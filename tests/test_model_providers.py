@@ -597,3 +597,340 @@ def test_preflight_responses_probe(
     assert "temperature" not in probe
     assert callable(built[0]["api_key"])
     assert "api_key" not in json.dumps(report)
+
+
+def _http_error(status: int, message: str) -> openai.APIStatusError:
+    request = httpx.Request("POST", "http://127.0.0.1:4141/v1/responses")
+    response = httpx.Response(
+        status, json={"error": {"message": message}}, request=request
+    )
+    cls = {400: openai.BadRequestError, 401: openai.AuthenticationError}[status]
+    return cls(f"Error code: {status} - {message}", response=response, body=None)
+
+
+# CAO (copilot-api) rejects an unknown model on /responses without naming it.
+CAO_UNKNOWN_MODEL = (
+    "This model does not support the responses endpoint. "
+    "Please choose a different model."
+)
+
+
+@pytest.mark.parametrize(
+    ("status", "message", "passed", "identified_by"),
+    [
+        (400, CAO_UNKNOWN_MODEL, True, "model_rejection"),
+        (400, "Invalid value for 'input': expected a string.", False, None),
+        (401, CAO_UNKNOWN_MODEL, False, None),
+    ],
+)
+def test_negative_control_accepts_a_model_rejection_that_omits_the_name(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    status: int,
+    message: str,
+    passed: bool,
+    identified_by: str | None,
+) -> None:
+    def create(**kwargs: Any) -> Any:
+        if kwargs["model"].startswith("ahe-negative-control-"):
+            raise _http_error(status, message)
+        return SimpleNamespace(model="exact-model", status="completed")
+
+    monkeypatch.setattr(
+        "ahe_runner.meta.preflight.OpenAI", lambda **_: _FakeResponsesOpenAI(create)
+    )
+    transport = TransportSettings(
+        base_url="http://127.0.0.1:4141/v1",
+        api_key_env="CAO_API_KEY",
+        api_mode="responses",
+        model_catalog="disabled",
+        negative_control="required",
+    )
+    run = lambda: run_model_preflight(  # noqa: E731
+        transport=transport,
+        api_key="unused",
+        settings=_settings(),
+        output_path=tmp_path / "preflight.json",
+    )
+    if not passed:
+        with pytest.raises(IntegrityError, match="negative control failed"):
+            run()
+        report = json.loads((tmp_path / "preflight.json").read_text())
+        assert report["negative_control"]["passed"] is False
+        return
+    report = run()
+    assert report["status"] == "completed"
+    assert report["negative_control"]["passed"] is True
+    assert report["negative_control"]["identified_by"] == identified_by
+    assert report["negative_control"]["status_code"] == status
+
+
+def test_negative_control_still_prefers_an_error_naming_the_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def create(**kwargs: Any) -> Any:
+        if kwargs["model"].startswith("ahe-negative-control-"):
+            raise _http_error(400, f"Unknown model {kwargs['model']}")
+        return SimpleNamespace(model="exact-model", status="completed")
+
+    monkeypatch.setattr(
+        "ahe_runner.meta.preflight.OpenAI", lambda **_: _FakeResponsesOpenAI(create)
+    )
+    report = run_model_preflight(
+        transport=TransportSettings(
+            base_url="http://127.0.0.1:4141/v1",
+            api_mode="responses",
+            model_catalog="disabled",
+            negative_control="required",
+        ),
+        api_key="unused",
+        settings=_settings(),
+        output_path=tmp_path / "preflight.json",
+    )
+    assert report["negative_control"]["passed"] is True
+    assert report["negative_control"]["identified_by"] == "model_name"
+
+
+# --------------------------------------------------------------------------
+# Token pacing
+
+
+def test_token_pacing_is_off_by_default_and_not_serialized() -> None:
+    assert "token_pacing_fraction" not in _azure().model_dump(mode="json")
+    assert _azure(token_pacing_fraction=0.85).model_dump(mode="json")[
+        "token_pacing_fraction"
+    ] == 0.85
+
+
+def test_pacer_waits_for_the_window_when_the_budget_is_spent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path))
+    clock = [1000.0]
+    sleeps: list[float] = []
+
+    def sleep(seconds: float) -> None:
+        sleeps.append(seconds)
+        clock[0] += seconds
+
+    monkeypatch.setattr(client_module.time, "time", lambda: clock[0])
+    monkeypatch.setattr(client_module.time, "sleep", sleep)
+    monkeypatch.setattr(client_module.random, "uniform", lambda *_: 0.0)
+    pacer = client_module.TokenPacer(AZURE_URL, "exact-model", 0.8)
+    # No budget known yet: send at once.
+    assert pacer.acquire(500_000) == 0.0
+    pacer.observe(
+        {
+            "x-ratelimit-limit-tokens": "1000000",
+            "x-ratelimit-remaining-tokens": "500000",
+            "x-ratelimit-reset-tokens": "30",
+        }
+    )
+    # 500k - 200k leaves 300k >= the 200k floor: send.
+    assert pacer.acquire(200_000) == 0.0
+    # 300k - 200k would leave 100k < 200k: wait for the 30 s reset.
+    assert pacer.acquire(200_000) == 30.0
+    # A fresh window admits even a call larger than the paced share.
+    pacer.cool_down(12.0)
+    assert pacer.acquire(900_000) == 12.0
+    # Another pacer (another process) sees the same state file.
+    other = client_module.TokenPacer(AZURE_URL, "exact-model", 0.8)
+    assert other.path == pacer.path
+    assert client_module.TokenPacer(AZURE_URL, "other-model", 0.8).path != pacer.path
+
+
+def test_rate_limits_cool_down_every_client_of_the_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path / "pacing"))
+    sleeps: list[float] = []
+    monkeypatch.setattr(client_module.time, "sleep", sleeps.append)
+    monkeypatch.setattr(client_module.random, "uniform", lambda *_: 0.0)
+    client, sent = _responses_client(
+        tmp_path,
+        [_status_error(429, {"retry-after": "7"}), _response()],
+        _azure(transient_retries=1, token_pacing_fraction=0.85),
+    )
+    client.responses.create(model="exact-model", input="hello")
+    assert len(sent) == 2
+    state = json.loads(client._pacer.path.read_text())  # type: ignore[attr-defined]
+    assert state["cooldown_until"] > 0 and state["remaining"] == 0.0
+    # The client slept the retry delay; the pacer (same 7 s) then let it pass.
+    assert sleeps[0] == 7.0
+
+
+def _gateway_error(retry_after: str = "5") -> Exception:
+    request = httpx.Request("POST", f"{AZURE_URL}/responses")
+    headers = {"retry-after": retry_after}
+    response = httpx.Response(429, headers=headers, request=request)
+    return openai.RateLimitError(
+        f"TRAPI: Rate Limit Exceeded, retry after {retry_after} seconds.",
+        response=response,
+        body=None,
+    )
+
+
+def test_gateway_rate_limit_pauses_all_clients_and_caps_refusals(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path / "pacing"))
+    monkeypatch.setattr(client_module, "_BLOCKED_ENDPOINTS", {})
+    clock = [1000.0]
+    sleeps: list[float] = []
+
+    def sleep(seconds: float) -> None:
+        sleeps.append(seconds)
+        clock[0] += seconds
+
+    monkeypatch.setattr(client_module.time, "time", lambda: clock[0])
+    monkeypatch.setattr(client_module.time, "sleep", sleep)
+    monkeypatch.setattr(client_module.random, "uniform", lambda a, b: a)
+    transport = _azure(
+        transient_retries=10,
+        token_pacing_fraction=0.85,
+        gateway_pause_seconds=300,
+        gateway_retries=1,
+    )
+    client, sent = _responses_client(
+        tmp_path / "a", [_gateway_error(), _gateway_error(), _response()], transport
+    )
+    # The first refusal pauses for 300 s (not the advised 5); the second
+    # exceeds gateway_retries and fails the call.
+    with pytest.raises(InfrastructureError, match="gateway rate limit"):
+        client.responses.create(model="exact-model", input="hello")
+    assert len(sent) == 2
+    assert sum(sleeps) == pytest.approx(300.0)
+    # Another client of the endpoint (any model) waits out the shared pause.
+    other, other_sent = _responses_client(tmp_path / "b", [_response()], transport)
+    sleeps.clear()
+    other.responses.create(model="exact-model", input="hello")
+    assert len(other_sent) == 1
+    assert sum(sleeps) == pytest.approx(300.0)
+
+
+def test_any_block_stops_every_paced_client_on_the_host(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path / "pacing"))
+    monkeypatch.setattr(client_module, "_BLOCKED_ENDPOINTS", {})
+    monkeypatch.setattr(client_module.time, "sleep", lambda _: None)
+    transport = _azure(transient_retries=2, token_pacing_fraction=0.85)
+    client, _ = _responses_client(tmp_path / "a", [_blocked_error()], transport)
+    with pytest.raises(ProviderBlockedError):
+        client.responses.create(model="exact-model", input="hello")
+    # A new process starts with no in-memory record, but the host file stops it.
+    monkeypatch.setattr(client_module, "_BLOCKED_ENDPOINTS", {})
+    other, other_sent = _responses_client(tmp_path / "b", [_response()], transport)
+    with pytest.raises(ProviderBlockedError, match="on this host"):
+        other.responses.create(model="exact-model", input="hello")
+    assert other_sent == []
+
+
+def test_token_window_admits_only_what_fits_the_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path))
+    clock = [1000.0]
+
+    def sleep(seconds: float) -> None:
+        clock[0] += seconds
+
+    monkeypatch.setattr(client_module.time, "time", lambda: clock[0])
+    monkeypatch.setattr(client_module.time, "sleep", sleep)
+    monkeypatch.setattr(client_module.random, "uniform", lambda a, b: a)
+    window = client_module.TokenWindow(AZURE_URL, "exact-model", 600_000)
+    assert window.acquire(250_000) == 0.0
+    clock[0] += 10
+    assert window.acquire(250_000) == 0.0
+    clock[0] += 5
+    # 750k would exceed 600k: wait until the first entry leaves the window.
+    assert window.acquire(250_000) == pytest.approx(45.0)
+    clock[0] += 200
+    # An empty window admits even a request above the budget.
+    assert window.acquire(900_000) == 0.0
+    # A 429 cuts the budget by 30% and pauses every client.
+    window.cool_down(30.0)
+    clock[0] += 61
+    assert window.acquire(400_000) == 0.0
+    assert window.acquire(100_000) == pytest.approx(60.0)
+
+
+def test_window_cut_floor_recovery_and_chars_are_settings(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path))
+    clock = [1000.0]
+    monkeypatch.setattr(client_module.time, "time", lambda: clock[0])
+    monkeypatch.setattr(client_module.time, "sleep", lambda s: None)
+    transport = _azure(
+        token_budget_per_minute=1_000_000,
+        token_budget_chars_per_token=4.0,
+        token_budget_cut=0.9,
+        token_budget_floor=0.6,
+        token_budget_recover_seconds=120.0,
+    )
+    window = client_module.token_window(transport, "exact-model")
+    window.cool_down(0.0)
+    with window._state() as state:  # type: ignore[attr-defined]
+        assert state["budget"] == pytest.approx(900_000)
+    for _ in range(10):
+        window.cool_down(0.0)
+    with window._state() as state:  # type: ignore[attr-defined]
+        assert state["budget"] == pytest.approx(600_000)
+    clock[0] += 121
+    with window._state() as state:  # type: ignore[attr-defined]
+        assert window._budget(state, clock[0]) == pytest.approx(660_000)
+    # A budget saved by a run with a larger maximum is capped by this one.
+    smaller = client_module.TokenWindow(AZURE_URL, "exact-model", 500_000)
+    with smaller._state() as state:  # type: ignore[attr-defined]
+        assert smaller._budget(state, clock[0]) == pytest.approx(500_000)
+    client, _ = _responses_client(tmp_path, [], transport)
+    assert client._chars_per_token == 4.0  # type: ignore[attr-defined]
+    # The defaults keep earlier campaign identities unchanged.
+    dumped = _azure(token_budget_per_minute=1).model_dump(mode="json")
+    assert "token_budget_cut" not in dumped
+    assert "token_budget_chars_per_token" not in dumped
+
+
+def test_budget_setting_selects_the_window(tmp_path: Path) -> None:
+    transport = _azure(token_budget_per_minute=600_000, token_pacing_fraction=0.85)
+    client, _ = _responses_client(tmp_path, [], transport)
+    pacer = client._pacer  # type: ignore[attr-defined]
+    assert isinstance(pacer, client_module.TokenWindow)
+    assert "token_budget_per_minute" not in _azure().model_dump(mode="json")
+
+
+def test_preflight_retries_obey_gateway_pause_and_cap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from ahe_runner.meta import preflight
+
+    monkeypatch.setenv("AHE_PACING_DIR", str(tmp_path))
+    clock = [1000.0]
+
+    def sleep(seconds: float) -> None:
+        clock[0] += seconds
+
+    monkeypatch.setattr(client_module.time, "time", lambda: clock[0])
+    monkeypatch.setattr(client_module.time, "sleep", sleep)
+    monkeypatch.setattr(preflight.time, "sleep", sleep)
+    monkeypatch.setattr(client_module.random, "uniform", lambda a, b: a)
+    transport = _azure(
+        transient_retries=8,
+        token_budget_per_minute=600_000,
+        gateway_pause_seconds=120,
+        gateway_retries=2,
+    )
+    calls: list[float] = []
+
+    def create(**_: Any) -> Any:
+        calls.append(clock[0])
+        raise _gateway_error()
+
+    with pytest.raises(openai.RateLimitError):
+        preflight._create_with_transient_retries(
+            create, {"model": "exact-model", "input": "OK"}, transport, []
+        )
+    # Three refusals (the cap is 2 retries), each after the shared pause.
+    assert len(calls) == 3
+    assert calls[1] - calls[0] >= 120 and calls[2] - calls[1] >= 120

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from ahe_runner.cli import init_project
@@ -22,3 +23,10 @@ def make_example_project(
         encoding="utf-8",
     )
     return config_path
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):
+    """Expose each phase's report as ``item.rep_<phase>`` to fixtures."""
+    outcome = yield
+    setattr(item, f"rep_{call.when}", outcome.get_result())

@@ -18,6 +18,9 @@
 #      for the operator; on a provider block waits BLOCK_PAUSE_SECONDS; on any
 #      other failure waits PAUSE_SECONDS.
 # Never relaunches immediately. At most MAX_INVOCATIONS probes in total.
+# SKIP_FIRST_PROBE=1 starts the first invocation without a probe, for a
+# caller that has just probed once for several launchers (run_c14b.sh), so
+# a second launcher does not wait behind the first one's load.
 set -u
 
 CONFIG=${1:?usage: launch_trapi_c0.sh <config.yaml> <log file>}
@@ -34,9 +37,14 @@ MARKER="model provider blocked this principal"
 log() { echo "[launcher $(date -u +%FT%TZ)] $*" | tee -a "$LOG"; }
 
 for i in $(seq 1 "$MAX_INVOCATIONS"); do
-  probe=$("$PYTHON" harvey-ahe-project/scripts/probe_trapi.py 2>/dev/null)
-  rc=$?
-  log "probe $i/$MAX_INVOCATIONS exit=$rc $probe"
+  if [ "$i" -eq 1 ] && [ "${SKIP_FIRST_PROBE:-0}" = 1 ]; then
+    rc=0
+    log "probe 1/$MAX_INVOCATIONS skipped (SKIP_FIRST_PROBE=1)"
+  else
+    probe=$("$PYTHON" harvey-ahe-project/scripts/probe_trapi.py 2>/dev/null)
+    rc=$?
+    log "probe $i/$MAX_INVOCATIONS exit=$rc $probe"
+  fi
   if [ "$rc" -eq 3 ]; then
     log "TRAPI blocked this principal; waiting ${BLOCK_PAUSE_SECONDS}s"
     sleep "$BLOCK_PAUSE_SECONDS"

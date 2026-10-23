@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import email.utils
+import fcntl
 import json
 import multiprocessing
+import os
 import random
 import subprocess
+import tempfile
 import threading
 import time
 from collections.abc import Callable, Iterator, Mapping
@@ -85,6 +88,259 @@ _BACKOFF_JITTER_FRACTION = 0.5
 # Endpoints that blocked this principal, per process: no further requests.
 _BLOCKED_ENDPOINTS: dict[str, str] = {}
 _BLOCKED_ENDPOINTS_LOCK = threading.Lock()
+
+
+# Token pacing (transport.token_pacing_fraction): one small state file per
+# endpoint and model, under a per-user directory, locked with flock so that
+# every process on the host sees the same budget and cool-down.
+_PACING_DIR_ENV = "AHE_PACING_DIR"
+# Never wait longer than this per check, so a stale state file cannot stall.
+_PACING_MAX_SLEEP_SECONDS = 60.0
+# Rough characters per token when estimating a request's input tokens for
+# header pacing. Admission control uses transport.token_budget_chars_per_token
+# (default 3.0, which never undercounts: Harvey requests measured 3.2-5.3
+# characters per real token, median 4.5).
+_PACING_CHARS_PER_TOKEN = 4.0
+
+
+class TokenPacer:
+    """Host-wide pacing for one model on one endpoint.
+
+    State: the provider's token ``limit`` and ``remaining`` budget and the time
+    the window resets (from the last response's x-ratelimit headers, less the
+    estimated cost of calls sent since), and a cool-down set by any HTTP 429.
+    """
+
+    def __init__(self, base_url: str, model: str, fraction: float) -> None:
+        directory = Path(
+            os.environ.get(_PACING_DIR_ENV)
+            or Path(tempfile.gettempdir()) / f"ahe-runner-pacing-{os.getuid()}"
+        )
+        directory.mkdir(parents=True, exist_ok=True)
+        key = sha256(f"{base_url}\n{model}".encode()).hexdigest()[:16]
+        self.path = directory / f"{key}.json"
+        self.fraction = fraction
+
+    @contextmanager
+    def _state(self) -> Iterator[dict[str, float]]:
+        with open(self.path, "a+", encoding="utf-8") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                handle.seek(0)
+                try:
+                    state = json.loads(handle.read() or "{}")
+                except ValueError:
+                    state = {}
+                yield state
+                handle.seek(0)
+                handle.truncate()
+                handle.write(json.dumps(state))
+                handle.flush()
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    def acquire(self, cost: float) -> float:
+        """Wait until ``cost`` tokens fit the budget, reserve them; return wait."""
+        waited = 0.0
+        while True:
+            with self._state() as state:
+                now = time.time()
+                wait = state.get("cooldown_until", 0.0) - now
+                limit = state.get("limit")
+                if wait <= 0 and limit:
+                    if state.get("reset_at", 0.0) <= now:
+                        state["remaining"] = limit
+                        state["reset_at"] = now + 60.0
+                    remaining = state.get("remaining", limit)
+                    floor = limit * (1.0 - self.fraction)
+                    if remaining < limit and remaining - cost < floor:
+                        wait = state["reset_at"] - now
+                    else:
+                        state["remaining"] = remaining - cost
+                if wait <= 0:
+                    return waited
+            pause = min(wait, _PACING_MAX_SLEEP_SECONDS) + random.uniform(0.0, 1.0)
+            time.sleep(pause)
+            waited += pause
+
+    def observe(self, headers: Mapping[str, str]) -> None:
+        """Adopt the provider's reported token budget after a response."""
+        try:
+            limit = float(headers["x-ratelimit-limit-tokens"])
+            remaining = float(headers["x-ratelimit-remaining-tokens"])
+            reset = float(headers.get("x-ratelimit-reset-tokens", 60.0))
+        except (KeyError, TypeError, ValueError):
+            return
+        with self._state() as state:
+            state["limit"] = limit
+            state["remaining"] = remaining
+            state["reset_at"] = time.time() + max(reset, 1.0)
+
+    def cool_down(self, seconds: float) -> None:
+        """After an HTTP 429: every client of this model waits ``seconds``."""
+        with self._state() as state:
+            until = time.time() + seconds
+            until = max(state.get("cooldown_until", 0.0), until)
+            # The server's advised wait ends the spent window.
+            state["cooldown_until"] = until
+            state["reset_at"] = until
+            state["remaining"] = 0.0
+
+
+class TokenWindow(TokenPacer):
+    """Host-wide admission control for one model on one endpoint.
+
+    State: ``log`` of [send time, cost] for the last 60 seconds, the current
+    ``budget`` (adapted by 429s), and a ``cooldown_until`` time. A request is
+    admitted only if the window's total plus its cost fits the budget (or the
+    window is empty); costs are never refunded, so the window cannot burst.
+    """
+
+    WINDOW_SECONDS = 60.0
+    CUT = 0.7
+    FLOOR = 0.3
+    RECOVER = 1.1
+    RECOVER_AFTER_SECONDS = 600.0
+
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        budget: int,
+        *,
+        cut: float = CUT,
+        floor: float = FLOOR,
+        recover_after_seconds: float = RECOVER_AFTER_SECONDS,
+    ) -> None:
+        super().__init__(base_url, f"{model}#window", 1.0)
+        self.maximum = float(budget)
+        self.cut = cut
+        self.floor = floor
+        self.recover_after_seconds = recover_after_seconds
+
+    def _budget(self, state: dict[str, Any], now: float) -> float:
+        # A budget left by a run with a larger maximum never exceeds this one.
+        budget = min(float(state.get("budget", self.maximum)), self.maximum)
+        quiet_since = max(state.get("last_429", 0.0), state.get("last_raise", 0.0))
+        if budget < self.maximum and now - quiet_since >= self.recover_after_seconds:
+            budget = min(self.maximum, budget * self.RECOVER)
+            state["last_raise"] = now
+        state["budget"] = budget
+        return budget
+
+    def acquire(self, cost: float) -> float:
+        waited = 0.0
+        while True:
+            with self._state() as state:
+                now = time.time()
+                log = [
+                    entry
+                    for entry in state.get("log", [])
+                    if now - entry[0] < self.WINDOW_SECONDS
+                ]
+                state["log"] = log
+                budget = self._budget(state, now)
+                wait = state.get("cooldown_until", 0.0) - now
+                if wait <= 0:
+                    used = sum(entry[1] for entry in log)
+                    if not log or used + cost <= budget:
+                        log.append([now, cost])
+                        return waited
+                    # Wait until enough of the oldest entries leave the window.
+                    excess = used + cost - budget
+                    for sent_at, entry_cost in log:
+                        excess -= entry_cost
+                        if excess <= 0:
+                            wait = sent_at + self.WINDOW_SECONDS - now
+                            break
+                    else:
+                        wait = log[-1][0] + self.WINDOW_SECONDS - now
+            pause = min(max(wait, 0.05), _PACING_MAX_SLEEP_SECONDS)
+            pause += random.uniform(0.0, 1.0)
+            time.sleep(pause)
+            waited += pause
+
+    def observe(self, headers: Mapping[str, str]) -> None:
+        """Costs are fixed when sent; the headers are only recorded."""
+
+    def cool_down(self, seconds: float) -> None:
+        with self._state() as state:
+            now = time.time()
+            budget = min(float(state.get("budget", self.maximum)), self.maximum)
+            state["budget"] = max(self.maximum * self.floor, budget * self.cut)
+            state["last_429"] = now
+            until = max(state.get("cooldown_until", 0.0), now + seconds)
+            state["cooldown_until"] = until
+
+
+def estimated_request_tokens(
+    kwargs: Mapping[str, Any], chars_per_token: float = _PACING_CHARS_PER_TOKEN
+) -> float:
+    """Input tokens (from the payload size) plus the requested output cap."""
+    size = len(json.dumps(_json_safe(dict(kwargs)), ensure_ascii=False))
+    output = (
+        kwargs.get("max_output_tokens")
+        or kwargs.get("max_completion_tokens")
+        or kwargs.get("max_tokens")
+        or 0
+    )
+    return size / chars_per_token + float(output)
+
+
+# With pacing on, a provider block seen by any client stops every client on
+# the host for this long (a block file next to the pacing state).
+_HOST_BLOCK_SECONDS = 1800.0
+_GATEWAY_RATE_LIMIT_MARKER = "TRAPI: Rate Limit Exceeded"
+
+
+def token_window(transport: TransportSettings, model: str) -> TokenWindow:
+    """The shared admission window for one model, as the transport sets it."""
+    assert transport.token_budget_per_minute is not None
+    return TokenWindow(
+        transport.base_url,
+        model,
+        transport.token_budget_per_minute,
+        cut=transport.token_budget_cut,
+        floor=transport.token_budget_floor,
+        recover_after_seconds=transport.token_budget_recover_seconds,
+    )
+
+
+def gateway_pacer(base_url: str) -> TokenPacer:
+    """The host-wide pause shared by every model on one endpoint."""
+    return TokenPacer(base_url, "__gateway__", 1.0)
+
+
+def _host_block_path(base_url: str) -> Path:
+    return gateway_pacer(base_url).path.with_name(
+        gateway_pacer(base_url).path.stem + "-blocked.json"
+    )
+
+
+def record_host_block(base_url: str, message: str) -> None:
+    """Remember a provider block for every process on this host."""
+    path = _host_block_path(base_url)
+    path.write_text(
+        json.dumps({"blocked_at": time.time(), "message": message[:1500]}),
+        encoding="utf-8",
+    )
+
+
+def host_block(base_url: str) -> str | None:
+    """A provider block recorded on this host in the last 30 minutes, if any."""
+    path = _host_block_path(base_url)
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if time.time() - float(record.get("blocked_at", 0.0)) > _HOST_BLOCK_SECONDS:
+        return None
+    return str(record.get("message", "provider block"))
+
+
+def is_gateway_rate_limit(exc: BaseException) -> bool:
+    """TRAPI's account-wide gateway limit, as opposed to a model token limit."""
+    return _is_rate_limited(exc) and _GATEWAY_RATE_LIMIT_MARKER in str(exc)
 
 
 def _shared_request_slots(transport: TransportSettings) -> Any | None:
@@ -278,6 +534,24 @@ class RecordedExactModelClient:
         self._log_dir = log_dir
         self._lock = threading.Lock()
         self._request_slots = _shared_request_slots(transport)
+        self._gateway = (
+            gateway_pacer(transport.base_url)
+            if transport.gateway_pause_seconds is not None
+            else None
+        )
+        fraction = transport.token_pacing_fraction
+        self._pacer: TokenPacer | None = (
+            token_window(transport, settings.model)
+            if transport.token_budget_per_minute is not None
+            else TokenPacer(transport.base_url, settings.model, fraction)
+            if fraction is not None
+            else None
+        )
+        self._chars_per_token = (
+            transport.token_budget_chars_per_token
+            if transport.token_budget_per_minute is not None
+            else _PACING_CHARS_PER_TOKEN
+        )
         self._log_dir.mkdir(parents=True, exist_ok=True)
         self._sequence = max(
             (
@@ -435,6 +709,26 @@ class RecordedExactModelClient:
                 }
                 atomic_write_json(call_dir / "error.json", error)
                 raise ProviderBlockedError(error["message"])
+            if self._pacer is not None:
+                blocked = host_block(self._transport.base_url)
+                if blocked is not None:
+                    error = {
+                        "type": "ProviderBlockedError",
+                        "message": f"{PROVIDER_BLOCKED_MARKER} on this host: {blocked}",
+                        "sent": False,
+                    }
+                    atomic_write_json(call_dir / "error.json", error)
+                    raise ProviderBlockedError(error["message"])
+            if self._gateway is not None:
+                paused = self._gateway.acquire(0.0)
+                if paused:
+                    waited["gateway_wait_seconds"] = round(paused, 3)
+            if self._pacer is not None:
+                paced = self._pacer.acquire(
+                    estimated_request_tokens(kwargs, self._chars_per_token)
+                )
+                if paced:
+                    waited["pacing_wait_seconds"] = round(paced, 3)
             try:
                 with _request_slot(self._request_slots, waited):
                     if api == "responses":
@@ -442,6 +736,8 @@ class RecordedExactModelClient:
                             *args, **kwargs
                         )
                         response_headers = recorded_headers(raw.headers)
+                        if self._pacer is not None:
+                            self._pacer.observe(raw.headers)
                         response = raw.parse()
                     else:
                         response = self._base.chat.completions.create(*args, **kwargs)
@@ -450,6 +746,8 @@ class RecordedExactModelClient:
                 error = {**_error_payload(exc), **waited}
                 if is_principal_blocked(exc):
                     _record_endpoint_block(self._transport.base_url, str(exc))
+                    if self._pacer is not None:
+                        record_host_block(self._transport.base_url, str(exc))
                     error["type"] = "ProviderBlockedError"
                     if transient_attempts:
                         error["transient_attempts"] = transient_attempts
@@ -457,6 +755,31 @@ class RecordedExactModelClient:
                     raise ProviderBlockedError(
                         f"{PROVIDER_BLOCKED_MARKER}: {str(exc)[:1500]}"
                     ) from exc
+                gateway = self._gateway is not None and is_gateway_rate_limit(exc)
+                if gateway:
+                    advised = _retry_after_seconds(getattr(exc, "response", None))
+                    pause = max(advised or 0.0, self._transport.gateway_pause_seconds)
+                    self._gateway.cool_down(pause * random.uniform(1.0, 1.25))
+                    if self._pacer is not None:
+                        # The gateway limit is unknown: shrink this model's
+                        # budget as well, so the retry fits under it.
+                        wait = max(advised or 0.0, _BACKOFF_BASE_SECONDS)
+                        self._pacer.cool_down(wait)
+                    refusals = 1 + sum(
+                        1 for row in transient_attempts if row.get("gateway")
+                    )
+                    error["gateway"] = True
+                    if refusals > self._transport.gateway_retries:
+                        if transient_attempts:
+                            error["transient_attempts"] = transient_attempts
+                        atomic_write_json(call_dir / "error.json", error)
+                        raise InfrastructureError(
+                            f"gateway rate limit refused this call {refusals} times: "
+                            f"{str(exc)[:500]}"
+                        ) from exc
+                elif self._pacer is not None and _is_rate_limited(exc):
+                    advised = _retry_after_seconds(getattr(exc, "response", None))
+                    self._pacer.cool_down(max(advised or 0.0, _BACKOFF_BASE_SECONDS))
                 if (
                     is_hung_call_exception(exc)
                     and len(hung_attempts) < self._transport.hung_call_retries
@@ -470,10 +793,14 @@ class RecordedExactModelClient:
                     is_transient_exception(exc)
                     and len(transient_attempts) < self._transport.transient_retries
                 ):
-                    delay = transient_retry_delay(
-                        exc,
-                        attempt=len(transient_attempts) + 1,
-                        max_wait=self._transport.transient_max_wait_seconds,
+                    delay = (
+                        0.0
+                        if gateway
+                        else transient_retry_delay(
+                            exc,
+                            attempt=len(transient_attempts) + 1,
+                            max_wait=self._transport.transient_max_wait_seconds,
+                        )
                     )
                     error["retry_delay_seconds"] = round(delay, 3)
                     transient_attempts.append(error)
@@ -674,6 +1001,12 @@ def is_transient_exception(exc: BaseException) -> bool:
         return True
     return isinstance(exc, APIStatusError) and (
         exc.status_code == 429 or exc.status_code >= 500
+    )
+
+
+def _is_rate_limited(exc: BaseException) -> bool:
+    return isinstance(exc, RateLimitError) or (
+        isinstance(exc, APIStatusError) and exc.status_code == 429
     )
 
 

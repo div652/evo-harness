@@ -1,0 +1,139 @@
+# Campaign 20: the CAO-vs-TRAPI check (2026-10-22). Campaign 13b's base
+# harness (C0) evaluation, unchanged except for the endpoint: the local CAO
+# gateway (copilot-api 2.7.30 at 127.0.0.1:4141, the user's Copilot seat)
+# instead of TRAPI, on Ravi's 100 tasks, one trial. As in 13b:
+#   * the Responses API: the system prompt is sent as `instructions`, and
+#     reasoning items (summary + encrypted content) are returned and resent
+#     on every turn;
+#   * agent gpt-5.6-sol at reasoning high, 32768 output tokens; one judge,
+#     gpt-6.1-sol at reasoning high, 8192 tokens; no filename helper.
+# Differences, none of which changes what is evaluated or graded:
+#   * CAO's model IDs (gpt-5.6-sol, gpt-6.1-sol) instead of TRAPI's dated
+#     deployment names;
+#   * campaign 15's (Copilot) parallelism: 10 trials at once, 12 request
+#     slots, 9 judge calls;
+#   * CAO lists its models and rejects an unknown one, so both preflight
+#     checks run.
+# CAO_API_KEY must hold the gateway key (/home/agarwaldi/cao/profile/.gateway-key).
+# Run only with scripts/run_c0_train_only.py (rounds: 0), in this worktree.
+schema_version: 1
+
+campaign:
+  name: harvey-lab-campaign-20-cao-c0-ravi100
+  artifacts_dir: ./campaign-artifacts/harvey-lab-campaign-20-cao-c0-ravi100
+  rounds: 0
+  root_seed: 42
+
+project:
+  harness_dir: ./harness_lab
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    # Ravi's 100 tasks (seed 20261013).
+    split_file: ./splits-firm-knowledge-ravi100.json
+    apply_task_filter: false
+    # LAB's OpenAI judge path (Responses API, strict JSON schema on all but
+    # the last try) with one judge.
+    judge_api: openai_responses
+    judges:
+      - model: gpt-6.1-sol
+        max_tokens: 8192
+        reasoning_effort: high
+        temperature: null
+    # No helper model: deliverables LAB cannot match by name stay unmatched.
+    helper: null
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    # As campaign 9b; verdicts do not depend on grading parallelism.
+    grading_parallel: 10
+    # As campaign 15 (Copilot).
+    judge_max_concurrent_calls: 9
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    # As the colleague's run: an API rejection mid-run reruns the trial
+    # instead of grading the partial work (the default, grade, was used by
+    # every earlier campaign; 9b had no such errors).
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+    - ./benchmark_adapter.py
+    - ./harvey_ahe
+    - ./splits-firm-knowledge-ravi100.json
+    - ./pyproject.toml
+    - ./requirements.txt
+  meta_agent_source_roots:
+    - ./benchmark_public
+
+models:
+  evaluated:
+    model: gpt-5.6-sol
+    # The output cap of the colleague's gateway run.
+    max_tokens: 32768
+    reasoning_effort: high
+    # Not sent: reasoning models on the Responses API take no temperature.
+    temperature: null
+  # Not used by a C0-only run.
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+
+transport:
+  provider: gh_copilot_server
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  # CAO lists its models and rejects an unknown one, so both checks run.
+  model_catalog: required
+  negative_control: required
+  # As campaign 15 (Copilot). Agents use at most max_concurrency of these slots.
+  max_concurrent_requests: 12
+  hung_call_retries: 2
+  # As campaign 13b.
+  transient_retries: 6
+  transient_max_wait_seconds: 120
+
+evaluation:
+  train_trials: 1
+  validation_trials: 1
+  test_trials: 1
+  # Trials at once, as campaign 15 (Copilot).
+  max_concurrency: 10
+
+debugger:
+  max_concurrency: 4
+  max_iterations: 25
+
+recovery:
+  # 3 in campaign 13. Each attempt runs only the units still pending.
+  maximum_stage_attempts: 10
+  archive_incomplete_attempts: true
+
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+      - https://github.com/nex-agi/NexAU
+  role_supplements:
+    source: ./meta_supplements/source.md
+    web: ./meta_supplements/web.md
+    debugger: ./meta_supplements/debugger.md
+    evolve: ./meta_supplements/evolve.md
+  max_concurrent_model_calls: 4
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2

@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C9",
+  "parent_checkpoint": "C8",
+  "objective": "Prevent corpus candidates from disappearing between search and review while removing unsupported lifecycle defaults that narrowed the requested object.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "rollback",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "attribution/C8/transition.json: chg-1 predicted fixes observed 0/3 and verdict INEFFECTIVE",
+        "debugger/C9/tasks/task-4713a3a2151bd4603b25/result.json: issue-coverage-gap",
+        "debugger/C9/tasks/task-fd91f3f6ed5e3406777e/result.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "The always-visible lifecycle verb rule imposed operative, closing, or inception gates even when the requested object was a precedent, agreement, or bound policy.",
+      "mechanism": "Restore C7's neutral separation of eligibility from document and lifecycle attributes, removing categorical verb-to-operation defaults from the base prompt.",
+      "rationale": "The harmful rule is always visible in the system prompt and directly preceded two shared prompt-level failures; its C8 predictions were unsupported.",
+      "predicted_fixes": [
+        "381c5dcfaa875825",
+        "6c0f259c5aae31b3"
+      ],
+      "risk_tasks": [
+        "bf6dc1ed09375414"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/corpus-reconciliation/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C9/summary.json: incomplete-document-reading recurred in 12 tasks",
+        "debugger/C9/tasks/task-634cc0085ce5291b6045/result.json: incomplete-document-reading",
+        "debugger/C9/tasks/task-cc59d0397b06e387b816/result.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "Independent searches surfaced decisive matters and high-signal files, but later regexes or manual shortlists replaced rather than extended the candidate set, allowing leads to vanish without disposition.",
+      "mechanism": "Require independent filename, content, status, role, and entity search channels to append paths to a monotonic lead union; map every surfaced matter to the candidate register, read or disposition high-signal files, and diff union versus register before drafting and finish. Lifecycle analysis is calibrated to the requested object rather than one verb.",
+      "rationale": "C8's detailed skill was partially effective and remains the appropriate reusable procedure, but needed auditable discovery state and neutral requested-object calibration rather than another lifecycle heuristic.",
+      "predicted_fixes": [
+        "2616c1f2c5d3b27f",
+        "a2e53bca7d8aaf02",
+        "51eabdb3da14c4dd",
+        "7ee6dc2541bec68e",
+        "2c92cfc8f3b9b6b6",
+        "7b63ac5814cfc2ed",
+        "a828251fd94bbc85",
+        "80dee57052409b59",
+        "fe4541dddf098a63"
+      ],
+      "risk_tasks": [
+        "b0772e2e68f3fbe2"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/finish.py",
+        "tool_descriptions/finish.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/C9/tasks/task-cc59d0397b06e387b816/result.json: completion audit accepted self-reported zero without reconciling search hits",
+        "debugger/C9/tasks/task-634cc0085ce5291b6045/result.json: final audit checked only the narrowed affirmative set"
+      ],
+      "failure_pattern": "The finish interlock accepted corpus completion counts even when no durable lead-union reconciliation artifact existed.",
+      "mechanism": "For corpus work, deterministically require non-empty lead_union.txt and review_state.md before accepting finish, while retaining the existing capped rejection policy and instructing the agent to diff union matters against register rows.",
+      "rationale": "Finish is the strongest existing completion control and can verify artifact existence without guessing eligibility or crossing the benchmark boundary.",
+      "predicted_fixes": [
+        "a828251fd94bbc85",
+        "fe4541dddf098a63"
+      ],
+      "risk_tasks": [
+        "b0772e2e68f3fbe2",
+        "51eabdb3da14c4dd"
+      ]
+    }
+  ],
+  "validation": [
+    "NexAU guide static validation",
+    "Python and YAML syntax checks",
+    "candidate validation"
+  ]
+}

@@ -16,10 +16,18 @@ from ahe_runner.errors import InfrastructureError, IntegrityError
 from ahe_runner.io import atomic_write_json
 
 from .model_client import (
+    _retry_after_seconds,
+    estimated_request_tokens,
+    gateway_pacer,
+    host_block,
+    is_gateway_rate_limit,
     is_infrastructure_exception,
+    is_principal_blocked,
     is_transient_exception,
     openai_credential,
+    record_host_block,
     responses_reasoning,
+    token_window,
     transient_retry_delay,
 )
 
@@ -170,10 +178,12 @@ def run_model_preflight(
             response = create(**negative_payload)
         except Exception as exc:
             text = str(exc)
-            passed = nonexistent.casefold() in text.casefold()
+            identified_by = _negative_control_rejection(exc, nonexistent)
+            passed = identified_by is not None
             negative = {
                 "requested_model": nonexistent,
                 "passed": passed,
+                "identified_by": identified_by,
                 "error_type": type(exc).__name__,
                 "error": text,
                 "status_code": getattr(exc, "status_code", None),
@@ -205,23 +215,103 @@ def run_model_preflight(
     return report
 
 
+# Endpoints that reject an unknown model without naming it. Each phrase must
+# say the model itself was refused, so a rejection for any other reason
+# (bad input, auth) still fails the control.
+_MODEL_REJECTION_PHRASES = (
+    # CAO (copilot-api 2.7.30) on /responses, observed 2026-10-22.
+    "this model does not support the responses endpoint",
+)
+
+
+def _negative_control_rejection(exc: BaseException, model: str) -> str | None:
+    """How the error shows the nonexistent model was refused, if it does."""
+    text = str(exc).casefold()
+    if model.casefold() in text:
+        return "model_name"
+    if getattr(exc, "status_code", None) in (400, 404) and any(
+        phrase in text for phrase in _MODEL_REJECTION_PHRASES
+    ):
+        return "model_rejection"
+    return None
+
+
 def _create_with_transient_retries(
     create: Callable[..., Any],
     payload: dict[str, Any],
     transport: TransportSettings,
     errors: list[str],
 ) -> Any:
-    """Resend a probe rejected for rate limits or 5xx, as model calls are."""
+    """Resend a probe rejected for rate limits or 5xx, as model calls are.
+
+    With admission control or a gateway pause configured, the probe obeys
+    them exactly like a recorded model call (campaign 14c, 2026-10-19: four
+    trial preflights retried a gateway 429 on their own for 13 minutes and
+    TRAPI blocked the principal): it stops at a host-wide block, waits for
+    the shared gateway pause and the model's token window, shares any 429 as
+    a pause for every client, and gives up after gateway_retries gateway
+    refusals.
+    """
+    guarded = (
+        transport.token_budget_per_minute is not None
+        or transport.gateway_pause_seconds is not None
+    )
+    window = (
+        token_window(transport, str(payload["model"]))
+        if transport.token_budget_per_minute is not None
+        else None
+    )
+    gateway = (
+        gateway_pacer(transport.base_url)
+        if transport.gateway_pause_seconds is not None
+        else None
+    )
+    gateway_refusals = 0
     while True:
+        if guarded:
+            blocked = host_block(transport.base_url)
+            if blocked is not None:
+                raise InfrastructureError(
+                    f"model provider blocked this principal on this host: {blocked}"
+                )
+            if gateway is not None:
+                gateway.acquire(0.0)
+            if window is not None:
+                window.acquire(
+                    estimated_request_tokens(
+                        payload, transport.token_budget_chars_per_token
+                    )
+                )
         try:
             return create(**payload)
         except Exception as exc:
+            if guarded and is_principal_blocked(exc):
+                record_host_block(transport.base_url, str(exc))
+                raise
+            if guarded and is_gateway_rate_limit(exc):
+                gateway_refusals += 1
+                advised = _retry_after_seconds(getattr(exc, "response", None)) or 0.0
+                if gateway is not None:
+                    gateway.cool_down(
+                        max(advised, transport.gateway_pause_seconds or 0.0)
+                    )
+                if window is not None:
+                    window.cool_down(max(advised, 5.0))
+                if gateway_refusals > transport.gateway_retries:
+                    raise
+                errors.append(f"{type(exc).__name__}: {exc}")
+                continue
             if (
                 not is_transient_exception(exc)
                 or len(errors) >= transport.transient_retries
             ):
                 raise
             errors.append(f"{type(exc).__name__}: {exc}")
+            if guarded and window is not None and getattr(exc, "status_code", 0) == 429:
+                window.cool_down(
+                    max(_retry_after_seconds(getattr(exc, "response", None)) or 0, 5.0)
+                )
+                continue
             time.sleep(
                 transient_retry_delay(
                     exc,

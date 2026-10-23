@@ -58,6 +58,14 @@ _TRANSPORT_LATER_DEFAULTS: dict[str, Any] = {
     "token_scope": None,
     "transient_retries": 0,
     "transient_max_wait_seconds": 120.0,
+    "token_pacing_fraction": None,
+    "gateway_pause_seconds": None,
+    "gateway_retries": 2,
+    "token_budget_per_minute": None,
+    "token_budget_chars_per_token": 3.0,
+    "token_budget_cut": 0.7,
+    "token_budget_floor": 0.3,
+    "token_budget_recover_seconds": 600.0,
 }
 
 
@@ -86,6 +94,34 @@ class TransportSettings(StrictModel):
     # transient_max_wait_seconds, else min(60, 2^n) seconds, plus jitter.
     transient_retries: int = Field(default=0, ge=0, le=100)
     transient_max_wait_seconds: float = Field(default=120.0, gt=0, le=600)
+    # Pace calls to each model by the provider's own per-minute token budget,
+    # shared by every process on this host: the x-ratelimit-*-tokens headers
+    # of each response, and a cool-down for all clients after any HTTP 429. A
+    # call waits instead of sending when it would leave less than (1 - this
+    # fraction) of the model's token limit in the current window. None: off.
+    token_pacing_fraction: float | None = Field(default=None, gt=0, le=1)
+    # A gateway rate limit (TRAPI's account-wide "Rate Limit Exceeded", which
+    # carries no x-ratelimit headers) pauses every client of the endpoint on
+    # this host for at least this many seconds, and a call refused by it more
+    # than gateway_retries times fails instead of retrying further. With
+    # token pacing on, any provider block (workload or principal) also stops
+    # every client on this host for 30 minutes. None: off, as before.
+    gateway_pause_seconds: float | None = Field(default=None, gt=0, le=3600)
+    # Admission control: every process on this host shares, per model, a log
+    # of the tokens each request may use (estimated prompt plus the output
+    # cap) over the last 60 seconds, and sends a request only if it fits this
+    # budget; otherwise it waits. Any 429 multiplies the budget by
+    # token_budget_cut (to at least token_budget_floor of this value) and
+    # pauses every client for the advised wait; each
+    # token_budget_recover_seconds without a 429 restores 10%. The prompt is
+    # estimated as its JSON size in characters / token_budget_chars_per_token.
+    # Replaces token_pacing_fraction pacing when set. None: off.
+    token_budget_per_minute: int | None = Field(default=None, gt=0)
+    token_budget_chars_per_token: float = Field(default=3.0, gt=0, le=10)
+    token_budget_cut: float = Field(default=0.7, gt=0, le=1)
+    token_budget_floor: float = Field(default=0.3, gt=0, le=1)
+    token_budget_recover_seconds: float = Field(default=600.0, gt=0, le=3600)
+    gateway_retries: int = Field(default=2, ge=0, le=20)
 
     @field_validator("base_url")
     @classmethod
