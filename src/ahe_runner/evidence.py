@@ -16,13 +16,15 @@ from pydantic import (
 )
 
 from .adapter import (
+    EXTRA_EVIDENCE_ROOT,
     EvaluationRequest,
     EvaluationResult,
+    EvaluationTrialFact,
     EvidenceBundle,
     MetricSummary,
 )
 from .errors import IntegrityError
-from .evaluation import verify_evaluation_output
+from .evaluation import VerifiedEvaluationUnit, verify_evaluation_output
 from .io import read_json, sha256_file
 
 
@@ -120,7 +122,18 @@ def verify_evidence_bundle(
     evaluation_dir: Path,
     source_evaluation: EvaluationResult,
     source_request: EvaluationRequest,
+    extra_request: EvaluationRequest | None = None,
+    extra_evaluation: EvaluationResult | None = None,
 ) -> EvidenceManifest:
+    """Verify adapter evidence against its source training evaluation.
+
+    With ``extra_request``/``extra_evaluation`` (evidence-only extra training
+    trials), each task the extra evaluation covers also carries its extra
+    trials, numbered after the regular ones, marked ``evidence_only`` and
+    with artifacts under ``EXTRA_EVIDENCE_ROOT``.
+    """
+    if (extra_request is None) != (extra_evaluation is None):
+        raise IntegrityError("extra evidence needs both its request and result")
     root = evidence_dir.resolve()
     manifest_path = Path(bundle.manifest_path).resolve()
     try:
@@ -171,6 +184,24 @@ def verify_evidence_bundle(
         raise IntegrityError("evidence tasks do not cover the source evaluation")
     units = {(unit.task_key, unit.trial): unit for unit in verified_evaluation.units}
     trial_facts = {fact.unit_id: fact for fact in verified_evaluation.trial_facts}
+    extra_units: dict[tuple[str, int], VerifiedEvaluationUnit] = {}
+    extra_facts: dict[str, EvaluationTrialFact] = {}
+    extra_trials = 0
+    record = (manifest.model_extra or {}).get("extra_evaluation")
+    if extra_request is None or extra_evaluation is None:
+        if record is not None:
+            raise IntegrityError("evidence cites an unverified extra evaluation")
+    else:
+        _verify_extra_record(record, extra_request, extra_evaluation)
+        extra_verified = verify_evaluation_output(extra_request, extra_evaluation)
+        extra_units = {
+            (unit.task_key, unit.trial): unit for unit in extra_verified.units
+        }
+        extra_facts = {fact.unit_id: fact for fact in extra_verified.trial_facts}
+        extra_trials = extra_request.trials
+        if not {key for key, _ in extra_units} <= set(source_states):
+            raise IntegrityError("extra evidence covers a task outside training")
+    extra_task_keys = {key for key, _ in extra_units}
     seen: set[str] = set()
     for task in manifest.tasks:
         if task.task_key in seen:
@@ -201,7 +232,13 @@ def verify_evidence_bundle(
             or task.state != state.state
         ):
             raise IntegrityError(f"evidence task identity mismatch: {task.task_key}")
-        if task.trial_count != state.trials or len(detail_value.trials) != state.trials:
+        expected_trials = state.trials + (
+            extra_trials if task.task_key in extra_task_keys else 0
+        )
+        if (
+            task.trial_count != expected_trials
+            or len(detail_value.trials) != expected_trials
+        ):
             raise IntegrityError(f"evidence trial coverage mismatch: {task.task_key}")
         observed_trials: set[int] = set()
         for trial in detail_value.trials:
@@ -210,12 +247,34 @@ def verify_evidence_bundle(
                     f"duplicate evidence trial: {task.task_key}/{trial.trial}"
                 )
             observed_trials.add(trial.trial)
-            unit = units.get((task.task_key, trial.trial))
-            if unit is None or trial.unit_id != unit.unit_id or trial.seed != unit.seed:
+            native = trial.model_extra or {}
+            is_extra = trial.trial >= state.trials
+            if is_extra:
+                unit = extra_units.get((task.task_key, trial.trial - state.trials))
+                facts = extra_facts
+                artifact_dir = (
+                    extra_request.output_dir
+                    if extra_request is not None
+                    else evaluation_dir
+                )
+                root_ok = native.get("artifact_root") == EXTRA_EVIDENCE_ROOT
+            else:
+                unit = units.get((task.task_key, trial.trial))
+                facts, artifact_dir = trial_facts, evaluation_dir
+                root_ok = native.get("artifact_root", "raw_evaluation") == (
+                    "raw_evaluation"
+                )
+            if (
+                unit is None
+                or trial.unit_id != unit.unit_id
+                or trial.seed != unit.seed
+                or bool(native.get("evidence_only", False)) != is_extra
+                or not root_ok
+            ):
                 raise IntegrityError(
                     f"evidence trial lineage mismatch: {task.task_key}/{trial.trial}"
                 )
-            fact = trial_facts[unit.unit_id]
+            fact = facts[unit.unit_id]
             if (
                 trial.outcome != fact.outcome
                 or trial.score != fact.score
@@ -228,7 +287,7 @@ def verify_evidence_bundle(
             declared_artifacts: dict[tuple[str, str], str] = {}
             for artifact in trial.artifacts:
                 artifact_path = _evaluation_artifact_path(
-                    evaluation_dir,
+                    artifact_dir,
                     artifact.path,
                 )
                 if (
@@ -288,6 +347,29 @@ def verify_evidence_bundle(
                 f"evidence trial indices are incomplete: {task.task_key}"
             )
     return manifest
+
+
+def _verify_extra_record(
+    record: Any,
+    request: EvaluationRequest,
+    evaluation: EvaluationResult,
+) -> None:
+    """The manifest's ``extra_evaluation`` entry names exactly this result."""
+    source = (request.output_dir / "adapter_result.json").resolve()
+    if (
+        not isinstance(record, dict)
+        or Path(str(record.get("source_evaluation", ""))).resolve() != source
+        or record.get("source_evaluation_id") != evaluation.evaluation_id
+        or record.get("source_request_sha256") != evaluation.request_sha256
+        or record.get("trials") != request.trials
+    ):
+        raise IntegrityError("evidence extra-evaluation record mismatch")
+    if not source.is_file() or sha256_file(source) != record.get(
+        "source_evaluation_sha256"
+    ):
+        raise IntegrityError("evidence extra-evaluation hash mismatch")
+    if EvaluationResult.model_validate(read_json(source)) != evaluation:
+        raise IntegrityError("evidence extra-evaluation content mismatch")
 
 
 def load_evidence_manifest(path: Path) -> EvidenceManifest:

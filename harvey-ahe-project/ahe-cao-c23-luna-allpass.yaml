@@ -6,6 +6,8 @@
 #   * 3 training trials per task (campaign 12: 2);
 #   * one judge, gpt-5.6-sol at high reasoning (campaign 12: claude-sonnet-5
 #     and gpt-5.5), through LAB's OpenAI judge path;
+#   * evidence-only extra trials: a training task with no all-passing trial
+#     among its 3 runs 2 more for the Debugger and Evolve (not in metrics);
 #   * objective all_pass: the primary metric is the mean all-pass rate, ties
 #     broken by the mean criterion pass rate (campaign 12: the reverse). The
 #     meta agents get matching prompts: meta_supplements_all_pass/ and
@@ -101,6 +103,9 @@ transport:
 
 evaluation:
   train_trials: 3
+  # A training task with 0/3 all-pass runs 2 more, evidence-only trials for
+  # the Debugger and Evolve; no metric counts them.
+  train_extra_trials: 2
   validation_trials: 2
   test_trials: 3
   max_concurrency: 20

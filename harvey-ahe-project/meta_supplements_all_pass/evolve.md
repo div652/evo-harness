@@ -10,7 +10,11 @@ that fails even one criterion counts as 0. The mean criterion pass rate (the
 share of criteria passed) is reported and breaks ties: between checkpoints
 with the same all-pass rate, and, in the per-task attribution, for a task
 whose all-pass rate did not change. Each training task runs three trials,
-so a task contributes 0, 1/3, 2/3 or 1.
+so a task contributes 0, 1/3, 2/3 or 1. A task with no all-passing trial
+among its three gets two more, marked `evidence_only` in its evidence (its
+state then also gives `extra_trials_state`). They are not counted in any
+metric, but a passing one shows what a successful run of that task looked
+like.
 
 # Core Principles for This Benchmark
 

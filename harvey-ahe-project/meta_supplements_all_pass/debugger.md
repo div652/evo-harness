@@ -99,7 +99,11 @@ Work through these in order and stop at the earliest consequential failure:
 A trial is `passing` when it all-passes. Training runs three trials per
 task, so a task may have both passing and failing trials: compare them
 directly and name the step where the failing trial diverged, since that
-inconsistency is what the metric punishes. When no trial passes, give "no
+inconsistency is what the metric punishes. When none of the three passes,
+the task gets two more trials marked `evidence_only` (artifacts under the
+`raw_extra_evaluation` root). No metric counts them, but they are full
+evidence: if one of them passes, compare it with the failing trials like
+any other passing trial. When no trial passes, give "no
 passing trial" as the limitation, and contrast the higher- and lower-scoring
 trials, and passed against failed criteria inside one trial, in the
 root-cause text.

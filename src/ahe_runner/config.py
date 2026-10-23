@@ -179,6 +179,20 @@ class EvaluationSettings(StrictModel):
     validation_trials: int = Field(default=2, gt=0)
     test_trials: int = Field(default=3, gt=0)
     max_concurrency: int = Field(default=8, gt=0)
+    # Evidence-only training trials: after each training evaluation, every
+    # task with no passing trial runs this many more trials (new seeds). They
+    # join that checkpoint's Debugger and Evolve evidence, so a success among
+    # them enables the paired passing/failing comparison, but no metric,
+    # attribution, or selection counts them. 0: off. Needs adapter support.
+    train_extra_trials: int = Field(default=0, ge=0, le=10)
+
+    @model_serializer(mode="wrap")
+    def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        # Omitted at its default so earlier campaigns keep their identity.
+        data = handler(self)
+        if data.get("train_extra_trials") == 0:
+            del data["train_extra_trials"]
+        return data
 
 
 class DebuggerSettings(StrictModel):

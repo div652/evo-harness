@@ -1347,3 +1347,107 @@ def test_default_objective_keeps_the_criterion_identity(adapter: HarveyAdapter) 
     assert adapter.meta_prompt_context().benchmark_objective.startswith(
         "Maximize the rubric criterion pass rate"
     )
+
+
+def test_extra_training_trials_merge_into_evidence(
+    scratch_root: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from dataclasses import replace
+
+    from ahe_runner.adapter import extra_evidence_root_seed, extra_evidence_split
+
+    settings = _responses_settings(scratch_root)
+    settings["objective"] = "all_pass"
+    adapter = HarveyAdapter(project_root=PROJECT_ROOT, settings=settings)
+    assert adapter.supports_extra_training_trials()
+    grader = _Grader(adapter, label="openai")
+    monkeypatch.setattr(adapter_module, "pandoc_version", lambda: "3.6")
+    monkeypatch.setattr(
+        adapter_module, "_podman_image_id", lambda _image: FAKE_IMAGE_ID
+    )
+    monkeypatch.setattr(adapter_module, "Sandbox", lambda **kw: FakeSandbox(**kw))
+    monkeypatch.setattr(adapter_module, "grade_with_retries", grader)
+    request = EvaluationRequest(
+        checkpoint="C0",
+        harness_dir=HARNESS_DIR,
+        split=adapter.split(SplitName.TRAIN),
+        trials=1,
+        root_seed=7,
+        output_dir=tmp_path / "C0-train",
+        model=ModelSettings(model="evaluated-model", max_tokens=64000),
+        transport=TransportSettings(base_url="http://127.0.0.1:9/v1"),
+        api_key="offline-key",
+        max_concurrency=3,
+    )
+    runtime = _Runtime(adapter)
+    with pytest.raises(InfrastructureError):
+        adapter.evaluate(request, runtime)  # type: ignore[arg-type]
+    result = adapter.evaluate(request, runtime)  # type: ignore[arg-type]
+    failing = [s.task_id for s in result.summary.task_states if s.successes == 0]
+    assert failing
+
+    extra_request = replace(
+        request,
+        split=extra_evidence_split(request.split, [str(t) for t in failing]),
+        trials=2,
+        root_seed=extra_evidence_root_seed(request.root_seed),
+        output_dir=tmp_path / "C0-train-extra",
+    )
+    extra = adapter.evaluate(extra_request, runtime)  # type: ignore[arg-type]
+    verify_evaluation_output(extra_request, extra)
+    assert adapter.verify_evaluation(VerificationRequest(evaluation=extra_request)) == (
+        extra
+    )
+    # A subset split that is not an extra-evidence split is still rejected.
+    with pytest.raises(ConfigurationError, match="differs"):
+        adapter.verify_evaluation(
+            VerificationRequest(
+                evaluation=replace(
+                    extra_request,
+                    split=extra_request.split.model_copy(update={"metadata": {}}),
+                )
+            )
+        )
+
+    evidence_dir = tmp_path / "evidence"
+    bundle = adapter.materialize_training_evidence(
+        EvidenceRequest(
+            checkpoint="C0",
+            evaluation_dir=request.output_dir,
+            output_dir=evidence_dir,
+            extra_evaluation_dir=extra_request.output_dir,
+        )
+    )
+    manifest = verify_evidence_bundle(
+        bundle,
+        evidence_dir=evidence_dir,
+        expected_checkpoint="C0",
+        evaluation_dir=request.output_dir,
+        source_evaluation=result,
+        source_request=request,
+        extra_request=extra_request,
+        extra_evaluation=extra,
+    )
+    assert manifest.metrics == result.summary
+    rows = {task.task_id: task for task in manifest.tasks}
+    for task_id, row in rows.items():
+        detail = json.loads((evidence_dir / row.detail_path).read_text())
+        if task_id in failing:
+            assert row.trial_count == 3
+            assert [t.get("evidence_only", False) for t in detail["trials"]] == [
+                False,
+                True,
+                True,
+            ]
+            assert detail["extra_trials_state"].endswith(
+                "evidence-only extra trials all-pass (not counted in any metric)"
+            )
+            extra_trial = detail["trials"][1]
+            assert extra_trial["artifact_root"] == "raw_extra_evaluation"
+            view = extra_trial["readable_artifacts"][0]["path"]
+            assert (evidence_dir / view).is_file()
+        else:
+            assert row.trial_count == 1 and "extra_trials_state" not in detail
+    assert "evidence-only extra trials |" in (evidence_dir / "overview.md").read_text()

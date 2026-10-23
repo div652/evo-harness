@@ -50,7 +50,7 @@ from .tools import (
 )
 
 # Roots whose files the debugger may cite.
-CITABLE_ROOTS = frozenset({"evidence", "raw_evaluation"})
+CITABLE_ROOTS = frozenset({"evidence", "raw_evaluation", "raw_extra_evaluation"})
 # Mirrors the built-in search and glob default excludes.
 _WALK_EXCLUDES = frozenset(
     {

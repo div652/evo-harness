@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ahe_runner.adapter import EvaluationResult
+from ahe_runner.adapter import EvaluationResult, SplitName
 from ahe_runner.cli import main as cli_main
 from ahe_runner.config import load_config
 from ahe_runner.controller import CampaignController
@@ -17,7 +17,7 @@ from ahe_runner.errors import (
     StageBlockedError,
     StageInterruptedError,
 )
-from ahe_runner.io import atomic_write_json, read_json, sha256_json
+from ahe_runner.io import atomic_write_json, read_json, sha256_file, sha256_json
 from ahe_runner.meta.scripted import ScriptedMetaBackend
 from ahe_runner.workspace import git_output
 
@@ -502,3 +502,119 @@ def test_retry_blocked_stage_continues_an_infrastructure_blocked_stage(
         "completed",
     ]
     CampaignController(load_config(config_path)).prepare()
+
+
+def _with_extra_trials(config_path: Path, extra: int) -> None:
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    config["evaluation"]["train_extra_trials"] = extra
+    config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+
+
+def test_extra_training_trials_join_evidence_but_not_metrics(tmp_path: Path) -> None:
+    from ahe_runner.adapter import EvidenceBundle
+    from ahe_runner.evidence import verify_evidence_bundle
+
+    config_path = make_example_project(tmp_path, rounds=1)
+    _with_extra_trials(config_path, 2)
+    controller = CampaignController(load_config(config_path))
+    status = controller.run()
+    assert status["blocked_stages"] == []
+    campaign_dir = Path(status["campaign_dir"])
+    train_trials = controller.config.document.evaluation.train_trials
+
+    for checkpoint in ("C0", "C1"):
+        base = EvaluationResult.model_validate(
+            read_json(
+                campaign_dir
+                / "evaluations"
+                / f"{checkpoint}-train"
+                / "adapter_result.json"
+            )
+        )
+        failing = [s.task_id for s in base.summary.task_states if s.successes == 0]
+        extra_path = (
+            campaign_dir / "evaluations" / f"{checkpoint}-train-extra"
+        ) / "adapter_result.json"
+        manifest = read_json(
+            campaign_dir / "evidence" / f"{checkpoint}-train" / "evidence_manifest.json"
+        )
+        # Metrics come from the regular trials only.
+        assert manifest["metrics"] == base.summary.model_dump(mode="json")
+        if not failing:
+            assert not extra_path.exists()
+            assert "extra_evaluation" not in manifest
+            continue
+        extra = EvaluationResult.model_validate(read_json(extra_path))
+        assert [s.task_id for s in extra.summary.task_states] == failing
+        assert {s.trials for s in extra.summary.task_states} == {2}
+        assert manifest["extra_evaluation"]["source_evaluation_id"] == (
+            extra.evaluation_id
+        )
+        for task in manifest["tasks"]:
+            detail = read_json(
+                campaign_dir / "evidence" / f"{checkpoint}-train" / task["detail_path"]
+            )
+            flags = [bool(t.get("evidence_only")) for t in detail["trials"]]
+            if task["task_id"] in failing:
+                assert task["trial_count"] == train_trials + 2
+                assert flags == [False] * train_trials + [True, True]
+                assert [t["trial"] for t in detail["trials"]] == list(
+                    range(train_trials + 2)
+                )
+                assert {
+                    t["artifact_root"]
+                    for t in detail["trials"]
+                    if t.get("evidence_only")
+                } == {"raw_extra_evaluation"}
+            else:
+                assert task["trial_count"] == train_trials and not any(flags)
+
+        # Evidence that cites extra trials fails without the extra evaluation.
+        evidence_dir = campaign_dir / "evidence" / f"{checkpoint}-train"
+        bundle = EvidenceBundle(
+            checkpoint=checkpoint,
+            manifest_path=str(evidence_dir / "evidence_manifest.json"),
+            manifest_sha256=sha256_file(evidence_dir / "evidence_manifest.json"),
+            task_count=len(manifest["tasks"]),
+            supervision_policy="dense",
+        )
+        index = int(checkpoint[1:])
+        with pytest.raises(IntegrityError, match="unverified extra evaluation"):
+            verify_evidence_bundle(
+                bundle,
+                evidence_dir=evidence_dir,
+                expected_checkpoint=checkpoint,
+                evaluation_dir=campaign_dir / "evaluations" / f"{checkpoint}-train",
+                source_evaluation=base,
+                source_request=controller._evaluation_request(index, SplitName.TRAIN),
+            )
+
+    stages = {row["name"] for row in status["stages"]}
+    assert "evaluation.C0.train-extra" in stages
+    attempts_before = {row["name"]: len(row["attempts"]) for row in status["stages"]}
+    resumed = CampaignController(load_config(config_path)).resume()
+    attempts_after = {row["name"]: len(row["attempts"]) for row in resumed["stages"]}
+    assert attempts_after == attempts_before
+
+
+def test_extra_training_trials_default_keeps_identity(tmp_path: Path) -> None:
+    config_path = make_example_project(tmp_path, rounds=0)
+    document = load_config(config_path).document
+    assert "train_extra_trials" not in document.evaluation.model_dump(mode="json")
+    _with_extra_trials(config_path, 2)
+    document = load_config(config_path).document
+    assert document.evaluation.model_dump(mode="json")["train_extra_trials"] == 2
+
+
+def test_extra_training_trials_need_adapter_support(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from ahe_runner.example.adapter import ExampleAdapter
+
+    config_path = make_example_project(tmp_path, rounds=0)
+    _with_extra_trials(config_path, 2)
+    monkeypatch.setattr(
+        ExampleAdapter, "supports_extra_training_trials", lambda _: False
+    )
+    with pytest.raises(ConfigurationError, match="train_extra_trials"):
+        CampaignController(load_config(config_path))

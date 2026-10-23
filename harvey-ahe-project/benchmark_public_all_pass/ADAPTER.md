@@ -47,6 +47,12 @@ protected and are not readable by meta-agents.
   unchanged, by its mean criterion pass rate.
 - Diagnostic class: a trial is `passing` when it all-passes, otherwise
   `failing`.
+- Evidence-only extra trials: when none of a training task's regular trials
+  all-passes, the task runs two more trials (new seeds) after the training
+  evaluation. They appear in that task's evidence after the regular trials,
+  marked `evidence_only: true`, with artifacts under the
+  `raw_extra_evaluation` root. No metric, attribution, or checkpoint
+  selection counts them.
 - Judge input limit: if the formatted judge prompt for a criterion would
   exceed 240,000 characters, that criterion is scored `fail` without a model
   call and the reasoning contains `[harvey-ahe judge-input limit]`. Very large

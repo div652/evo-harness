@@ -19,6 +19,7 @@ from nexau import Agent
 from nexau.archs.main_sub.config import AgentConfig
 from nexau.archs.sandbox import LocalSandboxConfig
 
+from ahe_runner.adapter import EXTRA_EVIDENCE_ROOT
 from ahe_runner.config import ModelSettings
 from ahe_runner.debugger import validate_debugger_diagnosis
 from ahe_runner.errors import (
@@ -308,6 +309,12 @@ class NexAUMetaBackend(MetaBackend):
             "explore_skills": skills_dir,
             **self._safe_source_roots,
         }
+        read_roots.update(
+            {
+                name: Path(path)
+                for name, path in _extra_evaluation_roots(raw_evaluation_dir).items()
+            }
+        )
         if attribution_dir is not None:
             read_roots["attribution"] = attribution_dir
         if recovery_dir is not None:
@@ -507,6 +514,7 @@ class NexAUMetaBackend(MetaBackend):
         raw_evaluation_dir = (
             self.context.config.campaign_dir / "evaluations" / f"{checkpoint}-train"
         )
+        extra_roots = _extra_evaluation_roots(raw_evaluation_dir)
         settings = self._role_settings("debugger")
         request_payload = {
             "schema_version": 4,
@@ -515,6 +523,7 @@ class NexAUMetaBackend(MetaBackend):
             "read_roots": {
                 "evidence": str(evidence_dir),
                 "raw_evaluation": str(raw_evaluation_dir),
+                **extra_roots,
             },
             "benchmark_context": self.context.prompt_context.model_dump(mode="json"),
             "benchmark_interface": self.context.benchmark_interface.model_dump(
@@ -550,7 +559,9 @@ class NexAUMetaBackend(MetaBackend):
             str(trial["diagnostic_class"]) for trial in task_detail["trials"]
         ]
         artifact_classes = {
-            f"raw_evaluation:{artifact['path']}": str(trial["diagnostic_class"])
+            f"{trial.get('artifact_root', 'raw_evaluation')}:{artifact['path']}": str(
+                trial["diagnostic_class"]
+            )
             for trial in task_detail["trials"]
             for artifact in trial["artifacts"]
         }
@@ -575,15 +586,30 @@ class NexAUMetaBackend(MetaBackend):
             "meta_read_roots": {
                 "evidence": str(evidence_dir),
                 "raw_evaluation": str(raw_evaluation_dir),
+                **extra_roots,
             },
             "meta_write_roots": {"scratch": str(scratch_dir)},
         }
+        extra_trials = [
+            int(trial["trial"])
+            for trial in task_detail["trials"]
+            if trial.get("evidence_only")
+        ]
         query = (
             "Diagnose exactly one authorized training task.\n\n"
             f"Task key: {task.task_key}\n"
             f"Task state: {task.state}\n"
             f"Primary detail: evidence:{task.detail_path}\n"
             f"Verified trial diagnostic classes: {trial_classes}\n\n"
+            + (
+                f"Trials {extra_trials} are evidence-only extra trials, run "
+                "because no regular trial of this task passed. No metric counts "
+                "them, but they are complete evidence: their artifacts are under "
+                f"the {EXTRA_EVIDENCE_ROOT} root, and they join the passing and "
+                "failing comparison like any other trial.\n\n"
+                if extra_trials
+                else ""
+            )
             + _readable_views_text(task_detail)
             + "Benchmark-family diagnostic context:\n"
             + json.dumps(
@@ -1031,6 +1057,12 @@ def _skill_record(path: Path) -> dict[str, Any]:
         "tree_hashes": tree_hashes(path.parent),
         "read_only": not bool(path.stat().st_mode & writable_bits),
     }
+
+
+def _extra_evaluation_roots(raw_evaluation_dir: Path) -> dict[str, str]:
+    """The evidence-only extra training evaluation's read root, if it ran."""
+    extra = raw_evaluation_dir.with_name(raw_evaluation_dir.name + "-extra")
+    return {EXTRA_EVIDENCE_ROOT: str(extra)} if extra.is_dir() else {}
 
 
 def _debugger_task_key(task: EvidenceTask) -> str:

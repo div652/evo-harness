@@ -38,6 +38,8 @@ from openai import APIStatusError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from ahe_runner.adapter import (
+    EXTRA_EVIDENCE_ROOT,
+    EXTRA_EVIDENCE_SUFFIX,
     AdapterIdentity,
     BenchmarkAdapterV2,
     BenchmarkInterface,
@@ -56,6 +58,7 @@ from ahe_runner.adapter import (
     TransitionSummary,
     ValidationResult,
     VerificationRequest,
+    extra_evidence_split,
 )
 from ahe_runner.child_process import run_in_child
 from ahe_runner.config import ModelSettings
@@ -426,6 +429,30 @@ class HarveyAdapter(BenchmarkAdapterV2):
         task_ids = [str(state.task_id) for state in evaluation.summary.task_states]
         trials = self._load_trials(evaluation_dir, task_ids)
         facts = {fact.unit_id: fact for fact in evaluation.trial_facts}
+        extra_trials: list[_Trial] = []
+        extra_record: dict[str, Any] | None = None
+        extra_dir: Path | None = None
+        if request.extra_evaluation_dir is not None:
+            extra_dir = request.extra_evaluation_dir.resolve()
+            extra_source = extra_dir / "adapter_result.json"
+            extra = EvaluationResult.model_validate(read_json(extra_source))
+            if extra.split != SplitName.TRAIN or extra.checkpoint != (
+                evaluation.checkpoint
+            ):
+                raise IntegrityError("Harvey extra evidence is not this training run")
+            extra_ids = [str(state.task_id) for state in extra.summary.task_states]
+            if not set(extra_ids) <= set(task_ids):
+                raise IntegrityError("Harvey extra evidence covers unknown tasks")
+            extra_trials = self._load_trials(extra_dir, extra_ids)
+            facts.update({fact.unit_id: fact for fact in extra.trial_facts})
+            extra_record = {
+                "source_evaluation": str(extra_source),
+                "source_evaluation_id": extra.evaluation_id,
+                "source_request_sha256": extra.request_sha256,
+                "source_evaluation_sha256": sha256_file(extra_source),
+                "trials": extra.summary.task_states[0].trials,
+                "task_ids": extra_ids,
+            }
         request.output_dir.mkdir(parents=True, exist_ok=True)
         task_rows: list[dict[str, Any]] = []
         overview = [
@@ -442,8 +469,15 @@ class HarveyAdapter(BenchmarkAdapterV2):
                 "| task | state | mean all-pass rate | mean criterion pass rate |",
                 "|---|---|---|---|",
             ]
+        if extra_record is not None:
+            overview[-2] += " evidence-only extra trials |"
+            overview[-1] += "---|"
         for state in evaluation.summary.task_states:
             rows = [trial for trial in trials if trial.task_key == state.task_key]
+            extra_rows = sorted(
+                (trial for trial in extra_trials if trial.task_key == state.task_key),
+                key=lambda row: row.trial,
+            )
             detail = {
                 "schema_version": 3,
                 "task_key": state.task_key,
@@ -451,15 +485,37 @@ class HarveyAdapter(BenchmarkAdapterV2):
                 "state": state.state,
                 "metrics": state.metrics,
                 "trials": [
-                    _evidence_trial(
-                        trial,
-                        facts[str(trial.unit["unit_id"])],
-                        evaluation_dir,
-                        request.output_dir,
-                    )
-                    for trial in sorted(rows, key=lambda row: row.trial)
+                    *(
+                        _evidence_trial(
+                            trial,
+                            facts[str(trial.unit["unit_id"])],
+                            evaluation_dir,
+                            request.output_dir,
+                        )
+                        for trial in sorted(rows, key=lambda row: row.trial)
+                    ),
+                    *(
+                        _evidence_trial(
+                            trial,
+                            facts[str(trial.unit["unit_id"])],
+                            extra_dir,  # type: ignore[arg-type]
+                            request.output_dir,
+                            index=len(rows) + trial.trial,
+                        )
+                        for trial in extra_rows
+                    ),
                 ],
             }
+            extra_note = ""
+            if extra_rows:
+                passed = sum(trial.both_pass for trial in extra_rows)
+                detail["extra_trials_state"] = (
+                    f"{passed}/{len(extra_rows)} evidence-only extra trials "
+                    "all-pass (not counted in any metric)"
+                )
+                extra_note = f" {passed}/{len(extra_rows)} |"
+            elif extra_record is not None:
+                extra_note = " - |"
             detail_path = request.output_dir / "tasks" / f"{state.task_key}.json"
             atomic_write_json(detail_path, detail)
             task_rows.append(
@@ -471,17 +527,18 @@ class HarveyAdapter(BenchmarkAdapterV2):
                         request.output_dir
                     ).as_posix(),
                     "detail_sha256": sha256_file(detail_path),
-                    "trial_count": len(rows),
+                    "trial_count": len(rows) + len(extra_rows),
                 }
             )
             if self.config.objective == "all_pass":
                 overview.append(
                     f"| {state.task_id} | {state.state} | {state.score:.3f} | "
-                    f"{float(state.metrics[PRIMARY_METRIC]):.3f} |"
+                    f"{float(state.metrics[PRIMARY_METRIC]):.3f} |" + extra_note
                 )
             else:
                 overview.append(
                     f"| {state.task_id} | {state.state} | {state.score:.3f} |"
+                    + extra_note
                 )
         manifest = {
             "schema_version": 3,
@@ -494,6 +551,7 @@ class HarveyAdapter(BenchmarkAdapterV2):
             "source_evaluation_sha256": sha256_file(source),
             "metrics": evaluation.summary.model_dump(mode="json"),
             "tasks": task_rows,
+            **({} if extra_record is None else {"extra_evaluation": extra_record}),
         }
         manifest_path = request.output_dir / "evidence_manifest.json"
         atomic_write_json(manifest_path, manifest)
@@ -716,8 +774,27 @@ class HarveyAdapter(BenchmarkAdapterV2):
 
     # Evaluation internals
 
+    def supports_extra_training_trials(self) -> bool:
+        return True
+
     def _check_split(self, request: EvaluationRequest) -> None:
-        if request.split != self.split(request.split.name):
+        split = request.split
+        if split.name == SplitName.TRAIN and split.identity.endswith(
+            EXTRA_EVIDENCE_SUFFIX
+        ):
+            # Evidence-only extra trials run on a subset of the training split.
+            try:
+                expected = extra_evidence_split(
+                    self.split(SplitName.TRAIN), split.task_ids
+                )
+            except ValueError as exc:
+                raise ConfigurationError(str(exc)) from exc
+            if split != expected:
+                raise ConfigurationError(
+                    "extra evidence split differs from splits.json"
+                )
+            return
+        if split != self.split(split.name):
             raise ConfigurationError("evaluation split differs from splits.json")
 
     def _environment(self) -> _Environment:
@@ -1446,7 +1523,14 @@ def _evidence_trial(
     fact: EvaluationTrialFact,
     evaluation_dir: Path,
     evidence_dir: Path,
+    *,
+    index: int | None = None,
 ) -> dict[str, Any]:
+    """One evidence trial. With ``index``, an evidence-only extra trial."""
+    extra = index is not None
+    root = EXTRA_EVIDENCE_ROOT if extra else "raw_evaluation"
+    number = trial.trial if index is None else index
+
     def artifact(kind: str, path: Path) -> dict[str, str]:
         return {
             "kind": kind,
@@ -1458,9 +1542,9 @@ def _evidence_trial(
     readable_artifacts = write_readable_views(
         evidence_dir=evidence_dir,
         task_key=trial.task_key,
-        trial=trial.trial,
+        trial=number,
         trace_path=trial.trace_path,
-        trace_label="raw_evaluation:"
+        trace_label=f"{root}:"
         + trial.trace_path.resolve().relative_to(evaluation_dir).as_posix(),
         deliverables=[
             (str(row["path"]), output_root / str(row["path"]))
@@ -1478,8 +1562,9 @@ def _evidence_trial(
         ),
     ]
     return {
+        **({"evidence_only": True, "artifact_root": root} if extra else {}),
         "unit_id": fact.unit_id,
-        "trial": trial.trial,
+        "trial": number,
         "seed": int(trial.unit["seed"]),
         "outcome": fact.outcome,
         "score": fact.score,

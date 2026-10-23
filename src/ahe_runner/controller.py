@@ -8,6 +8,7 @@ import os
 import platform
 import shutil
 import stat
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,8 @@ from .adapter import (
     VerificationRequest,
     adapter_api_generation,
     benchmark_interface_for,
+    extra_evidence_root_seed,
+    extra_evidence_split,
 )
 from .change_manifest import load_change_manifest
 from .config import ResolvedConfig
@@ -71,6 +74,14 @@ class CampaignController:
             for name in (SplitName.TRAIN, SplitName.VALIDATION, SplitName.TEST)
         }
         self._validate_split_separation()
+        if config.document.evaluation.train_extra_trials and not (
+            isinstance(self.adapter, BenchmarkAdapterV2)
+            and self.adapter.supports_extra_training_trials()
+        ):
+            raise ConfigurationError(
+                "evaluation.train_extra_trials needs an adapter that supports "
+                "extra training trials"
+            )
         self.stage_store = StageStore(
             campaign_dir=config.campaign_dir,
             maximum_attempts=config.document.recovery.maximum_stage_attempts,
@@ -334,6 +345,67 @@ class CampaignController:
         split_name: SplitName,
     ) -> EvaluationResult:
         request = self._evaluation_request(index, split_name)
+        return self._run_evaluation_stage(
+            index,
+            request,
+            stage_name=f"evaluation.{request.checkpoint}.{split_name.value}",
+        )
+
+    def _ensure_extra_training_evaluation(
+        self, index: int
+    ) -> tuple[EvaluationRequest, EvaluationResult] | None:
+        """Evidence-only extra trials for tasks with no passing training trial."""
+        extra_trials = self.config.document.evaluation.train_extra_trials
+        if extra_trials == 0:
+            return None
+        base = EvaluationResult.model_validate(
+            read_json(
+                self._evaluation_dir(index, SplitName.TRAIN) / "adapter_result.json"
+            )
+        )
+        task_ids: list[str] = []
+        for state in base.summary.task_states:
+            if state.successes is None or state.task_id is None:
+                raise IntegrityError(
+                    "extra training trials need task IDs and success counts"
+                )
+            if state.successes == 0:
+                task_ids.append(state.task_id)
+        if not task_ids:
+            return None
+        request = self._extra_training_request(index, task_ids)
+        result = self._run_evaluation_stage(
+            index,
+            request,
+            stage_name=f"evaluation.{request.checkpoint}.train-extra",
+            extra_inputs={"base_evaluation_id": base.evaluation_id},
+        )
+        return request, result
+
+    def _extra_training_request(
+        self, index: int, task_ids: list[str]
+    ) -> EvaluationRequest:
+        base = self._evaluation_request(index, SplitName.TRAIN)
+        return replace(
+            base,
+            split=extra_evidence_split(base.split, task_ids),
+            trials=self.config.document.evaluation.train_extra_trials,
+            root_seed=extra_evidence_root_seed(base.root_seed),
+            output_dir=self._extra_training_dir(index),
+        )
+
+    def _extra_training_dir(self, index: int) -> Path:
+        train = self._evaluation_dir(index, SplitName.TRAIN)
+        return train.with_name(train.name + "-extra")
+
+    def _run_evaluation_stage(
+        self,
+        index: int,
+        request: EvaluationRequest,
+        *,
+        stage_name: str,
+        extra_inputs: dict[str, Any] | None = None,
+    ) -> EvaluationResult:
         checkpoint = request.checkpoint
         checkpoint_manifest = verify_checkpoint(self._checkpoint_dir(index))
         output_dir = request.output_dir
@@ -377,14 +449,15 @@ class CampaignController:
             )
 
         stage = self.stage_store.run(
-            name=f"evaluation.{checkpoint}.{split_name.value}",
+            name=stage_name,
             semantic_inputs={
+                **(extra_inputs or {}),
                 "checkpoint": checkpoint,
                 "harness_sha256": checkpoint_manifest["harness_sha256"],
                 "split_identity": request.split.identity,
                 "split_task_ids_sha256": sha256_json(request.split.task_ids),
                 "trials": request.trials,
-                "root_seed": self.config.document.campaign.root_seed,
+                "root_seed": request.root_seed,
                 "evaluated_model": self.config.document.models.evaluated.model_dump(
                     mode="json"
                 ),
@@ -427,6 +500,7 @@ class CampaignController:
         result = EvaluationResult.model_validate(
             read_json(evaluation_dir / "adapter_result.json")
         )
+        extra = self._ensure_extra_training_evaluation(index)
         output_dir = self.config.campaign_dir / "evidence" / f"{checkpoint}-train"
 
         def action(context: StageContext) -> StageResult:
@@ -436,6 +510,9 @@ class CampaignController:
                     checkpoint=checkpoint,
                     evaluation_dir=evaluation_dir,
                     output_dir=output_dir,
+                    extra_evaluation_dir=(
+                        None if extra is None else extra[0].output_dir
+                    ),
                 )
             )
             manifest = verify_evidence_bundle(
@@ -445,6 +522,8 @@ class CampaignController:
                 evaluation_dir=evaluation_dir,
                 source_evaluation=result,
                 source_request=self._evaluation_request(index, SplitName.TRAIN),
+                extra_request=None if extra is None else extra[0],
+                extra_evaluation=None if extra is None else extra[1],
             )
             return StageResult(
                 outputs=(output_dir,),
@@ -457,6 +536,11 @@ class CampaignController:
         self.stage_store.run(
             name=f"evidence.{checkpoint}.train",
             semantic_inputs={
+                **(
+                    {}
+                    if extra is None
+                    else {"extra_evaluation_id": extra[1].evaluation_id}
+                ),
                 "evaluation_id": result.evaluation_id,
                 "checkpoint": checkpoint,
                 "adapter": self.adapter.identity().model_dump(mode="json"),

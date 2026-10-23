@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -243,6 +244,35 @@ class EvidenceRequest:
     checkpoint: str
     evaluation_dir: Path
     output_dir: Path
+    # The checkpoint's evidence-only extra training evaluation, if one ran
+    # (evaluation.train_extra_trials); its trials join the evidence.
+    extra_evaluation_dir: Path | None = None
+
+
+# Evidence-only extra training trials (evaluation.train_extra_trials).
+EXTRA_EVIDENCE_SUFFIX = ":extra-evidence"
+EXTRA_EVIDENCE_ROOT = "raw_extra_evaluation"
+
+
+def extra_evidence_split(
+    train: SplitDefinition, task_ids: list[str]
+) -> SplitDefinition:
+    """The training-split subset an extra evaluation runs, in split order."""
+    wanted = set(task_ids)
+    if not wanted <= set(train.task_ids):
+        raise ValueError("extra evidence tasks must belong to the training split")
+    return SplitDefinition(
+        name=train.name,
+        identity=train.identity + EXTRA_EVIDENCE_SUFFIX,
+        task_ids=[task_id for task_id in train.task_ids if task_id in wanted],
+        metadata={**train.metadata, "extra_evidence_for": train.identity},
+    )
+
+
+def extra_evidence_root_seed(root_seed: int) -> int:
+    """A root seed for extra trials, distinct from the campaign's own."""
+    digest = hashlib.sha256(f"{root_seed}{EXTRA_EVIDENCE_SUFFIX}".encode()).digest()
+    return int.from_bytes(digest[:4], "big")
 
 
 @dataclass(frozen=True, slots=True)
@@ -334,6 +364,17 @@ class BenchmarkAdapterV2(BenchmarkAdapterBase):
         runtime: EvaluatedAgentRuntime,
     ) -> EvaluationResult:
         """Run or resume one evaluation using the supplied NexAU runtime."""
+
+    def supports_extra_training_trials(self) -> bool:
+        """Whether this adapter runs evidence-only extra training trials.
+
+        Such an adapter accepts an ``extra_evidence_split`` subset of the
+        training split in ``evaluate``, and merges the trials of
+        ``EvidenceRequest.extra_evaluation_dir`` into training evidence with
+        ``evidence_only: true`` and ``artifact_root: "raw_extra_evaluation"``,
+        numbered after the regular trials.
+        """
+        return False
 
 
 def benchmark_interface_for(adapter: BenchmarkAdapterBase) -> BenchmarkInterface:

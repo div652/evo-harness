@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from ahe_runner.adapter import (
+    EXTRA_EVIDENCE_ROOT,
     AdapterIdentity,
     BenchmarkAdapterV2,
     BenchmarkInterface,
@@ -191,6 +192,9 @@ class ExampleAdapter(BenchmarkAdapterV2):
             artifact_hashes=_evaluation_artifact_hashes(evaluation.output_dir),
         )
 
+    def supports_extra_training_trials(self) -> bool:
+        return True
+
     def materialize_training_evidence(
         self,
         request: EvidenceRequest,
@@ -198,49 +202,28 @@ class ExampleAdapter(BenchmarkAdapterV2):
         evaluation = EvaluationResult.model_validate(
             read_json(request.evaluation_dir / "adapter_result.json")
         )
+        extra_dir = request.extra_evaluation_dir
+        extra_record: dict[str, Any] | None = None
+        if extra_dir is not None:
+            extra_source = extra_dir / "adapter_result.json"
+            extra = EvaluationResult.model_validate(read_json(extra_source))
+            extra_record = {
+                "source_evaluation": str(extra_source),
+                "source_evaluation_id": extra.evaluation_id,
+                "source_request_sha256": extra.request_sha256,
+                "source_evaluation_sha256": sha256_file(extra_source),
+                "trials": extra.summary.task_states[0].trials,
+            }
         request.output_dir.mkdir(parents=True, exist_ok=True)
         task_rows: list[dict[str, Any]] = []
         for state in evaluation.summary.task_states:
-            source_units = []
-            for unit_dir in sorted((request.evaluation_dir / "units").iterdir()):
-                unit = read_json(unit_dir / "unit.json")
-                if unit["task_key"] != state.task_key:
-                    continue
-                completion = read_json(unit_dir / "complete.json")
-                result_path = Path(completion["result_path"])
-                result = read_json(result_path)
-                trace_path = Path(completion["trace_path"])
-                source_units.append(
-                    {
-                        "unit_id": unit["unit_id"],
-                        "trial": unit["trial"],
-                        "seed": unit["seed"],
-                        "outcome": "pass" if result["reward"] else "fail",
-                        "score": result["reward"],
-                        "termination_reason": result["termination_reason"],
-                        "diagnostic_class": (
-                            "passing" if result["reward"] else "failing"
-                        ),
-                        "artifacts": [
-                            {
-                                "kind": "result",
-                                "path": result_path.relative_to(
-                                    request.evaluation_dir
-                                ).as_posix(),
-                                "sha256": sha256_file(result_path),
-                            },
-                            {
-                                "kind": "trace",
-                                "path": trace_path.relative_to(
-                                    request.evaluation_dir
-                                ).as_posix(),
-                                "sha256": sha256_file(trace_path),
-                            },
-                        ],
-                        "native_result": result,
-                    }
+            source_units = _evidence_units(request.evaluation_dir, state.task_key)
+            if extra_dir is not None:
+                source_units += _evidence_units(
+                    extra_dir,
+                    state.task_key,
+                    offset=len(source_units),
                 )
-            source_units.sort(key=lambda row: int(row["trial"]))
             detail = {
                 "schema_version": 3,
                 "task_key": state.task_key,
@@ -272,25 +255,9 @@ class ExampleAdapter(BenchmarkAdapterV2):
             "source_evaluation_sha256": sha256_file(source_result),
             "metrics": evaluation.summary.model_dump(mode="json"),
             "tasks": task_rows,
+            **({} if extra_record is None else {"extra_evaluation": extra_record}),
         }
-        manifest_path = request.output_dir / "evidence_manifest.json"
-        atomic_write_json(manifest_path, manifest)
-        (request.output_dir / "overview.md").write_text(
-            f"# {request.checkpoint} example training evidence\n\n"
-            f"Primary score: {evaluation.summary.primary.value:.4f}\n",
-            encoding="utf-8",
-        )
-        atomic_write_json(
-            request.output_dir / "metrics.json",
-            evaluation.summary.model_dump(mode="json"),
-        )
-        return EvidenceBundle(
-            checkpoint=request.checkpoint,
-            manifest_path=str(manifest_path),
-            manifest_sha256=sha256_file(manifest_path),
-            task_count=len(task_rows),
-            supervision_policy="dense",
-        )
+        return _write_evidence(request, evaluation, manifest, task_rows)
 
     def validate_candidate(
         self,
@@ -339,6 +306,73 @@ class ExampleAdapter(BenchmarkAdapterV2):
             task_id_leakage_terms=["train-", "validation-", "test-"],
         )
 
+
+
+def _evidence_units(
+    evaluation_dir: Path, task_key: str, *, offset: int | None = None
+) -> list[dict[str, Any]]:
+    """One task's evidence trials; with ``offset``, evidence-only extra trials."""
+    rows: list[dict[str, Any]] = []
+    for unit_dir in sorted((evaluation_dir / "units").iterdir()):
+        unit = read_json(unit_dir / "unit.json")
+        if unit["task_key"] != task_key:
+            continue
+        completion = read_json(unit_dir / "complete.json")
+        result_path = Path(completion["result_path"])
+        result = read_json(result_path)
+        trace_path = Path(completion["trace_path"])
+        rows.append(
+            {
+                **(
+                    {}
+                    if offset is None
+                    else {"evidence_only": True, "artifact_root": EXTRA_EVIDENCE_ROOT}
+                ),
+                "unit_id": unit["unit_id"],
+                "trial": unit["trial"] + (offset or 0),
+                "seed": unit["seed"],
+                "outcome": "pass" if result["reward"] else "fail",
+                "score": result["reward"],
+                "termination_reason": result["termination_reason"],
+                "diagnostic_class": "passing" if result["reward"] else "failing",
+                "artifacts": [
+                    {
+                        "kind": kind,
+                        "path": path.relative_to(evaluation_dir).as_posix(),
+                        "sha256": sha256_file(path),
+                    }
+                    for kind, path in (("result", result_path), ("trace", trace_path))
+                ],
+                "native_result": result,
+            }
+        )
+    return sorted(rows, key=lambda row: int(row["trial"]))
+
+
+def _write_evidence(
+    request: EvidenceRequest,
+    evaluation: EvaluationResult,
+    manifest: dict[str, Any],
+    task_rows: list[dict[str, Any]],
+) -> EvidenceBundle:
+    manifest_path = request.output_dir / "evidence_manifest.json"
+    atomic_write_json(manifest_path, manifest)
+    (request.output_dir / "overview.md").write_text(
+        f"# {request.checkpoint} example training evidence\n\n"
+        f"Primary score: {evaluation.summary.primary.value:.4f}\n",
+        encoding="utf-8",
+    )
+    atomic_write_json(
+        request.output_dir / "metrics.json",
+        evaluation.summary.model_dump(mode="json"),
+    )
+    return EvidenceBundle(
+        checkpoint=request.checkpoint,
+        manifest_path=str(manifest_path),
+        manifest_sha256=sha256_file(manifest_path),
+        task_count=len(task_rows),
+        supervision_policy="dense",
+    )
 
 def _trial_seeds(root_seed: int, trials: int) -> list[int]:
     generator = random.Random(root_seed)

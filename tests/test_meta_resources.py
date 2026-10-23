@@ -1173,3 +1173,77 @@ def test_failed_debugger_task_is_unavailable_not_fatal(
             output_dir=tmp_path / "debugger-2",
             task=task,
         )
+
+
+def test_debugger_sees_evidence_only_extra_trials(tmp_path: Path, monkeypatch) -> None:
+    config_path = make_example_project(tmp_path)
+    value = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    value["meta"]["backend"] = "nexau"
+    value["meta"]["explore"]["web_search_backend"] = "ddgs"
+    value["models"]["meta"]["model"] = "exact-meta-model"
+    config_path.write_text(yaml.safe_dump(value, sort_keys=False), encoding="utf-8")
+    backend = CampaignController(load_config(config_path)).meta
+    extra_dir = backend.context.config.campaign_dir / "evaluations" / "C0-train-extra"
+    extra_dir.mkdir(parents=True)
+
+    def trial(number: int, diagnostic: str, extra: bool) -> dict[str, object]:
+        return {
+            **(
+                {"evidence_only": True, "artifact_root": "raw_extra_evaluation"}
+                if extra
+                else {}
+            ),
+            "unit_id": f"unit-{number}",
+            "trial": number,
+            "seed": number,
+            "outcome": diagnostic,
+            "score": 1.0 if diagnostic == "passing" else 0.0,
+            "termination_reason": "complete",
+            "diagnostic_class": diagnostic,
+            "artifacts": [
+                {"kind": kind, "path": f"units/u{number}/{name}", "sha256": "a" * 64}
+                for kind, name in (("result", "result.json"), ("trace", "trace.jsonl"))
+            ],
+        }
+
+    evidence_dir = tmp_path / "evidence"
+    detail = evidence_dir / "tasks" / "opaque.json"
+    detail.parent.mkdir(parents=True)
+    atomic_write_json(
+        detail,
+        {
+            "schema_version": 3,
+            "task_key": "opaque",
+            "task_id": None,
+            "state": "0/1",
+            "trials": [trial(0, "failing", False), trial(1, "passing", True)],
+        },
+    )
+    task = EvidenceTask(
+        task_key="opaque",
+        task_id=None,
+        state="0/1",
+        detail_path="tasks/opaque.json",
+        detail_sha256=sha256_file(detail),
+        trial_count=2,
+    )
+    seen: dict[str, object] = {}
+
+    def fake_run_agent(**kwargs):  # type: ignore[no-untyped-def]
+        seen.update(kwargs)
+        return "no diagnosis"
+
+    monkeypatch.setattr(backend, "_run_agent", fake_run_agent)
+    backend._run_debugger_task(
+        checkpoint="C0",
+        evidence_dir=evidence_dir,
+        output_dir=tmp_path / "debugger",
+        task=task,
+    )
+    context = seen["context"]
+    assert context["meta_read_roots"]["raw_extra_evaluation"] == str(extra_dir)  # type: ignore[index]
+    assert context["debugger_trial_classes"] == ["failing", "passing"]  # type: ignore[index]
+    classes = context["debugger_artifact_classes"]  # type: ignore[index]
+    assert classes["raw_extra_evaluation:units/u1/trace.jsonl"] == "passing"
+    assert classes["raw_evaluation:units/u0/trace.jsonl"] == "failing"
+    assert "Trials [1] are evidence-only extra trials" in str(seen["query"])
