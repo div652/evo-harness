@@ -221,6 +221,8 @@ def run_model_preflight(
 _MODEL_REJECTION_PHRASES = (
     # CAO (copilot-api 2.7.30) on /responses, observed 2026-10-22.
     "this model does not support the responses endpoint",
+    # CAO on /chat/completions (code model_not_supported), observed 2026-10-23.
+    "the requested model is not supported",
 )
 
 

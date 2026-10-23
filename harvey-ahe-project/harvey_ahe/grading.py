@@ -283,6 +283,7 @@ def grade_task(
     parallel: int = 1,
     call_slots: threading.BoundedSemaphore | None = None,
     judge_api: JudgeApi = "copilot_chat",
+    helper_api: Literal["chat", "responses"] | None = None,
 ) -> dict[str, Any]:
     """Grade ``run_dir/output`` once; write all artifacts into ``grading_dir``.
 
@@ -305,12 +306,19 @@ def grade_task(
             artifact_root=grading_dir / "filename_helper"
         )
     else:
+        api = helper_api or ("responses" if judge_api == "openai_responses" else "chat")
         callback = CopilotDeliverableMatcher(
             settings=helper,
-            transport=transport,
+            # A chat helper on a Responses transport (Claude on the CAO
+            # gateway) is preflighted and called through chat completions.
+            transport=(
+                transport.model_copy(update={"api_mode": "chat_completions"})
+                if api == "chat"
+                else transport
+            ),
             api_key=api_key,
             artifact_root=grading_dir / "filename_helper",
-            api="responses" if judge_api == "openai_responses" else "chat",
+            api=api,
         )
     per_judge: list[dict[str, Any]] = []
     try:

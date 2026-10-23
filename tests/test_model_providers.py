@@ -614,11 +614,19 @@ CAO_UNKNOWN_MODEL = (
     "Please choose a different model."
 )
 
+# The same on /chat/completions.
+CAO_UNKNOWN_CHAT_MODEL = (
+    '{"error":{"message":"The requested model is not supported.",'
+    '"code":"model_not_supported","param":"model",'
+    '"type":"invalid_request_error"}}'
+)
+
 
 @pytest.mark.parametrize(
     ("status", "message", "passed", "identified_by"),
     [
         (400, CAO_UNKNOWN_MODEL, True, "model_rejection"),
+        (400, CAO_UNKNOWN_CHAT_MODEL, True, "model_rejection"),
         (400, "Invalid value for 'input': expected a string.", False, None),
         (401, CAO_UNKNOWN_MODEL, False, None),
     ],

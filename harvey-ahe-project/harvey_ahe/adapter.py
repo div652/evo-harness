@@ -115,6 +115,9 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULT_SCHEMA_VERSION = 1
 PRIMARY_METRIC = "mean_criterion_pass_rate"
 ALL_PASS_METRIC = "mean_dual_all_pass_rate"
+# The primary metric when adapter_settings.objective is all_pass.
+ALL_PASS_PRIMARY_METRIC = "mean_all_pass_rate"
+Objective = Literal["criterion_pass", "all_pass"]
 SCORE_FILES = ("scores_judge-1.json", "scores_judge-2.json", "scores_dual.json")
 
 
@@ -178,6 +181,17 @@ class HarveyAdapterSettings(BaseModel):
     # graded, as in earlier campaigns. rerun: it is an infrastructure failure,
     # so the trial runs again on resume (up to the stage attempt limit).
     api_rejection_policy: Literal["grade", "rerun"] = "grade"
+    # What evolution maximizes. criterion_pass: the mean rubric criterion pass
+    # rate, ties broken by the all-pass rate (every campaign up to 22).
+    # all_pass: the mean all-pass rate (a trial all-passes when every
+    # criterion passes; with two judges, LAB's dual rate), ties broken by the
+    # criterion pass rate. Selection, attribution, and meta prompts follow it.
+    objective: Objective = "criterion_pass"
+    # Wire API of the filename helper. null follows judge_api (chat for
+    # copilot_chat, responses for openai_responses). chat sends it through
+    # chat completions even on a Responses transport, for helper models the
+    # endpoint serves only there (Claude on the CAO gateway).
+    helper_api: Literal["chat", "responses"] | None = None
 
     @model_validator(mode="after")
     def validate_judges(self) -> HarveyAdapterSettings:
@@ -286,6 +300,8 @@ class HarveyAdapter(BenchmarkAdapterV2):
         )
 
     def identity(self) -> AdapterIdentity:
+        if self.config.objective == "all_pass":
+            return self._all_pass_identity()
         return AdapterIdentity(
             name="harvey-lab-ahe",
             version=ADAPTER_VERSION,
@@ -302,6 +318,33 @@ class HarveyAdapter(BenchmarkAdapterV2):
                 "two judges. LAB's dual all-pass rate (each judge contributes 0.5 "
                 "when every criterion passes) is reported as "
                 "mean_dual_all_pass_rate and breaks ties."
+            ),
+            supervision_policy="dense",
+        )
+
+    def _all_pass_identity(self) -> AdapterIdentity:
+        judges = len(self.config.judges)
+        return AdapterIdentity(
+            name="harvey-lab-ahe",
+            version=ADAPTER_VERSION,
+            benchmark_name="harvey-lab",
+            benchmark_version=self.split_file.lab_commit,
+            protocol_description=(
+                "Each trial runs the evaluated NexAU harness on one LAB task in a "
+                "fresh network-less LAB podman sandbox. The task instructions are "
+                "the first user message; /workspace/output is graded by "
+                + ("LAB's two rubric judges." if judges == 2 else "one rubric judge.")
+            ),
+            native_metric_description=(
+                (
+                    "Mean per-trial all-pass rate: a trial all-passes when the "
+                    "judge passes every rubric criterion "
+                    if judges == 1
+                    else "Mean per-trial dual all-pass rate (each of LAB's two "
+                    "judges contributes 0.5 when it passes every rubric criterion) "
+                )
+                + f"({ALL_PASS_PRIMARY_METRIC}). The mean rubric criterion pass "
+                f"rate ({PRIMARY_METRIC}) is reported and breaks ties."
             ),
             supervision_policy="dense",
         )
@@ -323,7 +366,12 @@ class HarveyAdapter(BenchmarkAdapterV2):
             description=(
                 "Harvey LAB legal tasks: instructions as the first user message, "
                 "read-only matter documents and writable output in a per-trial "
-                "podman sandbox, graded by two rubric judges."
+                "podman sandbox, graded by "
+                + (
+                    "two rubric judges."
+                    if len(self.config.judges) == 2
+                    else "one rubric judge."
+                )
             ),
             input_kinds=("prompt", "data", "environment"),
             tool_delivery="none",
@@ -383,11 +431,17 @@ class HarveyAdapter(BenchmarkAdapterV2):
         overview = [
             f"# {request.checkpoint} Harvey LAB training evidence",
             "",
-            f"Primary {PRIMARY_METRIC}: {evaluation.summary.primary.value:.4f}",
+            f"Primary {evaluation.summary.primary.name}: "
+            f"{evaluation.summary.primary.value:.4f}",
             "",
             "| task | state | mean criterion pass rate |",
             "|---|---|---|",
         ]
+        if self.config.objective == "all_pass":
+            overview[-2:] = [
+                "| task | state | mean all-pass rate | mean criterion pass rate |",
+                "|---|---|---|---|",
+            ]
         for state in evaluation.summary.task_states:
             rows = [trial for trial in trials if trial.task_key == state.task_key]
             detail = {
@@ -420,7 +474,15 @@ class HarveyAdapter(BenchmarkAdapterV2):
                     "trial_count": len(rows),
                 }
             )
-            overview.append(f"| {state.task_id} | {state.state} | {state.score:.3f} |")
+            if self.config.objective == "all_pass":
+                overview.append(
+                    f"| {state.task_id} | {state.state} | {state.score:.3f} | "
+                    f"{float(state.metrics[PRIMARY_METRIC]):.3f} |"
+                )
+            else:
+                overview.append(
+                    f"| {state.task_id} | {state.state} | {state.score:.3f} |"
+                )
         manifest = {
             "schema_version": 3,
             "checkpoint": request.checkpoint,
@@ -466,11 +528,34 @@ class HarveyAdapter(BenchmarkAdapterV2):
         shared = old.keys() & new.keys()
         # One global noise floor for every task: smaller moves count as unchanged.
         threshold = self.config.attribution_min_task_delta
-        improved = sorted(
-            key for key in shared if new[key].score - old[key].score > threshold
+        # all_pass: a task whose all-pass rate is unchanged is compared on its
+        # mean criterion pass rate instead.
+        tie_broken = (
+            {key for key in shared if new[key].score == old[key].score}
+            if self.config.objective == "all_pass"
+            else set()
         )
-        regressed = sorted(
-            key for key in shared if old[key].score - new[key].score > threshold
+
+        def delta(key: str) -> float:
+            if key in tie_broken:
+                return float(new[key].metrics[PRIMARY_METRIC]) - float(
+                    old[key].metrics[PRIMARY_METRIC]
+                )
+            return new[key].score - old[key].score
+
+        improved = sorted(key for key in shared if delta(key) > threshold)
+        regressed = sorted(key for key in shared if -delta(key) > threshold)
+        tie_metadata = (
+            {
+                "improved_by_criterion_pass_rate": sorted(
+                    tie_broken.intersection(improved)
+                ),
+                "regressed_by_criterion_pass_rate": sorted(
+                    tie_broken.intersection(regressed)
+                ),
+            }
+            if self.config.objective == "all_pass"
+            else {}
         )
         return TransitionSummary(
             primary_delta=after.primary.value - before.primary.value,
@@ -478,10 +563,13 @@ class HarveyAdapter(BenchmarkAdapterV2):
             regressed_task_keys=regressed,
             unchanged_task_keys=sorted(shared - set(improved) - set(regressed)),
             metadata={
-                f"{ALL_PASS_METRIC}_delta": float(
-                    after.metrics.get(ALL_PASS_METRIC, 0.0)
+                **tie_metadata,
+                f"{_secondary_metric(self.config.objective)}_delta": float(
+                    after.metrics.get(_secondary_metric(self.config.objective), 0.0)
                 )
-                - float(before.metrics.get(ALL_PASS_METRIC, 0.0)),
+                - float(
+                    before.metrics.get(_secondary_metric(self.config.objective), 0.0)
+                ),
                 "attribution_min_task_delta": threshold,
             },
         )
@@ -489,11 +577,13 @@ class HarveyAdapter(BenchmarkAdapterV2):
     def selection_key(self, summary: MetricSummary) -> tuple[Any, ...]:
         return (
             summary.primary.value,
-            float(summary.metrics.get(ALL_PASS_METRIC, 0.0)),
+            float(summary.metrics.get(_secondary_metric(self.config.objective), 0.0)),
         )
 
     def meta_prompt_context(self) -> MetaPromptContext:
         training = [task.task_id for task in self.split_file.splits[SplitName.TRAIN]]
+        if self.config.objective == "all_pass":
+            return self._all_pass_prompt_context(training)
         return MetaPromptContext(
             evaluated_agent_role=(
                 "legal-work agent that reads matter documents in a sandboxed "
@@ -544,6 +634,78 @@ class HarveyAdapter(BenchmarkAdapterV2):
             source_exploration_scope=(
                 "The seed harness, NexAU tool/middleware/sub-agent/skill "
                 "attachment, and benchmark_public/ADAPTER.md (sandbox handle API "
+                "and LAB tool fidelity)."
+            ),
+            task_id_leakage_terms=[
+                *LEAKAGE_TERMS,
+                *sorted({training_slug(task_id) for task_id in training}),
+            ],
+        )
+
+    def _all_pass_prompt_context(self, training: list[str]) -> MetaPromptContext:
+        two = len(self.config.judges) == 2
+        judges = "LAB's two judges" if two else "the rubric judge"
+        return MetaPromptContext(
+            evaluated_agent_role=(
+                "legal-work agent that reads matter documents in a sandboxed "
+                "/workspace and writes deliverable files (memos, redlines, "
+                "spreadsheets, slides) to /workspace/output"
+            ),
+            benchmark_objective=(
+                "Maximize the all-pass rate: the share of trials in which "
+                f"{judges} pass{'' if two else 'es'} every rubric criterion of "
+                "the task"
+                + (
+                    " (LAB's dual rate: each judge contributes 0.5), "
+                    if two
+                    else ", "
+                )
+                + "averaged over all trials. A trial that misses even one "
+                "criterion scores 0 on this metric. The rubric criterion pass rate "
+                "(share of criteria passed) is also reported and breaks ties, "
+                "between checkpoints and, in change attribution, for a task "
+                "whose all-pass rate is unchanged."
+            ),
+            evidence_description=(
+                "Each training trial records the task instructions, the full NexAU "
+                "message trace (tool calls and results), termination reason, "
+                "finish summary, output and workspace file listings with hashes, "
+                "the graded deliverable copies, and "
+                + ("both judges'" if two else "the judge's")
+                + " per-criterion verdicts and reasoning."
+            ),
+            failure_taxonomy=[
+                "missing or misnamed deliverable file",
+                "wrong deliverable format (for example text instead of .docx)",
+                "substantive legal issue missed or mis-analysed",
+                "factual or citation error relative to the documents",
+                "documents not fully read (parse failures, truncated reads)",
+                "turn or context limit reached before finishing",
+                "finished before every deliverable was complete",
+                "one or two criteria failed in otherwise complete work",
+                *(["judges disagree (one all-pass, one not)"] if two else []),
+            ],
+            protected_protocol=[
+                "Tasks, documents, rubrics, the LAB sandbox, and grading are "
+                "adapter-owned.",
+                "Harness tools reach the trial sandbox only through "
+                "harvey_ahe.workspace.handle_for(agent_state); host network, "
+                "subprocess, dynamic-import, and grader imports are rejected.",
+                "The finish stop tool, tool_call_mode, model routing, and "
+                "max_iterations=200 are protected.",
+                "Only files under /workspace/output are graded.",
+                "Validation and test tasks remain unavailable during evolution.",
+            ],
+            web_research_scope=(
+                "Agent techniques for long legal-document review and drafting: "
+                "reading strategies, issue-spotting checklists, producing .docx, "
+                ".xlsx, and .pptx with python-docx, openpyxl, and python-pptx, and "
+                "self-verification before finishing. Never search for the "
+                "benchmark's tasks, rubrics, or solutions."
+            ),
+            source_exploration_scope=(
+                "The seed harness, NexAU tool/middleware/sub-agent/skill "
+                "attachment, and the public ADAPTER.md (sandbox handle API "
                 "and LAB tool fidelity)."
             ),
             task_id_leakage_terms=[
@@ -731,6 +893,7 @@ class HarveyAdapter(BenchmarkAdapterV2):
                 run_dir=run_dir,
                 judges=self.config.judges,
                 helper=self.config.helper,
+                helper_api=self.config.helper_api,
                 transport=request.transport,
                 api_key=request.api_key,
                 max_prompt_chars=self.config.judge_max_prompt_chars,
@@ -911,7 +1074,9 @@ class HarveyAdapter(BenchmarkAdapterV2):
             request_sha256=evaluation_request_sha256(request),
             checkpoint=request.checkpoint,
             split=request.split.name,
-            summary=_summarize(trials, request.split.task_ids),
+            summary=_summarize(
+                trials, request.split.task_ids, self.config.objective
+            ),
             trial_facts=[_trial_fact(trial) for trial in trials],
             artifact_hashes=_artifact_hashes(output_dir),
             metadata={
@@ -1147,7 +1312,17 @@ def _run_session(
         session.close()
 
 
-def _summarize(trials: Sequence[_Trial], task_ids: Sequence[str]) -> MetricSummary:
+def _secondary_metric(objective: Objective) -> str:
+    """The tie-break metric of an objective."""
+    return PRIMARY_METRIC if objective == "all_pass" else ALL_PASS_METRIC
+
+
+def _summarize(
+    trials: Sequence[_Trial],
+    task_ids: Sequence[str],
+    objective: Objective = "criterion_pass",
+) -> MetricSummary:
+    all_pass = objective == "all_pass"
     if not trials:
         raise IntegrityError("Harvey evaluation has no completed trials")
     states: list[TaskState] = []
@@ -1165,7 +1340,11 @@ def _summarize(trials: Sequence[_Trial], task_ids: Sequence[str]) -> MetricSumma
                     if len(rows[0].judge_scores) == 2
                     else f"{both}/{len(rows)} trials all-pass"
                 ),
-                score=_mean(row.score for row in rows),
+                score=(
+                    _mean(float(row.dual["dual_all_pass_rate"]) for row in rows)
+                    if all_pass
+                    else _mean(row.score for row in rows)
+                ),
                 successes=both,
                 trials=len(rows),
                 metrics={
@@ -1189,7 +1368,9 @@ def _summarize(trials: Sequence[_Trial], task_ids: Sequence[str]) -> MetricSumma
                 },
             )
         )
-    primary = _mean(trial.score for trial in trials)
+    criterion = _mean(trial.score for trial in trials)
+    dual_all_pass = _mean(float(trial.dual["dual_all_pass_rate"]) for trial in trials)
+    primary = dual_all_pass if all_pass else criterion
     passed = sum(sum(int(value) for value in t.dual["n_passed"]) for t in trials)
     criteria = sum(sum(int(value) for value in t.dual["n_criteria"]) for t in trials)
     judge_pass = [
@@ -1198,12 +1379,14 @@ def _summarize(trials: Sequence[_Trial], task_ids: Sequence[str]) -> MetricSumma
     ]
     both = sum(trial.both_pass for trial in trials)
     return MetricSummary(
-        primary=MetricValue(name=PRIMARY_METRIC, value=primary),
+        primary=MetricValue(
+            name=ALL_PASS_PRIMARY_METRIC if all_pass else PRIMARY_METRIC,
+            value=primary,
+        ),
         metrics={
-            PRIMARY_METRIC: primary,
-            ALL_PASS_METRIC: _mean(
-                float(trial.dual["dual_all_pass_rate"]) for trial in trials
-            ),
+            **({ALL_PASS_PRIMARY_METRIC: primary} if all_pass else {}),
+            PRIMARY_METRIC: criterion,
+            ALL_PASS_METRIC: dual_all_pass,
             "both_judges_all_pass_rate": both / len(trials),
             **{
                 f"judge_{index}_all_pass_rate": value

@@ -666,3 +666,41 @@ def test_dual_summary_of_one_judge_matches_that_judge() -> None:
     assert summary["judges_agree"] is True
     with pytest.raises(IntegrityError):
         grading.dual_summary([])
+
+
+@pytest.mark.parametrize(
+    ("helper_api", "api", "api_mode"),
+    [(None, "responses", "responses"), ("chat", "chat", "chat_completions")],
+)
+def test_helper_api_routes_the_filename_helper(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    helper_api: str | None,
+    api: str,
+    api_mode: str,
+) -> None:
+    seen: dict[str, Any] = {}
+
+    class RecordingMatcher:
+        def __init__(self, **kwargs: Any) -> None:
+            seen.update(kwargs)
+
+        def __call__(self, prompt: str, schema: dict[str, Any]) -> dict[str, Any]:
+            return {}
+
+        def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(grading, "CopilotDeliverableMatcher", RecordingMatcher)
+    monkeypatch.setattr(grading, "RecordedExactModelClient", FakeResponsesClient)
+    FakeResponsesClient.requests = []
+    FakeResponsesClient.texts = [_verdict("pass"), _verdict("pass")]
+    helper = ModelSettings(model="helper-model", max_tokens=1024, temperature=0.0)
+    result = _grade_responses(
+        tmp_path, _run_dir(tmp_path), helper=helper, helper_api=helper_api
+    )
+    assert result["all_pass"] is True
+    assert seen["api"] == api
+    assert seen["transport"].api_mode == api_mode
+    # The judges keep the campaign's Responses transport.
+    assert FakeResponsesClient.requests[0]["model"] == JUDGE_A

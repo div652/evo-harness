@@ -598,11 +598,12 @@ def test_candidate_checks_reject_training_slug(
 # Meta-agent supplements are rendered as Jinja by NexAU (AHE-009)
 
 
+@pytest.mark.parametrize("folder", ["meta_supplements", "meta_supplements_all_pass"])
 @pytest.mark.parametrize("role", ["source", "web", "debugger", "evolve"])
-def test_role_supplements_render_unchanged(role: str) -> None:
+def test_role_supplements_render_unchanged(folder: str, role: str) -> None:
     from nexau.archs.main_sub.prompt_handler import PromptHandler
 
-    path = PROJECT_ROOT / "meta_supplements" / f"{role}.md"
+    path = PROJECT_ROOT / folder / f"{role}.md"
     text = path.read_text(encoding="utf-8")
     rendered = PromptHandler()._process_jinja_prompt(str(path), {"date": "x"})
     assert rendered.strip() == text.strip()
@@ -1214,3 +1215,135 @@ def test_trial_process_errors_are_classified_before_pickling(
         adapter_module._trial_process_entry(payload, None)  # type: ignore[arg-type]
     # What crosses the process boundary must survive pickling as itself.
     assert type(portable_exception(caught.value)) is expected
+
+
+def test_all_pass_objective_ranks_by_all_pass(
+    scratch_root: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = _responses_settings(scratch_root)
+    settings["objective"] = "all_pass"
+    adapter = HarveyAdapter(project_root=PROJECT_ROOT, settings=settings)
+    grader = _Grader(adapter, label="openai")
+    monkeypatch.setattr(adapter_module, "pandoc_version", lambda: "3.6")
+    monkeypatch.setattr(
+        adapter_module, "_podman_image_id", lambda _image: FAKE_IMAGE_ID
+    )
+    monkeypatch.setattr(adapter_module, "Sandbox", lambda **kw: FakeSandbox(**kw))
+    monkeypatch.setattr(adapter_module, "grade_with_retries", grader)
+    request = EvaluationRequest(
+        checkpoint="C0",
+        harness_dir=HARNESS_DIR,
+        split=adapter.split(SplitName.TRAIN),
+        trials=1,
+        root_seed=7,
+        output_dir=tmp_path / "evaluation",
+        model=ModelSettings(model="evaluated-model", max_tokens=64000),
+        transport=TransportSettings(base_url="http://127.0.0.1:9/v1"),
+        api_key="offline-key",
+        max_concurrency=3,
+    )
+    runtime = _Runtime(adapter)
+    with pytest.raises(InfrastructureError):
+        adapter.evaluate(request, runtime)  # type: ignore[arg-type]
+    result = adapter.evaluate(request, runtime)  # type: ignore[arg-type]
+
+    train_ids = adapter.split(SplitName.TRAIN).task_ids
+    rates = [
+        (grader.criteria_counts[task_id] - SCRIPT[index][1][0])
+        / grader.criteria_counts[task_id]
+        for index, task_id in enumerate(train_ids)
+    ]
+    summary = result.summary
+    assert summary.primary.name == "mean_all_pass_rate"
+    assert summary.primary.value == pytest.approx(3 / 6)
+    assert summary.metrics["mean_all_pass_rate"] == summary.primary.value
+    assert summary.metrics["mean_criterion_pass_rate"] == pytest.approx(
+        sum(rates) / 6
+    )
+    # Task scores are all-pass rates; trial facts keep the criterion score.
+    assert sorted(state.score for state in summary.task_states) == [0, 0, 0, 1, 1, 1]
+    assert sorted(fact.score for fact in result.trial_facts) == pytest.approx(
+        sorted(rates)
+    )
+    assert adapter.selection_key(summary) == (
+        pytest.approx(3 / 6),
+        pytest.approx(sum(rates) / 6),
+    )
+    transition = adapter.compare(summary, summary)
+    assert transition.metadata == {
+        "improved_by_criterion_pass_rate": [],
+        "regressed_by_criterion_pass_rate": [],
+        "mean_criterion_pass_rate_delta": 0.0,
+        "attribution_min_task_delta": 0.0,
+    }
+    # Same all-pass rate: the criterion pass rate decides; otherwise all-pass.
+    states = summary.task_states
+    failing = next(state for state in states if state.score == 0)
+    passing = next(state for state in states if state.score == 1)
+
+    def bump(state: Any, score: float, criterion: float) -> Any:
+        metrics = {**state.metrics, "mean_criterion_pass_rate": criterion}
+        return state.model_copy(update={"score": score, "metrics": metrics})
+
+    criterion = float(failing.metrics["mean_criterion_pass_rate"])
+    after = summary.model_copy(
+        update={
+            "task_states": [
+                bump(state, 0.0, criterion + 0.1)
+                if state.task_key == failing.task_key
+                else bump(state, 0.0, 1.0)
+                if state.task_key == passing.task_key
+                else state
+                for state in states
+            ]
+        }
+    )
+    transition = adapter.compare(summary, after)
+    assert transition.improved_task_keys == [failing.task_key]
+    assert transition.regressed_task_keys == [passing.task_key]
+    assert transition.metadata["improved_by_criterion_pass_rate"] == [
+        failing.task_key
+    ]
+    assert transition.metadata["regressed_by_criterion_pass_rate"] == []
+    assert adapter.verify_evaluation(VerificationRequest(evaluation=request)) == result
+
+    identity = adapter.identity()
+    assert "all-pass" in identity.native_metric_description
+    assert "one rubric judge" in identity.protocol_description
+    context = adapter.meta_prompt_context()
+    assert context.benchmark_objective.startswith("Maximize the all-pass rate")
+    assert "judges disagree" not in " ".join(context.failure_taxonomy)
+    assert "the judge's per-criterion" in context.evidence_description
+
+    evidence_dir = tmp_path / "evidence"
+    bundle = adapter.materialize_training_evidence(
+        EvidenceRequest(
+            checkpoint="C0",
+            evaluation_dir=request.output_dir,
+            output_dir=evidence_dir,
+        )
+    )
+    verify_evidence_bundle(
+        bundle,
+        evidence_dir=evidence_dir,
+        expected_checkpoint="C0",
+        evaluation_dir=request.output_dir,
+        source_evaluation=result,
+        source_request=request,
+    )
+    overview = (evidence_dir / "overview.md").read_text()
+    assert "Primary mean_all_pass_rate: 0.5000" in overview
+    header = "| task | state | mean all-pass rate | mean criterion pass rate |"
+    assert header in overview
+
+
+def test_default_objective_keeps_the_criterion_identity(adapter: HarveyAdapter) -> None:
+    identity = adapter.identity()
+    assert identity.native_metric_description.startswith(
+        "Mean per-trial rubric criterion pass rate"
+    )
+    assert adapter.meta_prompt_context().benchmark_objective.startswith(
+        "Maximize the rubric criterion pass rate"
+    )
