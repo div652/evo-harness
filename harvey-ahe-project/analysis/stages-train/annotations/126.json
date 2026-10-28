@@ -1,0 +1,280 @@
+{
+ "task": "126",
+ "context": "Request: full list of general-litigation matters where the firm sought fee-shifting, with the underlying documents. Rubric: 14 matters (1006-00005, 1008-00007, 1010-00005, 1012-00006, 1019-00005, 1020-00005, 1021-00006, 1023-00002, 1024-00003, 1027-00003, 1033-00006, 1035-00004, 1038-00007, 1044-00006) each with a proof document, plus a precision criterion (1045-00004 also permitted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Two batches of reads of pleadings, motions and memos of the matter at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 19,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for fee and cost terms; times out after about 45K chars of snippets."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 24,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of four candidate matters picked from the scan output (including the one read first)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 25,
+     "end": 33,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the opening of pleadings, briefs and approval motions of three candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script over eight named documents of those matters for fee and cost language."
+    },
+    {
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters whose papers sought fees or costs."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 38,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The one store-wide scan timed out before reaching nearly all qualifying matters; it answered with matters from that partial output, none of them qualifying.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 18,
+    "end": 19,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide extraction scan timed out before reaching most of the matters it needed; it did not narrow the scan by matter range or folder, rerun it, or search file names, and worked from the partial output."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted matters from other practice areas as qualifying because their papers sought fees or costs, without checking whether they belonged to the docket the request named."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two batches of reads (openings, then later sections and other memos) of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Two store-wide extraction scripts for fee and cost terms (docx and emails, then docx only); both time out, after about 36K and 124K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads motions, memos and pleadings of three candidate matters picked from the scan output."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script over four named documents for fee-award language."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters, including the one read first, whose papers sought fees, costs or sanctions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Both store-wide scans timed out before reaching the qualifying matters; it answered from the partial output with matters from other practice areas.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 18,
+    "end": 21,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both store-wide extraction scans timed out before reaching nearly all of the matters it needed; it did not narrow them by matter range or folder or search file names, and worked from the partial output."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted matters from other practice areas as qualifying because their papers sought fees or costs, without checking whether they belonged to the docket the request named."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 10,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads pleadings, motions and a memo of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for fee-shifting terms over docx and emails; times out after about 621K chars of snippets."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the first page of one pleading or brief from each of six candidate matters picked from the scan output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight matters plus two with discovery-sanction fee requests, from those first pages and scan snippets."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 22,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The scan timed out after reaching only one qualifying matter; it skimmed six candidates and listed many matters, most outside the set.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 11,
+    "end": 12,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one store-wide scan timed out with only one of the matters it needed in the output; it did not narrow or rerun the scan or search file names, and chose candidates from the partial output."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 20,
+     "end": 21,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted many matters as qualifying from scan snippets and first-page skims, including matters of the same clients under other matter numbers and matters from other practice areas."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way: after reading the matter at the top of the listing, each ran a store-wide extraction scan that timed out before reaching most qualifying matters (first error at the scan stage, search-miss), then answered with matters from the partial output, most of them outside the qualifying set (over-inclusion)."
+}

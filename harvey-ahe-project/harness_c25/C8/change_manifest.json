@@ -1,0 +1,117 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C8",
+  "parent_checkpoint": "C7",
+  "objective": "Turn selected broad candidate searches into an auditable discovery-to-ledger set reconciliation so surfaced matter roots cannot disappear behind a syntactically closed ledger.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/glob.py",
+        "tools/grep.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-d113fea164fd73eefc6e/result.json: broad inventory surfaced a plausible matter that was absent from the later ledger",
+        "debugger/tasks/task-d6d62c8aa5b20d8654f1/result.json: decisive source paths appeared in discovery but were lost during reconciliation",
+        "debugger/overview.md: incomplete-document-reading recurred in 34 tasks"
+      ],
+      "failure_pattern": "Candidate-generating search results were indistinguishable from neutral census or incidental-search output, so no deterministic state mechanism could preserve their matter roots across later free-form ledger rewrites.",
+      "mechanism": "Glob and grep now accept a validated candidate_discovery boolean and echo it in page metadata, allowing the agent to designate only high-precision, corpus-rooted result pages whose matter roots must be dispositioned.",
+      "rationale": "The discovery tools are the earliest surface that knows both the search intent and exact returned paths; adding an explicit designation there avoids guessing legal relevance from filenames in middleware.",
+      "predicted_fixes": [
+        "task-d113fea164fd73eefc6e",
+        "task-d6d62c8aa5b20d8654f1",
+        "task-a45c1e8dd63ecdfeef36"
+      ],
+      "risk_tasks": [
+        "task-5d441329fa3dde9638d5",
+        "task-9701b83f67d934d923aa"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/glob.tool.yaml",
+        "tool_descriptions/grep.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/tasks/task-d929bb6f1ccf4811be45/result.json: narrow filename hits became the candidate universe without an auditable population transition",
+        "debugger/tasks/task-2deb5f67387c3450a6c7/result.json: one positive keyword search was treated as the complete candidate set"
+      ],
+      "failure_pattern": "The model lacked a structured way to distinguish a neutral corpus census from a high-precision search intended to create candidate obligations.",
+      "mechanism": "Tool schemas explain when candidate_discovery must be true and when it must remain false, including neutral census, local inventory, and incidental-hit cases.",
+      "rationale": "Because tool descriptions are delivered with the structured schema, they place the designation rule at the exact call-decision point without lengthening every named-file workflow.",
+      "predicted_fixes": [
+        "task-d929bb6f1ccf4811be45",
+        "task-2deb5f67387c3450a6c7",
+        "task-5540393c53df18e2a065"
+      ],
+      "risk_tasks": [
+        "task-5d441329fa3dde9638d5"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "middleware",
+      "paths": [
+        "middleware/coverage_state.py"
+      ],
+      "evidence": [
+        "attribution/C7/transition.json: coverage middleware was PARTIALLY_EFFECTIVE at 4/5 while the combined checkpoint regressed on primary rate",
+        "debugger/tasks/task-d113fea164fd73eefc6e/result.json: later reconciliation checked ledger syntax rather than candidate-set completeness",
+        "debugger/tasks/task-4902e1eade47d45b9eee/result.json: known candidates were dropped when the ledger was overwritten as reconciled",
+        "debugger/tasks/task-1af125079b6ca6110bf9/result.json: a surfaced correct matter never entered candidate-local review"
+      ],
+      "failure_pattern": "Fingerprint and open-token checks could be satisfied by rewriting ledger text or deleting unresolved words even when entire surfaced candidate roots were absent.",
+      "mechanism": "The middleware now stores exact matter roots and bounded representative paths from designated broad pages, compares them against exact candidate-column root tokens, and injects a replaceable set-difference reminder until every root has a visible disposition.",
+      "rationale": "This improves the already partially effective cross-turn middleware at the earliest remaining deterministic gap; it audits set membership without deciding whether any matter legally qualifies or changing finish semantics.",
+      "predicted_fixes": [
+        "task-d113fea164fd73eefc6e",
+        "task-4902e1eade47d45b9eee",
+        "task-1af125079b6ca6110bf9",
+        "task-c39e36e4283f850f1646",
+        "task-d2149fcb11efa3a03057"
+      ],
+      "risk_tasks": [
+        "task-5d441329fa3dde9638d5",
+        "task-9701b83f67d934d923aa"
+      ]
+    },
+    {
+      "id": "chg-4",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/candidate-dossier-workflow/SKILL.md"
+      ],
+      "evidence": [
+        "attribution/C7/transition.json: candidate-dossier skill was MIXED at 2/5 and one declared risk materialized",
+        "debugger/tasks/task-d113fea164fd73eefc6e/result.json: free-form ledger rewrites destroyed discovery-to-row provenance",
+        "debugger/tasks/task-c8adb503ca082d061498/result.json: a directly surfaced qualifying matter was never carried into the ledger"
+      ],
+      "failure_pattern": "The workflow required reconciliation in prose but did not define a machine-visible discovery registry or exact row key, permitting silent omission during manual synthesis.",
+      "mechanism": "The skill now requires candidate-generating broad pages to be designated, exact returned matter roots to lead candidate cells, and every designated root to remain visible through qualification or false-positive disposition.",
+      "rationale": "The skill is the appropriate progressively disclosed surface for the detailed state protocol, while middleware provides the stronger deterministic audit instead of relying on another prompt-only admonition.",
+      "predicted_fixes": [
+        "task-d113fea164fd73eefc6e",
+        "task-c8adb503ca082d061498",
+        "task-b6fcd6ec733f19e458eb"
+      ],
+      "risk_tasks": [
+        "task-5d441329fa3dde9638d5",
+        "task-9701b83f67d934d923aa"
+      ]
+    }
+  ],
+  "validation": [
+    "Python compilation and NexAU guide static validation",
+    "Tool schema-to-signature parity checks",
+    "Synthetic candidate-root extraction, registry set-difference, and reminder smoke checks",
+    "Candidate validation before manifest commit"
+  ]
+}

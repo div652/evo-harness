@@ -1,0 +1,29 @@
+type: tool
+name: finish
+description: >-
+  Signal that the task is complete after all required deliverables exist in the
+  output directory and the final review is done. Listed missing files can reject
+  finish up to twice. In a corpus-wide run, the first finish attempt also rejects
+  when tracked semantic search-hit matter clusters have no later source read or
+  when exact reads were deferred with zero text. On that rejection, reconcile the
+  named clusters and paths against the scratch ledger and user-facing answer,
+  resolve real gaps, then retry. This candidate check is capped at one rejection
+  so an incidental search hit cannot create a finish loop.
+input_schema:
+  type: object
+  properties:
+    summary:
+      type: string
+      description: Brief summary of the completed work.
+    deliverables:
+      type: array
+      items:
+        type: string
+      description: >-
+        Paths of the deliverable files produced, relative to the output directory
+        (for example, response.md or memo.docx).
+  required:
+  - summary
+  additionalProperties: false
+disable_parallel: true
+binding: tools.finish:finish

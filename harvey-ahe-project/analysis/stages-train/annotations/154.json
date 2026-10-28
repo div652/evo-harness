@@ -1,0 +1,238 @@
+{
+ "task": "154",
+ "context": "Request: the most recent closed M&A deal that included an earnout, as a drafting precedent. Rubric: 1009-00003 (Skybridge Fintech de-SPAC, closed July 21 2025) and its business-combination-agreement-execution.docx, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Files-with-matches grep for the request term mixed with generic deal words (about 250 files, mostly emails), with a whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Four file-name globs for agreement, purchase, merger and closing words; each returns at most 100 files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 22,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and closing emails of three matters from the glob lists, re-reads their openings for dates and lists files of two; one guessed path does not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 38,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads closing certificates, a form agreement, escrow and memo and the agreement body of the matter it picked; one grep inside it with a non-recursive glob returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter closed in an earlier year as the most recent deal with the term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 41,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The opening grep listed two emails of the latest deal among about 250 hits, but it picked candidates from capped file-name globs and named an older deal.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 10,
+    "end": 22,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The opening grep listed the matter (two of its emails among about 250 hits), but the candidates it chose to open came from capped file-name globs and left that matter out."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, a checklist and emails of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "A grep inside one of those matters with a non-recursive glob (empty), plus reads of its agreement and a letter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads another section of that agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the listing-top matter as the most recent closed deal with the term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched the store; named the closed deal at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 11,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the two matters at the top of a capped listing without any store-wide search, so the later deal never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs by file type (one type has no files)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, memos and an opinion of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 12,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections and supporting documents of the closed listing-top matter."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Grep inside that matter's folder with a non-recursive glob; returns nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads another section of its agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the listing-top matter as the most recent closed deal with the term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 23,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched the store; named the closed deal at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 11,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the two matters at the top of a capped listing without any store-wide search, so the later deal never surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs named an older deal. T1 and T2 never searched and took the closed deal at the top of the capped listing (partial listing as corpus). T0's opening grep listed two emails of the latest deal among about 250 hits, but it chose candidates from capped file-name globs and named another older deal (surfaced, never opened)."
+}

@@ -1,0 +1,509 @@
+{
+ "task": "082",
+ "context": "Request: semiconductor IP disputes of the firm where it actually litigated an injunction (conflicts and precedent check for a new chip-patent case). Rubric: one criterion, that no matter qualifies (the closest patent matter, 1014-00004, has only a contingency preliminary-injunction draft on hold and permanent-injunction planning).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a two-level folder listing; the review asks for an untruncated matter count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and files and tallies matter-number ranges.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "find loops and a path regex for chip, patent and injunction words, capped at 120 lines per pattern; 25 candidate matters. The review flags the cap and substring noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: broadened uncapped path regex with short substrings; 72 matters, much noise, which the review flags.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: word-bounded IP and injunction path patterns; ten matters hit both, one patent matter with an injunctive-relief folder leading.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: adds device words; prints only matter-number lists (6 both, 12 injunction-only, 24 IP-only).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 40,
+     "end": 47,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 5: a heredoc error, then an uncapped path-term listing saved to a file (472 files, 75 matters); only part of it is shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 6: tally of matters hitting device, IP and injunction path terms together; one patent matter hits all three. The review flags narrowing on file names alone.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 69,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; range-split reruns error or return nothing; a final script over 14 hand-picked matters returns snippets. The review flags that no full-store scan was achieved.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 70,
+     "end": 79,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "A script call refused because no stage was open, then attempt 2 scans all 75 path-hit matters in batches; 20 matters show device plus IP or injunction text. The review flags dropping matters on category labels.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of ten high-hit matters; the review flags many surfaced matters never listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 86,
+     "end": 95,
+     "tags": [
+      "output capped",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: first 12 files of each of the 20 scan-hit matters, a grep on a scratch file refused by the sandbox, and filtered listings of four matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 96,
+     "end": 120,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "One parallel batch of 20 reads: complaints, status reports, closing memos, injunction drafts and analyses, an opposition to a preliminary injunction and a TRO application across six matters; one guessed path fails. The leading patent matter's preliminary-injunction motion is marked a contingency draft on hold.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 121,
+     "end": 126,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes a no-qualifying-matter answer with the two closest patent matters and two injunction near misses listed separately. The review flags a possible over-strict reading.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 127,
+     "end": 137,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, adds a path convention, checks cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 148,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the injunction and closing documents of four matters behind the conclusion; conclusion unchanged.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 149,
+     "end": 159,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: reads the permanent-injunction analysis and trial-preparation documents of the leading matter and adds them as sources.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 160,
+     "end": 165,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 4: final read of the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 166,
+     "end": 166,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a two-level folder listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Path regex for device, patent and injunction words over the whole store, in parallel with a content grep (glob `*`) that returns nothing. The review flags substring noise and the empty grep.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: grouped path search; device words hit one matter, patent words 19, injunction words 56.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out twice; a shell fallback fails because unzip is missing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: extraction script over matter-number ranges printing every file with device, patent or injunction terms (about 141K characters); one patent matter with an injunctive-relief folder leads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of seven hand-picked candidate matters; the review flags about 60 surfaced matters never listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search file names for a document type. Store-wide path sweep for injunction, patent and device words grouped per matter; the request uses the injunction word.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 59,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: filtered file listings of four more matters; the output is cut.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 78,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Reads complaints, the preliminary-injunction draft (marked contingency, on hold), a permanent-injunction analysis and draft order, and status and closing documents from five candidate matters chosen from earlier searches; two guessed paths fail and one is retried.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 79,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads settlement and dismissal filings of one matter and the trial-strategy memo and injunction analysis of the leading matter. The review recommends checking whether an injunction was actually litigated there.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the leading patent matter as the one qualifying matter, on its permanent-injunction work, with near misses listed. The review flags possible missing matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths, adds a strict-reading caveat; the matter stays qualifying. The review flags that the answer rests on drafts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read that the patent matter's preliminary-injunction motion was an on-hold contingency draft and its permanent-injunction papers were drafts, yet wrote that matter as one where an injunction was litigated.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 88,
+    "end": 93,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The check-stage review at [102] said the answer rests on draft injunction papers that may not show an injunction was litigated; the agent finished without changing it.",
+    "why": "The answer presents a patent matter as qualifying on its draft preliminary-injunction motion and post-trial permanent-injunction planning, with no filed motion, hearing or order seen (evidence seen at [62]-[86])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob and a file count; the review asks for a paged matter-folder list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists every matter folder with file counts and first subfolder names; the output is cut in the log, which the review flags.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: the same inventory saved to a file and printed in pages.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 29,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "find loops and a path regex for device, patent and injunction words, in parallel with a content grep (glob `*`) that returns nothing. The review flags substring noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: word-bounded, matter-grouped path search; one patent matter also has injunction files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script. Extraction script over about 25 named candidate matters from the path searches, printing device, patent and injunction snippets. The review flags the hand-picked set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: store-wide scan with narrow terms times out, and so does a range-split rerun.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 62,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the injunction draft (marked contingency, on hold), analysis and draft order and claim charts of the leading patent matter plus complaints and briefs of three other patent matters. The review flags that the draft does not show an injunction was litigated.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 77,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Lists the leading matter's files; reads on three folders fail; then reads its irreparable-harm and pretrial documents, a sibling complaint and a status memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 78,
+     "end": 95,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: lists case-management, correspondence and settlement folders and reads closing, settlement and status documents of the leading matter and its sibling; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 96,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: reads the settlement memo and term sheet, scheduling emails and the permanent-injunction analysis of the leading matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes a strict no-confirmed-matter answer with the two device patent matters as borderline near misses.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and three sources, fixes a path and softens the draft-order wording, checks cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 129,
+     "end": 129,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0, T2 pass; T1 fails). All three runs screened the same patent matter whose preliminary-injunction motion is a contingency draft on hold. They split at the write stage: T0 and T2 wrote a strict no-match answer with that matter as a near miss; T1 wrote it as qualifying on its draft injunction papers. The reviews did not differ in a way that explains the split: in all three the write-stage review warned of dropped matters, and only T1's check-stage review named the reliance on drafts, which the agent did not act on."
+}

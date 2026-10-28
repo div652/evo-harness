@@ -1,0 +1,474 @@
+{
+ "task": "223",
+ "context": "Request: how often completed real-estate matters included an environmental indemnity in the executed documents, and which ones. Rubric: 1017-00009, 1026-00004, 1031-00004, 1036-00004, 1043-00003 as qualifying matters, a frequency of 5 of 9, and a precision criterion (financing matters such as 1005-00001, 1019-00002, 1021-00001, 1036-00005, 1043-00001, 1043-00002, and 1030-00002 are outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level listing of 200 entries.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders, files, file types and top-level subfolder names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for request and deal words (217 matters) and three globs; the review flags the narrowing to indemnity file names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 31,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: heredoc error, then a saved per-matter path list (100 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for the requested clause times out; a stage_start is refused while the stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 69,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads eight files named for the clause, eight closing documents (one guessed path fails) and five short re-reads.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 70,
+     "end": 75,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of 16 candidate matters; a stage_start is refused while the stage is open. The review flags that none of them was opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 76,
+     "end": 88,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads the first 35 lines of eight executed agreements of three kinds. The review flags that three of these matters may be outside the requested type.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 5 of 13, counting three loan-side matters' clause documents as positives and other loan matters in the population.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, softens the execution wording with two edits and checks cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted loan-side matters outside the requested type as qualifying, inflating the qualifying set and the rate.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 89,
+    "end": 94,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read loan-side environmental indemnities and credit agreements (evidence seen at [42]-[66], [78]-[86]) and counted those financing matters as completed real-estate matters, three of them as positives, so both the qualifying set and the 5-of-13 rate are off.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [88] said three credit-agreement matters were read as real estate with no real-estate nature shown; the agent kept them, and no review named the three financing positives."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level listing of 200 entries and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two path-regex scripts and a brace glob for request words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 23,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a heredoc error, then a widened path regex paged by matter (132 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 31,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: saves the file-level path list and prints it in line ranges; a stage_start is refused while the stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 42,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for the requested clause times out after saving partial hits (about 129K chars printed) and a per-matter count; a filename script fails.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 43,
+     "end": 56,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: range-split scan with coverage logs plus two path lists for clause and transaction files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 100,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads about 37 documents (agreements, clause documents, closing records) across candidate matters; several guessed closing paths fail. The review names one candidate matter as read only once with its closing letter not found.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 13 scoped matters; the review flags the hand-picked scope.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Clause-phrase search over the executed and closing documents of the 13 scoped matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 12 of 13 matters, counting loan-side matters and leaving out one candidate matter it had opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 137,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, fixes cited paths with two edits; the first path script fails on the working directory.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 150,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A path check refused with no stage open; attempt 2 checks every cited path and spot-reads four documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 151,
+     "end": 156,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: full-text search of two cited documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 157,
+     "end": 174,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: a wider search of one counted matter's agreement finds a related clause; five edits change the headline to 13 of 13.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 175,
+     "end": 186,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: extracts that section, inserts the quote and checks the output file.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 187,
+     "end": 187,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted loan-side matters outside the requested type as qualifying, inflating the qualifying set and the rate. It also dropped a candidate matter it had opened.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 113,
+    "end": 118,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It counted financing matters with loan-side indemnities as completed real-estate matters with an indemnity (evidence seen at [59]-[98], [109]-[110]), inflating both the qualifying set and the rate.",
+    "critic": "not-flagged",
+    "critic_note": "Reviews pressed for a broader population and more surfaced matters; one noted a matter's hits came from staffing memos, but none said financing matters fall outside the requested set."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It opened an acquisition matter's executed purchase agreement at [91]-[93] but, after its closing letter path failed, left the matter out of the 13-matter scope and the answer.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [100] named that matter as read only once with its closing letter not found and no retry; the next stage listed only the 13 scoped matters."
+    },
+    {
+     "stage_no": 14,
+     "stage": "Check or revise the response",
+     "start": 157,
+     "end": 174,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "After a wider search of one ground lease the agent reclassified that matter as having an environmental indemnity, moving the answer to 13 of 13 and adding it to the qualifying set.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [174] questioned changing the result from one hit and asked to confirm a real contamination indemnity; the agent quoted the clause and kept the change."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level listing of 200 entries and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path grep for request words, a grep-tool search over .docx files that returns nothing, and a find | grep capped at 300 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 24,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path regex grouped by matter; a stage_start is refused while the stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; a second script prints about 91K chars of hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 40,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-phrase scan summarised per matter; a stage_start is refused while the stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 75,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads 20 agreements, clause documents and closing records, a snippet script over a named list of matters and six more reads; one guessed path fails.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 13 of 16 under a broad reading and 5 of 16 for standalone clause documents, counting loan-side matters in both.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 90,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks arithmetic; one path script fails and the retry matches no paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: per-row path checks and one path fix by edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted loan-side matters outside the requested type as qualifying, inflating the qualifying set and the rate.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 76,
+    "end": 81,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read loan documents and closing records of financing matters (evidence seen at [43]-[73]) and counted them as completed real-estate matters, giving a 16-matter population and many extra qualifying matters.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The write review warned of the inflation pattern and asked to move snippet- or certificate-only matters out and pick one headline ratio, but named no matter; the check stages only fixed paths."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed precision and frequency the same way at the write stage: each counted loan-side matters outside the requested type as in-scope matters, so the population and the qualifying set were too large (5 of 13, 12 of 13 then 13 of 13, and 13 of 16 / 5 of 16). Only T0 had a review naming some of those matters as possibly outside the requested type; T1's reviews pressed for a broader population and T2's write review gave only a stock inflation warning. T1 also left out a candidate matter after a failed closing-letter read (named in its review) and, in a late check, reclassified another counted matter as qualifying. Every run did its screening reads under a declared 'Read documents picked from the file listing' label despite the label note."
+}

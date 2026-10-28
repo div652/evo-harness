@@ -1,0 +1,338 @@
+{
+ "task": "148",
+ "context": "Request: the most recent closed M&A deal with disclosure schedules that can be pulled as a template. Rubric (no matter numbers in titles): 1006-00008 (Crestline Packaging bolt-on, APA June 16, 2025, closed Aug. 15, 2025) and its disclosure-schedules.docx, plus a precision criterion allowing only that matter.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 16,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel globs for disclosure, schedule and purchase-agreement file names plus a tail of the folder list; the outputs are long and cut in the display."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 17,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of eleven deal matters chosen as the highest-numbered ones from the glob hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists ten more high-numbered matters at the review's suggestion; none is a newer deal."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 30,
+     "end": 52,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads the agreements, schedules, certificates and checklists of three high-numbered deals and two closing records of a fourth; one guessed email path does not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 53,
+     "end": 63,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Finds and reads the schedules, agreement, checklist and bring-down certificate of the fourth deal."
+    },
+    {
+     "stage": "Write the response",
+     "start": 64,
+     "end": 69,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the fourth deal as the most recent closed deal with schedules."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 70,
+     "end": 78,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths and fixes one path."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks the fixed path and re-reads two source openings."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The deal it needed was in its own disclosure-file search results, but it ranked candidates by matter number, opened only high-numbered matters and named an older deal.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "List files in candidate matters",
+    "start": 17,
+    "end": 23,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its disclosure-file glob listed the matter's schedules (it even named the matter in its summary), but it chose what to list by highest matter number instead of by date and never opened that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the search review called ranking by matter number only an assumption; the write review asked to check other candidates' dates."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 17,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Folder tail plus find | grep over file paths for disclosure, schedule, merger and closing words (one capped at 300 lines), then an uncapped schedule-file search."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 18,
+     "end": 25,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of the six highest-numbered deal matters, plus a store-wide schedule-file search capped at 200 lines."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 46,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads schedules, merger agreements, certificates, checklists and closing emails of five high-numbered deals."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 47,
+     "end": 54,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files. find | grep over the files of the four highest number series for deal, schedule and closing words; one pass returns nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "end": 64,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads closing memoranda and a closing email of six high-numbered matters surfaced by that search."
+    },
+    {
+     "stage": "Write the response",
+     "start": 65,
+     "end": 70,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a high-numbered deal as the most recent; the write sits inside the declared reading stage and a stage_start for checking is refused until that stage is closed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 85,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks paths and fixes a cited file name; a grep fails on the response path."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 86,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The deal it needed was in its own schedule-file search results, but it treated the highest matter numbers as the most recent deals and named an older one.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "List files in candidate matters",
+    "start": 18,
+    "end": 25,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its schedule-file search listed the matter's disclosure schedules, but it chose the six highest-numbered matters to list and never opened that matter; later checks also followed matter-number order.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) two reviews said to pick the most recent deal by date, not by matter number."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a two-level folder list and a file count."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for disclosure-schedule wording; times out after about 3.3M characters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered find listings of seven candidate matters picked from the scan output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type (the request itself names disclosure schedules). Store-wide file-name search for disclosure-schedule files, then closing-file listings for the 23 matters found."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 52,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads schedules, closing certificates and checklists of nine matters and compares closing dates; two guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 53,
+     "end": 56,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files. find over a list of surfaced matters for schedule-like files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 68,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files (second part). Reads schedules and closing memos of three more matters and a later section of the chosen schedules; a stage_start for writing is refused while this stage is open."
+    },
+    {
+     "stage": "Write the response",
+     "start": 69,
+     "end": 76,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the chosen deal with its schedules and a comparison table of other closed deals with schedules; a stage_start for checking is refused while the write stage is open."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the recency wording and one comparison row."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the right deal and its schedules, but its comparison table presented several other matters as closed deals with disclosure schedules.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 69,
+    "end": 76,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Alongside the chosen deal, the answer describes five other matters it read at [29]-[68] as closed M&A deals with disclosure schedules, which the request's single-deal answer does not allow.",
+    "critic": "not-flagged"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed outcomes, all failing. All three runs surfaced the matter's disclosure-schedules file in store-wide searches. T0 and T1 then ranked candidates by matter number, listed and read only the highest-numbered deal matters, and named older deals (surfaced, never opened); in both runs the critic said matter-number order is only an assumption and asked for dates, and the agent kept checking higher-numbered matters. T2 took its candidates from a content scan whose hits started low in the number range, read the schedules and closing records of seven matters, compared closing dates and named the right deal (2/3), but its answer also described several other matters as closed deals with schedules, which failed precision; the critic did not name that."
+}

@@ -1,0 +1,343 @@
+{
+ "task": "199",
+ "context": "Request: due-diligence memos from the firm's healthcare-services M&A deals (hospital systems, provider groups, etc.). Rubric: 1001-00003, 1001-00007, 1006-00008 and their diligence memos (12 criteria).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 12,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell listing of folders and a file sample, both cut by head limits; the sample includes files of two candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Counts matters and files and lists every file in diligence folders (395 files, ~64K chars)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for sector words run in parallel per series, then greps of the saved hits by matter and with snippets (~71K chars)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the diligence folders of five candidate matters and greps the saved hits for diligence-folder files."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reopened: lists memo-like files in eleven candidate matters without the folder filter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 76,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads diligence memos and opening memos from nine candidates, then the remaining memos of the three it keeps, and one more matter's letter, listing and memo."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 77,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files. A store-wide file-name sweep and term counts, then filtered listings and engagement-letter openings of six more candidates to rule them out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three matters with their diligence memos and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths, edits a caveat and re-reads the top."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 110,
+     "end": 117,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Extraction scan over diligence-folder documents for sector and deal terms, then an edit to the completeness note."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reopened: edits the completeness note and rechecks paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 126,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Scan document text with an extraction script → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 12,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders plus a find | grep over file paths for diligence and sector words (~39K chars)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for sector words; times out after ~200K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of thirteen candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 62,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads diligence reports and deal memos from nine candidates, a per-matter term-count script, openings from five more, then the remaining memos of the three it keeps."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 72,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reopened: filtered listings and one memo each from three more candidates to rule them out."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 73,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reopened (attempt 3): reads the agreement and a memo of one more candidate to rule it out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three matters and all their diligence memos."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts memos per matter, edits a note, re-reads and checks cited paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 99,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 12,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 22,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scripts for sector words, then two parallel variants; time out after ~490K chars; self-rated not reached."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. find for diligence-named documents (232 files), grepped for candidate numbers."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type (attempt 2). Groups diligence-named files and folders by matter (85 matters)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide file-name sweep for paths combining sector and deal or diligence words (six matters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads diligence memos and agreements from eleven candidates, then the remaining memos of the three it keeps."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "end": 96,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reopened: thirteen short reads of letters and memos from further candidates to rule them out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three matters with their diligence memos and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks links resolve and re-reads the top."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 111,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reopened: re-reads the full response and softens two sentences."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs passed with the same procedure: after the capped glob, a store-wide extraction scan for sector words (two timed out with large partial output) and file-name searches for diligence-named files surfaced the three needed matters early; each listed candidate folders, read the diligence memos of about ten candidates, kept the same three matters, read all their memos, ruled out further candidates in reopened screening stages, and wrote the answer. Reviews kept flagging unopened candidates, which the runs answered with extra screening rounds."
+}

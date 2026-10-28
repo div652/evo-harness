@@ -1,0 +1,271 @@
+{
+ "task": "179",
+ "context": "Request: conflicts/cross-sell review of everything done for Pinnacle Venture Fund II LP across its funds and portfolio companies. Rubric: 26 matters, the fund's own 1002-00001..00005 plus portfolio companies Lumos Analytics (1008-00001..00009), Skybridge Fintech (1009-00001..00007) and Arbor Health Tech (1010-00001, -00002, -00004..00006), plus a precision criterion. The portfolio-company link sits in .docx engagement letters naming the fund as sponsor.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Two content-mode greps, one for the client's name and generic words and one for names seen in the listing; hits come from email text."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 8,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs four matters from the grep hits, two of them the client's own."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads conflicts, closing and tax memos of the client's two matters and an escrow agreement of another matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 21,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide .docx text scan printing snippets around the client's name and generic words; about 727K chars that include engagement letters of other companies' matters naming the client as sponsor."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos and letters of three more of the client's matters and of two matters of one related company."
+    },
+    {
+     "stage": "Write the response",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five of the client's matters plus two matters of one related company, the latter framed as a name-disambiguation item."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 31,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The scan surfaced the related companies' matters, but the agent opened two and reported only the client's own matters plus those two.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 22,
+    "end": 28,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan just before listed engagement letters in about twenty related-company matters stating the client as sponsor, but it opened only two such matters and wrote the answer without the others."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus PDF, DOCX and XLSX globs; the PDF glob returns nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 7,
+     "end": 8,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan of document, email and spreadsheet text for the client's name, names from the listing and generic words; about 637K chars of file-to-term lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 21,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Twelve reads: engagement letters and memos of three of the client's matters plus documents of three matters of other similarly named entities; one path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter count of .docx files naming the client in full; a 1.3K-char list of about thirty matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 30,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads documents of two more of the client's matters and of two matters of one related company; one guessed path does not exist."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the client's five matters, part of one related company's work, and three matters of other entities as related conflicts work."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Two scans listed the related companies' matters, but the agent opened two of them and added three unrelated matters.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 9,
+    "end": 21,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scan listed files naming the client in the related companies' matters, and a later per-matter count listed all of them compactly, but it opened only two of those matters and omitted the rest."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts three matters of other similarly named entities, skimmed at the first reading stage, as relevant client work."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep, then a content-mode grep for the client's name; hits come from email text."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs four matters from the grep hits, two of them the client's own."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads conflicts memo, engagement letters, closing and tax memos of the client's two matters and a conflicts memo of an unrelated matter."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 19,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Three greps for the client's full name and for company names taken from one memo; email hits in other matters are generic phrase matches."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 33,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Globs two more of the client's matters and reads their emails, engagement letter and memos plus a post-closing memo (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four of the client's matters and flags one unrelated matter as a false positive."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search file contents for request keywords → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Content greps never exposed the sponsor link to the related companies; the answer lists only the client's own matters.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only searches were content greps, which cannot read the .docx engagement letters that tie the related companies to the client; the email hits in those matters were generic phrase matches, and it never scanned document text or listed matter folders."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found the client's own matters but missed most of the related companies' matters, whose link to the client sits in .docx engagement letters. T0 and T1 ran .docx scans whose outputs listed those matters, then opened only two of them (surfaced not opened, at the reading stage after the scan); T2 searched only with content greps, which cannot read .docx text (search miss at its first grep). T1 also asserted unrelated matters."
+}

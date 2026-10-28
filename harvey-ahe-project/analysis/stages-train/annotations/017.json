@@ -1,0 +1,351 @@
+{
+ "task": "017",
+ "context": "Request: across signed Banking & Finance deals, how often EBITDA add-backs were conceded in controlling-sponsor portfolio-company deals versus strategic-corporate deals: the deals in each bucket, which had add-backs, and the rates. Rubric: sponsor rate 6 of 8, corporate rate 3 of 4, six sponsor matters with add-backs (1005-00001, 1006-00001, 1012-00001, 1043-00001, 1019-00002, 1042-00001), three corporate ones (1021-00001, 1038-00002, 1010-00001), plus a precision criterion. The two sponsor deals without add-backs are not named in the rubric.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and agreements of the three matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script listing files with EBITDA, add-back, leverage or sponsor words; times out after about 411K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 19,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads deal summary memos of six candidate matters; one guessed path does not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "A script over the agreements of thirteen named matters for add-back language, a listing of their execution and closing files, and two scripts over six named agreements (the first fails on a missing file, after which one matter is dropped). Labelled by the dominant intent."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of four executed agreements and a closing memo."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 35,
+     "end": 36,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Content grep inside one matter with a `*.docx` glob; returns nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 37,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a deal summary memo and a closing memo of two matters already in its set."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 41,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts pulling EBITDA definitions from six named agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the top of one more deal summary memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 51,
+     "end": 52,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes ten signed deals: six sponsor deals, all with add-backs, and four corporate deals, three with add-backs."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 53,
+     "end": 56,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads one memo opening and edits a borrower name."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 57,
+     "end": 57,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Every named deal was found and bucketed, but the sponsor bucket lacks the signed sponsor deals without add-backs, so the sponsor rate is off.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Search within a candidate matter's files",
+    "start": 20,
+    "end": 27,
+    "events": "",
+    "kind": "incomplete-population",
+    "why": "It fixed its deal set as thirteen matters picked from a timed-out scan and memo reads and never looked for further signed sponsor deals, so the sponsor bucket lacks the two deals without add-backs and reads 6 of 6."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (empty) plus whole-store glob."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one matter from the listing."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 9,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Glob over transaction-document folders across the store; capped."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Files-with-matches grep with a `*.docx` glob; returns nothing."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Globs over engagement and transaction-document folders across the store; both capped."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 23,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and agreements of four matters seen in those listings; two guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate matter's files, then globs the whole store again."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all file paths for credit, loan and financing words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scripts listing documents with EBITDA or add-back text, the second with snippets (about 142K and 193K chars)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of nine executed credit agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads deal summary, closing and diligence memos of six matters for ownership details."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 51,
+     "end": 58,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet scripts for EBITDA definitions and parties in named agreements, plus one agreement opening."
+    },
+    {
+     "stage": "Write the response",
+     "start": 59,
+     "end": 60,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes fifteen signed facilities: eleven sponsor deals (ten with add-backs) and four corporate deals (three with add-backs)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 61,
+     "end": 61,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List files in candidate matters → Search file names for a document type → Search file contents for request keywords → Search file names for a document type → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Every named deal was found, but the sponsor bucket was inflated with extra deals and one corporate borrower, and two deals were credited with add-backs.",
+   "first_error": {
+    "stage_no": 13,
+    "stage": "Write the response",
+    "start": 59,
+    "end": 60,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Counted acquisition financings and a construction facility as sponsor deals and credited two deals outside the qualifying set with add-backs, inflating the sponsor bucket to eleven."
+   },
+   "other_errors": [
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 59,
+     "end": 60,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "Placed one strategic-corporate borrower in the sponsor bucket."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three globs: all files, documents, and PDFs (none)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads up to 400 lines of five memos from the matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide script printing every EBITDA, add-back, credit-facility and sponsor snippet; times out after about 8.2M chars and the run stops for a full context."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script",
+   "failure_point": "A store-wide snippet scan returned about 8.2M chars; the context filled and no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its first content search printed every keyword snippet from the whole store, and the 8.2M-char output filled the context before any response was written."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed differently. T0 found and bucketed every named deal, but the deal set it fixed early left out the sponsor deals without add-backs, so the sponsor rate is off (incomplete population). T1 found every named deal too, but inflated the sponsor bucket with extra deals and one corporate borrower and credited two deals with add-backs (over-inclusion). T2's first content search printed about 8.2M chars and the context overflowed before any response (context overflow)."
+}

@@ -1,0 +1,262 @@
+{
+ "task": "130",
+ "context": "Request: general-litigation matters that had a fee-shifting provision, with the documents (fee-shifting playbook). Rubric: same 14 matters as task 126 (1006-00005 ... 1044-00006) each with a proof document, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (empty), then whole-store glob."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 6,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Globs for document-type folder names across all matters (two batches) plus one content grep with a single-extension glob that returns nothing (labelled by the dominant intent); the folder listings include many matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing four snippets per matching file; times out with about 34M chars, and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script",
+   "failure_point": "A store-wide extraction script returned about 34M chars and filled the context; no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 16,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its store-wide extraction script printed snippets for every matching document; the ~34M-char result filled the context, so no response was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 10,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads memos and pleadings of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for fee and cost terms; times out after about 79K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 13,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of three candidate matters picked from the scan output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 17,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of engagement letters, pleadings, memos and briefs of those matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script over the three matters' documents for fee language."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter with a tribunal cost award as the only confirmed example."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The one store-wide scan timed out before reaching any qualifying matter; it examined three matters from the partial output and named one outside the set.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 11,
+    "end": 12,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide extraction scan timed out before reaching most of the matters it needed; it did not narrow the scan by matter range or folder, rerun it, or search file names, and worked from the partial output."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It presented an arbitration matter with a tribunal cost award as a qualifying example without checking whether it belonged to the docket the request named."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one type that matches nothing, docx)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads six documents of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for fee and indemnity terms; times out after about 1M chars."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists matter folders whose subfolder names suggest court work, with their subfolder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide script for one exact phrase; times out after listing a few files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of one document from each of seven candidate matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters with a fee-recovery basis plus one arbitration matter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Both scans timed out after reaching only one qualifying matter; it skimmed seven candidates and listed several matters outside the set.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 13,
+    "end": 14,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide scans timed out with only one of the matters it needed in the output; the folder list it then printed was not followed up, and it chose candidates from the partial scan output."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted matters as qualifying from first-page skims, including matters from other practice areas and an arbitration with a tribunal cost award."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed at a store-wide extraction scan: T0's scan returned about 34M chars and ended the run (context-overflow); T1's and T2's scans timed out with at most one qualifying matter in the output (search-miss), after which both answered with matters mostly outside the set (over-inclusion)."
+}

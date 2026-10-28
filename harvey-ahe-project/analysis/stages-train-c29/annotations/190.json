@@ -1,0 +1,498 @@
+{
+ "task": "190",
+ "context": "Request: all closed deals from the M&A practice with their signing and closing dates (to benchmark time to close). Rubric: 15 matters (1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00007, 1008-00008, 1009-00003, 1013-00006, 1015-00004, 1017-00006, 1037-00006, 1039-00004, 1041-00003, 1042-00004, 1046-00001) with signing and closing dates, plus a precision criterion (one more matter, 1036-00004, permitted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 17,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List files in the document store (attempt 2). A folder glob returns nothing; parallel globs for closing, merger, agreement and purchase file names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; lists all matter folders; a narrower scan times out; a script lists per matter every file whose name holds merger, purchase, acquisition or closing words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 105,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads execution agreements and closing certificates or memos of about 25 candidate matters in batches, with snippet and date scripts and two store-wide extraction scripts for closing language. The review flags about 60 surfaced matters unopened and weak closing evidence for several named ones."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 106,
+     "end": 125,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads closing memos and certificates of the matters the review named; two guessed paths do not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 126,
+     "end": 145,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: globs the files of seven matters and reads their status and closing documents."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 146,
+     "end": 151,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes elapsed days, mean and median for 20 deals."
+    },
+    {
+     "stage": "Write the response",
+     "start": 152,
+     "end": 157,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 20 closed deals with dates, elapsed days, sources and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 158,
+     "end": 163,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 164,
+     "end": 164,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its per-matter file-name listing showed the matter it needed, but it never opened it; the answer also lists matters outside the permitted set.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 30,
+    "end": 105,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review warned that about 60 surfaced matters were never opened; its examples did not include this matter.",
+    "why": "The per-matter file-name listing just before showed the matter, but of the roughly 25 matters it chose to read it left that one out and never opened it, so the deal is missing from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 152,
+     "end": 157,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The screening review named several matters treated as closed on weak evidence; the agent re-checked them and dropped one.",
+     "why": "The answer lists 20 deals, at least four outside the permitted set, several resting on certificates without a confirmed closing (evidence seen at [30]-[145])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Script over all paths for merger, acquisition, purchase, business-combination, signing and closing words (about 220K characters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script and a range-split version both time out with no output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: background extraction scan with capped snippets, polled several times; prints hit counts per matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: checks that the background scan finished and its coverage."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 141,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads execution agreements, closing certificates and termination documents of about 30 candidate matters, with a file-name script and several folder listings. The review flags about 60 surfaced matters unopened."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 142,
+     "end": 158,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads documents of further filename candidates and adds one closed deal."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 159,
+     "end": 175,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: reads one representative document from each remaining matter series; one guessed path does not exist."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 176,
+     "end": 183,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes elapsed days and statistics for 17 deals."
+    },
+    {
+     "stage": "Write the response",
+     "start": 184,
+     "end": 189,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 17 closed deals with dates, elapsed days, sources and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 190,
+     "end": 199,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path and arithmetic check (the first script opens a response path that does not exist); no edit."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 200,
+     "end": 200,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its file-name search and scan counts showed the matter it needed, but it never opened it; the answer also gives a wrong closing date for one deal and lists a matter outside the permitted set.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 141,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Each screening review warned that about 60 surfaced matters were never opened; none of the examples was this matter.",
+    "why": "The file-name search and the scan's per-matter counts both listed the matter, but across three screening stages it never opened it, so the deal is missing from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 184,
+     "end": 189,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "The answer gives one deal's closing date four days earlier than its documents state (evidence seen at [50]-[141])."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 184,
+     "end": 189,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "The answer lists 17 deals, at least one outside the permitted set; the reviews questioned coverage, not inclusions."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a two-level find of folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and files by type and lists all folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script over all paths for merger, acquisition, purchase, sale, signing and closing words; 222 matters hit."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Search file names for request keywords (attempt 2). Narrows to file names with agreement-type phrases (asset or stock purchase agreement and similar); 39 matters. The review flags that differently named matters could be missed."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction script for dates and status over the 39 matters only, printing file headings."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 42,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: store-wide rerun; the first run fails on a regex error, the repaired one times out; not retried."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 43,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of the 39 matters (output cut in the display)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (attempt 2). Script summarising each matter's agreement, closing and status files."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 55,
+     "end": 140,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements and closing or status documents of the candidate matters in many batches."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 141,
+     "end": 152,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads closing certificates, memos and emails of seven matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 153,
+     "end": 165,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads date-bearing lines of agreements and closing documents of the flagged matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 166,
+     "end": 173,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 4). A script issued with no stage open is rejected; then a date-passage extraction over the flagged files."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 174,
+     "end": 179,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes elapsed days and statistics for 17 deals."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 180,
+     "end": 185,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: recomputes the shortest and longest intervals."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 186,
+     "end": 194,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Calculate figures for the answer (attempt 3). Opens the agreements and closing certificates of the two extreme deals."
+    },
+    {
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 17 closed deals with dates, elapsed days, sources and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 201,
+     "end": 206,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Reads the response end to end."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 207,
+     "end": 217,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: recomputes the statistics and reads the rest of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 218,
+     "end": 218,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Search file names for a document type → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Calculate figures for the answer → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its broad file-name search reached every needed matter, but it narrowed the candidates to agreement-type file names, which dropped two closed deals; its full-store rescan timed out and was not retried.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for a document type",
+    "start": 21,
+    "end": 26,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review named the agreement-type pattern and the risk of missing differently named matters.",
+    "why": "The broad path search just before hit all needed matters, but the agent kept only matters with agreement-type file names, which dropped two closed deals whose agreements are named differently; after the review flagged this pattern limit, its full-store rescan timed out and was not retried."
+   },
+   "other_errors": [
+    {
+     "stage_no": 16,
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "The answer gives one deal's closing date four days earlier than its documents state (evidence seen at [55]-[165])."
+    },
+    {
+     "stage_no": 16,
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "The answer lists 17 deals, at least one outside the permitted set; the reviews questioned evidence for closing dates, not inclusions."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed on the same matter (a closed deal whose files never matched the agents' agreement-name patterns) and on precision. T0 and T1 had that matter in their own file-name listings and scan counts but never opened it while screening dozens of other candidates (surfaced, not opened); their screening reviews warned only generically about about 60 unopened matters, with examples that did not include it. T2 dropped it, together with a second needed matter, by narrowing its file-name search to agreement-type names; the critic named that narrowing, and the agent's full-store rescan timed out and was not retried (over-narrow filter). T1 and T2 also stated a wrong closing date for one deal, and all three asserted one or more matters outside the permitted set."
+}

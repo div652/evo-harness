@@ -1,0 +1,307 @@
+{
+ "task": "058",
+ "context": "Request: which fund and asset-management matters include a GP clawback, and pull the executed LPAs. Rubric: 1001-00002, 1003-00002, 1024-00002, 1027-00002, 1026-00001 (an LP-side review with a memo as the only proof), proof documents for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, documents, one file type that does not exist)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide text-extraction script for request terms; times out with partial output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 12,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three file-name globs for request words plus a content grep on documents; the globs list agreement files across several matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of eight agreements, amendments and memos from seven candidates in the hits."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script extracts provision text from named candidate agreements."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 30,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Six globs of candidate matter folders; the pattern matches nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script extracts provision text from every document whose file name has agreement or partnership words."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Re-reads one candidate's executed amendment."
+    },
+    {
+     "stage": "Write the response",
+     "start": 35,
+     "end": 36,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the matters with the provision and their executed or draft documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 37,
+     "end": 40,
+     "tags": [
+      "run ended: text reply without finish"
+     ],
+     "hindsight": "none",
+     "note": "Edits a paragraph and re-reads the top of the response; the run ends with a closing message and no finish call."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response",
+   "failure_point": "Found all qualifying matters, but misdescribed one it had read and asserted matters with only draft provisions.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 35,
+    "end": 36,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "Read one qualifying matter's review memo but described the matter as the reviewed sponsor's engagement rather than the client's investor-side review (evidence seen at [13]-[21])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 35,
+     "end": 36,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Listed three matters with only draft or markup provisions as containing the provision."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder, which fails because it is a directory."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 11,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three file-name globs plus a content grep with a `*.docx` glob (the grep and one glob return nothing), then a find piped to grep over file paths that lists agreement files across many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos and agreements of six candidates, then later sections or openings of agreements from three matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script extracts provision text from the transaction documents of two candidates."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find piped to grep for agreement file names, sorted."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script locates provision text in two candidates' amendments."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes three matters with executed documents and two with related documents."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Search file names for request keywords → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Found and answered every qualifying matter, but misdescribed one it had read.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 32,
+    "end": 33,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "Read one qualifying matter's review memos but described the matter as the reviewed sponsor's engagement rather than the client's investor-side review (evidence seen at [12]-[25])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "no matches",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Depth-limited finds and a workspace listing, then a find -ls of the store to depth five (about 1.76M characters)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Glob for agreement file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of five agreements from five candidates."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script extracts provision text from the agreements just read."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script extracts provision text from every document whose file name has agreement or partnership words (about 97K characters)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with the provision and one without it."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 22,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "Answered from scan snippets: asserted two matters with only draft provisions and misdescribed one qualifying matter it never opened.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Write the response",
+    "start": 20,
+    "end": 21,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Asserted two matters with only draft or markup provisions as containing the provision, from extracted snippets."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 20,
+     "end": 21,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "Described one qualifying matter from scan snippets and a file name, naming the wrong client and provision, without opening it."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three surfaced and read or extracted every qualifying matter; the failures are judgement errors. T0 and T1 misdescribed one matter they had read at the screening stage (misstated facts, placed at the write stage); T2 asserted matters with only draft provisions and misdescribed another matter from snippets, both at the write stage. T0 also asserted draft-only matters and ended without a finish call."
+}

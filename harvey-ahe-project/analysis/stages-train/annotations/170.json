@@ -1,0 +1,243 @@
+{
+ "task": "170",
+ "context": "Request: which of the firm's M&A deals never made it to closing, including mergers that could not get regulatory clearance. Rubric: eight matters (1001-00005, 1002-00004, 1003-00001, 1011-00005, 1017-00007, 1018-00008, 1020-00006, 1032-00005) plus a precision criterion; the in-progress 1045-00005 (Tessera) draft deal is outside the permitted set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches reading agreements, memos, emails and closing documents of four matters at the top of the listing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "One glob for file names containing a deal-type word."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidate matters from that glob."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches reading memos, notices, letters and closing checklists of six candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 51,
+     "end": 52,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes two matters as deals that did not close and three more as having no documented closing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 53,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "One file-name glob reached two of eight qualifying matters; the answer also listed three matters without a documented closing.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file names for request keywords",
+    "start": 21,
+    "end": 22,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was one file-name glob for a deal-type word; six qualifying matters whose files did not match never surfaced, and it never searched document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 51,
+     "end": 52,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It listed three more matters, including one still being negotiated, as deals with no documented closing."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find to depth two (empty)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a draft agreement, memos, an issues list and emails of the matter at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "One files-with-matches grep with a brace-extension glob; returns nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, closing documents and termination letters of three more listing matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing matter, a deal still being negotiated, as the only one without a closing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 23,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Its single grep returned nothing; it answered from the listing matters and named a deal still being negotiated.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one grep used a brace-extension glob and returned nothing; it neither retried with another pattern nor searched file names, and fell back to the matters at the top of the listing."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 21,
+     "end": 22,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted a deal still being negotiated as one that never closed."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches reading agreements, memos, emails and closing documents of the four matters at the top of the listing; no keyword search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing matter, a deal still being negotiated, as the only one that did not close."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; answered from the matters at the top of the listing and named a deal still being negotiated.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 17,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the four matters at the top of a capped listing without any keyword search, so none of the qualifying matters surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted a deal still being negotiated as one that never closed."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed and none ran an effective search. T2 never searched (partial listing as corpus); T1's single grep returned nothing (search miss); T0's single file-name glob reached two of eight qualifying matters (search miss). All three read the matters at the top of the listing first, and all three counted a deal from that listing that was still being negotiated as one that never closed (over-inclusion)."
+}

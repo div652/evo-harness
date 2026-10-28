@@ -1,0 +1,332 @@
+{
+ "task": "184",
+ "context": "Request: as of 2026-08-06, commercial deals signed on or before 2026-05-08 that have not closed (stale-pipeline review). Rubric: nine matters (1004-00003, 1009-00006, 1013-00001, 1017-00001, 1019-00002, 1027-00002, 1029-00001, 1036-00005, 1038-00009) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, an opinion, a spreadsheet and an email from three matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 11,
+     "end": 19,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of one agreement and more agreements, a checklist, an engagement letter and an email of the same listing-top matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide python-docx scan for one counterparty name, the current year and closing words; times out after about 3.6M chars."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Short python date arithmetic for three signing dates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three signed-but-unclosed deals: two from the listing-top matters and one from the scan output."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the opening of one cited agreement after writing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Scan document text with an extraction script → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A single timed-out scan surfaced two of nine qualifying matters, which were never opened; the answer asserts three other deals.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 20,
+    "end": 21,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one search was a store-wide scan for date words that timed out with oversized output; most matters it needed never appeared, the two that did were never opened, and it did not narrow or rerun the scan."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 24,
+     "end": 25,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts three matters as stale signed deals on skims of a few documents; none qualifies."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for signing, closing and deal words; the hit list spans many matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Scan of email files only, printing lines with signing or closing words; about 246K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads status and signing emails of five matters from the scan output."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script printing date and subject lines of emails in nine named candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of email reads across nine candidates, one at an offset."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script checking emails of six candidates for closing-confirmation wording."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of two candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 33,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an executed merger agreement and an update email of one candidate."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Date arithmetic for five signing dates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four stale signed deals plus one watch item."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 38,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Finish the run",
+   "failure_point": "An email-only scan reached four of nine qualifying matters; the answer names two of them plus a non-qualifying deal.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 5,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "It restricted its text scan to email files, so matters whose signing and closing status is documented only in .docx files never surfaced; it never scanned document text, and one matter that did surface was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts a matter outside the qualifying set as clearly stale."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for signing, closing and deal words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight agreements and signing or closing emails from five matters on the hit list."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Content grep for signing and not-yet-closed phrases across the store."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads signing emails of seven matters from the grep hits."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 24,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Offset reads of those signing emails for closing steps and dates, plus two openings."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate's files."
+    },
+    {
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight signed-but-unclosed deals."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 41,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Greps emails for three deal names, removes two rows and updates the count and exclusions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 53,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Content greps reached four of nine qualifying matters; the answer names one of them plus five non-qualifying deals.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its searches were content greps, which reach email text but not .docx agreements and memos; most matters it needed never surfaced, two that did were never opened, and it never scanned document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts five matters as stale on signing emails alone, without confirming they remained unclosed."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed at search: content greps (T2), an email-only scan (T1) or one timed-out store-wide scan (T0) never surfaced most of the qualifying matters, and each answer then asserted non-qualifying matters (over-inclusion at the write stage)."
+}

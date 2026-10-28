@@ -1,0 +1,236 @@
+{
+ "task": "185",
+ "context": "Request: the most recent matter handled for Cascade Retail Holdings, what it is about and when it was opened. Rubric: 1038-00003 (planned shelf registration, opened 2026-04-06) plus subject, open-date and precision criteria.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 11,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Content grep for the client's name and opening-date words plus five reads of engagement letters of listing-top matters (labelled by the dominant intent); grep hits name several of the client's matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 18,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads emails from five of the client's matters seen in the grep hits; one path does not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 19,
+     "end": 25,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Greps for opening-date words inside five of the client's matters, plus a glob for all of the client's matter folders that returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the matter with the latest stated opening date among those seen as the most recent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The most recent matter never surfaced; the answer names an older matter of the client.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 5,
+    "end": 11,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its content grep reached only the client's matters with email hits, and its one attempt to list all the client's matter folders used a glob that returned nothing; it did not retry, so the most recent matter never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters and an opening memo of six listing-top matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide python-docx scan printing text around the client's name; times out after about 2.1M chars that include documents of several of the client's matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one of the client's matters as the most recent straight from the scan output, without opening any of its documents."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 15,
+     "end": 15,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "The needed matter appeared in the scan output, but the agent wrote an older matter without opening any documents.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Write the response",
+    "start": 13,
+    "end": 14,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan output included a document of the matter it needed (ahead of the matter it chose), but it wrote the answer without opening any of the client's matters or comparing their opening dates."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Whole-store glob plus a content grep for the client's full name; hits name five of its matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 5,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs all files of those five matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters, emails and a report of the five matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a status email of the matter it is leaning towards."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 24,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Greps two matters for opening-date words."
+    },
+    {
+     "stage": "Write the response",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one of the five matters as the most recent."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The most recent matter never surfaced; the answer names an older matter of the client.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a content grep for the client's name, which reaches email text but not .docx files; the most recent matter had no hit, and it never listed the client's matter folders, so it compared only the five matters the grep showed."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs named an older matter of the client. T0 and T2 relied on content greps that never surfaced the most recent matter (T0's folder glob returned nothing) - search miss at the first grep; T1's timed-out scan did show it, but the agent wrote straight from the scan output without opening any matter (surfaced not opened at the write stage)."
+}

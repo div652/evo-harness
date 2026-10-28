@@ -1,0 +1,207 @@
+{
+ "task": "198",
+ "context": "Request: executed credit agreements from the firm's deals valued over $1 billion, as comparables for a large financing. Rubric: 1003-00003 (Harrowgate PE), 1005-00001 (Nexford Industrial), 1041-00003 (Solara Digital), each with its executed credit agreement, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find to depth 3 (no output) plus whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 6,
+     "end": 9,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "File-name globs for credit and agreement files (each stops at 100 files) plus a non-recursive *.docx content grep that returns nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six credit or loan agreements from that listing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 17,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 36,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads deal and closing memos of six candidates, two merger agreements and one more matter listing to check deal sizes (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 37,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of one credit agreement plus the commitment letter, fee letter and funds flow of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one matter as the only clear fit and lists near misses."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 44,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its credit-file glob was capped before two needed matters and its content grep found nothing; it found one of three.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 6,
+    "end": 9,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its credit-file glob stopped at 100 files before reaching two of the matters it needed and its content grep returned nothing; it never narrowed the glob, paged further or scanned document text."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements, memos and spreadsheets from the three matters at the top of the listing; no search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no matter qualifies."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the three matters at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 17,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any search and concluded that nothing qualifies."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find to depth 3 (no output) plus whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 14,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and memos from the three matters at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 16,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide .docx scan printing every sentence with financing or size words; times out after printing about 9.1M chars and the run ends there."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script",
+   "failure_point": "The store-wide scan's output filled the context; no response file was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 15,
+    "end": 16,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its store-wide scan printed matching sentences with no limit; the 9.1M-char output filled the context and the run ended before any response was written."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T1 never searched and wrote that nothing qualifies after reading the listing-top matters (partial listing as corpus). T2 read the same listing-top matters, then ran a store-wide extraction scan whose 9.1M-char output ended the run (context overflow at the scan stage). T0 searched by file name, but its credit-file glob stopped at 100 files before two needed matters and its content grep returned nothing; it found one of three (search miss at the file-name stage)."
+}

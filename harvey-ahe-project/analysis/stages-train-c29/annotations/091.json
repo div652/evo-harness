@@ -1,0 +1,325 @@
+{
+ "task": "091",
+ "context": "Request: Labor & Employment matters where the non-compete ran 18 months or longer. Rubric: 1017-00004 (Aldrich, 18-month clause) and 1038-00006 (original 18-month covenants later modified), plus a precision criterion; 1022-00004 and 1033-00005 had only proposed (unexecuted) long terms.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Counts the matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for covenant and duration words; times out after about 2.4M chars. The review flags overbroad duration terms."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 43,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads engagement letters, covenant memos and closing memos of five candidate matters (one path not found), then lists and reads one more matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters. The review flags about 40 surfaced matters never listed."
+    },
+    {
+     "stage": "Write the response",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes two matters with documented durations of 18 months or more, and lists matters with proposed or shorter terms as screened out. The review flags possible under-inclusion and over-inclusion risk."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 60,
+     "end": 69,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two edits that qualify the completeness claim, then a re-read."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 70,
+     "end": 70,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts and prints all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for covenant and duration terms; times out after about 950K chars."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script; snippet-extraction script over six named candidate matters printing covenant clauses with durations."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Background store-wide scan for covenant phrases near durations, polled until done (one wait times out), then a practice-area filter over its 58 matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads covenant, closing and engagement documents of six candidates, then lists and reads one more matter. The review flags many surfaced matters never opened."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 73,
+     "end": 83,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Screen candidate matters by reading documents; a glob first rejected because no stage was open, then lists six more candidate matters after a new stage_start."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 92,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a near-final covenant draft, engagement and closing letters and one negotiation memo of three matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 93,
+     "end": 100,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the engagement letter, complaint and memo of one more candidate and rules it out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying, two of them with proposed terms that were never executed. The review flags a risk of mixing proposals with executed terms."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and confirms the file exists. The review names the two proposal-only matters and asks whether they fit."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 114,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the same candidates as the passing runs but counted two matters whose 18-month-plus terms were only proposed as qualifying.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 101,
+    "end": 106,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Its reads at [48]-[57] and [84]-[90] showed that two matters' long non-competes were only proposals never executed, yet the answer counts them as qualifying, a loose reading of 'ran'.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the write review at [106] flagged mixing proposals with executed terms and the check review at [113] named both matters; the agent finished without changing them."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts and prints all matter folder paths."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad duration and practice words; times out after about 3.2M chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Caches the text of all 8,055 documents, then searches the cache for covenant words near long durations; 162 files listed."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos, drafts, closing memos and settlement documents of six candidate matters in two batches."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five matters the review named and of two matters it is weighing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letters of the five named matters and an executed settlement and a draft answer of the two it is weighing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes two matters under a strict executed-or-operative reading, with proposal-only matters as near misses. The review flags the strict reading as possibly too narrow."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads cited passages in three source documents."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found and read the same candidate set, including the two qualifying matters and two matters whose long terms were only proposed. They split at Write the response: T0 and T2 counted only executed or operative terms and listed the proposal-only matters as near misses (pass); T1 counted those two as qualifying (over-inclusion). The critic differed: T1's write review flagged mixing proposals with executed terms and its check review named both matters, but the agent finished unchanged; T0's and T2's write reviews instead warned that the reading might be too narrow, and both kept it."
+}

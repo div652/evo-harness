@@ -1,0 +1,419 @@
+{
+ "task": "155",
+ "context": "Request: every M&A matter where a no-shop or exclusivity covenant made it into an executed definitive agreement or a standalone executed exclusivity agreement (not LOIs, term sheets or drafts), with those agreements. Rubric: 21 matters (1001-00003/4/5/7, 1002-00004 exclusivity-agreement.docx in a Series D financing, 1003-00003/4, 1006-00006/8, 1007-00006, 1008-00008, 1009-00003, 1017-00006, 1018-00008, 1032-00005, 1037-00006, 1038-00009, 1039-00004 executed offer to purchase, 1041-00003, 1042-00004, 1046-00001), each with its proof document, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 39,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and a file count.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for covenant and deal-agreement words, plus a file grep capped at 240 lines and a folder grep capped at 200.",
+     "label_check": "none",
+     "end": 16
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path search with wider agreement words; 149 matters.",
+     "label_check": "none",
+     "end": 22
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for covenant terms times out; a range split fails on an indentation error, then range scans write a hit file; greps and a path list of strong hits (heredoc error first).",
+     "label_check": "none",
+     "end": 38
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: checks the range outputs and builds a matter-level candidate list with a strong-phrase regex and an agreement-name filter. The review flags that the filter can drop differently worded agreements.",
+     "label_check": "none",
+     "end": 44
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads about 25 executed agreements and exclusivity letters of candidate matters, then snippet scripts over the executed agreements on its strong-hit list. The review flags many surfaced matters never opened.",
+     "label_check": "none",
+     "end": 79
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 80,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). A script run with no stage open is refused; then a store-wide script over executed-looking deal agreements for covenant headings (278 hits).",
+     "label_check": "ignored",
+     "end": 85
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads covenant sections of a few more executed agreements; the review names two candidates never opened.",
+     "label_check": "none",
+     "end": 93
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 21 matters with executed agreements and covenant sections, excluding a financing matter's standalone exclusivity agreement as non-deal work.",
+     "label_check": "none",
+     "end": 99
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Removes one matter as a duplicate of another after a re-read, and checks paths. The review flags the removal as a possible narrowing.",
+     "label_check": "none",
+     "end": 115
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: compares the two agreements, restores the removed matter as distinct and re-checks paths.",
+     "label_check": "none",
+     "end": 131
+    },
+    {
+     "stage": "Finish the run",
+     "start": 132,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 132
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened one matter whose covenant sits in an executed offer to purchase, although that matter surfaced in its scan lists, and it excluded a standalone executed exclusivity agreement because the deal was a preferred-stock financing.",
+   "first_error": {
+    "stage_no": 6,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "A matter whose covenant sits in an executed offer to purchase surfaced in its candidate lists at [36] and [42] (and again at [85]), but none of its reads or snippet scripts opened it.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The screening review at [79] said many surfaced matters were never opened, naming others; the agent ran one more scan and a few reads, not of this matter.",
+    "stage": "Screen candidate matters by reading documents",
+    "start": 45,
+    "end": 79
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Its snippet script at [76]-[77] showed a standalone executed exclusivity agreement in a financing matter, but the answer excludes the matter as non-deal work.",
+     "critic": "not-flagged",
+     "critic_note": "No review mentioned the matter.",
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 100 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts.",
+     "label_check": "none",
+     "end": 14
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for covenant terms times out; a four-way split with broad terms reports hits in all 266 matters.",
+     "label_check": "none",
+     "end": 22
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: tighter-phrase scans time out twice, then the leftover processes are killed.",
+     "label_check": "none",
+     "end": 32
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for deal-agreement and covenant words; 151 matters (about 40K chars).",
+     "label_check": "none",
+     "end": 38
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for request keywords (attempt 2). Purchase-agreement abbreviations, tender-offer, lock-up, standstill and closing names; 213 matters.",
+     "label_check": "none",
+     "end": 44
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of twelve executed agreements and exclusivity letters; the review flags short reads and unopened matters.",
+     "label_check": "none",
+     "end": 61
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 62,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search within a candidate matter's files. A store-wide script over deal-agreement and exclusivity file names prints covenant snippets with no cap (about 6.75M chars); the run ends before stage_end.",
+     "label_check": "ignored",
+     "end": 65
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Search file names for a document type → Screen candidate matters by reading documents → Scan document text with an extraction script",
+   "failure_point": "Its store-wide snippet script over agreement files printed millions of characters with no cap; the output filled the context and no deliverable was written.",
+   "first_error": {
+    "stage_no": 8,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The script printed covenant snippets from every agreement-named file in the store with no output cap, so the result filled the context before the stage could be closed or reviewed.",
+    "critic": "no-review",
+    "critic_note": "",
+    "stage": "Scan document text with an extraction script",
+    "start": 62,
+    "end": 65
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 27,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts.",
+     "label_check": "none",
+     "end": 14
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for covenant and deal-agreement words (about 37K chars) and a content grep whose glob lacks a path prefix and finds nothing. The review names a purchase-agreement matter it did not shortlist.",
+     "label_check": "none",
+     "end": 21
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened path search saved to a file; 147 matters.",
+     "label_check": "none",
+     "end": 27
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction times out, also in four and twelve parts; a shell fallback fails because unzip is not installed.",
+     "label_check": "none",
+     "end": 43
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: background extraction batches finish with hits in all 266 matters; a filter then keeps only lines with explicit no-shop or competing-proposal wording or an exclusivity file name (118 lines). The review flags that the filter drops agreements that word the covenant differently.",
+     "label_check": "none",
+     "end": 57
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements and exclusivity letters from the filtered list and runs snippet scripts over them (about 105K and 39K chars).",
+     "label_check": "none",
+     "end": 74
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: further reads of the listed agreements and one folder glob; the review flags that only about nine matters were opened and a header naming another matter.",
+     "label_check": "none",
+     "end": 94
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists agreement files of the fourteen shortlisted folders; the review flags 62 surfaced matters never listed.",
+     "label_check": "none",
+     "end": 100
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes fourteen matters with executed agreements and exclusions, among them a financing matter's exclusivity agreement.",
+     "label_check": "none",
+     "end": 106
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response and agreements and corrects two party descriptions mixed up by parallel reads.",
+     "label_check": "none",
+     "end": 122
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: reads two agreements individually and fixes the remaining mix-up.",
+     "label_check": "none",
+     "end": 136
+    },
+    {
+     "stage": "Finish the run",
+     "start": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 137
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its store-wide scan reached every matter, but it kept only hits with explicit no-shop or competing-proposal wording, so executed agreements whose covenant is worded otherwise (several purchase agreements, an offer to purchase) were never read; it also excluded a financing matter's executed exclusivity agreement.",
+   "first_error": {
+    "stage_no": 6,
+    "events": "[54]-[55]",
+    "kind": "over-narrow-filter",
+    "why": "The background scan at [46]-[51] hit all 266 matters, but the filter at [54] kept only explicit no-shop or competing-proposal wording or exclusivity file names, dropping seven matters whose executed agreements word the covenant otherwise; the answer was built from the filtered list.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [57] said the filter would drop executed agreements that word the covenant differently; the agent screened only the filtered list.",
+    "stage": "Scan document text with an extraction script",
+    "start": 44,
+    "end": 57
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Its snippet script at [71]-[72] showed a financing matter's standalone executed exclusivity agreement, but the answer excludes the matter as a preferred-stock financing.",
+     "critic": "not-flagged",
+     "critic_note": "No review mentioned the matter.",
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail, in different ways and at different stages. T1 ended in context overflow at an uncapped store-wide snippet script, before any review. T0 found 19 of 21: it never opened one matter that surfaced in its candidate lists (surfaced-not-opened at the first screening stage; flagged only in generic terms). T2's scan reached every matter, but a wording filter dropped seven, and it screened only the filtered list (over-narrow-filter, flagged specifically and ignored). T0 and T2 both excluded the financing matter's executed exclusivity agreement as non-deal work, with no review comment. In T0 a check review caught a late edit that removed a qualifying matter, and the agent restored it."
+}

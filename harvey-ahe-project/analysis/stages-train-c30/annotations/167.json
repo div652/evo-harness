@@ -1,0 +1,439 @@
+{
+ "task": "167",
+ "context": "Request: the firm's deals over $1B in guaranteed (base) consideration, excluding earnout/CVR value, governed by Delaware law. Rubric: 1001-00004, 1003-00003, 1038-00009, 1041-00003 as qualifying, plus a precision criterion. 1038-00001 (a litigation matter whose case assessment describes a ~$4.7B Delaware-law merger) and 1025-00006 / 1018-00003 ($925M plus CVR) are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two path-regex scripts for deal-document words, one full and one with per-matter counts; the review flags the truncated output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path regex saved to files (211 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 35,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for clause and amount terms: a script error, two timeouts, then it reads the partial batch files and lists hit files with deal words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: parses the batch outputs for amounts above the threshold after a heredoc error; about 22K lines, mostly bare paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Reads the opening of twelve executed deal agreements from candidate matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: compact scan over primary deal documents giving one block per matter, then a snippet script over four agreements for amounts and the requested clause.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 67,
+     "end": 80,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 4: an unfiltered all-document rerun times out twice with empty output files; one agreement opening is re-read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with base amounts, the requested clauses and a below-threshold exclusion.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 103,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths, fixes one certificate path with an edit; a path script fails once on the working directory.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files in all 266 matter folders.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two path-regex scripts for deal and clause words; the broad one prints about 94K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: path regex for agreement types grouped per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: wider path regex saved to a file; 83 candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 53,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice, then three range-split runs (about 100K chars each), a heredoc error, a price-phrase filter, per-matter counts of amounts above the threshold and the first hits for nine matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 54,
+     "end": 59,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Snippet script over a named list of candidate matters' agreements, then a file listing of one matter and two extractions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of six candidate agreements and filings.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 67,
+     "end": 74,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Store-wide grep for one amount and an acronym, then snippet scripts over two lead agreements for amounts and the requested clause. The review flags a hand-picked list and that one matter was confirmed from a case assessment only.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five qualifying matters, including one supported only by a case assessment in a litigation matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 89,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths; the first path script fails on the working directory.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: snippet script over the cited agreements and the response tail; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 106,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Two calls are refused with no stage open; attempt 3 re-reads the response and reruns the snippet script; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: string checks for each listed amount and clause heading.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 5: prints the clause text of two agreements; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 119,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It added a litigation matter to the qualifying set on a case-assessment snippet, after the scan review had named that weak evidence.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 80,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It counted a litigation matter as a qualifying deal from a case-assessment snippet giving a deal value and the requested clause (evidence seen at [56]-[57]), without opening any executed agreement for it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [74] said that matter was confirmed only from a case assessment, not the operative agreement's governing-law clause; the agent wrote it anyway, and the later check reviews told it not to add or drop matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says to re-list in pieces.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file of every matter folder, about 814K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Per-matter file counts and subfolder names for all matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: range-split scan times out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 65,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the opening of ten deal agreements (one guessed path fails), a snippet script, six more agreement openings and three snippet scripts for amounts and clause text.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Reads one document each from five matters the review named, plus a snippet script over one draft.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 78,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one lead agreement in two chunks.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 86,
+     "end": 93,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists that matter's files and reads its closing checklist and certificate of merger.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with base amounts, the requested clauses and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that cited paths exist; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0, T2 pass; T1 fails on precision). All three runs reached the four qualifying deals and read their executed agreements. They split at the verification stage after the store-wide scan: T0 and T2 judged candidates only from executed agreement text, while T1 ran its snippet script over a hand-picked list that included a litigation matter and accepted that matter's deal value and clause from a case assessment. The critic's review there differed from the passing runs: it named this exact weakness, but the agent wrote the matter as qualifying, and the later check reviews (which said not to add or drop matters) did not press the point again."
+}

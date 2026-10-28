@@ -1,0 +1,435 @@
+{
+ "task": "210",
+ "context": "Request: top five clients by number of matters, with counts (relationship review). Rubric: client prefixes 1038 Cascade Retail, 1008 Lumos, 1025 Quorum at 10 matters each; 1016 Dunmore, 1017 Aurelius, 1018 Penterra tied at 9 at the cutoff; all six reported with counts and the tie explained. No matter numbers named.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a direct folder listing.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders in parallel with a store-wide list of engagement-letter files (about 68K chars).",
+     "label_check": "ignored",
+     "end": 13
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Saves the folder list, counts folders and the folders with an engagement file, and names the two without one.",
+     "label_check": "ignored",
+     "end": 19
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 20,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Reads the opening lines of three engagement letters from different number prefixes; two reads on folder paths fail.",
+     "label_check": "none",
+     "end": 29
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matters per number prefix from the saved folder list; three prefixes at ten and three at nine.",
+     "label_check": "none",
+     "end": 35
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Extraction of engagement-letter openings for every matter in the six leading prefixes (heredoc error, then a run saved to a file).",
+     "label_check": "none",
+     "end": 43
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists one matter without an engagement file and reads four of its documents to name its client.",
+     "label_check": "none",
+     "end": 54
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 55,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reads the openings of four more of its documents.",
+     "label_check": "none",
+     "end": 63
+    },
+    {
+     "stage": "Write the response",
+     "start": 64,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the ranking with the three-way tie at the cutoff, six clients with their matter lists and sources.",
+     "label_check": "none",
+     "end": 69
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 70,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a count script fails on the workspace path and reruns against the output folder.",
+     "label_check": "none",
+     "end": 78
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reads one engagement letter per ranked client and recounts per prefix.",
+     "label_check": "none",
+     "end": 91
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: direct recount of folders and a re-read of the response opening.",
+     "label_check": "none",
+     "end": 98
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: reads the openings of seven client documents and four continuations; the review says keep the response.",
+     "label_check": "none",
+     "end": 115
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 116
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → List matter folders → Read documents picked from the file listing → Calculate figures for the answer → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts.",
+     "label_check": "ignored",
+     "end": 13
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction of engagement and opening documents to name each matter's client (two heredoc errors), with a per-prefix count; snippets cut before the client name.",
+     "label_check": "none",
+     "end": 29
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: client-focused snippets for all matters saved to a file, a rough name tally and a per-prefix list of engagement files; several matters come back blank.",
+     "label_check": "none",
+     "end": 41
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "tags": [
+      "file not found",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters of the six leading prefixes; three guessed paths fail, a brace glob finds nothing, then lists files of five matters.",
+     "label_check": "ignored",
+     "end": 56
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Finds engagement files per prefix and reads seven letters at their real paths.",
+     "label_check": "ignored",
+     "end": 70
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 71,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matters for the six leading prefixes; the review flags that only six prefixes were counted.",
+     "label_check": "none",
+     "end": 76
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 77,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: full per-prefix distribution over all folders (one syntax error).",
+     "label_check": "none",
+     "end": 84
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the ranking with the tie at the cutoff and the six clients' matter ranges.",
+     "label_check": "none",
+     "end": 90
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Checks cited paths, fixes one path by edit and re-reads the response.",
+     "label_check": "none",
+     "end": 100
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-runs the distribution.",
+     "label_check": "none",
+     "end": 106
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 107
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts and lists all matter folders with file counts.",
+     "label_check": "none",
+     "end": 13
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists engagement and matter-opening files for every matter, then counts matters per number prefix.",
+     "label_check": "none",
+     "end": 21
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters from the six leading prefixes; the review flags a letter whose header names a matter number from another prefix.",
+     "label_check": "ignored",
+     "end": 39
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scan of engagement and opening documents for the leading client names (heredoc error, then about 50K chars), reads six engagement letters, and path searches for the client names with per-matter listings.",
+     "label_check": "none",
+     "end": 60
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 61,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: one client summary per matter for all folders, plus per-prefix matter lists.",
+     "label_check": "none",
+     "end": 68
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 69,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 3). A call made with no stage open is refused; then coverage and per-prefix counts from the saved scan file, and one memo read.",
+     "label_check": "none",
+     "end": 78
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Lists the two matters with no engagement file and reads one memo of each; one guessed path fails.",
+     "label_check": "ignored",
+     "end": 90
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Re-reads one memo to confirm the client.",
+     "label_check": "ignored",
+     "end": 96
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the ranking with matter lists and the tie at the cutoff.",
+     "label_check": "none",
+     "end": 102
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and edits the rank order so both tie groups share a rank.",
+     "label_check": "none",
+     "end": 112
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: script checks each client section's matter count and cited paths (first run fails on the workspace path).",
+     "label_check": "none",
+     "end": 122
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: prints the extra matter numbers in three sections.",
+     "label_check": "none",
+     "end": 128
+    },
+    {
+     "stage": "Finish the run",
+     "start": 129,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 129
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Screen candidate matters by reading documents → Scan document text with an extraction script → Calculate figures for the answer → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All pass with the same procedure: after the capped glob, a full folder enumeration, a per-prefix matter count (three prefixes at ten, three at nine), and engagement-letter reads or extraction scans to name the client behind each leading prefix and resolve matters without an engagement letter; the answer reports all six with the tie at the cutoff. Reviews repeatedly flagged that prefix counts were treated as client counts; each run answered by reading more client documents rather than changing the count."
+}

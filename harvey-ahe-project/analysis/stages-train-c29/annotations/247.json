@@ -1,0 +1,379 @@
+{
+ "task": "247",
+ "context": "Request: the most recent white collar matter where the client cooperated with the government, and the supporting document. Rubric: 1032-00007 (Halcyon Semiconductor) and its vsd-cover-letter-bis.docx (voluntary self-disclosure cover letter to BIS), plus a precision criterion. All runs named 1039-00005 (Torchlight Mining, FCPA/SEC investigation) instead.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says it is capped."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store; counts matter folders and prints the first and last twenty names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for cooperation and agency terms times out; range-split reruns write hits to files, then a filtered grep over those files with a tail limit."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of five candidate matters picked from the scan output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide find over file and folder paths for investigation, agency and offence words, collapsed to matter numbers."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search file names for request keywords; lists all files of eight matters from those hits, one of them showing a self-disclosure cover letter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 50,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Search file names for request keywords; reads analysis memos, letters and engagement papers from five of those matters; none from three listed matters. The review names unopened matters including the one with the cover letter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 56,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Filtered file listings of sixteen high-numbered matters the review named."
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one investigation matter and its agency production cover letter as the most recent playbook."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 63,
+     "end": 74,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths, re-reads a preservation letter and edits the recency wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 75,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the recency statement and the note on higher-numbered matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the description of unopened file-name hits and re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter it needed surfaced in its file-name searches and its file listing showed the self-disclosure cover letter, but it read other matters and named a different investigation.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 38,
+    "end": 50,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "Its own listing at [36]-[37] showed the matter it needed with a self-disclosure cover letter to an agency, but when choosing what to read it opened five other matters and never read that matter's files.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the review at [50] named that matter among the unopened candidates; the agent then listed other high-numbered matters and wrote its answer."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says it is capped."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders and prints the first and last twenty names."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Saves the sorted folder list to a scratch file."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 32,
+     "tags": [
+      "script error",
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script fails on a heredoc, a rerun times out, and four range-split reruns return four hits in one range and none in the rest."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 43,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Read documents picked from the file listing; prints the scan hits, then four rerun scans with a fixed range filter all return zero."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 44,
+     "end": 57,
+     "tags": [
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "Seven globs for investigation and agency words return nothing; a find over file paths for broad investigation words is cut at 240 lines by its own line limit."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 67,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of two candidate matters (first globs use a mistaken base path and return nothing)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 68,
+     "end": 75,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files; file-path grep over the highest-numbered matter folders (a depth-limited first try finds nothing)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 94,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and agency letters of three candidate matters to compare cooperation and dates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one investigation matter and a preservation-response letter as the most recent playbook."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Rewrites the response to name a later-dated remediation matter as most recent, then re-reads it."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Edits the headline back to the earlier investigation matter and removes a comparator block; re-reads twice."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans failed or came back empty and its file-name search was cut by its own line limit, so the matter it needed never surfaced; it named a different investigation.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Search file names for request keywords",
+    "start": 44,
+    "end": 57,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After its scans came back empty it switched to file-name search, but the only productive find was cut by its own 240-line limit before the matter it needed, and it never reran it uncut or narrower; no search in the run ever reached that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the review at [57] flagged the sed line limit and that the output looked cut off; the agent listed two matters from the visible part and moved on."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says it is capped."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders and files and prints the first fifty names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script times out; a range-split rerun prints about 400K chars of noisy hits."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide find over file paths for investigation, agency and offence words (911 hits, shown truncated) plus a find over subfolder names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 53,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads findings memos, agency letters and reports from six candidate matters; one guessed path is not found, so it globs that matter and reads three more of its documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one investigation matter as the most recent playbook with another as a completed comparator."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Write the response; edits the scope and ranking section to explain exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 66,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs the two cited matters to check paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 74,
+     "end": 74,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter it needed surfaced in its subfolder and file-name finds, but it read six other candidates and named a different investigation.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 29,
+    "end": 53,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its subfolder and file-path finds at [24]-[26] showed the matter it needed (an investigation subfolder), but the six matters it chose to read left that matter out and it never opened it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the reviews at [28] (truncated hit list) and [53] (only a subset of ~58 surfaced matters opened) flagged the gap generically, without naming that matter; the agent wrote its answer."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way at the answer (the same investigation matter named instead) but went off course at different stages. T0 surfaced the matter in its file-name search and listed its files, including the cover letter, then read five other matters (listed document not opened, [38]-[50]). T2 surfaced it in its subfolder and file-path finds but left it out of the six matters it read (surfaced, not opened, [29]-[53]). T1 never surfaced it: its scans failed or returned nothing and its file-name find was cut by its own 240-line limit (search miss, [44]-[57]). The critic flagged each gap and each was ignored: by name in T0 ([50]), the line limit in T1 ([57]), and generically in T2 ([28], [53])."
+}

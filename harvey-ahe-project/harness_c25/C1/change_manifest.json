@@ -1,0 +1,92 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C1",
+  "parent_checkpoint": "C0",
+  "objective": "Make large-corpus matter discovery complete and resumable before legal candidate selection, while keeping tool output bounded.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/glob.py",
+        "tools/grep.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-e2541256bbff4a383450/result.json: incomplete-document-reading",
+        "debugger/tasks/task-a89c21c85e718417dd79/result.json: incomplete-document-reading",
+        "debugger/tasks/task-ac3f68d3d94bbda2b275/result.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "Broad corpus listings and searches silently stopped at fixed prefixes, which were then treated as exhaustive candidate inventories.",
+      "mechanism": "Return deterministic bounded pages with total, truncation, and continuation metadata; expose direct-directory enumeration so every matter can enter the census without a giant context dump.",
+      "rationale": "The earliest recurrent defect was success-shaped partial output from discovery tools, so the strongest reusable fix belongs in the tool implementation rather than relying only on model caution.",
+      "predicted_fixes": [
+        "task-e2541256bbff4a383450",
+        "task-a89c21c85e718417dd79",
+        "task-ac3f68d3d94bbda2b275",
+        "task-be30f3b30b9ce7b74c33",
+        "task-1ec359401877aeea17fa"
+      ],
+      "risk_tasks": [
+        "task-0692b71d9e9320c82832",
+        "task-b4ab2572f7c52d459265"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/glob.tool.yaml",
+        "tool_descriptions/grep.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/tasks/task-e2541256bbff4a383450/result.json: incomplete-document-reading",
+        "debugger/tasks/task-e7b620d79ff4d09afc24/result.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "Agents received no indication that result caps required continuation and treated binary grep no-matches as evidence of absence.",
+      "mechanism": "Describe pagination preconditions and output fields beside the schemas, require continuation while truncated, and distinguish decoded text search from format-aware Office-document reading.",
+      "rationale": "The model must correctly interpret the new structured page metadata and avoid applying plain-text search semantics to binary matter documents.",
+      "predicted_fixes": [
+        "task-e2541256bbff4a383450",
+        "task-e7b620d79ff4d09afc24",
+        "task-ce55ec94b40b77373284"
+      ],
+      "risk_tasks": [
+        "task-0692b71d9e9320c82832"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/overview.md: incomplete-document-reading",
+        "debugger/tasks/task-6ad6efea61c05527b425/result.json: incomplete-document-reading",
+        "debugger/tasks/task-c6833c1d91ea51b7906c/result.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "Across matters, agents narrowed from visible hits before forming a complete candidate denominator and lost discovered candidates during follow-up.",
+      "mechanism": "Require a paginated matter census, concise qualification ledger, bounded recovery from timeouts, primary/status evidence review, and final reconciliation for corpus-wide or superlative requests, while exempting explicitly named-file tasks.",
+      "rationale": "Tool completeness removes silent clipping, but the agent still needs an operational state transition from census to qualification to drafting so complete pages become a maintained legal-review denominator.",
+      "predicted_fixes": [
+        "task-6ad6efea61c05527b425",
+        "task-c6833c1d91ea51b7906c",
+        "task-b6b392ee47cef5d6f300",
+        "task-163610cab3139875cb8a"
+      ],
+      "risk_tasks": [
+        "task-0692b71d9e9320c82832",
+        "task-b4ab2572f7c52d459265"
+      ]
+    }
+  ],
+  "validation": [
+    "Python syntax and YAML parsing",
+    "Synthetic multi-page glob and grep smoke tests",
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

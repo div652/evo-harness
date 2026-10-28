@@ -1,0 +1,289 @@
+{
+ "task": "173",
+ "context": "Request: the firm's buy-side healthcare deals over $500M that closed in 2024, as pricing comparables. Rubric: 1001-00003 (Ardent Capital Partners / Cardinal Peak) as qualifying, plus precision (only 1001-00001 and 1001-00003 may be asserted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 31,
+     "tags": [
+      "script error",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script: a heredoc error, two timeouts, then five parallel range runs to files and a grep of the saved output (~314K chars)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: per-matter ranking script with term counts and amount matching (~66K chars)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads memos, certificates, execution agreements and status memos from seven candidates, then four more documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes two qualifying deals with metrics and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths and fixes one path."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 92,
+     "end": 106,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Filtered listings of four sibling matters and one read each to rule them out, then an edit to the exclusions list."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Screen candidate matters by reading documents → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script with broad terms and no output cap; times out after ~6.1M chars."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first scan was an uncapped extraction script with broad terms; ~6.1M characters came back and the run ended without an answer.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The first store-wide scan matched very broad terms and printed every hit with no cap; the output filled the context before any review or answer.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). A glob on the matters folder returns nothing; a shell listing counts 266 folders and prints the first and last 20."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script with broad terms; times out after ~282K chars; the review rates it not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Reopened: background extraction of all documents into a text cache, polled until done; the filter query over the cache times out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reopened (attempt 3): launches a bounded filter in the background; polling calls are flagged by the protocol and no list is retrieved."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened (attempt 4): reads the finished filter output (254 matters with snippets) and its matter list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of three shortlisted matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 60,
+     "end": 67,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for sector words (28 hits), then lists all files of five more candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 90,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads agreements, certificates and engagement letters of five candidates, a clause-extraction script over two agreements and one more letter; a premature stage_start is refused."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 91,
+     "end": 100,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Text search over the whole extracted cache for sector, price and date terms, per-matter checks of four matters and one read."
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes two qualifying deals with metrics and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 pass; T1 fails. All three opened with the whole-store glob, a folder listing and a store-wide extraction script with broad terms. T1's scan printed every hit uncapped (~6.1M chars) and overflowed the context before any review. T0's scan failed and timed out with little output, and T2's timed out at ~282K chars; both then reran in range chunks or a background cache, ranked candidates, listed and read the leading matters, and wrote the same two deals. The split is at the first scan stage; T1 had no review there, while T0 and T2's reviews flagged the timeouts and they reopened the stage."
+}

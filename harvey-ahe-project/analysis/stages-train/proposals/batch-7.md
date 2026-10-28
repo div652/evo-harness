@@ -1,0 +1,18 @@
+# Batch 7 proposals (tasks 126 129 130 131 132 137, all 18 runs failed)
+
+| Kind | Name | Definition | Example | Why no existing name fits |
+|---|---|---|---|---|
+| error kind | NEW: listed-document-not-opened | The agent found and worked on the needed matter, and a document a criterion requires appeared in its own listing of that matter's files, but when choosing what to read it left that document out and never opened or cited it | 137_T0 [42]-[48], 137_T2 [20]-[26] | surfaced-not-opened is defined for matters, not documents within an opened matter; missing-identifier assumes the agent read the right documents and only omitted an identifier from the answer |
+| error kind | NEW: opened-but-excluded | The agent opened a needed matter's documents but judged it not qualifying (from a skim that stopped before the relevant clause, or a strict reading of what it found) and left it out of the answer or presented it as a counterexample | 132_T0 [14]-[30], 132_T2 [28]-[29] | surfaced-not-opened requires the matter was never opened; hedged-answer is about qualifying a conclusion, not excluding a matter; over-inclusion is the opposite direction |
+| hindsight | NEW: answer misses document | The written answer names the needed matter but omits a specific document a criterion requires | 137_T0 [51]-[52], 137_T2 [33]-[34] | "answer misses target" is about omitting a matter; "answer lacks matter number" is about the matter number |
+
+## Issues
+
+- search-miss was used for runs whose store-wide extraction scans all timed out even when the agent retried several times (131_T1 three scans, 137_T1 two scans plus file-path filters and a shell loop that printed nothing); the definition's "neither broadened nor retried" does not hold literally there. A variant such as "repeated-timeout" may be worth considering if it recurs.
+- 126, 130 and 132 have 14-26 qualifying matters; the first error is the search that left most of them unsurfaced, and later independent errors (surfaced-not-opened, over-inclusion, NEW: opened-but-excluded) go to other_errors, so some runs carry three later errors.
+- over-inclusion in 126 and 130 is mostly scope: the agent asserted matters whose papers really did seek fees, but from other practice areas (or same client, other matter number) than the docket the request named. This is the loose-qualifier case already noted for 082_T1; a separate "scope-not-applied" kind may be warranted.
+- Hindsight on whole-store listings: 129 and 132 have a rubric matter among the few matters a capped whole-store glob shows (with request-matching file names in 129). I used "target surfaced" on that "List files in the document store" stage; earlier batches only ever used "none" there because no rubric matter appeared.
+- 130_T2 [15]-[16] is a matter-folder listing filtered to folders with court-work subfolders, printing subfolder names; labelled "List matter folders" with "target in folder list only", though it gives slightly more signal than a bare folder-name list.
+- 130_T0 [6]-[15]: whole-store globs for document-type folder names (e.g. motions, settlements) were labelled "Search file names for request keywords"; the words are derived from the request's domain rather than taken from it.
+- 132_T1 [12]-[15] mixes two in-matter greps with one store-wide grep in one parallel event; labelled by the dominant "Search within a candidate matter's files", but the first error is the store-wide grep (events field narrows it).
+- Context overflow appeared three times (130_T0, 131_T0, 131_T2), each from a store-wide extraction script printing every match of broad patterns (4M-63M chars).

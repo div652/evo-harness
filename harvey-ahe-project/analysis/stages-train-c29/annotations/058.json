@@ -1,0 +1,334 @@
+{
+ "task": "058",
+ "context": "Request: which of the firm's fund and asset-management matters include a GP clawback, and pull the executed LPAs. Rubric: 1001-00002 (Ardent), 1003-00002 (Harrowgate), 1024-00002 (Driftwood), 1026-00001 (Briarwood Family Office: an LP-side review of a third-party fund the client passed on), 1027-00002 (Pellegrino), a proof document for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts and lists all matter folder names. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script fails on a heredoc error, then times out with no output. Review: no."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for request words, including a broad word that matches many unrelated files. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower path search grouped by matter (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 46,
+     "tags": [
+      "mixed intents",
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six documents from two matters, then a snippet script over every file of 13 listed matters (about 540K chars). Review: no (claims about four matters rest on bulk snippets)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Listings of 18 candidate matters filtered to names with agreement words. Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 53,
+     "end": 73,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the openings of documents in six matters, a snippet script on five documents, reads in a seventh matter and one path search for executed agreements. Review: partly (first lines only; one listed amendment unread)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 74,
+     "end": 81,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "A read refused because no stage was open, then the same read of an executed amendment in a reopened stage (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes seven matters as including the term and two executed agreements as the pull list. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the count to eight by adding one more matter and re-reads the opening. Review: partly (added matter unverified)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 103,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit refused because no stage was open, then the same caveat edit in a reopened stage (attempt 2). Review: yes."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "All five needed matters were named, but the LP-side review matter is described as the sponsor's own engagement, and draft-only matters are asserted as qualifying.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 82,
+    "end": 87,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "It names the LP-side review matter but describes it as the sponsor's own engagement, although the review memo it read at [55]-[61] is addressed to the investor client.",
+    "critic": "not-flagged",
+    "critic_note": "No review mentioned how that matter was described."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It also asserts matters that have only draft or markup documents, picked from a bulk snippet scan; after the review it read one opening of two of them and kept them (evidence seen at [34]-[73]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [46] named two of these matters as resting on bulk snippets; the agent read one document of each and kept them."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts and lists all matter folder names. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing up to six snippets per file for broad terms, followed by a path search in the same command; times out after about 40M chars and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The first store-wide scan printed uncapped snippets for broad terms; the context filled and the run ended with no response.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The uncapped snippet output of the first store-wide scan filled the context before any document was opened or a response written.",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before its stage_end review."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folder names with a short script. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Store-wide extraction script with broad terms; times out after about 1.6M chars. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for request and execution words (about 31K chars). Review: partly (too broad)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrow path search saved to a file with per-matter counts, then greps of it for eight matters (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 36,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements, amendments, side letters and a review memo of the matters it picked (up to 240 lines each), then a snippet script over four of them. Review: partly."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of six matters. Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes four matters with the term plus one draft-only comparator, with document paths. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 68,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the opening, softens the completeness claim and edits the scope section; a later read and grep miss the file. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the full response and reformats the exclusions (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads one later section (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "All five needed matters and their documents are named, but the LP-side review matter is described as the sponsor's own engagement.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 62,
+    "end": 67,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "It names the LP-side review matter as the sponsor's own engagement, although the review memo it read at [36]-[50] is addressed to the investor client reviewing another sponsor's terms.",
+    "critic": "not-flagged",
+    "critic_note": "No review mentioned how that matter was described."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 reached all five matters through file-name searches and both failed one criterion the same way at the write stage: the LP-side review matter was described as the sponsor's own engagement (misstated facts), which no review named. T0 additionally asserted draft-only matters taken from a bulk snippet scan (over-inclusion) that the review had questioned; T2 read its chosen matters in depth and held to them. T1's first store-wide scan printed uncapped snippets (about 40M chars) and the context filled before any review (context overflow)."
+}

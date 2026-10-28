@@ -1,0 +1,394 @@
+{
+ "task": "158",
+ "context": "Request: which privacy matters resulted in an executed (finalized and signed) data processing agreement, and pull the DPA from each; drafts or negotiated-only DPAs do not count. Rubric: 1017-00008 (Aurelius Media, two executed DPAs), 1022-00007 (Northgate Telecom, executed amended DPA), 1038-00010 (Cascade Retail, onpoint-dpa-rider.docx), plus a precision criterion (permitted set also includes 1009-00004).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts the files in every matter folder. Review: yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for agreement, privacy and execution words (about 35K chars). Review: partly (too broad)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrow path search for agreement words (27 hits) plus a broad execution-word list (about 108K chars) (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script over documents and emails with broad terms; about 437K chars. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrow-phrase script counting execution markers per file (attempt 2). Review: partly (weak markers)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 63,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads 18 agreements, closing memos, certificates and compliance memos from seven candidate matters, plus a snippet script. Review: partly (execution inferred from labels and memos; one placeholder date)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 64,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos of three matters it excludes and certificates and a memo of two it includes (attempt 2). Review: partly (indirect execution evidence)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight agreements across seven matters as executed. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths. Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "All needed matters and agreements were named, but three matters whose exhibit agreements rest on closing documents are also counted as executed.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 80,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It counted three matters whose agreements were execution-version exhibits backed only by closing letters, certificates or memos, one of them after the review flagged a placeholder date (evidence seen at [38]-[74]).",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [63] named the placeholder date and indirect evidence for one counted matter; the agent reopened the stage, read two certificates and kept it, and the other two were not named."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Three globs for agreement words (one empty) in parallel with a folder count and a capped path search. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script; times out after about 155K chars. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 36,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Rerun times out, then the script runs in the background with polling; 292 hit files printed (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 62,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads 17 agreements, memos and closing documents from eight candidate matters, then tail and snippet scripts. Review: partly (two inclusions rest on closing documents)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 63,
+     "end": 69,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Read a chosen matter's documents in depth. File-type counts and a store-wide path search, in parallel with filtered listings of candidate matters (labelled by the search; attempt 2). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 70,
+     "end": 85,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Store-wide background script for execution wording near agreement terms with polling (one poll timed out), then reads of three hit documents. Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters with executed agreements and lists the matter with the rider among exclusions. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the method text. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks linked paths after a failed first path (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It opened the matter with the executed rider but excluded it on a rollout memo, and counted two matters backed only by closing documents.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 86,
+    "end": 91,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It read that matter's rider and rollout memo at [37]-[62] but excluded the matter as execution still pending, although its rider was executed.",
+    "critic": "not-flagged",
+    "critic_note": "No review questioned the exclusion of that matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted two matters whose exhibit agreements rest on closing binders or letters, an inference the review named before it moved on (evidence seen at [37]-[62]).",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [62] named both matters' execution as resting on closing or index statements; the next stage searched elsewhere and the write kept both."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 16,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Folder count and listing in parallel with three globs for agreement words (labelled by the search). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad path search, 541 hits. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 35,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script fails on a heredoc error, then times out; four range scripts write about 1-1.7M chars each to files and print hit paths. Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 64,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads 12 agreements and addenda from eight candidate matters, tail scripts, then principal agreements and closing letters (one guessed path missing). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 65,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one matter's closing folder and reads its binder index and two agreements again (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters, excluding the matter with the rider without having opened it. Review: partly (names that matter as unopened)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths after a failed first path. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 97,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit refused because no stage was open, then the same scope edit in a reopened stage (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter with the executed rider surfaced in its first globs but was never opened; the answer excludes it and counts two matters backed only by closing documents.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 64,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its globs at [10]-[14] listed that matter's rider and rollout files, but it marked the matter as a likely template from the names and left it out of every read; the answer excludes it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The write-stage review at [79] named the matter among unopened candidates; the check stages only edited wording."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted two matters on closing binders and letters after the review flagged that inference; it rechecked one binder and kept both (evidence seen at [36]-[73]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [64] named both matters' execution as inferred from closing documents; the agent reopened the stage for one of them and kept both."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs counted exhibit agreements backed only by closing letters, binders or certificates as executed (over-inclusion at the write stage); reviews named this inference for specific matters in every run, and the agents rechecked or moved on but kept them. They split on the matter with the executed rider: T0 read the rider and a board memo stating it was executed and included it; T1 read the rider and a rollout memo and excluded it (under-inclusion, not flagged); T2 judged it a template from file names and never opened it (surfaced, never opened), though the write-stage review named it as unopened."
+}

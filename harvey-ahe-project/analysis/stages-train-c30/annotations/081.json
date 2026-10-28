@@ -1,0 +1,283 @@
+{
+ "task": "081",
+ "context": "Request: the firm's most recent filed willful-infringement case and its supporting document. Rubric: 1021-00004 (Verimark Hospitality trademark complaint filed July 2025, complaint-trademark-infringement.docx) as the only answer; 1013-00005 (GenomeDx 2025 patent complaint), 1014-00004 and others are earlier.",
+ "runs": [
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a two-level folder listing and a file count; the review recommends name and text searches.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-keyword find | grep over all paths and a folder-name grep, each line-capped; the review flags the caps and the early focus on one dedicated matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path regex grouped by matter; names seven candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad terms (about 12,500 hit lines saved, 55K shown), then a narrower one that times out with about 390K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-phrase scan split into two matter-number ranges; the review flags a hand-picked list and narrow phrases.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: compact per-matter scan with broader variants, pairing hits with pleading paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Reads the opening of five complaints, then later sections of two and two civil cover sheets.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 55,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Reads a status letter, an expert retention letter and the prayer of the lead matter's complaint to fix its filing date.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the most recent filed case with the complaint as proof and dated comparisons.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and three source openings; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the cited complaint, a later draft complaint of another matter and the response; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 86,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path greps for request and pleading words (line-capped), a folder-name grep and the last 40 matter folders; the review flags the cap and an early single-matter focus.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path regex grouped by matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 30,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out with no output; a loop over six named candidates also times out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 37,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: two range-split scans print about 370K and 440K chars of mostly unrelated contract hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: exact-phrase scan restricted to filing folders, one line per hit file.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 61,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads six complaints, then a pre-filing memo, a status letter, a motion memo, a draft complaint and a mediation statement; one guessed path fails.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Filtered file listings of seven candidate matters and full listings of two.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads two status emails of one candidate and a status report of another to settle filing status.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the most recent confirmed filed case with its complaint, dated comparisons and the exclusion of an unfiled draft.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and confirms three cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the openings of the three cited documents; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 97,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1, T2 pass; T0 fails without a trace, so no split stage can be named). T1 and T2 followed the same procedure: whole-store listing, file-name searches, repeated store-wide extraction scans until a bounded list of candidate pleadings came out, reads of the candidate complaints, then dated corroboration of the lead matter's filing from a status letter before writing. Both scan stages carried a label note pointing to screening, and both runs did their first screening reads or listings under the scan or screening label instead of opening a new stage. T0's untraced output picked another candidate whose exact filing date the traced runs could not fix; the traced runs ranked the candidate with a dated filing above it.",
+ "runs_without_trace": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "reason": "Trace has no tool calls (agent_error: No response content or tool calls; 0 assistant turns). A response.md from an untraced attempt sits in the output folder and names another candidate matter as the answer; no stages or first error can be assigned."
+  }
+ ]
+}

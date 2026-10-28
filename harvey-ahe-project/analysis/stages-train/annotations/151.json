@@ -1,0 +1,262 @@
+{
+ "task": "151",
+ "context": "Request: the most recent M&A deal with a working-capital adjustment, by executed APA signing date. Rubric: 1006-00008 (Crestline Packaging / Lakewood outpatient clinics, APA signed June 16 2025) and its asset-purchase-agreement-execution.docx, plus a precision criterion that permits no other matter (1006-00006, signed June 15 2025, is the near miss).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shallow find that prints nothing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Files-with-matches grep for request terms with a file-name glob for agreement abbreviations (about 38 paths, including two draft agreements of one matter)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 8,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads two executed agreements and two emails of four matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 13,
+     "end": 17,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate's files and globs executed documents store-wide (capped at 100), with two reads (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 18,
+     "end": 24,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the executed agreement and deal memo of the matter it picked and later sections of two comparators."
+    },
+    {
+     "stage": "Write the response",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a deal signed in an earlier year as the most recent, with two comparators."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 27,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "A file-name glob listed the latest deal's draft agreements, but it never opened that matter and named an older deal.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 8,
+    "end": 12,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The file-name glob just before listed two draft agreements of the matter, but the four matters it chose to read left it out and it never checked that matter's executed agreement."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Whole-store glob plus a files-with-matches grep for request terms."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two file-name globs for agreement abbreviations and two typed content greps; one glob and one grep return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, a redline, a letter and an email of five matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of five candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of four executed agreements and two deal memos."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 30,
+     "end": 40,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads further sections of the agreement, memo and email of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a deal signed one day before the latest one as the most recent, with comparators."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 43,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "A file-name glob listed the latest deal's draft agreements, but it never opened that matter and named a deal signed one day earlier.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 10,
+    "end": 16,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The file-name glob just before listed two draft agreements of the matter, but the five matters it chose to read and list left it out, so it never saw the later signing date."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs by file type (one type has no files)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and memos of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for the request terms; times out after about 3.2M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads one matter's executed agreement and closing certificate plus two comparator agreements; two guessed paths do not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the next section of that matter's executed agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest deal as the answer and lists three earlier executed agreements as comparators that also contain the term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 25,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The answer names the latest deal and its agreement but also describes three earlier deals as containing the term, which the judge counted as asserting them.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Write the response",
+    "start": 23,
+    "end": 24,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It named the latest deal but also listed three earlier executed agreements as containing the term, and the precision check counted those as asserted answers."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T1 both had a file-name glob list two draft agreements of the latest deal, but neither opened that matter; T0 named a deal from an earlier year and T1 a deal signed one day earlier (surfaced, never opened). T2's timed-out scan reached the latest deal and it named it, but listing three earlier deals as comparators that contain the term failed the precision check."
+}

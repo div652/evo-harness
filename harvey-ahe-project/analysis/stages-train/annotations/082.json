@@ -1,0 +1,270 @@
+{
+ "task": "082",
+ "context": "Request: semiconductor IP disputes of the firm where it actually litigated an injunction (conflicts / precedent check). Rubric names no matter: the expected answer is that none qualifies; 1014-00004 (Optiwave v. Lumicore) has only a pleaded permanent injunction and an unfiled, on-hold preliminary-injunction motion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads five documents (memos, filings, an expert outline) of the matter at the top of the listing; no keyword lead behind the choice."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script over document text for request keywords; times out after printing about 360K chars of per-file hit lists."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two batches of reads across five candidate matters picked from the scan output: complaints, a draft motion marked on hold, status reports, case assessments, a closing memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no matter meets every part of the request and explains why each near candidate falls short."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four documents of the matter at the top of the listing; no keyword lead behind the choice."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 10,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script over document text; times out after about 220K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four documents of one candidate the scan suggested (including a draft motion marked on hold), then documents of two other candidates."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Walks the store for folder names containing request words; one candidate matter has a dedicated folder for the remedy."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Reads a status report and two analyses from that folder of the matter it settled on, plus one conflict memo of another candidate (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes that one matter qualifies because the remedy was pleaded and developed, while noting that the interim motion was never filed."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 30,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "It read that the matter's interim motion was an unfiled draft on hold, yet presented the matter as qualifying on the strength of a pleaded remedy.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 28,
+    "end": 29,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Having read that the interim motion was an unfiled draft on hold, it still presented the matter as one where the remedy was actually litigated, relying on the pleaded permanent remedy and internal analyses."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two content greps (documents, emails) for request keywords; the email grep returns most hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of four candidate matters from the grep hits."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs for file names containing a request keyword."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the openings of documents from two related candidate matters, then of six motion papers found by the name search across six matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 26,
+     "end": 30,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three more document greps; two return nothing, one repeats an earlier short hit list."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 31,
+     "end": 35,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Lists one candidate's files and reads two of its documents, plus a guessed path in another matter that does not exist (labelled by the dominant intent)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-lists one candidate matter's files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 42,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four more documents across four candidate matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no matter meets a strict reading of the request and lists the near candidates with reasons."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 45,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs reached the same candidate matter and read its draft interim motion marked as on hold. T0 and T2 treated an unfiled motion and a pleaded-only remedy as not meeting the request and wrote that no matter qualifies. T1 read more documents from that matter's remedy folder and wrote the matter up as qualifying (over-inclusion). The runs split at the judgement made when writing, not in search."
+}

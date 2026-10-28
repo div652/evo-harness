@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C10",
+  "parent_checkpoint": "C9",
+  "objective": "Replace an incomplete reviewer pass with deterministic reconciliation between designated candidates, surfaced authority paths, and successful candidate-local reads.",
+  "changes": [
+    {
+      "id": "chg-C10-1-reviewer-rollback",
+      "type": "rollback",
+      "component": "sub_agent",
+      "paths": [
+        "agent.yaml",
+        "systemprompt.md",
+        "sub_agents/candidate_reviewer/agent.yaml",
+        "sub_agents/candidate_reviewer/systemprompt.md"
+      ],
+      "evidence": [
+        "attribution/C9/transition.json: chg-C9-1-reviewer-pass matched only one of four predicted gains while both declared regression risks materialized",
+        "debugger/C10/tasks/task-4925ecf9736aa5749d7d/result.json: reviewer_incomplete_coverage",
+        "debugger/C10/tasks/task-aba8509e35acd8de59b9/result.json: reviewer_failed_to_catch_missing_evidence"
+      ],
+      "failure_pattern": "The optional second-pass reviewer reproduced the parent's candidate omissions, consumed turns, and failed to promote already surfaced decisive source paths.",
+      "mechanism": "Restore the C8 single-agent workflow and remove reviewer routing so the main agent retains the full trace and spends its budget resolving source obligations rather than delegating an incomplete snapshot.",
+      "rationale": "The regressing logical edit was registered across the top-level config, prompt, and reviewer files; selectively restoring only those files removes the unsupported mechanism while retaining the previously beneficial discovery tools and coverage middleware.",
+      "predicted_fixes": [
+        "2924060a6edbcf9f",
+        "3c9b749a71eec52f",
+        "7edddbd9f52f4c1d"
+      ],
+      "risk_tasks": [
+        "bf6dc1ed09375414",
+        "381c5dcfaa875825"
+      ]
+    },
+    {
+      "id": "chg-C10-2-source-consistency-audit",
+      "type": "improvement",
+      "component": "middleware",
+      "paths": [
+        "middleware/coverage_state.py",
+        "skills/candidate-dossier-workflow/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C10/tasks/task-4c22621a50f82a7aa563/result.json: high_signal_candidate_not_promoted",
+        "debugger/C10/tasks/task-dee954dfddc8fe593fcd/result.json: execution_evidence_not_promoted",
+        "debugger/C10/tasks/task-57c1856c639be1e0c2c7/result.json: single_lexical_hint_not_followed_up",
+        "debugger/C10/tasks/task-96a6aea03ef2121398a0/result.json: closing_or_status_evidence_not_promoted",
+        "debugger/C10/summary.json: repeated wrong_candidate_set_and_omissions diagnoses begin when surfaced candidate-local paths are not opened before ledger closure"
+      ],
+      "failure_pattern": "Across independent tasks, designated roots or primary-looking lifecycle paths appeared in search results but were closed by generic ledger rationales without any successful candidate-local source read.",
+      "mechanism": "Persist successful read roots and bounded authority-path signals in trial-local middleware state, compare them with designated candidate rows before every model turn, and emit exact unresolved root/path obligations that cannot be cleared by changing ledger status words.",
+      "rationale": "Middleware observes both discovery and read results deterministically and preserves cross-turn state without changing protected tools; the paired skill defines when designation is appropriate and prevents a neutral all-files inventory from creating spurious obligations.",
+      "predicted_fixes": [
+        "bf6dc1ed09375414",
+        "381c5dcfaa875825",
+        "7edddbd9f52f4c1d",
+        "a030496be1a701a6"
+      ],
+      "risk_tasks": [
+        "b0772e2e68f3fbe2",
+        "a6fc89dada8cdabc",
+        "d964c191cc883a36"
+      ]
+    }
+  ],
+  "validation": [
+    "candidate validation passed after component commits",
+    "Python syntax and synthetic candidate/source reconciliation smoke checks passed",
+    "NexAU evolution guide static validation passed with only the expected local-schema availability warning"
+  ]
+}

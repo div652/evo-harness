@@ -1,0 +1,279 @@
+{
+ "task": "081",
+ "context": "Request: the most recent willful-infringement case the firm has filed, and the supporting document. Rubric: 1021-00004 (Verimark Hospitality; complaint-trademark-infringement.docx), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Content-mode grep for the request words over the whole store (hits only in emails of a few matters), plus a grep in one listed matter's documents that returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 7,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs all files of one matter with email hits."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists matter folders to depth two."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 11,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Files-with-matches grep for the single key word; email hits from a few matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads emails and complaints from three matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Email-only grep for filing phrases and the key words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads one filing email of another matter."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 22,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two greps for filing words in one candidate matter and a read of its status email (labelled by the dominant intent)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs that matter's files."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the complaint of the matter it settled on."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 32,
+     "end": 35,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Greps that matter's emails for dates and its complaint for the key words; the complaint grep returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one patent case as the most recent filing, citing its complaint."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 38,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → List matter folders → Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Every grep reached only emails; the matter it needed never surfaced, and it named the latest patent case among matters whose emails matched.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 4,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "All its greps matched only email text, while the willful-infringement complaint of the matter it needed is a document file; it never searched document text or file names, so that matter never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Parallel whole-store glob and a content-mode grep for the key words; hits only in emails of a few matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs all files of four matters with email hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads: complaints and emails of four matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 22,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Grep over one matter's documents for key words and dates; returns nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of that matter's complaint."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs that matter's files again."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one patent case as the most recent filing, citing its complaint."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 30,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Finish the run",
+   "failure_point": "Its one grep reached only emails; the matter it needed never surfaced, and it named the latest patent case among matters whose emails matched.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a grep that matched email text alone; the matter it needed has its willful-infringement complaint in a document file, so it never surfaced, and it did not search file names or document text."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs; the one for a single file type returns nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script for broad litigation words printing up to ten snippets per file; returns about 6.2M chars and the run stops with the context full, before any response is written."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "An unbounded scan dump filled the context; no response.md was produced.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 6,
+    "end": 7,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Ran a store-wide scan with broad terms and no output cap; its ~6.2M-char output overflowed the context and the run ended without a deliverable."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed at their first search. T0 and T1 relied on the grep tool, which matched only email text, so the matter whose complaint is a document file never surfaced; both picked the latest patent case among the email hits (search miss at the first content-search stage). T2's first search was an uncapped store-wide scan that filled the context (context overflow)."
+}

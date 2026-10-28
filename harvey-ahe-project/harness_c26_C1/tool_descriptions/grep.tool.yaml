@@ -1,0 +1,46 @@
+type: tool
+name: grep
+description: >-
+  Search directly readable file contents with a Python regular expression.
+  Results are sorted by relative path and returned as a page with total_results,
+  showing, next_offset, and an explicit COMPLETE or PARTIAL status. A PARTIAL
+  page cannot support corpus-wide, comparative, or negative conclusions; follow
+  next_offset or narrow or partition the query. This is reliable for plain text
+  and email-like files. It does not parse office documents: use glob for office
+  filenames and read each candidate document for its extracted contents.
+input_schema:
+  type: object
+  properties:
+    pattern:
+      type: string
+      description: Python regular expression to search for.
+    path:
+      type: string
+      description: File or directory to search. Defaults to the documents directory.
+    glob:
+      type: string
+      description: Glob pattern limiting searched files, such as '**/*.eml'.
+    output_mode:
+      type: string
+      enum:
+        - content
+        - files_with_matches
+        - count
+      description: >-
+        content returns matching lines; files_with_matches returns one path per
+        matching file; count returns each matching path and its match count.
+        Default is files_with_matches.
+    offset:
+      type: integer
+      minimum: 0
+      description: Zero-based result offset for pagination. Default is 0.
+    limit:
+      type: integer
+      minimum: 1
+      maximum: 500
+      description: Maximum results on this page. Default is 250; maximum is 500.
+  required:
+    - pattern
+  additionalProperties: false
+disable_parallel: true
+binding: tools.grep:grep

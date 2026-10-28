@@ -1,0 +1,212 @@
+{
+ "task": "192",
+ "context": "Request: all firm merger agreements that use the phrase 'material adverse effect', and pull those documents (MAE language bank). Rubric: nine matters (1001-00004, 1001-00005, 1003-00003, 1003-00004, 1008-00008, 1018-00003, 1032-00005, 1041-00003, 1042-00004), each with its executed merger agreement, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a content-mode grep for the exact phrase; the few hits are email lines."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of three agreements from the two matters at the top of the listing; a parallel files-with-matches grep lists email files from several matters (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 10,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A file-name glob for merger files lists files from many matters; a .docx grep for agreement titles returns nothing; two later-section reads of listing-top agreements run in parallel."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 18,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A store-wide .docx text scan for the phrase prints about 596K chars across many matters; a second script keeps only agreement-named files under folders named exactly 'Transaction Documents' and prints a short file list."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 23 documents across 12 matters from the second script's list."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "A folder-name filter in its second scan dropped one matter that its first scan had listed; the response was built from the filtered list.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 15,
+    "end": 18,
+    "events": "[17]-[18]",
+    "kind": "over-narrow-filter",
+    "why": "Its first scan listed every matter it needed, but the follow-up script kept only files under folders with one exact name, which dropped a matter whose agreements sit in a differently named folder, and it wrote from that list."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 7,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Three content greps with a non-recursive *.docx glob (the phrase in two casings, agreement titles); all return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads three agreements from the two matters at the top of the listing at length, then re-reads one."
+    },
+    {
+     "stage": "Write the response",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three documents from the two listing-top matters as the only ones using the phrase."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 16,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "All greps returned nothing; it treated the agreements of the two listing-top matters as the whole set.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 4,
+    "end": 7,
+    "events": "",
+    "kind": "search-miss",
+    "why": "All three greps used a non-recursive *.docx glob and returned nothing; it did not retry with another glob, scan document text or search file names, and fell back to the listing-top matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents",
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Whole-store glob plus a files-with-matches grep for the phrase with glob '*'; the grep returns nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of three agreements from the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 9,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the next sections of the same three agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes the two listing-top matters as the only ones whose agreements use the phrase."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 15,
+     "end": 15,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only grep returned nothing; it treated the two listing-top matters as the whole set.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "[2]-[4]",
+    "kind": "search-miss",
+    "why": "Its only grep used the glob '*' and returned nothing; it never retried, scanned document text or searched file names, and treated the listing-top matters as the whole set."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T1 and T2 failed the same way: their only content greps used non-recursive globs and returned nothing, so they wrote up the agreements of the two matters at the top of the listing (search miss at the first search stage). T0 searched further: a file-name glob and a store-wide text scan both reached every needed matter, but a follow-up script kept only files under folders with one exact name, which dropped one matter (extraction-scan stage); it passed 9 of 10 criteria."
+}

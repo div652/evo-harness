@@ -1,0 +1,357 @@
+{
+ "task": "011",
+ "context": "Request: all Banking & Finance deals that negotiated defined adjusted-EBITDA add-backs, with a document showing the add-backs for each. Rubric: nine matters (1005-00001 Nexford, 1006-00001 Crestline, 1010-00001 Arbor, 1012-00001 Stonefield, 1019-00002 Whitmore, 1021-00001 Verimark, 1038-00002 Cascade Retail, 1042-00001 Brightfield, 1043-00001 Ironhaven), a proof document per matter, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find on the store (empty), a pwd/ls of the workspace, then find | head -200 over all files."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 8,
+     "end": 9,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Files-with-matches grep with a `*` glob; returns nothing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists matter folders and their subfolders, first 240 lines."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over file paths for credit, loan and agreement words, first 240 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads an issues list, a covenant memo and four credit agreements from five matters on that list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 26,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide python-docx scan times out; a path search for an engagement number seen in a document; then a zipfile scan for files with EBITDA plus add-back or negotiation words lists hits in many matters (about 124K chars). Labelled by the dominant intent."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads negotiation memos and draft agreements from eight matters picked from the scan list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower scan grouping add-back and negotiation hits by matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos and agreements from five matters, including a sibling matter of a client already read."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 47,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of one negotiation memo and a restructuring term sheet."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 48,
+     "end": 51,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet scripts pulling EBITDA and add-back passages from the term sheet and three named documents."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of two more credit agreements."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts pulling the EBITDA definitions from five named agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 62,
+     "end": 63,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nine matters, each with a document showing its add-backs."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 64,
+     "end": 64,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "A scan listed every qualifying matter, but two were never opened, two that were read were left out, and the answer added drafts and a sibling matter.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 27,
+    "end": 35,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan just before listed all nine qualifying matters, but the eight matters it chose to read left two of them out, and it never opened those two later."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 62,
+     "end": 63,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Two qualifying matters whose negotiation memos it had read are left out of the answer without a stated reason."
+    },
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 62,
+     "end": 63,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted draft and term-sheet matters, and cited a client's sibling matter in place of the matter whose executed agreement it had read."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches: engagement letters, then transaction documents and memos, of the matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "no matches",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "An unzip | grep loop over all documents prints nothing; a python-docx scan for EBITDA and credit-agreement lines times out after about 1.7M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and a credit agreement of three matters from the scan output."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script pulling the Adjusted EBITDA definition from two named agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters, each with its executed agreement."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 27,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The only working scan timed out early; the answer names the two matters it reached and omits the other seven.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its scans either printed nothing or timed out after reaching only two of the matters it needed; it accepted the partial output and did not narrow the scan or search another way."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (empty) plus whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Files-with-matches grep for EBITDA, add-back and financing words with a `**/*` glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Python walk listing files under folders whose names contain financing words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 13,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A store-wide python-docx scan times out after about 160K chars; a second scan limited to financing and transaction folders lists EBITDA-definition and add-back lines (about 150K chars)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 20-35-line openings of memos and agreements from five matters; a second batch of five guessed new-matter-memo paths all fail."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes thirteen matters from the scan snippets and openings."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Adds five more matters, re-reads the top of the response and updates the count to eighteen."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Partial scans reached six qualifying matters; the answer lists eighteen from snippets and skims, adding many outside the set and missing three.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 10,
+    "end": 13,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its scans (one timed out, the other limited to finance-named folders) reached six of the nine matters it needed; it searched no further, so the other three never entered its candidate set."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted every matter whose scan snippet showed an EBITDA definition or add-back, after 20-35-line skims, including drafts and a sibling matter of one client."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, in two ways. T0 ran a scan that listed every qualifying matter, but the matters it chose to read left two out (surfaced, never opened); it also dropped two matters it had read and added drafts and a sibling matter. T1 and T2 relied on scans that timed out or were narrowed to finance-named folders and reached only some qualifying matters (search miss); T1 wrote the two it reached, T2 wrote eighteen matters from snippets and short skims (over-inclusion)."
+}

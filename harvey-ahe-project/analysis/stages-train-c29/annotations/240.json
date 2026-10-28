@@ -1,0 +1,383 @@
+{
+ "task": "240",
+ "context": "Request: the firm's most recent Tax matter with a tax indemnity provision in an executed agreement, and the document evidencing it. Rubric: 1001-00006 (Ardent Capital Partners), its closing-tax-memorandum.docx, plus precision (no other matter asserted as most recent).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and prints the first and last 30."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; three shell loops return 0 hits because the unzip tool is missing; a zipfile version then prints ~2.25M chars uncapped; the review rates it not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: bounded zipfile scan in three ranges with candidate lines (~37K chars)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 44,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs all files of four candidate matters with the latest-dated agreements in the scan."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 50,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reopened: filtered listing of tax folders and execution-named files in the highest-numbered matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 71,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads the execution agreements, memos and certificates of the four candidates (one guessed path does not exist) and clause-extraction scripts on one agreement."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "declared: List files in candidate matters (attempt 3). Script over matters numbered from a cut-off upward, listing tax-named folders and execution-named files with dates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 78,
+     "end": 96,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists and reads the agreements, tax memo, protection agreement and closing certificate of the later-dated matter it found; a premature stage_start is refused."
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "end": 104,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one later-dated matter and its protection agreement; a premature stage_start is refused."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 105,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks the signature block, edits the execution and search wording, re-reads."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 124,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Reopened after a refused edit: adds an execution caveat."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reopened (attempt 3): re-reads the final response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 131,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The needed matter surfaced in its scans, but it chose candidates by latest agreement date and matter number, never opened that matter, and named a later-dated matter instead.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 36,
+    "end": 44,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scans listed the matter it needed, but it listed only four candidates with the latest-dated agreements and never opened that matter; its later recency script skipped low-numbered matters altogether.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the review at [44] listed unopened candidates (later-numbered ones); the agent reopened the stage but only checked higher-numbered matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders and prints the last 40 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request phrases; times out after ~312K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of thirteen highest-numbered candidate matters; the review flags many unlisted matters, including the low-numbered series."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request words (2,401 hits), narrowed to names joining both request words (7 hits, one a draft markup in a low-numbered matter)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 44,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads engagement letters, memos and agreements from five candidates."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 57,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of the latest-dated candidate and reads six of its documents."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Clause extraction on that candidate's protection agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 64,
+     "end": 69,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the latest-dated candidate and its protection agreement."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 76,
+     "end": 76,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The needed matter surfaced in its scan and file-name search, but it listed only the highest-numbered matters, never opened that one and named a later-dated matter instead.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "List files in candidate matters",
+    "start": 20,
+    "end": 25,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scan listed the matter it needed, but it chose to list only the thirteen highest-numbered matters and never opened that matter, even after its file-name search showed a tax-indemnity file there.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the review at [25] listed unlisted matters including 'many 1001-1012 matters' without naming the needed one; the agent ran a file-name search but did not open it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request and agreement words (2,430 hits, ~204K chars) plus two whole-store name globs."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 27,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request phrases; times out after ~531K chars; the review rates it not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 36,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: scan of a higher-numbered folder range, a file-name search for request words, and file listings of four candidates and of the higher-numbered matters; the review flags the number-range restriction."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 37,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the protection agreement (in several sections), closing certificate and memo of the matter it picked and agreements of four comparators."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 66,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Short reads of documents from five later-numbered candidates to rule them out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the later-dated matter and its protection agreement, naming a low-numbered matter only as an older precedent it does not use."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response; the review names low-numbered matters as unopened."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 79,
+     "end": 79,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The needed matter surfaced in its file-name searches and scan, but it treated higher matter numbers as more recent, never opened that matter, and named a later-numbered one.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 28,
+    "end": 36,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches and scan listed the matter it needed (including an execution-version agreement), but it restricted its recency check to higher-numbered folders and listed or read only those candidates, never opening that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the review at [36] flagged the number-range restriction and the review at [78] named the low-numbered range containing the needed matter as unopened; the agent finished without opening it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way: the needed matter surfaced in their store-wide scans (and in T1/T2 also in file-name searches), but each ranked candidates by matter number or by the latest agreement dates it saw, listed and read only higher-numbered matters, never opened the needed matter, and named the same later-dated matter with a tax protection agreement (surfaced, never opened). Reviews flagged unopened candidates throughout, mostly naming higher-numbered ones; T2's final review named the low-numbered range, but the run finished without opening it."
+}

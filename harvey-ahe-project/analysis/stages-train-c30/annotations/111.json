@@ -1,0 +1,497 @@
+{
+ "task": "111",
+ "context": "Request: the largest settlement the firm has reached, counting each at the amount its executed agreement defines (for a pitch). Rubric: 1021-00006 (Verimark Hospitality v. Coastal Palms, $87,500,000 Settlement Amount; $25M is only its initial payment) as the answer, its figure, and a precision criterion. 1021-00003 (Verimark v. insurers, $47.3M) and 1027-00003 ($52.85M redemption price) are not the answer.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad path regex for settlement and agreement words prints about 100K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "After a heredoc error, a narrower path regex is saved to a file; only a count and the head are shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Settlement-specific path regex yields a list of about 30 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 43,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two text scans of settlement-named files saved to files; the agent prints three chosen line ranges of the second, skipping the lines between them.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 66,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads executed agreements of four candidates, checks one agreement's amount with a script, reads it at later offsets, and greps the store for one figure.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 76,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Lists the files of the matter the grep hit and reads two emails and an agreement; the figure was part of a larger number.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a sibling matter's agreement amount as the largest settlement, with comparison rows.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and the agreement, checks paths and edits two sentences.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Spot-checks three comparison agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads one comparison agreement and edits the description of another.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads two sources and the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 125,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the needed matter: its own skipped line ranges credited that matter's amount to a sibling matter of the same client, and the sibling's smaller amount became the answer.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 66,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The needed matter's executed agreement and its amount appeared in the scan output at [39]-[41], but the agent's own skipped line ranges put that amount under a sibling matter's header, so it opened only the sibling's agreement (which stated a smaller amount) and never opened the needed matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [43] said lines 151-183 of the printed output were skipped and asked to check them; the agent went straight to reading the sibling matter, which the same review had named as the top candidate."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Full recursive listing of every file prints about 700K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 3). Per-matter path regex for settlement and related words.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 4). Narrower path regex for settlement-specific words.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A text scan of path-filtered documents saved to a file (about 195K chars shown), then, after a heredoc error, a scan of executed-agreement files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script. Extracts definition and payment sections from a named list of agreements in several candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A sweep for defined settlement terms times out; a path-filtered rerun prints amounts sorted by size.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the agreements of the top candidates and later sections of four of them.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 65,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "All-matter sweep of settlement-named documents ranks defined amounts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the largest defined amount, its matter and a comparison table.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and the opening of five cited agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the amount sections of every comparison agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four lower comparison agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-checks one comparison agreement's execution date and amount.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; a shallow find prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints the folder count, every folder name and file-type counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad path regex finds about 1,700 files in about 220 matters (133K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower settlement-specific path regex: 54 candidate matters with file lists.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 27,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Wider second pass joined with the first: 155 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 50,
+     "tags": [
+      "script error",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A text scan of candidate files saved to a file and filtered with head; after a heredoc error, a scan of agreement-named files; it prints chosen line ranges and reads amounts from the snippets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 62,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the agreements and closing papers of the two candidates its summary ranked highest.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 63,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Snippet scripts over one candidate's two agreements for price and signature text.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 71,
+     "end": 80,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists that candidate's files and reads its closing memo and two closing certificates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 81,
+     "end": 87,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Re-reads the openings of its two agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 88,
+     "end": 96,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of the agreements, the closing memo and a certificate.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a redemption price in another matter as the largest settlement and lists an unopened candidate at its initial-payment figure (taken from scan snippets).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks paths and fixes one file-name case.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the top two agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the rest of the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the needed matter's initial payment from scan snippets as its settlement amount and never opened the executed agreement, so a redemption price in another matter became the largest.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 97,
+    "end": 102,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "The answer lists the needed matter at its initial-payment figure, not the larger settlement amount its executed agreement defines; the agent took that figure from scan snippets (evidence seen at [42]-[46], summary at [49]) and never opened the agreement, so another matter's redemption price became the largest.",
+    "critic": "review-endorsed",
+    "critic_note": "The scan review at [50] described the needed matter's hits as drafts and redlines and told the agent to open the two other candidates' agreements; it did so and never returned to the needed matter. Later reviews did not name the figure."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0, T2 fail). All runs surfaced the needed matter's execution-version agreement through path searches and text scans. They split at the scan stage that read amounts from snippets: T1 ran a sweep for defined settlement terms that printed amounts sorted by size, then read that agreement and wrote it. T0 printed chosen line ranges of its scan output, skipping the needed matter's header lines, so the larger figure was credited to a sibling matter; T2 took the needed matter's initial payment as its amount. Neither opened the needed matter's agreement. The critic differed: in T0 the scan review flagged the skipped line ranges (ignored), in T2 the scan review called the needed matter's hits drafts and pointed to two other matters, and in T1 the reviews only flagged path filters as possibly incomplete."
+}

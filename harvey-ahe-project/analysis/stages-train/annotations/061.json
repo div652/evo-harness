@@ -1,0 +1,223 @@
+{
+ "task": "061",
+ "context": "Request: has the firm ever set up a fund using an American (deal-by-deal) waterfall? No matter is named; the single criterion requires stating that no fund the firm set up uses one.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus three content greps for request keywords and a listing of one candidate matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads agreement drafts, a structuring memo and two emails of one candidate matter."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Content grep inside that matter for specific section and entity names."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 17,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads two further sections of one agreement draft."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Glob for a keyword in file names."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 28,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Lists three other candidate matters and tries two reads (one guessed path)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads several sections of another matter's agreement and one more agreement draft."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer hedged",
+     "note": "Writes that no instance was found for one client's funds and declines to state a firm-wide answer."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 39,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The conclusion was scoped to one client and declined to answer for the firm as asked.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 37,
+    "end": 38,
+    "events": "",
+    "kind": "hedged-answer",
+    "why": "Having reviewed several fund matters, it framed the conclusion around one client and explicitly declined the firm-wide statement the question asked for."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Reads five memos and emails from the matters at the top of the listing in full (limit 1000); about 320K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script with broad terms prints about 7.4M chars; the run stops with the context full, before any response is written."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script",
+   "failure_point": "An unbounded scan dump filled the context; no response.md was produced.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 10,
+    "end": 11,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Ran a store-wide scan with broad terms and no output cap; its 7.4M-char output overflowed the context and the run ended without a deliverable."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a content grep for request keywords."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan; times out with about 36K chars of hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four documents of one candidate matter."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Two more reads in the same matter alongside a store-wide .docx content grep that returns nothing (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no evidence was found that the firm ever did so, citing the one matter whose draft moved the other way."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 18,
+     "end": 18,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file contents for request keywords → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T2 scanned, read one candidate matter and stated a flat firm-wide 'no evidence we have'. T0 searched and read more candidate matters than T2 but scoped its conclusion to one client and declined the firm-wide answer; T1 read huge files from the capped listing, then ran an uncapped scan whose 7.4M-char output overflowed the context before any response was written."
+}

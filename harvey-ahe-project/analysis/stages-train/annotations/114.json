@@ -1,0 +1,391 @@
+{
+ "task": "114",
+ "context": "Request: general litigation matters that involved a retained damages expert, and the documents showing the engagement. Rubric: ten matters (1005-00005, 1010-00005, 1011-00004, 1012-00005, 1021-00006, 1022-00005, 1033-00006, 1034-00003, 1038-00007, 1044-00006), proof documents for several, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads three documents of one matter at the top of the listing, alongside a content-mode grep for request words (labelled by the store-wide search)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Files-with-matches grep for request words in the matters folder; every hit is an email file."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four emails from four matters on the hit list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight letters and a memo from five of those matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List matter folders → Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Email-only grep hits reached four of ten qualifying matters; it opened one of them and added three that do not qualify.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file contents for request keywords",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its keyword greps returned email files only and reached four of the ten qualifying matters; it did not search file names or scan document text, so six never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 18,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The grep listed three more qualifying matters, but the emails and folders it chose next left them out and it never opened them."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It listed three other matters as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one empty extension, one document type)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads six documents of one matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for request terms; times out after about 43K chars."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Shell walk matching request words in file names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 20,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Second store-wide extraction script; times out after about 109K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of twelve letters and agreements from eleven matters in two batches."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over engagement and retention files across the store; about 119K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads two more letters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 41,
+     "end": 42,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Content grep with a single-extension glob in one candidate matter; nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one memo of another matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 45,
+     "end": 46,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes about a dozen matters as qualifying and lists others as excluded."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 47,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two edits fixing a matter number and the headline count."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 51,
+     "end": 51,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Most qualifying matters were found, but one never surfaced, one was passed over for a different matter, one was read and excluded, and eight others were added.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 13,
+    "end": 14,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide content scans timed out (here and at [19]-[20]) and its other searches matched file names only, so one qualifying matter whose documents carry no such names never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 34,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The file-name search listed another qualifying matter, but it read a different matter of the same client and never opened that one."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 45,
+     "end": 46,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read one qualifying matter's memo and excluded the matter as only a recommendation to engage."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 45,
+     "end": 46,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It listed eight other matters as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one empty extension, one document type)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads six documents of one matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms; times out after about 134K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction script restricted to folders whose names match request words; about 37K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 17,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eighteen letters and agreements from about sixteen matters in three batches."
+    },
+    {
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes fifteen matters as qualifying."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 40,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two edits to the headline count and a heading."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 44,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A folder-restricted scan missed six qualifying matters; the answer adds eight that do not qualify.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 15,
+    "end": 16,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After the store-wide scan timed out it restricted the retry to folders with matching names, which missed six qualifying matters whose documents sit in other folders; it never searched file names across the store."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It listed eight other matters as qualifying."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, each with an over-inclusive answer. They split on how many qualifying matters surfaced: T0's greps returned email files only and reached four of ten; T2's retry scan was restricted to matching folder names and missed six; T1's file-name search reached nine while its content scans timed out before the tenth. All three then counted extra matters as qualifying at the write stage."
+}

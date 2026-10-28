@@ -1,0 +1,333 @@
+{
+ "task": "149",
+ "context": "Request: which of the firm's M&A deals included a working-capital adjustment, with the purchase agreements. Rubric: 15 qualifying matters (1001-00003 … 1041-00003; 1011-00006 via a draft v1 APA, 1017-00006 via mipa-execution-version.docx, 1041-00003 via merger-agreement-execution-version.docx), each with a proof document, plus a precision criterion (1022-00006, 1023-00001, 1032-00005 not permitted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 28,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs by file type (one type has no files)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, memos and an email of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 18,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four store-wide extraction scripts for the request terms: one times out, one prints nothing, then a file list and clause snippets restricted to deal-document folders."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eight executed or draft agreements picked from the scan output."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of three candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six more agreements from the scan output."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script pulling the term definitions from a named list of agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes seventeen matters, including drafts and deals of other kinds."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 41,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The scans listed every qualifying matter; it never opened one of them, and the answer adds three matters outside the set.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 19,
+    "end": 27,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan output listed documents of one qualifying matter (a redline and a memo, not its agreement), but the agreements it chose to open left that matter out, and it named a sibling matter's draft instead."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts three further matters (drafts and other deal types) as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 23,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for request terms."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 10,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Five file-name globs for agreement words; two return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the first 250-300 lines of agreements and an email from three matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 24,
+     "tags": [
+      "mixed intents",
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; a script lists agreement-named files; a grep over documents and a narrower script both return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 25,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six agreements from that file list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction script over agreement-named files for three exact term phrases; returns 25 files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the first 15-18 lines of eight agreements in one parallel batch to get parties and dates."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 43,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two snippet-extraction scripts over named agreements for the term definitions."
+    },
+    {
+     "stage": "Write the response",
+     "start": 47,
+     "end": 48,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes twelve agreements; two matters are given the parties of other matters' agreements."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 49,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Its term scan used three exact phrases over agreement-named files and missed two matters; it skipped a draft it had listed, and attached two matters to other deals' parties.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 32,
+    "end": 33,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its main scan looked for three exact phrases only in files with agreement-type names, which missed one matter's executed agreement (other wording) and another's (other file name), and it took the result as complete."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 42,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The scan just before listed one matter's draft agreement, but it left that matter out of the agreements it opened and out of the answer."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 47,
+     "end": 48,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "It paired the eight parallel reads with the wrong matters, so the answer gives two matters the parties of other agreements (evidence seen at [34]-[42])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and memos of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 10,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads three further sections of one draft agreement."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for the request terms; times out after about 1.37M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six agreements picked from the partial output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters, one of them outside the set."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 27,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Its one store-wide scan timed out part-way; it wrote six matters from the partial output, one of them outside the set.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 16,
+    "end": 17,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a store-wide scan that timed out after reaching a fraction of the store, and it neither narrowed nor reran it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 25,
+     "end": 26,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a draft agreement of another matter as a qualifying deal."
+    }
+   ]
+  }
+ ],
+ "divergence": "The three runs failed differently. T0's scans listed all qualifying matters; it opened all but one and added three matters outside the set (surfaced, never opened; over-inclusion). T1's term scan used narrow phrases over agreement-named files and missed two matters (search miss), skipped a listed draft, and attached two matters to other deals' parties. T2's single store-wide scan timed out and it wrote six matters from the partial output (search miss)."
+}

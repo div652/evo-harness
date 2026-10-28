@@ -1,0 +1,229 @@
+{
+ "task": "173",
+ "context": "Request: buy-side healthcare deals over $500M that closed in 2024, as pricing comparables. Rubric: 1001-00003 (Ardent Capital Partners' Cardinal Peak acquisition) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find of the top two levels (empty)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads (agreements, closing spreadsheets, engagement letters, memos, emails) from the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide python-docx scan for year, closing and sector words and large amounts; times out after about 210K chars of hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 25,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, closing documents and engagement letters of two candidate matters taken from the scan output; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "Three more store-wide scans of document openings for sector, deal and year words: timeout, heredoc syntax error, timeout; no usable output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letter, memos and a certificate of one more candidate and re-reads one earlier candidate."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs one candidate matter to locate its engagement letter's real path."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 47,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that engagement letter, then engagement letters, memos and an agreement of three more candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 48,
+     "end": 49,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no deal meets all four filters and lists near misses."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 50,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Every store-wide scan timed out before reaching the needed matter; the agent concluded that no deal qualifies.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 17,
+    "end": 18,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its first content search was a store-wide scan that timed out before reaching the matter it needed; three retries timed out or failed, and it never narrowed the scan (e.g. to transaction or closing folders) or searched file names, so it judged only the candidates the partial output showed."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus PDF and DOCX globs; the PDF glob returns nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Three batches of reads (agreements, memos, an opinion, emails, a checklist) from the three matters at the top of the listing; no keyword search."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that the qualifying set is empty, naming the closest listing-top matter as a near miss."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 24,
+     "end": 24,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the few matters visible in a short listing and reported an empty set.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 21,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any keyword search, so the matter it needed never surfaced, and concluded that none qualifies."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 27,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, spreadsheets, memos and emails of the matters at the top of the listing; one batch of six uses a mistyped folder and all fail, then is retried under the listed folder."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no deal qualifies, listing the listing-top matters as exclusions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 30,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the few matters visible in a short listing and reported an empty set.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 27,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any keyword search, so the matter it needed never surfaced, and concluded that none qualifies."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs judged the store mainly from the matters at the top of the capped listing and wrote that nothing qualifies. T1 and T2 never searched (partial listing as corpus at the reading stage). T0 also ran four store-wide extraction scans, all of which timed out or failed before reaching the needed matter (search miss at the first scan)."
+}

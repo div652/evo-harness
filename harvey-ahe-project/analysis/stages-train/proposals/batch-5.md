@@ -1,0 +1,18 @@
+# Batch 5 proposals (tasks 059 063 068 080 081 091; all 18 runs failed)
+
+All stages and error kinds fit the existing vocabulary. One new tag and one new hindsight value.
+
+| Kind | Name | Definition | Example | Why no existing name fits |
+|---|---|---|---|---|
+| tag | NEW: run ended: no finish call | The run stopped after the last tool call with a plain text reply and no finish call. The deliverable may already be written. | 080_T2 [31]-[32] | The only "run ended" tag is context overflow. check.py needs a `run ended…` tag on the last stage when no finish call exists, so this check also fails until the tag is adopted without the NEW prefix. |
+| hindsight | NEW: answer lacks proof document | The answer names the qualifying matter but cites a different supporting document from the one a criterion requires. Usually the agent never opened that document. | 080_T1 [36]-[37] | "answer lacks matter number" is about a missing identifier. "answer misses target" and "answer wrong matter" are about the matter. Here the matter is right and only the proof document is missing. |
+
+## Issues
+
+- Context overflow after two oversized outputs: in 059_T1 a ~4M-char scan did not end the run, and a later ~450K-char single-matter script did. In 068_T0, 1.1M chars, then 7M chars. The first error was put at the first uncapped stage (059_T1 [6]-[7]). The `run ended: context overflow` tag and the "context overflow" hindsight went on the stage where the run actually stopped. In 068_T0 both scans were merged into one stage because they had the same intent, following 032_T2. Elsewhere (034, 081_T2) a single ~4.5–6M output ended the run at once, so we can't tell from the logs how much output the harness truncates.
+- search-miss was used in 080_T1 [26]-[27] for a needed *document* inside a matter that was already open. The grep in that matter returned nothing because it did not read .docx text, and the agent never listed the matter's files. The definition talks about a needed matter. A document-level kind may be warranted.
+- Seen again (cf. batch 13): store-wide grep-tool hits were email (.eml) files only (080 all runs, 081_T0/T1, 063_T0 grep). Matters whose evidence sits only in .docx never surfaced (081: the target complaint, 080: the target status memo). This was the main search-miss mechanism in this batch. A tag like "hits from emails only" would make this visible.
+- 063_T1 [37]-[38]: the agent read a qualifying matter's amendment and memos but excluded it as "not confirmed" because the original agreement was not in the file. It was labelled hedged-answer (other_error). Batch 13's proposed `NEW: under-inclusion` may fit better. 063_T0 is similar: one memo of a qualifying matter was read and then silently dropped. That was folded into its surfaced-not-opened first error rather than recorded separately.
+- 063_T0, 080_T0, 091_T1 each have both an omission and extra or other errors. Following the batch-2 Issue, the write stage got one hindsight value: "answer over-inclusive" if extras were asserted, else "answer misses target".
+- 063_T2 [14]-[15]: a store-wide walk whose output was filtered to four named matters was labelled "Search within a candidate matter's files", per the batch-2 Issue on multi-matter snippet scripts. It is also where a matter the earlier scan had listed got dropped, so the surfaced-not-opened later error sits on that stage.
+- Over-inclusion in 068_T1/T2 and 091 (all runs) came after reading the extra matters, from a broad reading of the request ("turned on" a grant; drafts or negotiating positions counted as the term). This is the same pattern as the batch-2 note on 082_T1. A separate kind (e.g. "loose qualifier reading") may be warranted, since it now recurs.

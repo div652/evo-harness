@@ -1,0 +1,615 @@
+{
+ "task": "121",
+ "context": "Request: the spread of settlement amounts across the firm's general commercial litigation matters, both recovered and paid. Rubric: 11 qualifying matters (1005-00005, 1006-00005, 1007-00005, 1008-00007, 1012-00006, 1021-00006 $87.5M, 1027-00003 $52.85M paid, 1033-00006, 1035-00004, 1038-00007, 1044-00006), each identified with direction; count 11, range $425K-$87.5M, mean about $16.82M, total about $185.0M, distribution shape, recovered about $105.2M vs paid about $79.8M; precision (1006-00004, 1012-00003, 1021-00003, 1025-00006 are outside).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts.",
+     "label_check": "ignored",
+     "end": 13
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for settlement, dispute and pleading words over all files (about 97K chars); the review flags a hand-picked list of about 40 matters.",
+     "label_check": "none",
+     "end": 19
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: settlement-document name patterns saved to a file; 100 matters listed by count.",
+     "label_check": "none",
+     "end": 25
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for settlement amounts times out; per-prefix reruns report zero hits because of a path bug; a full rerun times out.",
+     "label_check": "none",
+     "end": 39
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: fixes the path bug on one prefix, then scans only settlement-, closing- and outcome-named files by prefix (about 89K chars). The review flags the file-name filter.",
+     "label_check": "none",
+     "end": 47
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "tags": [
+      "file not found",
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads settlement agreements, closing memos and outcome reports of about fifteen candidate matters, with re-reads; one guessed path fails, a glob from the workspace root finds nothing, and an in-matter grep without a path prefix finds nothing. The review flags dozens of surfaced matters never opened and eight read matters with no stated treatment.",
+     "label_check": "none",
+     "end": 95
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Spread statistics for three recoveries and four payments.",
+     "label_check": "none",
+     "end": 101
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: recomputes with the non-cash credit kept separate.",
+     "label_check": "none",
+     "end": 107
+    },
+    {
+     "stage": "Write the response",
+     "start": 108,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three recoveries, three cash payments and one credit resolution with spread statistics and exclusions.",
+     "label_check": "none",
+     "end": 113
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads; a path check fails on the workspace path and passes against the output folder.",
+     "label_check": "none",
+     "end": 122
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads opening sections of seven cited sources.",
+     "label_check": "none",
+     "end": 134
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 135
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read a hand-picked fifteen of the hundred surfaced matters, so several large settlements never entered the set; it also excluded read matters as out of scope and counted two matters outside the set, so every spread figure was off.",
+   "first_error": {
+    "stage_no": 7,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Matters with large settlements surfaced in its path searches at [16]-[23] (one also in the scan at [44]-[45]), but when choosing what to read it opened about fifteen others and never opened them.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review at [95] said dozens of surfaced matters were never opened, naming only number ranges; the agent went on to calculate.",
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 95
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the settlement agreements of two matters (evidence seen at [50]-[72]) but the answer excludes one as an IP-only dispute and leaves out the other in favour of a sibling matter.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The screening review at [95] named both matters among those read with no stated treatment; the answer gave no reason for dropping one of them.",
+     "stage": "Write the response",
+     "start": 108,
+     "end": 113
+    },
+    {
+     "stage_no": 10,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts two settlements outside the request's set (read at [50]-[72]) in the recovered spread.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked only for row-by-row checks of amounts and directions.",
+     "stage": "Write the response",
+     "start": 108,
+     "end": 113
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-word path find loops, a folder grep and a file grep, each cut by its own line cap.",
+     "label_check": "none",
+     "end": 16
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path sweep reduced to 185 matters with counts.",
+     "label_check": "none",
+     "end": 22
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction times out; a rerun limited to settlement-, closing- and payment-named files writes a hit file (about 76K chars shown), then greps and windows of it. The review flags the file-name filter.",
+     "label_check": "none",
+     "end": 36
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "tags": [
+      "no matches",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: range scans without the file-name filter write nothing because of a matter-number bug; a full rerun times out.",
+     "label_check": "none",
+     "end": 54
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads closing memos, letters and agreements of about a dozen candidate matters, one per matter. The review flags that the set is capped by what was listed.",
+     "label_check": "ignored",
+     "end": 72
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads five settlement agreements and receipt memos of matters already included.",
+     "label_check": "none",
+     "end": 83
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Spread statistics for three payments and four recoveries.",
+     "label_check": "none",
+     "end": 89
+    },
+    {
+     "stage": "Write the response",
+     "start": 90,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four recoveries and three payments with separate spreads and a list of exclusions, among them a redemption arbitration.",
+     "label_check": "none",
+     "end": 95
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Path check run against the workspace path fails; recomputes the statistics.",
+     "label_check": "none",
+     "end": 103
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check against the output folder.",
+     "label_check": "none",
+     "end": 109
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the response and the cited sources; the review asks to re-confirm the exclusions, especially the redemption arbitration.",
+     "label_check": "none",
+     "end": 122
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 123
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read one closing document for each of about a dozen hand-picked matters, so several surfaced settlements were never opened; it also excluded a read matter, reversed one matter's payment direction and counted two matters outside the set.",
+   "first_error": {
+    "stage_no": 6,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Several settlements surfaced in its path and content scans at [13]-[32] (two in the content-hit windows at [31]-[32]), but its reads covered about a dozen other matters and never opened them.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review at [72] said the reads were capped by what had been listed and no wider search was run; the agent went on to in-depth reads of the same matters.",
+    "stage": "Screen candidate matters by reading documents",
+    "start": 55,
+    "end": 72
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read a matter's closing certificate (evidence seen at [57]-[70]) but the answer excludes it as a redemption arbitration although the settlement belongs in the set.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The last check review at [122] asked to re-confirm the redemption-arbitration exclusion and restore any wrongly dropped matter; the agent finished without acting.",
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95
+    },
+    {
+     "stage_no": 9,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer lists one matter's settlement as paid by the client although its closing memo read at [57] shows the client recovered it.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked only for generic row checks of direction.",
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95
+    },
+    {
+     "stage_no": 9,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts two settlements outside the request's set (read at [57]-[81]) in the recovered spread.",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned these matters.",
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and a file count.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts all matter folders by prefix and size.",
+     "label_check": "ignored",
+     "end": 14
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for settlement and payment words (158 matters, about 77K chars) and three single-word globs.",
+     "label_check": "none",
+     "end": 23
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: settlement-document name patterns; 61 matters.",
+     "label_check": "none",
+     "end": 29
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search file names for request keywords (attempt 3). Second pass for pleading and motion file names and a union with the earlier set; 119 matters.",
+     "label_check": "none",
+     "end": 35
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad extraction over settlement- and litigation-named files to a file (about 12K lines), then a pass limited to settlement-named paths (about 43K chars).",
+     "label_check": "none",
+     "end": 43
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrow scan for explicit amounts and payment direction; a type error, then a rerun viewed from line 300 on (about 70K chars).",
+     "label_check": "none",
+     "end": 53
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: enumerates the 81 matters in the scan output by prefix.",
+     "label_check": "none",
+     "end": 59
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 60,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: reconciles the scan's matters with the broad path hits.",
+     "label_check": "none",
+     "end": 63
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 4). Reads closing memos, agreements and letters of about twenty matters and a snippet script over one agreement. The review flags that 56 surfaced matters were never opened.",
+     "label_check": "ignored",
+     "end": 89
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 90,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 5: per-matter extraction over the 137-matter union (a none-text error, then about 59K chars) and reads of five newly surfaced matters.",
+     "label_check": "none",
+     "end": 103
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 104,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. First reads of the five newly surfaced matters; the review flags two accepted on diligence memos.",
+     "label_check": "ignored",
+     "end": 113
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 114,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of four of them; a stage_start for calculating is refused as still open.",
+     "label_check": "none",
+     "end": 121
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Spread statistics for eleven recoveries and three payments.",
+     "label_check": "none",
+     "end": 127
+    },
+    {
+     "stage": "Write the response",
+     "start": 128,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes eleven recoveries and three payments with spreads, then recomputes the paid side; the review flags a patent settlement left in the paid table.",
+     "label_check": "none",
+     "end": 135
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "declared: Write the response (attempt 2). Edits the paid statistics; one edit fails to match.",
+     "label_check": "ignored",
+     "end": 145
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 146,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "declared: Write the response (attempt 3). Re-reads and edits the patent settlement out of the paid table into a comparator note.",
+     "label_check": "ignored",
+     "end": 167
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 168,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Greps the response for stale figures; the first grep finds nothing on its path.",
+     "label_check": "none",
+     "end": 176
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 177,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: removes the comparator note and checks cited paths; the review flags the narrowed paid sample.",
+     "label_check": "none",
+     "end": 188
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 189,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the paid rows' sources and several recovered rows.",
+     "label_check": "none",
+     "end": 198
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 199,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: confirms the largest recovery in its executed agreement.",
+     "label_check": "none",
+     "end": 204
+    },
+    {
+     "stage": "Finish the run",
+     "start": 205,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 205
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans surfaced all the settlements, but it never opened one large paid settlement; it also recorded two paid settlements as recoveries, overstated one recovery with non-cash value, and counted four matters outside the set.",
+   "first_error": {
+    "stage_no": 10,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "A large paid settlement surfaced in its scan outputs at [49]-[57] (and again at [95]), but neither its reads of about twenty matters here nor the five reads at [98]-[110] opened it.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The review at [89] said 56 surfaced matters were never opened; the agent ran a union scan and read five more matters, still not this one.",
+    "stage": "Screen candidate matters by reading documents",
+    "start": 64,
+    "end": 89
+   },
+   "other_errors": [
+    {
+     "stage_no": 15,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer records two settlements the clients paid as recoveries and adds estimated non-cash value to a third (documents read at [64]-[85]).",
+     "critic": "not-flagged",
+     "critic_note": "Reviews checked direction only for the two equal-sized settlements and the largest recovery.",
+     "stage": "Write the response",
+     "start": 128,
+     "end": 135
+    },
+    {
+     "stage_no": 15,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts four settlements outside the request's set in the recovered spread (read at [64]-[85]).",
+     "critic": "not-flagged",
+     "critic_note": "The review at [89] questioned only the document types read for two of them, not whether they belong in the set.",
+     "stage": "Write the response",
+     "start": 128,
+     "end": 135
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail, and the first error is the same in each run: a screening stage that read a subset of the matters its path searches and scans had surfaced, leaving out at least one large settlement (surfaced-not-opened; the screening review flagged unopened matters in generic terms each time). The later errors at the write stage differ: T0 dropped read matters and counted two outside the set; T1 excluded a read matter, reversed one direction and counted two outside; T2, after a union scan, reached the right count but reversed two directions, overstated one amount and counted four outside. Every spread statistic fails as a consequence."
+}

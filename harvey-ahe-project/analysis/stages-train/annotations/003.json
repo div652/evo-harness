@@ -1,0 +1,245 @@
+{
+ "task": "003",
+ "context": "Request: list antitrust-practice matters where a deal went through a second request to clearance, with the clearance documents. Rubric names 1041-00001 (Solara Digital / Pinnacle Cloud) and its post-clearance-status memo; 1003-00003 is also tolerated.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory); the listing showed files from only a few matter folders."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "One content grep restricted to .docx files returned no matches; the parallel glob repeated the same short listing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 8,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of memos and agreements from the two matters at the top of the listing; no keyword lead behind the choice."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no matter in the store meets the request, discussing only the two matters it read."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Its only keyword search returned nothing; it fell back to the matters visible in the short listing and concluded none qualified.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 5,
+    "end": 7,
+    "events": "",
+    "kind": "search-miss",
+    "why": "The only keyword search was a .docx-restricted content grep that returned nothing, and the agent neither retried with other file types nor searched file names, so the matter it needed never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Parallel whole-store glob and a content grep for request keywords; the grep hits (mostly emails) drive the next step."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads six emails from two matters that the grep returned."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Globs for file names containing request keywords and for a practice-area subfolder name."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 18,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the folders of four candidate matters found by the name search."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing / strategy memos and a status tracker across three candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 29,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four submission documents from the matter it later picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one transaction split across two matter folders."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 36,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs to check a cited file path, then edits the path in the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 40,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Shell find over the whole store, first 200 files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 4,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two find | grep passes over file paths for request keywords."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 8,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of a strategy memo from each of six candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters in one shell loop."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 17,
+     "end": 23,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing / status documents from three candidates; two guessed paths do not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads more of a status tracker in one of the two matters it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming two matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Passing runs (T1, T2) searched file names for request keywords (glob / find | grep), which surfaced the needed matter's folder, then opened its closing memo. T0's only keyword search was a .docx-only content grep that returned nothing; it read the two matters at the top of the short listing and concluded none qualified (fails both matter criteria)."
+}

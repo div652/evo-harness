@@ -1,0 +1,513 @@
+{
+ "task": "179",
+ "context": "Request: conflicts and cross-sell review of everything the firm did for a venture fund client across its funds and portfolio companies. Rubric: 26 matters (five fund matters 1002-00001..00005 and 21 portfolio-company matters in the 1008, 1009 and 1010 series, e.g. 1008-00001, 1009-00001, 1010-00002) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 19,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob in parallel with a two-level folder listing and file-type counts. The label check offered folder listing and file-name search; the declared label fits the store-wide glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "find over all paths for the client name and investment-related words, plus a content grep with glob '*' that returns nothing. The review flags the dropped long output and the empty grep."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 23,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: a path sweep grouped by matter fails on a type error, then reruns."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out; a range-split rerun crashes, a second rerun times out; then lists the folders of one matter-number series. The review flags that the series listing risks dropping other surfaced matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Lists all files of the five matters of one number series, plus a name-filtered listing. The review flags that other surfaced matters were not listed."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 56,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters, conflict memos, closing memos and term sheets of two candidate matters. A stage_start at [53] is refused because the stage is still open. The review flags that only two matters were read."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "ignored",
+     "note": "declared: Search within a candidate matter's files. A store-wide extraction script, limited to files whose names match engagement, conflict, closing and investment words, for the client's entity names; the summary names about twenty matters with exact-name hits. The review lists surfaced matters never opened."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Attempt 2: lists all files of twenty matters from three adjacent number series, skipping two that its own summary had named. The review names a skipped matter and two deferred ones."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads engagement letters, deal memos and closing papers from about a dozen matters in two parallel batches. The review flags that the portfolio link is unconfirmed for several."
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Writes the review with the client's own matters, the portfolio-company matters it read, and exclusions. The review flags possible padding with non-qualifying matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 115,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Re-reads the response, checks cited paths (a first script fails on the path), one edit, re-reads the tail."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its extraction script surfaced every portfolio-company matter, but the listing loop skipped two of them, and several listed matters were never read and left out of the answer.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "List files in candidate matters",
+    "start": 63,
+    "end": 68,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review of this stage named a skipped matter and two matters deferred without opening; the agent moved on to reads.",
+    "why": "Two portfolio-company matters that the store-wide extraction at [59]-[60] surfaced (one named in its own summary) were left out of the listing loop and never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) Reviews at [62] and [68] named several of these matters as listed or surfaced but never read.",
+     "why": "Five matters whose files it listed at [65]-[66] (three named in its own summary as exact-name hits) are absent from the answer with no stated reason."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "events": "",
+     "kind": "missing-detail",
+     "critic": "not-flagged",
+     "critic_note": "No review addressed how that matter was described.",
+     "why": "One listed but unread portfolio matter is described only as dispute and settlement work, without the service-credit dispute it concerned."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Whole-store glob; the review flags the cap and that the summary calls it complete."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "label_check": "ignored",
+     "note": "declared: List files in the document store (attempt 2). A glob for matter folders returns nothing; the agent closes the stage saying it is switching to the folder-listing stage."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Lists all matter folders with file counts."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 2: total folder count with first and last names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Path regex with generic company and investment words; 129 matters. The review flags the noise."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: separate path counts for the client name and for investment-document words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 51,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out, then two range-split runs, a failed aggregation, and a per-matter count for client-name variants that lists every matter with hits. The review flags coverage and noise."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Lists files of nine hand-picked matters (the client's own series and three others with the client's name). The review and its system note list surfaced matters never opened."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 61,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Attempt 2: lists files of the late-numbered series the review recommended."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 81,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: List files in candidate matters (attempt 2). Reads engagement letters, conflict memos and closing papers of the client's own series and three other matters; one guessed path fails. The review flags about 60 surfaced matters never listed or opened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Writes five client matters and three related non-client matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 100,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Re-reads the response, checks cited paths (first script fails on the path), one edit."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Attempt 2: re-reads sources for the client matters and the related matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 121,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "label_check": "none",
+     "note": "Attempt 3: re-reads two client-matter sources and the rest of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its per-matter extraction count listed every portfolio-company matter, but it listed and read only the client's own series and a few late-numbered matters, so the answer covers the client's own matters alone.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "List files in candidate matters",
+    "start": 52,
+    "end": 57,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The system note under the reviews at [57] and [81] listed portfolio-company matters among surfaced matters never opened; the review text itself pointed to other series.",
+    "why": "All 21 portfolio-company matters appeared in the per-matter count at [48]-[49], but the agent chose nine other matters to list and never opened any of them."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 27,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Whole-store glob; the review recommends listing the matters directory."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "label_check": "ignored",
+     "note": "declared: List files in the document store (attempt 2). Lists matter folders with file counts."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out; a parallel rerun saved to a file, with a find | grep path search alongside, then prints hit-file sections."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: aggregates exact client-name references by matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 3: a variant scan over all file types times out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 4: scan limited to three adjacent matter-number series for the client and portfolio-company names, one line per matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 53,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Lists all files of the client's own series and the three portfolio-company series (first try fails on a heredoc)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 92,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads documents from the client's own matters and an engagement or memo from nearly every portfolio-company matter; several guessed paths fail. The review flags the failed paths."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 93,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Attempt 2: re-lists the four series to get real paths."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 101,
+     "end": 117,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads the corrected documents for the matters whose paths failed."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 118,
+     "end": 123,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Snippet-extraction script over named engagement letters of portfolio-company matters for the client name; times out with partial output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer passes",
+     "label_check": "none",
+     "note": "Writes the client's own matters and the portfolio-company matters by company."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer passes",
+     "label_check": "none",
+     "note": "Re-reads the response. The review asks to confirm two exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 145,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "label_check": "none",
+     "note": "Attempt 2: path check (first try fails on the path) and an exact-name check of two excluded matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 146,
+     "end": 175,
+     "tags": [],
+     "hindsight": "answer passes",
+     "label_check": "none",
+     "note": "Attempt 3: looser-name scans and reads of the two excluded matters, then edits adding them and revising attribution wording."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 176,
+     "end": 176,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs surfaced every needed matter with a store-wide extraction script; they split at the first candidate-listing stage after it. The passing run scanned the three portfolio-company number series by company name, listed all their files, and read an engagement document from nearly every one. One failing run listed those series but skipped two surfaced matters and left several listed-but-unread ones out of the answer; the other listed only the client's own series and late-numbered matters the review pointed to and never opened a portfolio-company matter. The reviews at the split flagged unopened surfaced matters in all runs; in the run that never opened them, the review text steered toward other series while only its appended system note listed the portfolio-company matters."
+}

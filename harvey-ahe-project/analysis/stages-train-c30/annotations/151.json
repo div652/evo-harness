@@ -1,0 +1,433 @@
+{
+ "task": "151",
+ "context": "Request: the firm's most recent M&A deal with a working-capital adjustment, by executed APA signing date, as a starting point for drafting SPA mechanics. Rubric: 1006-00008 (Crestline Packaging / Lakewood APA dated June 16, 2025, Section 3.3) as the deal, its executed APA as proof document, and a precision criterion that only 1006-00008 be asserted as qualifying; earlier deals such as 1006-00006 (June 15, 2025), 1038-00008, 1007-00006 and 1038-00009 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level listing cut at 120 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 matter folders and file-type counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex over agreement and adjustment words (65 matters), a `*.docx` content grep that returns nothing, and a per-folder file-name match.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 32,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; four parallel range scans save all hits; a grep then keeps only executed-agreement file names. The review flags that file-name filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 59,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the openings of eight executed agreements from the scan, two at offsets, then snippet scripts for dates and adjustment clauses, including one over every executed asset-purchase file in the store.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide ranking of agreement-named files with adjustment terms by date string. The review flags the name filter and the string sort.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: store-wide scan with parsed dates printing agreements dated in the latest year.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 72,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads the openings of three earlier-dated agreements to confirm their dates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated matter with its agreement and adjustment mechanics, plus a comparison table of earlier executed agreements described as having the requested adjustment.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and the openings of four cited agreements; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found the latest-dated agreement but presented earlier agreements in a comparison table as qualifying deals with the requested adjustment.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 80,
+    "end": 85,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Besides the latest-dated deal, the answer's comparison table asserts several earlier executed agreements (read at [35]-[43] and [74]-[77]) as deals with the requested adjustment, although the request asks only for the most recent one.",
+    "critic": "review-endorsed",
+    "critic_note": "The write review asked that every comparison-table row carry its own folder number and signing date, and the check review said to keep the response as it is; no review questioned listing the comparators."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing cut at 80 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all 266 matter folders.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep loop over ten agreement and adjustment patterns, each cut at 200 lines, and a `*.docx` content grep that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: one uncapped path regex over widened agreement and adjustment words (64 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: path regex for further agreement and execution words (128 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; five parallel range scans print every hit (about 960K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 47,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a script over the highest-numbered matter series, limited to agreement-named files, prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: store-wide count scan over agreement-named files (71 matters, 180 files) with dates for hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 54,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the latest-dated candidate's agreement in three offset chunks, its adjustment escrow and a closing letter, plus the date headers of two earlier agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). One script prints the tail and signature lines of three agreements.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated matter with its mechanics, plus recency comparisons naming earlier executed agreements with adjustment terms.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks nine cited paths, edits one methodology reference.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the chosen agreement's header and adjustment section and the headers of seven comparison agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the date headers of four comparison agreements; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and verified the latest-dated agreement but listed earlier agreements as qualifying comparison candidates.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer presents earlier executed agreements (dates read at [56]-[61] and from scans) as qualifying comparison candidates with the requested adjustment, although the request asks only for the most recent deal.",
+    "critic": "review-endorsed",
+    "critic_note": "The write review asked the response to list the other candidate matters with their signing dates, and the check reviews said to keep the same set of matters; none questioned presenting them as qualifying."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing and extension counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over agreement and adjustment words (225 files), a `*.docx` content grep that returns nothing, and a folder count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened path patterns; 372 files in 95 matters saved as a candidate list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 30,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a chunked rerun over the 95 candidate matters prints adjustment-term hits with dates (about 134K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 31,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed agreements and supporting adjustment documents of three lead candidates, then snippet scripts for the adjustment sections of two of them.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 56,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). A date scan over executed-agreement files of all 95 candidate matters, in parallel with a listing of the chosen matter, an offset read of its agreement and a guessed memo path that fails.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 57,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads the chosen matter's closing checklist, funds-flow memo, conditions tracker and indemnity escrow.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated matter with its mechanics, plus a comparison table of earlier executed agreements with adjustment terms.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, runs a silent path check, edits one comparison row's wording.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: visible path check and re-reads of the chosen agreement and one comparison agreement; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It verified the latest-dated agreement but kept a comparison table presenting earlier agreements as qualifying deals.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 66,
+    "end": 71,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer's comparison table asserts earlier executed agreements (read at [33]-[39], others from scan output only) as deals with the requested adjustment, although the request asks only for the most recent one.",
+    "critic": "review-endorsed",
+    "critic_note": "The write review asked that every surfaced candidate appear in the comparison table or exclusions, and the check review said to keep the comparison row and not drop any matter already in the table."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way at the write stage. Each found the latest-dated agreement through path searches and a chunked extraction scan, read its executed agreement and adjustment section, and cited it correctly, but added a comparison table or recency list presenting earlier executed agreements as deals with the requested adjustment. In every run the reviews of the write and check stages endorsed the comparison rows (asking for their dates or to keep them) and none questioned listing them."
+}

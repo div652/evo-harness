@@ -1,0 +1,498 @@
+{
+ "task": "052",
+ "context": "Request: the underwriting breakdown of every Capital Markets matter (including shelved, withdrawn and never-executed ones) across firm-commitment, best-efforts and other structures. Rubric: 20 matters as firm commitment, including IPO and follow-on underwriting agreements and Rule 144A initial-purchaser note offerings (1005-00002, 1014-00001, 1016-00003, 1021-00002, 1039-00002, 1044-00004, 1045-00001), the block trade 1017-00001 and 1020-00003; the ATM program 1036-00002 as best efforts; the direct Reg D placement 1013-00002 as other; plus precision (placement-agent, fund PPM, bond and ABS matters such as 1004-00002, 1024-00004, 1030-00001, 1045-00006 are outside).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a folder and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex over all 266 matters (123 candidate matters); a content grep on raw files returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 27,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for structure terms with per-matter counts, then a heredoc error and a filtered scan of offering-named files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: content scan for exact structure terms across all matters written to a file.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Compares scan headers with the folder list and lists the files of the 47 matters without hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 85,
+     "tags": [
+      "mixed intents",
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the first lines of underwriting agreements of twelve candidates, a structure scan errors and then times out, then reads purchase agreements and offering memoranda of about seventeen more and greps the scan file. The review warns that about 60 surfaced matters were never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes a 26-matter book split 13 firm commitment, 0 best efforts, 13 other, with note offerings through initial purchasers under other. The review says the other bucket may hold misclassified matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 109,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misdescribes matter",
+     "note": "Re-reads the response and four sources, edits scope wording, and checks cited paths (first against a missing path).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Attempt 2: script over the cited folders for best-efforts wording; edits two matters to unresolved and renames the buckets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: lists one matter's files and greps the headline counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 132,
+     "end": 132,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened several surfaced matters, then bucketed note offerings sold to initial purchasers and an ATM program as other, and counted placement-agent, private-placement and bond matters in the book.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 42,
+    "end": 85,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The path search at [12] and the scans listed three needed matters (two firm-commitment deals and a direct placement), but when choosing what to read it opened none of their documents, so the answer leaves them out.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said about 60 surfaced matters were never opened, without naming these three; the agent wrote next."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "After reading their purchase agreements at [61]-[81], the answer puts seven note offerings sold to initial purchasers and the ATM program under other rather than firm commitment and best efforts.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review said the 13-matter other bucket may be misclassified; the check stages re-read two sources and searched for best-efforts wording but kept the buckets."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts placement-agent, fund-offering, bond and ABS matters read at [61]-[83] as part of the book.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review warned that counting draft or comparable-material matters may inflate the book."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 15,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags that the summary treats five folders as the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 matter folders with counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex over all matters for offering and structure words; 103 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened path regex with per-matter hit counts; 84 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 41,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scans time out; a scan over the 84 path-hit matters is written to a file and printed in three chunks of 80-140K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 51,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: all-matter scan in 14 background batches; the wrapper times out but the batch files are joined (135 matters with hits).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 89,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads underwriting and purchase agreements, offering memoranda and status memos of about twenty candidates, with two folder globs after guessed paths fail. The review warns that the rest of the book was not shown covered.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 90,
+     "end": 99,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Lists one matter's files and reads its termination papers and another matter's letter.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes a 24-matter book: 16 firm commitment, 1 best efforts, 7 other or undetermined. The review says several undetermined matters had their agreements unread.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Checks cited paths, finds files by glob and edits six citations.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 143,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: fixes one citation and reruns the path check.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 144,
+     "end": 144,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It screened only part of the surfaced matters and classified unread note offerings as other or undetermined, left out one of them and the direct placement, and counted bond and ABS matters in the book.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 52,
+    "end": 89,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scans at [33]-[49] listed the needed note-offering matters and the direct placement, but when choosing what to read it opened none of five of them; the answer then classifies four from snippets as other or undetermined and omits the rest.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said the rest of the book was never shown covered and the write review said undetermined matters had unread agreements; the check stages only fixed citations."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer puts the ATM program it read at [67]-[77] under other rather than best efforts.",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the ATM bucket."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts bond, ABS and terminated note matters read at [67]-[97] as part of the book.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review warned that snippet-based classification may inflate the count."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 15,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a folder and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Writes all 266 folder names to a file and prints the first and last.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find \\| grep over paths for underwriting and offering words with per-matter counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script and three reruns all time out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: 27 background batches polled until done; 234 matters with hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Targeted extraction over all matters in background batches, then prints matter headers and snippets; the harness notes the polling calls do not match the open stage.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 60,
+     "end": 67,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files (attempt 2). A heredoc error, then a path inventory of strong offering words across the store (291 lines).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 103,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads underwriting agreements and offering memoranda of about 25 candidates and a snippet script over four memoranda.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 104,
+     "end": 109,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes 16 firm commitment, 1 best efforts, 5 other and 1 unclassified.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 123,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misdescribes matter",
+     "note": "Re-reads the response, checks paths (first against a missing path) and fixes the headline count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the full response and counts entries.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 136,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: script reconciles category lists with the headline.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 137,
+     "end": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It left several surfaced firm-commitment matters and the direct placement unopened, read a sibling of one of them instead, and counted placement-agent, bond and ABS matters.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 68,
+    "end": 103,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scans and path inventory at [57]-[65] listed four needed firm-commitment matters and the direct placement, but when choosing what to read it opened none of them (for one it read a sibling ABS matter instead), so the answer omits them.",
+    "critic": "not-flagged",
+    "critic_note": "The screening review discussed single-document reads of opened matters, not unopened ones."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 104,
+     "end": 109,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer leaves a block-trade matter whose prospectus supplement it read at [90]-[96] unclassified and puts the ATM program under other rather than best efforts.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked for spot-checks of single-count entries without naming these classifications."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 104,
+     "end": 109,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts placement-agent, bond and ABS matters read at [79]-[101] as part of the book.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review warned that snippet or draft-based classifications could inflate the count."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail in the same way. Each reached every needed matter through broad path searches and text-extraction scans, then screened only part of them: the first error in all three is at the screening stage, where surfaced matters were left unopened (two firm-commitment matters and the direct placement in T0; several note offerings and the direct placement in T1; four firm-commitment matters and the direct placement in T2). The answers then misbucket matters (T0 read the initial-purchaser note offerings and put them under Other; T1 classified unread ones as undetermined; all three put the ATM program under Other) and include placement-agent, bond and ABS matters. The screening reviews raised only generic warnings about unopened matters; the write reviews of T0 and T1 named the 'other' bucket as possibly misclassified, and the check stages only fixed paths and wording."
+}

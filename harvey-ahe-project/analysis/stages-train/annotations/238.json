@@ -1,0 +1,361 @@
+{
+ "task": "238",
+ "context": "Request: which Tax matters include a tax indemnity in an executed agreement, with the documents. Rubric: 1001-00006 (Ardent Capital Partners, proof: closing-tax-memorandum.docx) and 1015-00005 (Calloway-Briggs Renewables, proof: tax-indemnity-agreement.docx), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for tax indemnity words."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "A folder glob returns nothing; a shell find lists the first 100 matter folders and subfolders and 80 files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Finds folders named for tax or transaction documents and lists the files in each tax folder and in tax-flagged matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of a tax indemnity agreement, two tax protection agreements and three executed purchase and merger agreements from six candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 22,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections, headings and signature pages of the three tax agreements and the openings of related executed agreements."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 39,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script printing the endings of those three tax agreements to check execution."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of the three matters with tax agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 43,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads signing and closing emails, a closing index, a closing certificate and a deal memo of those matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 52,
+     "end": 53,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Script locating tax-indemnity terms in three executed purchase and merger agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 54,
+     "end": 65,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the indemnity sections of those agreements and a tax indemnification memo of one of them."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 66,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep for file names pairing tax with indemnity or protection."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a tax gross-up memo, a credit agreement, a draft tax-indemnity markup and a draft tax protection agreement from three candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 73,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing all files with tax, gross-up or indemnity in the name."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with executed tax indemnities or tax protection agreements; excludes one matter because its tax-indemnity file is a draft markup."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 77,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Finish the run",
+   "failure_point": "Excluded a qualifying matter after reading only its draft markup, and listed four matters with tax protection or deal-level tax indemnities as qualifying.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 76,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It opened the matter it needed but read only a draft tax-indemnity markup there, and excluded the matter without looking for its closing tax documents (evidence seen at [68]-[72])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 76,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted four matters with tax protection agreements or ordinary deal-level tax indemnities as qualifying Tax matters."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an agreement, memos and a draft merger agreement of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 10,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of one listing-top agreement, its redline, a support agreement and an opinion."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 20,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for tax indemnity terms; times out after about 156K chars from low-numbered matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the tax indemnity agreement, purchase agreement, closing index and tax opinion of the one matter the scan flagged."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later parts of that matter's closing index and tax indemnity agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that matter as the only Tax matter with an executed tax indemnity."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its one scan timed out after reaching only one qualifying matter; it accepted that partial output and never found the other.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 19,
+    "end": 20,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a store-wide scan that timed out after reaching one qualifying matter; it did not narrow or rerun the scan or search file names, so the other never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find (no output)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an agreement, two memos and a draft merger agreement of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 10,
+     "end": 14,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of one listing-top agreement and its redline, an opinion and a checklist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 16,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for tax indemnity terms; times out after about 90K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 17,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the tax indemnity agreement, closing index, purchase agreement and tax opinion of the one matter the scan flagged."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of two more candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of four executed agreements from four other matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over executed and settlement files store-wide, printing tax indemnity snippets."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 33,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of four candidate matters picked from that output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one matter as the only qualifying precedent and states that no executed tax indemnity was located in a second matter whose files it had just listed."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 40,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → List files in candidate matters → Write the response → Finish the run",
+   "failure_point": "Its second scan and a file listing put the other qualifying matter in front of it, but it wrote that matter off without reading any of its documents.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 38,
+    "end": 39,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "After its scan flagged the matter it needed and it listed that matter's files, it read none of them and wrote that no executed tax indemnity was located there."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found and passed one qualifying matter and failed on the other. T1 never reached it: its one scan timed out first (search miss). T0 and T2 did reach it and excluded it without reading the document that shows execution. T0 read only a draft markup there; T2 read nothing after listing its files (under-inclusion, at the write stage in both; T0's evidence was its reading stage). T0 also listed four non-qualifying matters (later over-inclusion)."
+}

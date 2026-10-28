@@ -1,0 +1,326 @@
+{
+ "task": "046",
+ "context": "Request: closed Capital Markets offerings whose proceeds were earmarked primarily for growth, with documents showing the earmark and the closing. Rubric: four matters 1013-00002 (Genome Dx), 1033-00002 (Redstone Gaming), 1037-00001 (Solstice Biomedical), 1039-00002 (Torchlight Mining), each with a growth-earmark and a closing proof document, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the unopened listed matters."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two find | grep runs over file paths for request words and financing words; the second is cut by its own head limit; the review flags noise and the cap."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; rerun restricted to a hand-picked list of folder prefixes returns ~100K chars; the review says coverage is incomplete."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: chunked store-wide extraction scan of document files plus a file-name index for offering documents filtered to hand-picked prefixes."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 44,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads prospectus openings and closing checklists of three candidates; two guessed checklist paths do not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 45,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction scripts pulling use-of-proceeds passages from a named list of prospectuses across several candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing checklists, a closing memorandum, an officers' certificate and a pricing email of three matters it is weighing; the review flags many unopened candidates and incomplete recall."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Reads one document each from five further candidates named in the review to rule them out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two qualifying matters and a list of exclusions, one of them a matter it judged not closed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that cited paths exist."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Two needed matters surfaced in its name searches and scans but were never opened; a third was opened, its closing memorandum read, and it was excluded as not closed.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 44,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name search and store-wide scan listed all needed matters, but when choosing what to read it opened other candidates and never opened two of them, even after the review flagged unopened candidates and it reopened the stage.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the review at [63] said many candidates were unopened and recall incomplete, naming other matters."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "A needed matter whose prospectus and closing memorandum it read (evidence seen at [45]-[57]) is listed as excluded for incomplete closing evidence.",
+     "critic": "not-flagged"
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a shell listing of folders (first 80) and file-type counts; the review flags the cap."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 12,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search file contents for request keywords. A store-wide extraction script with broad terms and no output cap, plus a file-name find; returns ~5.4M chars."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "An uncapped store-wide extraction scan with broad terms returned ~5.4M characters and the run ended before any answer.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 9,
+    "end": 12,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its first search was an uncapped extraction script over every document with very broad terms; the output filled the context and no response was written.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths with broad words; 1,441 hits (~113K chars); the review flags noise."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Reopened: narrower file-name pattern, hit counts per matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out twice; rerun over a hand-picked list of about twelve matters; the review rates it not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: extraction scan over the first twenty numbered matter series."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the use-of-proceeds parts of offering documents from eight candidates."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over a named list of offering documents."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 76,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing documents, emails and offering memoranda of the matters it is weighing, lists one matter's files and runs snippet scripts; the review flags a matter excluded as not closed after reading only a pre-closing memo and checklist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened (attempt 3): range scans across all matters with capped output; no further reads."
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two qualifying matters and exclusions, one of them a matter judged not closed."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "Two needed matters surfaced in its name searches and scans but were never opened; a third was read and excluded as not closed.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 40,
+    "end": 48,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches listed every needed matter, but the shortlist it read from left out two of them and it never opened them, even after later reviews flagged unopened candidates and its final scan listed them again.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) reviews at [76], [82] and [88] flagged unopened candidates, naming other matters."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "A needed matter whose prospectus, closing memorandum and checklist it read (evidence seen at [69]-[74]) is excluded as not closed; the review at its reading stage named this exclusion, and the reopened stage ran only a scan.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) the review at [76] named the not-closed exclusion after reading only a pre-closing memo and checklist."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T1 ran an uncapped store-wide extraction script as its first search and overflowed the context (no review reached it). T0 and T2 both surfaced all needed matters through file-name searches and scans, then read from a shortlist of other candidates and never opened two needed matters (surfaced, never opened); each also read one needed matter's closing memorandum and excluded it as not closed. Reviews at the reading stages flagged unopened candidates in general (T2's also named the not-closed exclusion); the agents reopened stages for coverage scans but never opened the left-out matters. T0 kept one needed matter and T2 a different one."
+}

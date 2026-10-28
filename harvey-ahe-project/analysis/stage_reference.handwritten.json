@@ -1,0 +1,232 @@
+{
+  "_source": "Derived only from the base harness (campaign 23 C0) on the 80 TRAINING tasks, 3 runs each: analysis/stages-train/taxonomy.md (stages) and failure_patterns.md (patterns per stage). No validation or test runs were used. Rule: a stage's failure_patterns list only errors that the annotation placed AT that stage (first or later errors); passing_runs describe what passing runs did differently with respect to those errors (nothing, if none were recorded); examples describe only what happened inside the stage. Typical tools are the tools passing training runs used in each stage. 'Finish the run' is not a declarable stage.",
+  "stages": {
+    "List files in the document store": {
+      "purpose": "List files across the whole document store to get a first view of what it holds.",
+      "expected_activity": "a whole-store file listing (glob **/* or find over documents/)",
+      "failure_patterns": [
+        "No failures were recorded at this stage in the training runs."
+      ],
+      "passing_runs": "No failures were recorded at this stage, so there is no pass/fail contrast.",
+      "when_to_use": "At the very start, to see how the store is organised (matters/<NNNN-NNNNN>/<subfolders>/...).",
+      "examples_from_successful_runs": [
+        "A single whole-store glob ('**/*' over documents) to see how the store is organised.",
+        "A shell find over the whole store printing the first 200 paths."
+      ],
+      "typical_tools": "glob, bash find"
+    },
+    "Read documents picked from the file listing": {
+      "purpose": "Open documents chosen from the whole-store listing.",
+      "expected_activity": "reading documents of matters visible in the whole-store listing",
+      "failure_patterns": [
+        "Reading the matters at the top of the capped listing (often only 1-6 matters) and concluding from them, with no store-wide search afterwards. This was the most common first error in the training runs (39 of 213 failing runs).",
+        "Taking the one visible matter of the requested kind as the answer, or concluding that nothing else qualifies.",
+        "The only later search looked for a figure taken from those listing-top documents rather than for the request itself."
+      ],
+      "passing_runs": "Passing runs that read from the listing first all searched the whole store afterwards (e.g. a store-wide text search that listed the candidate matters).",
+      "when_to_use": "Only to get oriented on a matter visible in the listing; not as a substitute for searching the store.",
+      "examples_from_successful_runs": [
+        "Read memos and an engagement letter of the matter at the top of the listing to learn what such matters look like."
+      ],
+      "typical_tools": "read"
+    },
+    "Search file contents for request keywords": {
+      "purpose": "Search inside files across the store for words from the request.",
+      "expected_activity": "store-wide content search (grep over documents/)",
+      "failure_patterns": [
+        "The grep tool reads raw bytes: hits came only from plain-text files such as emails (.eml), so matters whose evidence sits only in .docx files never surfaced, and the email hits were accepted as the complete set.",
+        "A glob filter that matches nothing ('*.docx' without '**/', '*', brace or non-recursive patterns) returned 'No matches' and no other search followed.",
+        "A broad or partial hit list was accepted without a second, different search.",
+        "grep over .docx files printed compressed bytes, which gave no usable lead."
+      ],
+      "passing_runs": "Passing runs followed an empty or misleading grep with file-name searches, used a content-mode grep and then listed the candidates' files, ran an extraction script that unzips document text instead of the grep tool, or used recursive globs, shell loops or grep -Ril on raw files.",
+      "when_to_use": "When the request names terms that would appear inside documents (a party, a clause, a document type, an event).",
+      "examples_from_successful_runs": [
+        "A recursive, case-insensitive content grep over the whole store for the request's key terms; the hits (mostly emails) pointed to candidate matters.",
+        "A content grep that returned nothing was followed by a file-name search on the same terms instead of being taken as 'no matches in the store'."
+      ],
+      "typical_tools": "grep, glob, read, bash"
+    },
+    "Search file names for request keywords": {
+      "purpose": "Search file and folder names across the store for words from the request.",
+      "expected_activity": "store-wide file-name search (glob, find | grep) with request words",
+      "failure_patterns": [
+        "Output cut by the glob tool's 100-file cap or by the agent's own head/sed limit, so later matches were never seen.",
+        "Patterns too narrow for how files are actually named (e.g. anchored on a leading word, missing prefixed file names).",
+        "Working only from file-name hits after content searches had failed, without another way of reaching document text."
+      ],
+      "passing_runs": "No pass/fail contrast was recorded for these failures; in several passing runs this file-name search is where the needed matter first surfaced.",
+      "when_to_use": "When files are likely to be named after what the request asks for (agreement types, filings, memo topics).",
+      "examples_from_successful_runs": [
+        "find over all file paths piped to a case-insensitive grep for the request's key words; it returned a handful of matter numbers to screen.",
+        "Globs for file names containing request keywords and for a practice-area subfolder name, run in parallel."
+      ],
+      "typical_tools": "glob, bash find | grep"
+    },
+    "Search file names for a document type": {
+      "purpose": "Search file names across the store for a kind of document (e.g. engagement letters, closing memos) rather than words from the request.",
+      "expected_activity": "store-wide file-name search for document-type words",
+      "failure_patterns": [
+        "Counting matters from a listing limited to folders that hold one document type, which left matters out."
+      ],
+      "passing_runs": "No passing training run used this stage.",
+      "when_to_use": "When the request implies a kind of document (engagement letters, closing memos, filings) without naming the words used in file names.",
+      "examples_from_successful_runs": [
+        "No passing training run used this stage; it appears in failing runs only."
+      ],
+      "typical_tools": "glob, bash find"
+    },
+    "Scan document text with an extraction script": {
+      "purpose": "Extract text from documents (e.g. unzip .docx) with a script and search it across the store.",
+      "expected_activity": "a script that extracts and searches document text over many matters",
+      "failure_patterns": [
+        "The scan timed out (default shell timeout 60 s) and its partial output was treated as complete instead of being narrowed, paged, or rerun with a longer timeout (27 runs).",
+        "The scan was restricted by folder name, file name, file type or exact phrase, so a matter filed differently fell outside it.",
+        "The scan printed every match of broad terms with no output cap (1M-63M characters), filled the context and ended the run (15 runs).",
+        "A follow-up script filtered the scan's results too narrowly (one exact folder name, or only files named as executed agreements) and dropped a matter the scan had shown."
+      ],
+      "passing_runs": "Passing runs kept retrying a timed-out scan until it reached the matter, narrowed timed-out scans to agreement-type file names or transaction folders, narrowed after a syntax error, and capped output.",
+      "when_to_use": "When content search is needed across .docx files (the grep tool does not read .docx text).",
+      "examples_from_successful_runs": [
+        "A script that unzips each .docx and greps its text for the request's terms, written to a file first and run in several matter-number ranges in parallel so no single run timed out.",
+        "A store-wide scan that timed out was retried (rewritten after a syntax error, then rerun) until its output reached all candidate matters, printing only matter number and file path per hit."
+      ],
+      "typical_tools": "bash"
+    },
+    "List matter folders": {
+      "purpose": "List the names of the matter folders in the store.",
+      "expected_activity": "listing the matter folder names (glob or ls of documents/matters)",
+      "failure_patterns": [
+        "No failures were recorded at this stage in the training runs."
+      ],
+      "passing_runs": "No failures were recorded at this stage, so there is no pass/fail contrast.",
+      "when_to_use": "To get the full list of matter numbers, e.g. to drive a scan over every matter.",
+      "examples_from_successful_runs": [
+        "Listed all matter folder names, then counted files per matter folder to plan a scan in ranges."
+      ],
+      "typical_tools": "bash"
+    },
+    "List files in candidate matters": {
+      "purpose": "List the files of specific candidate matters to decide what to open.",
+      "expected_activity": "listing files inside named candidate matter folders",
+      "failure_patterns": [
+        "Listing only some of the matters a search or scan had shown (e.g. only matters already read), so a newly surfaced qualifying matter was never examined.",
+        "A full file-name list showed more qualifying matters, but other matters were listed instead."
+      ],
+      "passing_runs": "Passing runs listed the files of all candidates, including every one the scan showed, before comparing them.",
+      "when_to_use": "After a search has surfaced candidate matters, to see what each holds before deciding what to read.",
+      "examples_from_successful_runs": [
+        "Listed all files of every candidate matter found by the name search (five matters in one shell loop) before opening any.",
+        "After file-not-found errors, located the real subfolder of a candidate matter with find and glob instead of guessing paths."
+      ],
+      "typical_tools": "glob, bash"
+    },
+    "Screen candidate matters by reading documents": {
+      "purpose": "Read documents of candidate matters to decide whether each fits the request.",
+      "expected_activity": "reading documents of several candidate matters",
+      "failure_patterns": [
+        "Opening only a subset of the candidates the searches surfaced, often those whose file names fit, so a qualifying matter was never opened (the most common error at this stage: 29 first errors).",
+        "A candidate that showed up only through email lines, drafts, redlines or a loose name match was dropped without opening its documents.",
+        "The needed document was in the matter's own listing, but other documents were read instead.",
+        "Requesting a matter under a mistyped number, getting file-not-found, and dropping it.",
+        "Verifying only part of a complete list and counting from that."
+      ],
+      "passing_runs": "Passing runs opened every candidate the scan listed, listed all candidates' files before comparing their closing documents, and opened documents of each candidate before writing.",
+      "when_to_use": "To decide, for every surfaced candidate, whether it fits the request.",
+      "examples_from_successful_runs": [
+        "Read the opening of a strategy or closing memo from each of six candidate matters, one per candidate, before deciding which qualified.",
+        "Read engagement letters, memos and filings from all five candidate matters in two batches, and recorded the ones that did not qualify as excluded with a reason."
+      ],
+      "typical_tools": "read"
+    },
+    "Search within a candidate matter's files": {
+      "purpose": "Search inside the files of specific candidate matters for details.",
+      "expected_activity": "grep or a script over files inside named matter folders",
+      "failure_patterns": [
+        "Restricting follow-up searches to a few named matters, leaving out one that had surfaced.",
+        "An in-matter grep did not read .docx text; the matter's files were never listed, so the needed document was not found.",
+        "Fixing the set of matters early from a timed-out scan, so the population behind a count or rate is incomplete."
+      ],
+      "passing_runs": "Only two passing runs used this stage; no successful pattern stands out.",
+      "when_to_use": "To pull specific clauses, dates or figures out of the documents of matters already chosen.",
+      "examples_from_successful_runs": [
+        "A snippet-extraction script pulling the requested clauses from each named agreement of the candidate matters, then from one agreement in more detail."
+      ],
+      "typical_tools": "bash"
+    },
+    "Read a chosen matter's documents in depth": {
+      "purpose": "Read the documents of the matters you have settled on, for details and supporting evidence.",
+      "expected_activity": "reading documents of matters already chosen",
+      "failure_patterns": [
+        "Reading only some of a matter's listed files when an unread one was the needed document.",
+        "Ending with the answer as chat text instead of writing the response file."
+      ],
+      "passing_runs": "Passing runs read the chosen matter's status reports and filings to date its latest work, confirmed candidates from both emails and agreements, and compared dates of executed agreements.",
+      "when_to_use": "Once the answer's matters are chosen, to confirm details and collect the documents to cite.",
+      "examples_from_successful_runs": [
+        "Read the picked matter's filings and status letters with large read limits to date its most recent work.",
+        "Read the picked matter's agreement section by section, listed the matter's files, then read its closing and side documents."
+      ],
+      "typical_tools": "read"
+    },
+    "Calculate figures for the answer": {
+      "purpose": "Compute dates, counts, rates or amounts needed for the answer.",
+      "expected_activity": "a short calculation script or arithmetic",
+      "failure_patterns": [
+        "No failures were recorded at this stage in the training runs."
+      ],
+      "passing_runs": "No passing training run used this stage.",
+      "when_to_use": "When the answer needs dates, counts, averages or amounts computed from what was read.",
+      "examples_from_successful_runs": [
+        "No passing training run used this stage; it appears in failing runs only."
+      ],
+      "typical_tools": "bash"
+    },
+    "Write the response": {
+      "purpose": "Write the deliverable.",
+      "expected_activity": "writing the response file in the output directory",
+      "failure_patterns": [
+        "Over-inclusion: counting drafts, unsigned or still-negotiated items as executed or closed; counting items outside the request's scope (another practice area, deal type, or a sibling matter of the same client); asserting matters from keyword hits, snippets or short skims without reading them; describing ranked-out comparators as meeting the request.",
+        "Under-inclusion: reading a qualifier or the request's exclusions too narrowly; judging a matter from part of its documents (a draft, a pre-closing memo, first lines, email-only greps); dropping a matter without a stated reason.",
+        "Misstated facts: attaching the wrong matter number to documents (numbers printed inside documents can differ from the matter folder number; results of parallel reads paired with the wrong path); wrong category, client, role, or detail (e.g. a related filing date given for the requested date).",
+        "Writing from scan output without opening the matter it showed.",
+        "Scoping the conclusion more narrowly than asked, or omitting the matter number."
+      ],
+      "passing_runs": "Passing runs opened each candidate and listed borderline matters as excluded rather than qualifying, checked and dropped keyword hits, stated the conclusion as directly as asked, and cited matter numbers.",
+      "when_to_use": "When every candidate has been screened and the answer's matters are confirmed.",
+      "examples_from_successful_runs": [
+        "Wrote a response naming the qualifying matters with their matter numbers and proof documents, plus a list of keyword hits that were checked and excluded, with reasons.",
+        "Wrote a response naming one transaction whose documents were split across two matter folders, citing both."
+      ],
+      "typical_tools": "write"
+    },
+    "Check or revise the response": {
+      "purpose": "Re-read, check or edit the deliverable after writing it.",
+      "expected_activity": "re-reading or editing the response file",
+      "failure_patterns": [
+        "A later edit added another matter that does not qualify."
+      ],
+      "passing_runs": "A few passing runs used this stage; no failure pattern beyond the one above was recorded.",
+      "when_to_use": "After writing, to verify cited paths and details against the documents and fix the response.",
+      "examples_from_successful_runs": [
+        "Globbed to check that a cited file path exists, then corrected the path in the response.",
+        "Re-read the top of a source document to check a cited detail, then edited the response."
+      ],
+      "typical_tools": "read, edit, glob, bash"
+    }
+  },
+  "surfaced_not_opened": {
+    "_why": "Run fact for the critic: entities that appeared in the agent's own search results but were never opened. Included only because the training annotations contain the error kind 'surfaced-not-opened'; shown only at the stages where that error was placed in training (Screen 41, List files in candidate matters 10, Search within 3, Write 2, Scan 1, counting first and later errors). On another benchmark, set entity_regex to that benchmark's entity identifier, or set enabled=false if the error kind does not occur in its training annotations.",
+    "enabled": true,
+    "entity": "matter",
+    "entity_regex": "\\b\\d{4}-\\d{5}\\b",
+    "max_entities_for_hit_list": 150,
+    "show_at_stages": [
+      "Screen candidate matters by reading documents",
+      "List files in candidate matters",
+      "Search within a candidate matter's files",
+      "Write the response",
+      "Scan document text with an extraction script"
+    ]
+  }
+}

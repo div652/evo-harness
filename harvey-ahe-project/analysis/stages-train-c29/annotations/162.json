@@ -1,0 +1,387 @@
+{
+ "task": "162",
+ "context": "Request: the first traditional, non-SPAC IPO the firm took public (for a pitch bio), with the offering documents and a document showing the deal closed. Rubric: 1037-00001 (Solstice Biomedical Devices, closed March 2023), an offering document and a closing deliverable from it, plus a precision criterion. A later IPO (1010-00002, Arbor Health, February 2024) and an earlier SPAC IPO (1002-00001) are in the store.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 19,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). A glob of the matters folder (nothing) and six file-name globs for offering-document and closing words; two return nothing."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 3). A script that lists all matter folders and every file whose name has offering-document words. The review flags that candidates were ranked by matter number, unopened."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents. Globs all files of eight candidate matters, including one with an executed underwriting agreement and closing certificates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 49,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads offering, closing and engagement documents of three of the eight (one guessed path fails). The review names the listed-but-unread matter with closing certificates as possibly earlier or later than the one picked."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 59,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for offering and closing phrases times out; two range scans follow, viewed in truncated form."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "File-backed range scans for completed-offering phrases; only per-matter hit counts are printed."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 78,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads the openings of eight high-count hit documents from eight matters, all ruled out."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 79,
+     "end": 88,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the registration statement, underwriting agreement, memo and closing papers of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Names the 2024 offering as the first traditional IPO, with its offering and closing documents and reasons for excluding earlier SPAC, withdrawn and dormant matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and globs the chosen matter's folder; no change."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It listed the files of the matter it needed but read only three other candidates, and named a later offering as the first.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 89,
+    "end": 94,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It listed the matter's files at [28]-[36] (an executed underwriting agreement and closing certificates) but never read any of them and left it out of the answer; the screening review at [49] named this matter as listed but unread and possibly earlier, and the agent ran scans and read other hits instead.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) [49] named the matter as listed but not read and possibly earlier."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and shows the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for offering and closing terms times out after about 700K characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Narrower phrase scan also times out with partial per-matter output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "find | grep over paths for offering and closing words, one hit per matter, cut at 100 lines."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 38,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Lists all files of four candidate matters, plus a second store-wide file-name search for offering-document words whose matter list includes a new candidate."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 39,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files and counts for seven more candidates from that list, including the one it never read later."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "A script keeps only matters whose file names include a registration or prospectus file, a hyphenated underwriting agreement and a closing file; eight matters pass. The review warns that requiring all three by name drops matters named differently."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 52,
+     "end": 71,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the registration statement, final prospectus, underwriting agreement, closing papers and emails of one matter, plus one document each from three other candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 72,
+     "end": 81,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Reads one memo each from four other filtered candidates and lists the chosen matter's offering folders."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Names the 2024 offering as the first traditional IPO with its offering and closing documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response; no change."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 94,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for a document type → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It listed the matter it needed, then fixed its candidate set with a three-way file-name filter that dropped it, and named a later offering as the first.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Search file names for a document type",
+    "start": 46,
+    "end": 51,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "why": "Its own listing at [41]-[43] included the matter, but the file-name intersection it wrote to fix the candidate set dropped it, and the answer was built only from the eight matters that passed; the review named this exact risk and the agent went on to read only filtered candidates.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) [51] named the three-way name filter as dropping matters named differently, not the matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob and a shallow find that returns nothing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Saves all matter folder names and shows the first and last 20."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two find | grep searches over paths for offering, closing and equity words; about 1,200 name hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 28,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of nine candidate matters, plus a narrower store-wide name search for offering-document files."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists files of six more matters from that search."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 40,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for offering phrases times out after about 635K characters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 41,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads offering and closing documents of the two leading candidates side by side, a date-extraction script over underwriting agreements, then more closing papers of the earlier-dated one."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 73,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Reads an earlier candidate's papers to rule it out and lists files of a range of early matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Names the earlier-dated candidate as the first traditional IPO with its offering and closing documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Checks cited paths, re-reads, reruns a name search and tightens the ranking wording."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 92,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs listed the files of the matter they needed. They split at the next choice of what to read. T2 read that matter's engagement letter and closing certificate next to the later offering, compared dates and passed. T0 read three other candidates and never opened it, then answered with the later offering (under-inclusion); the screening review named the unread matter explicitly and the agent did not open it. T1 fixed its candidate set with a three-way file-name filter that dropped it (over-narrow-filter); that stage's review named the filter's risk and the agent moved on. So the critic flagged the problem in both failing runs and was ignored both times."
+}

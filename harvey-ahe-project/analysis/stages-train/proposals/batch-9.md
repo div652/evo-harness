@@ -1,0 +1,19 @@
+# Batch 9 proposals (tasks 155 158 161 162 169 170, all 18 runs failed)
+
+| Kind | Name | Definition | Example | Why no existing name fits |
+|---|---|---|---|---|
+| error kind | NEW: misjudged-exclusion | The agent opened a needed matter's qualifying document but judged that it did not qualify (it misread a qualifier, or folded the matter into another matter's deal), so the answer leaves it out | 155_T0 [44]-[45]; 169_T1 [69]-[70] | over-inclusion covers the opposite mistake. hedged-answer covers a conclusion that is qualified, not a matter that is dropped. surfaced-not-opened needs the matter never to have been opened. |
+| tag | NEW: binary output | A content-mode grep printed compressed document bytes (from .docx) rather than readable text, so the output is non-empty but gives no usable signal | 162_T0 [13]-[15]; 162_T2 [13]-[14] | `no matches` and `huge output` do not describe a non-empty result that cannot be read; it accounts for both search-miss first errors in those runs. |
+| tag | NEW: run ended: text reply without finish | The run stopped after a plain text reply without calling finish (the deliverable had already been written) | 158_T1 [38]-[39] | The only run-ended tag is `run ended: context overflow`. Note: check.py requires the tag to start with `run ended`, so it also reports "no finish and no run-ended tag" for 158_T1 because of the `NEW: ` prefix. |
+
+## Issues
+
+- Multi-matter recall tasks (155: 21 matters, 169: 9, 170: 8) usually have several independent errors. As the brief requires, first_error is the earliest in time even when a later error cost more criteria (e.g. 155_T0: one surfaced-not-opened matter comes before a scan that missed four). The rest go to other_errors, which can hold two entries on the same stage (155_T0 and 169_T1 Write: misjudged-exclusion + over-inclusion).
+- misjudged-exclusion and over-inclusion are both placed on the Write stage, following the batch-2 practice for over-inclusion, even when the documents behind the judgement were read earlier.
+- 155_T2 [24]-[25]: a matter appeared in the scan output only through draft files, because its executed exclusivity agreement sat in a folder the scan left out. I labelled it search-miss with hindsight "target surfaced". A hindsight value such as "target surfaced via drafts only" would describe it better.
+- 162_T1: the matter appeared only on the last line of a timed-out scan, right before the write. It is logged as surfaced-not-opened on the Write stage (the stage right after it surfaced), as an other_error after a search-miss first error.
+- 158_T1 and 158_T2: a surfaced matter was never opened but was then *expressly excluded* in the answer based on file names alone. I kept surfaced-not-opened. This is a variant where the agent states a judgement on a matter it never read.
+- 170 T1/T2: the answer names one non-rubric matter as the only answer, so it gets hindsight "answer wrong matter". The precision criterion also fails on its own (the deal was still being negotiated), so I added over-inclusion as an other_error. 161_T0/T1 are the reverse: the right matter plus an extra one, so over-inclusion is the first error.
+- Recurring patterns that are tagged only as `no matches`: a grep with a brace glob (`**/*.{docx,eml,xlsx}`) returned nothing (170_T1 [12]); a glob `matters/*` or `matters/**` on `documents` returned nothing (161_T1, 169_T2). `find documents -maxdepth 2 -type f` is always empty, because files sit deeper.
+- File-name filters anchored right after a `/` (`grep -Ei '/(credit|loan|...)'`) miss prefixed names such as `mezzanine-credit-agreement-…` (169_T1). Shell `head`/`sed -n 1,240p` caps on find output also cut off results (162_T1).
+- Long runs that work through candidates one by one, interleaving listings, reads and snippet scripts (169_T2 [53]-[78]), were kept as one "Screen candidate matters by reading documents" stage with `mixed intents`. Splitting them per candidate would give many 2-event stages.

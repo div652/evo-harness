@@ -1,0 +1,282 @@
+{
+ "task": "132",
+ "context": "Request: M&A deals where the firm negotiated a fraud carve-out to the indemnity cap (indemnity playbook). Rubric: 26 matters (incl. 1001-00003/4/5/7, 1003-00003/4, 1006-00006/7/8, 1008-00008, 1037-00006, 1041-00003, 1046-00001 ...), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads three agreements of the two matters at the top of the listing, plus one store-wide files-with-matches grep for broad terms whose file list spans several matters (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of four agreements or letters from four matters in the grep list."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of five agreements at offsets, looking for the indemnity terms."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as precedents and one as a counterexample; dismisses another."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only keyword search was one broad grep whose file list reached a few matters; most qualifying matters never surfaced, and it named one matter outside the set.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 4,
+    "end": 8,
+    "events": "[4]-[5]",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was one grep for very broad terms whose file list reached only a few of the matters it needed; it never searched or scanned agreement text for the clause, so most never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 13,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "Of the matters in its grep list it opened four and left several others it needed unopened."
+    },
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the indemnity sections of two matters it needed and judged them not qualifying, presenting one as a counterexample (evidence seen at [14]-[30])."
+    },
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted a draft agreement from a matter outside the set as a qualifying precedent."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four whole-store globs (all files, docx, and two types that match nothing)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements and a memo of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Content greps with single-extension globs inside those two matters and one over the whole store; all return nothing (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 16,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of the two agreements at offsets."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one executed precedent and one draft-only precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only store-wide grep used a single-extension glob and returned nothing; it worked only from the two matters at the top of the listing.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 12,
+    "end": 15,
+    "events": "[12]-[15]",
+    "kind": "search-miss",
+    "why": "Its only store-wide grep used a single-extension glob and returned nothing; it neither retried with another pattern nor scanned document text, and stayed with the two matters at the top of the listing."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted a draft agreement from a matter outside the set as a qualifying precedent."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for broad terms; the file list spans many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of two agreements of the listing-top matter and of emails from four matters in the grep list."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three content greps for the request terms (emails, docx, all files); one returns nothing, the others return lines mostly from emails."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads emails and letters of six matters from the grep lines, some at offsets."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters as precedents and one adjacent non-acquisition example."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 30,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Its greps reached only some qualifying matters and it never scanned agreement text; of the ones it opened it kept only two whose emails stated the clause.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its searches were grep-tool searches whose hits came from a capped file list and from emails; it never scanned agreement text for the clause, so most of the matters it needed never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 2,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 11,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "Of the matters in its first grep list it opened four and left several others it needed unopened."
+    },
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It had opened three matters it needed (the opening of one agreement, emails of two others) but did not read far enough to find the clause and left them out."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed at their store-wide search (search-miss): T0 and T2 relied on one or two grep-tool searches whose capped or email-only hits reached a few of the 26 qualifying matters; T1's only store-wide grep used a single-extension glob and returned nothing. All then judged a handful of matters; T0 and T1 also asserted a matter outside the set."
+}

@@ -1,0 +1,366 @@
+{
+ "task": "053",
+ "context": "Request: all Capital Markets matters that included a Rule 144A or Regulation S tranche, with offering documents and records of structure and closing. Rubric: 1005-00002, 1014-00001, 1016-00003, 1021-00002, 1039-00002, 1045-00001 as closed qualifying matters, 1020-00003 as an executed-but-terminated precedent, proof documents for each, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 9,
+     "tags": [
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Depth-limited finds return nothing; it lists the workspace, then the first 100 files under the matters folder."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find piped to grep over file paths for offering-document words, cut at 300 lines by its own head limit."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide text scan for tranche terms; times out with partial output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower find piped to grep over file paths, written to a file and printed in full."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 22,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the offering memorandum, closing memo and purchase agreement of one candidate and the global notes of another; one guessed path does not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 25,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos and offering memoranda of three more candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing memos, an exemption memo, a closing email and a purchase agreement of candidates already opened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters as closed comparables and screens out others."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 40,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The full file-name list showed every qualifying matter, but it opened five, judged one of them not closed, and never opened two others.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "List files in candidate matters",
+    "start": 23,
+    "end": 24,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its full file-name list showed two more qualifying matters, but the five matters it chose to list left them out and it never opened them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Read one matter's internal memo and offering supplement and treated it as not closed, although a closing checklist sat in the file list it had just printed (evidence seen at [25]-[31])."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 38,
+     "end": 39,
+     "events": "",
+     "kind": "hedged-answer",
+     "why": "Kept another qualifying matter in the answer but did not state that it closed."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder, which fails because it is a directory."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A store-wide content grep for tranche terms, with three reads of a listing-top matter in parallel (labelled by the grep, which set the next steps); the grep's line list covers a limited set of matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 10,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidates from the grep lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 17,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Four batches of reads of offering memoranda, closing memos, emails and checklists of six candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six responsive matters and one comparator."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the summary paragraph."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 45,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One content grep missed three qualifying matters; of those it opened, one was judged not closed, and two non-qualifying matters were added.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 5,
+    "end": 9,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was one content grep whose line list never reached three qualifying matters; it did not search file names or run another grep."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Read one matter's pre-closing email and checklist and treated it as priced but not closed (evidence seen at [27]-[35])."
+    },
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted two non-qualifying matters as responsive."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a depth-limited find that returns nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Lists matter subfolders and greps file paths for offering-document words; its own sorted line cap stops the file list among the early-numbered matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six documents of the one candidate in that list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 15,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide text scan for tranche terms; times out with partial output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos, an offering memorandum, indentures and an opinion of two matters from the scan output."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 28,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Re-reads one candidate's indenture and opinion and lists the files of two candidates (labelled by the reads)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 34,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists files of three matters and reads two documents of a listing-top matter (labelled by the listings)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 35,
+     "end": 40,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads and lists two more matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the offering memorandum, closing memo, funds flow and checklist of one candidate and the purchase agreement of another."
+    },
+    {
+     "stage": "Write the response",
+     "start": 47,
+     "end": 48,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three completed matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 49,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "A self-capped file-name list and a timed-out scan surfaced only two qualifying matters; it answered with those and one non-qualifying matter.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 5,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its file-name search was cut by its own line cap before reaching most matters and its later text scan timed out; it reran neither, so five qualifying matters never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 47,
+     "end": 48,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted a non-qualifying matter as a completed comparable."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed, at different search or selection stages. T0's uncapped file-name search listed every qualifying matter, but it chose five to list and skipped two (surfaced-not-opened at the listing stage). T1 relied on one content grep whose line list missed three matters (search-miss at its first search stage). T2's file-name search was cut by its own line cap and its scan timed out (search-miss at the file-name stage). T0 and T1 also judged an opened matter as not closed; T1 and T2 added non-qualifying matters."
+}

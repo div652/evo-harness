@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C2",
+  "parent_checkpoint": "C1",
+  "objective": "Prevent out-of-order or partial document reads from corrupting source-to-matter attribution and coverage state.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/read.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-60341bbbe7f24621d4e2/result.json: batched-read-source-misattribution",
+        "debugger/tasks/task-f85ac87c7a7b5530b001/result.json: candidate-qualification-and-source-attribution-gap",
+        "debugger/tasks/task-ee28f03b0cf7c49db7c0/result.json: candidate-provenance-reconciliation-gap"
+      ],
+      "failure_pattern": "Concurrent read results lacked a human-readable source identity and line windows lacked explicit completion state, allowing facts to be attached to the wrong matter or a partial read to be treated as complete.",
+      "mechanism": "Prepend every successful or failed document read with its normalized source path, status, exact line range, total lines, completion flag, and continuation offset; reject invalid paging ranges.",
+      "rationale": "The earliest observed corruption occurs at the read-result boundary, so deterministic provenance and coverage metadata in the tool is stronger and more reusable than relying on the model to recover opaque call IDs.",
+      "predicted_fixes": [
+        "task-60341bbbe7f24621d4e2",
+        "task-f85ac87c7a7b5530b001",
+        "task-ee28f03b0cf7c49db7c0",
+        "task-98819df83312c16bc7b0"
+      ],
+      "risk_tasks": [
+        "task-388bb7ef872b9908d8df"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/read.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/tasks/task-60341bbbe7f24621d4e2/result.json: batched-read-source-misattribution",
+        "debugger/summary.json: incomplete-document-reading"
+      ],
+      "failure_pattern": "The read schema did not explain that batched results can arrive out of request order or give an operational meaning to partial line windows.",
+      "mechanism": "Define the source header as authoritative, direct the agent to continue incomplete windows, and constrain offset and limit to valid ranges in the API schema.",
+      "rationale": "The model must interpret the new deterministic metadata correctly at the point of tool selection and result consumption.",
+      "predicted_fixes": [
+        "task-60341bbbe7f24621d4e2",
+        "task-915d8e88c958f51cde2e"
+      ],
+      "risk_tasks": [
+        "task-388bb7ef872b9908d8df"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/tasks/task-60341bbbe7f24621d4e2/result.json: batched-read-source-misattribution",
+        "debugger/tasks/task-88dbbca24b2c24cbe687/result.json: precision-set-overinclusion",
+        "debugger/tasks/task-ee28f03b0cf7c49db7c0/result.json: candidate-provenance-reconciliation-gap"
+      ],
+      "failure_pattern": "The existing corpus ledger protocol improved retrieval but did not make source binding an invariant, so facts and identities could still move between candidate rows during synthesis.",
+      "mechanism": "Require each ledger row to bind matter identity, returned source path, title-page parties, date, and finding, and require explicit continuation or an evidenced exclusion for incomplete reads before reconciliation.",
+      "rationale": "The prior corpus protocol was effective and is retained, but evidence shows it was incomplete; this narrow refinement teaches the state transition enabled by the stronger read-tool metadata without replacing the successful census workflow.",
+      "predicted_fixes": [
+        "task-60341bbbe7f24621d4e2",
+        "task-88dbbca24b2c24cbe687",
+        "task-ee28f03b0cf7c49db7c0"
+      ],
+      "risk_tasks": [
+        "task-388bb7ef872b9908d8df"
+      ]
+    }
+  ],
+  "validation": [
+    "Python AST and YAML syntax checks",
+    "Synthetic partial-read and parser-error metadata smoke tests",
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

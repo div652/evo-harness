@@ -1,0 +1,416 @@
+{
+ "task": "035",
+ "context": "Request: the full set of the firm's Capital Markets offerings that used a 180-day lock-up, with the documents showing each lock-up. Rubric: 1010-00002 (Arbor IPO) and 1037-00001 (Solstice ADS IPO), each with its form-of-lock-up-agreement, plus precision. Withdrawn or proposed IPO drafts (1008-00002, 1015-00001, 1032-00003) and the Penterra secondary 1018-00001 (90-day lock-up; its earlier IPO had 180 days) are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review recommends listing every matter folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex over all matters for offering and lock-up words, grouped by matter; a parallel content grep on raw files returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide lock-up snippet scan (about 84K chars), then a scan over offering-named files listing 180-day snippets per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 49,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads underwriting agreements or lock-up forms of seven candidates, then closing memos and one more lock-up agreement. For one matter it reads only the underwriting agreement. The review flags that this matter got no read confirming its lock-up and that two matters are drafts or proposed deals.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: scan over all documents for lock-up wording near a 180-day term, one line per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 61,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2, continued). Reads three documents of other matters from the new hits; a stage_start for writing is refused because the stage is still open.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five offering matters with 180-day lock-ups, including withdrawn and draft deals, citing a lock-up analysis memo for one matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 68,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and three sources, edits status wording to mark draft and unexecuted matters; the review flags that the five-matter list still counts drafts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 83,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened one qualifying matter's lock-up form, which its own file-name search had listed, and its answer counted withdrawn and draft offerings as qualifying.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 29,
+    "end": 49,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "The form of lock-up agreement of one qualifying matter appeared in its own path search at [17], but when choosing what to read it opened only that matter's underwriting agreement, and the answer cites a lock-up analysis memo instead.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review named the matter as having only an underwriting agreement read with no follow-up confirming its lock-up; the agent moved on to another scan."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 62,
+     "end": 67,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts five matters as qualifying, including a withdrawn offering and two proposed or draft offerings whose documents it had read as unexecuted (evidence seen at [31]-[47]).",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The screening review and the check review both named the draft and proposed matters as possibly not qualifying; the check stage only relabelled their status."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 17,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find loops and globs for underwriting, lock-up and offering words, each capped at 120 lines; the review flags the cap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path regex grouped by matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide 180-day scan (about 100K chars) and a snippet scan over a hand-picked matter list (about 120K chars); the review flags high-hit matters left out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: bounded scan for lock-up words near a 180-day term, one line per matter; nine matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: a wider scan and a sharded rerun both time out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 76,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads underwriting agreements, lock-up forms and memos of about ten candidates and a snippet script over lock-up forms.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five offering matters, separating two completed ones from withdrawn or draft ones. The review flags the five-count and suggests that a secondary-offering matter's earlier offering may itself qualify.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 100,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Edits the headline to completed offerings only and adds the secondary-offering matter's earlier offering as a third; a path check fails on a missing path and is rerun. The review flags that the added matter's own deal had a 90-day lock-up.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 116,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: edits the count back to two and marks that matter as related; the review calls this narrowing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 131,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: reads that matter's prospectus supplement, underwriting agreement and waiver memo and edits the count to three; the review flags that the matter's own deal had a 90-day lock-up.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 132,
+     "end": 132,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Following the reviews, it counted the earlier offering referenced in a secondary-offering matter as a qualifying 180-day offering.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Check or revise the response",
+    "start": 83,
+    "end": 100,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The edit at [89] adds a secondary-offering matter as a completed 180-day offering on the strength of an earlier offering its documents refer to, although that matter's own lock-up agreement read at [55]-[63] is 90 days.",
+    "critic": "review-endorsed",
+    "critic_note": "(specific flag) The write review named the matter as possibly wrongly dropped and the attempt-2 review called its removal narrowing; the agent followed both and ignored the opposite flags at [100] and [131]."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex grouped by matter and a folder count; a grep over .docx files returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 24,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a heredoc error, then an uncapped path inventory written to a file (69 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide lock-up scan times out; a rerun over a matter list writes 706 hit lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: whole-store scan in four batches with one summary per hit matter; eight candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 60,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads underwriting agreements and lock-up forms of eight candidates; a guessed path fails. The review flags swapped client names in the summary and unscreened sibling matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of several matter-number series and the folder names in them.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 83,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (continued). Reads closing memos, prospectuses and engagement papers to check each matter's status, with one file listing after two guessed paths fail.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with offering-specific 180-day lock-ups, with status caveats. The review flags that withdrawn and proposed deals may inflate the count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 104,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths (first against a missing path), and edits the headline to separate completed from draft matters; the review recommends leading with the two completed ones.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 105,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: edits the lead to the two completed offerings with the others as reference-only precedents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 113,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T2 passes; T0, T1 fail). All three runs reached the same candidates through path searches and text-extraction scans, screened them, and first wrote a five-matter answer that counted withdrawn and draft offerings. They split at the check stages, where the critic's reviews differed. In T2 the check review recommended leading with the two completed offerings and labelling the other three as reference-only; the agent did so and passed. In T0 the check review flagged that the draft matters were still counted, and the agent finished without changing the list; T0 had also never opened one qualifying matter's lock-up form, which its screening review had flagged. In T1 the write review suggested that a later secondary-offering matter's earlier offering might qualify; the agent added it, removed it after the next review called it a different deal, and re-added it after a further review called the removal narrowing."
+}

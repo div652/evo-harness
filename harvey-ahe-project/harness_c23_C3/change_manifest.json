@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C3",
+  "parent_checkpoint": "C2",
+  "objective": "Keep unresolved discovery pages, partial document reads, and candidate-closure obligations salient until the agent reconciles them.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "middleware",
+      "paths": [
+        "agent.yaml",
+        "middleware/coverage_state.py"
+      ],
+      "evidence": [
+        "debugger/overview.md: incomplete-document-reading",
+        "debugger/tasks/task-6e660a7331a27f229cdc/result.json: incomplete-document-reading",
+        "debugger/tasks/task-937d3fee864d9ef275fe/result.json: incomplete-document-reading",
+        "debugger/tasks/task-9e42da75eb6aa5627928/result.json: issue-coverage-gap"
+      ],
+      "failure_pattern": "Agents repeatedly saw explicit truncation or partial-read metadata, or surfaced a candidate and its proof path, but lost that open coverage state across later turns and drafted before candidate closure.",
+      "mechanism": "Track exact covered intervals for read, glob, and grep results in trial-local state; remove an item only when its intervals cover the complete reported range; and place one replaceable end-of-history reminder listing open ranges plus the candidate-to-proof-to-draft reconciliation action.",
+      "rationale": "C1 and C2 already made pagination, source identity, and completion metadata explicit, yet 54 independent diagnoses still show noncompliance with that prompt-level protocol. Middleware is the smallest stronger surface that can preserve those deterministic tool facts across turns without deciding legal relevance, blocking finish, or changing tool semantics.",
+      "predicted_fixes": [
+        "task-6e660a7331a27f229cdc",
+        "task-937d3fee864d9ef275fe",
+        "task-9e42da75eb6aa5627928",
+        "task-77f21cc13e78a9a78d1a"
+      ],
+      "risk_tasks": [
+        "task-0c3c1771620b07c9e902",
+        "task-e9826abeedc30520bb29"
+      ]
+    }
+  ],
+  "validation": [
+    "Python syntax and agent registration checks",
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

@@ -1,0 +1,292 @@
+{
+ "task": "195",
+ "context": "Request: all closed M&A deals whose executed agreements include indemnification sections (indemnification clause bank). Rubric: 15 matters (1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00007, 1008-00008, 1009-00003, 1013-00006, 1015-00004, 1017-00006, 1037-00006, 1039-00004, 1041-00003, 1042-00004, 1046-00001), each with its executed agreement, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell find to depth 3 (no output) plus whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over paths for agreement and deal words, cut at the first 240 lines (about 31 matters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads: agreements, closing documents and a checklist from about ten matters in that list."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 21,
+     "end": 25,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Content greps for the request wording inside four candidate matters with a non-recursive *.docx glob; all return nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Pages through later sections of four agreements looking for the relevant article."
+    },
+    {
+     "stage": "Write the response",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four closed deals, one of them supported by a draft agreement and an officer certificate."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 48,
+     "end": 48,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its one store-wide search was cut at 240 lines; it read a few matters from that list and added one supported only by a draft.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 5,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was a file-name search it cut at 240 lines, reaching about 31 matters; it never paged further, searched contents or scanned document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 20,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "One needed matter's executed agreement was in its file-name list, but it chose other matters to read and never opened it."
+    },
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 46,
+     "end": 47,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts as a closed deal with an executed agreement a matter whose agreement it read only in a draft version."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for the request wording; the hit list stops at 100 files, all emails or spreadsheets."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 5,
+     "end": 10,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Globs of files under folders named 'Transaction Documents' (run twice) and of agreement-named .docx files; each listing stops at 100 files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of four executed agreements from those listings and closing emails of three matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one candidate matter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a checklist, an opinion, an agreement and an email of the matters it is weighing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists three more candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads an agreement, a closing memo, a post-closing memo and a checklist from three of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 39,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of three executed agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four closed deals."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 45,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for a document type → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its first grep listed emails from seven needed matters, but it read only matters picked from capped folder-name globs.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 11,
+    "end": 20,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep listed emails from several matters it needed, but it chose what to read from capped folder-name listings instead and never opened most of them."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the agreement, checklist, closing email and diligence memo of the matter at the top of the listing."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 9,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Python snippet extraction of the relevant paragraphs from that matter's agreement."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 13,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads documents of two more listing-top matters and a redline of the first."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 18,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two more snippet extractions from the same agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one closed deal as the only one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 24,
+     "end": 24,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search within a candidate matter's files → Read documents picked from the file listing → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the few matters at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 8,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing and never searched the store, so most of the matters it needed never surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, each finding only a few of 15 matters, and at different stages. T0's only store-wide search was a file-name search it cut at 240 lines (search miss at the file-name stage); it also skipped one needed matter in that list and asserted a matter supported only by a draft. T1's first grep listed emails from seven needed matters, but it chose what to read from capped folder-name globs instead (surfaced, not opened, at the first reading stage). T2 never searched and studied the matter at the top of the listing (partial listing as corpus). The common thread is that no run searched document text across the whole store."
+}

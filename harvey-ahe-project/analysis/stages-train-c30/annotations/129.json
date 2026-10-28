@@ -1,0 +1,463 @@
+{
+ "task": "129",
+ "context": "Request: which Litigation (General) matters (not IP, employment or antitrust) involved a punitive or exemplary damages claim that the firm actually pursued, prosecuting or defending, rather than boilerplate in a complaint. Rubric: seven qualifying matters 1006-00005, 1021-00006, 1023-00002, 1024-00003, 1033-00006, 1034-00003, 1045-00004, plus a precision criterion (omissions allowed there). Documents in folder 1045-00004 carry the internal number 1022-00005, a different folder in the store.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders, prints the first and last twenty names, and lists opening and engagement file names (first 80).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three find | grep calls: request-word file names (13 hits), per-matter counts of pleading and motion files, and litigation folder names cut at 200 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for the request terms and a practice-group label, saved to a file (about 600K chars); prints a per-matter hit summary.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 29,
+     "end": 40,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over a named list of 36 candidate matters, then three batches of it, all time out with no output; ends by listing one candidate's files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads six documents of the one candidate whose file names name the request term (opening memo, answer, motion papers, strategy memo). The review flags that only one matter was opened.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 52,
+     "end": 58,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters. Lists the files of nine named candidate matters in parallel with a store-wide file-name grep for the request terms (convention 3).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 59,
+     "end": 66,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide scan for decisive claim phrases in pleading, motion and memo files; 17 matters hit; prints the first 260 lines. The review flags the narrow phrase filter and the cut-off view.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 93,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads complaints, strategy memos, engagement letters and closing records of five scan-surfaced candidates; one guessed path fails; lists one more candidate's files.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 94,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Reads the engagement letter, assessment memo, petition and closing memo of one more candidate.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 103,
+     "end": 112,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 4). Reads that candidate's mediation statement, discovery requests and demand letter; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes six matters as qualifying and lists one more matter, whose complaint and strategy memo it had read, under exclusions as not shown to be pursued beyond the pleading.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 127,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path-check script fails on the workspace path, a rerun on the output folder finds all 32 cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the opening of one cited document per included matter; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 139,
+     "end": 139,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Screen candidate matters by reading documents → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read a candidate's complaint and summary-judgment strategy memo but excluded the matter as boilerplate because no claim-specific motion practice was visible.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 113,
+    "end": 118,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "The answer lists a matter it had opened (complaint and strategy memo read at [69]-[75]; its stage summary at [92] called it confirmed) under exclusions as not shown to be pursued, applying a narrower reading of the qualifier than for the other matters.",
+    "critic": "not-flagged",
+    "critic_note": "No review named the excluded matter; the write review asked to verify the six included matters and keep exclusions to boilerplate-only ones, and both check reviews said to leave the matter set unchanged."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 8,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing and extension counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 matter folders and looks for index or metadata file names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A path regex over request and litigation words (81 matters) and three globs for request terms; one glob returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms and related intent words, then a filter of the saved output to lines with the exact claim phrase.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide scan for the exact claim phrases, skipping engagement and agreement file names, prints every hit (about 143K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 34 named candidate matters (about 131K chars). The review flags the hand-picked list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists up to twelve litigation-type file names for each of the 95 matters the scan surfaced.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads pleadings, mediation papers, settlement memos and closing memos of seven candidates in three parallel batches. The review flags unopened matters and that some reads show only pleaded claims.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes seven matters as qualifying with role, posture and proof documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 90,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; a path check fails on the workspace path and is rerun on the output folder; edits the scope note.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the opening of one pleading or motion per matter; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing and extension counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A path regex over request and broad litigation words (107 matters) in parallel with two content greps whose `*.docx` / `*.eml` globs return nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide and half-store extraction scripts time out; four range scans for request terms and broad intent words each print only the first 150 matching lines, then a grep over one range.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters picked from the scan.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists two neighbouring matters, both transactional.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads five documents of the lead candidate and three of two other candidates. The review flags that only three matters were read.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: lists the folder whose number appears inside the lead candidate's documents and hashes two of its files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 63,
+     "end": 71,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: four range scans for exact claim phrases; each output is filtered with grep -v on agreement, engagement, policy and similar words and cut at 120-200 lines. The review flags the exclusion filter and the cuts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 72,
+     "end": 93,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads assessment memos, pleadings and mediation or settlement papers of three candidates, then their engagement letters after an empty glob.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters as qualifying, with near misses and specialty exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that the 21 cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads one proof document per matter and two exclusion records; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its claim-phrase scans were cut by line caps and an exclusion filter, so three qualifying matters never appeared in any output it read and were never opened.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Scan document text with an extraction script",
+    "start": 63,
+    "end": 71,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "why": "The retry scan reached the whole store, but the grep -v exclusion filter and the 120-200 line caps the agent put on each range output hid three needed matters (the earlier scan at [17]-[31] had been cut at 150 lines the same way), and the answer was built from what remained visible.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review named the grep -vE exclusion filter and the head cuts as silently dropping litigation matters; the agent went on to read three matters it had already named, and the next review again asked for a store-wide search."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 fail). All runs found the matter whose file names name the claim and moved to store-wide extraction scans. T2 split off at its second scan: line caps and an exclusion filter hid three needed matters, which it never opened; the scan review flagged the filter specifically and the agent moved on. T0 and T1 both surfaced and opened all seven matters. They split at the write stage: T1 wrote all seven, although its screening review questioned whether several were pursued beyond the pleading; T0 excluded one it had read (complaint and strategy memo) as not shown to be pursued, and no review named that matter, so the critic's reviews did not differ on the point that decided the outcome."
+}

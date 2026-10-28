@@ -1,0 +1,239 @@
+{
+ "task": "201",
+ "context": "Request: deals the firm has done opposite Crescent Harbor Bank, N.A. (conflict / precedent check). Rubric: 1005-00001 (Nexford), 1021-00001 (Verimark), 1038-00002 (Cascade Retail), 1043-00001 (Ironhaven), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for the counterparty's name."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 11,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads three documents of the matter at the top of the listing and three emails from grep-hit matters (labelled as screening)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script over documents and emails printing passages around the name; times out after about 1M chars."
+    },
+    {
+     "stage": "Write the response",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming four matters from the grep and scan output."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 16,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Two greps for the name (one-level glob and .docx glob); both return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads four documents of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A shell loop unzipping documents two folder levels deep prints nothing; a second loop over all files lists matches in several matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Shell grep over all emails for the name, with surrounding lines."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one candidate matter's files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 31,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists two more candidates' files, then reads engagement letters, agreements and a closing memo of three candidates and one email of a fourth (labelled by the dominant intent)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists a fourth candidate's files."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming four matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits a cited path, greps one matter for a date and reads a certificate to confirm it."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 42,
+     "end": 42,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Shell grep -Ril with binary text over the store for the name; lists emails in four matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 7,
+     "end": 11,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Content-mode grep for the name plus reads of three emails from two candidates (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 12,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of long email threads (at offsets) and other emails across the four matters it settled on."
+    },
+    {
+     "stage": "Write the response",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming four matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 27,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Shared procedure: a store-wide search for the counterparty name that reached email text (T0 the grep tool with a recursive glob, then an extraction scan; T1 a shell loop over all files after two empty greps; T2 grep -Ril on binary text) listed the same four matters, which each run confirmed from emails and agreements before naming all four."
+}

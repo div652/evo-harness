@@ -1,0 +1,382 @@
+{
+ "task": "185",
+ "context": "Request: the most recent matter handled for one client (Cascade Retail Holdings), what it is about and when it was opened. Rubric: 1038-00003 (a planned WKSI-eligible universal shelf registration on Form S-3, opened April 6, 2026), its subject, its open date, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Parallel folder listing, a glob over engagement folders and a glob for the client name in file names (labelled by the name search)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of six matters in one numbered series. The review flags two further series matters that surfaced but were not listed."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 27,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists the two further matters' files; a store-wide extraction scan in the same stage times out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Extraction script for the client name times out; a find over engagement and new-matter file names returns a count of zero."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the engagement letters of ten of the client's matters and the new-matter memorandum of the newest-looking one."
+    },
+    {
+     "stage": "Write the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter, its subject, its formal opening date and the supporting documents with a comparison of the other matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 59,
+     "end": 66,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and removes one unsupported comparison."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 67,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). A folder glob returns nothing; a find lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for the client name and abbreviations; times out after about 800K characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-name scan over every folder of one numbered series, one line per file."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide find over engagement, matter-opening and intake file names (first 300 lines), then an extraction script over those files for the client name."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Exact-name scan over all matter folders in parallel ranges; ten matters match."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the new-matter memorandum, engagement letter and kick-off summary of the matter it picked."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Lists the picked matter's files and reads the openings of the other nine matters' engagement letters to compare dates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 66,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: re-reads the opening lines of the picked matter's memorandum and engagement letter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter, subject, formal opening and engagement dates, documents and a comparison table."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Repeats the parallel scan with a shorter client-name variant; the same ten matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Edits the search description and re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Scan document text with an extraction script → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel content grep for the client name, a grep over emails and an extraction script for name variants (labelled by the content grep)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords (attempt 2). Compact extraction scan counting client-name hits per matter (16 matters)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of the client's ten matters and of six other hit matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (continued). Reads the engagement letters or memoranda of the ten matters and the opening documents of twelve other hit matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 52,
+     "end": 59,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file contents for request keywords (attempt 3). Store-wide extraction scan for name variants, plus a read and a file listing of one other matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 71,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists and reads documents of two more hit matters, which turn out to be other clients."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 72,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the picked matter's memorandum, engagement letter, kick-off summary and a diligence summary."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 81,
+     "end": 87,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Lists the picked matter's files and the engagement and opening file names across the series."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 88,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: re-reads the opening lines of the memorandum and engagement letter and prints the dates of the series' opening records."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 4). Store-wide exact-name scan outside the series and a date list for every opening record in it."
+    },
+    {
+     "stage": "Write the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes the matter, its subject as a universal shelf registration on Form S-3, its opening date and a comparison. The review questions the opening-date source and coverage."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Re-reads the response and globs the cited paths; no edit."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Attempt 2: re-reads the memorandum and three other engagement letters; no edit."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "end": 132,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Attempt 3: reads the memorandum header, prints the date list and re-reads the response; no edit."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 133,
+     "end": 133,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → List files in candidate matters → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the right matter and opening date, but described the subject without the shelf-eligibility qualifier a criterion requires.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 102,
+    "end": 107,
+    "events": "",
+    "kind": "missing-detail",
+    "critic": "not-flagged",
+    "critic_note": "",
+    "why": "The answer describes the latest matter as a universal shelf registration on Form S-3 but omits that it is the automatic (well-known seasoned issuer) shelf, which the memorandum and engagement letter it read state (evidence seen at [74]-[78]); no review named the omission."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found the client's ten matters, read the latest matter's new-matter memorandum and engagement letter, and named the right matter and opening date. They split only at the write stage: T0 and T1 described the subject with its full shelf-registration qualifier and passed, while T2 described it as a universal shelf registration on Form S-3 without the eligibility qualifier a criterion requires. No review in T2 named the omission; its reviews of the write and check stages questioned the opening-date source and the coverage of other matters."
+}

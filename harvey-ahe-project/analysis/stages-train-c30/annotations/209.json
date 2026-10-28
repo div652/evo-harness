@@ -1,0 +1,431 @@
+{
+ "task": "209",
+ "context": "Request: the longest-running matter still open (not shelved; matters winding down in closing posture count as open) and its opening date, for an aging review. Rubric: 1044-00006 (Thalassa Shipping charter-party breach defense, opened October 16, 2023) as the answer, its precision, and the opening date. Runs answered 1002-00001 (closed 2021), 1042-00001 (closed 2022 financing) and 1001-00005 (dormant).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and a file count.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folder names and per-folder counts.",
+     "label_check": "ignored",
+     "end": 14
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 3). Extension counts and a store-wide list of 856 file names with opening, status, dormancy and closing words (about 69K chars).",
+     "label_check": "ignored",
+     "end": 20
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Store-wide extraction of status-named files for status and date terms, saved to a file (15K lines) with the head printed; the review flags broad terms and noisy output.",
+     "label_check": "none",
+     "end": 26
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: one-line-per-matter table of dates and status snippets from status-named files; the review flags the file-name filter and four hand-picked oldest candidates.",
+     "label_check": "none",
+     "end": 32
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of seven candidate matters picked as the oldest; the review flags that dozens of surfaced matters were not listed.",
+     "label_check": "none",
+     "end": 38
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: a store-wide scan for opening dates and status times out, also in four parallel ranges, with empty outputs.",
+     "label_check": "none",
+     "end": 48
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Reads opening, engagement, dormancy and closing records of four of the oldest candidates, including a closing checklist. The review says the chosen matter's open status rests on its engagement letter and closing papers and that its transaction closed years earlier.",
+     "label_check": "ignored",
+     "end": 63
+    },
+    {
+     "stage": "Write the response",
+     "start": 64,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the oldest candidate as the longest-running open matter, in closing posture, and excludes the dormant ones.",
+     "label_check": "none",
+     "end": 69
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 70,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Path check, re-read, and an edit qualifying the open classification as closing posture.",
+     "label_check": "none",
+     "end": 80
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the cited opening and dormancy records without changes.",
+     "label_check": "none",
+     "end": 90
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 91
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It ranked candidates by the oldest dates found, read that the chosen matter's transaction had closed, and still wrote it as open in closing posture; the newer matter that qualifies appeared only in its file-name listing and was never opened.",
+   "first_error": {
+    "stage_no": 9,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer presents an old matter as still open although its own reads of that matter's closing checklist and certificate (evidence seen at [51]-[61]) show a transaction closed years earlier; matters opened later were never screened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review at [63] said the chosen matter's open status rested on closing papers and that it may be fully closed; the agent wrote it anyway and only added a qualifying sentence at [75].",
+    "stage": "Write the response",
+    "start": 64,
+    "end": 69
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a two-level listing (first 200 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Saves the full folder list and prints the count with the first and last names.",
+     "label_check": "none",
+     "end": 14
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 15,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Per-matter hit counts for file names with opening, engagement, status, closing, dormancy and termination words, saved to a file (heredoc error first).",
+     "label_check": "none",
+     "end": 22
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for opening and status phrases times out twice but leaves four range files; greps of them for opening-date and status phrases (about 72K chars each).",
+     "label_check": "none",
+     "end": 40
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing. Lists and reads opening, status and closing records of three of the oldest candidates; one closing checklist marks a matter closed.",
+     "label_check": "ignored",
+     "end": 61
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 62,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of four more candidates from the scan's dated hits.",
+     "label_check": "none",
+     "end": 67
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Lists a later candidate's files, greps the scan output for opening dates, and reads its deal memo, closing confirmation letter, closing checklist and engagement letter plus another matter's intake, status and closing records.",
+     "label_check": "ignored",
+     "end": 89
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Reads dormancy and closing records of four older candidates, each dormant or closed. The review asks to confirm from the chosen matter's own files that it is still open.",
+     "label_check": "ignored",
+     "end": 99
+    },
+    {
+     "stage": "Write the response",
+     "start": 100,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the later candidate, whose financing closed, as the longest-running open matter in post-closing posture, with older ones excluded as closed or dormant.",
+     "label_check": "none",
+     "end": 105
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads and edits wording and citations; the review again asks to confirm that no close record exists.",
+     "label_check": "none",
+     "end": 117
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 118
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded older matters as closed or dormant but kept a matter whose financing had closed as open in post-closing posture; the newer matter that qualifies appeared only in folder listings and was never opened.",
+   "first_error": {
+    "stage_no": 9,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer presents a matter as still open in post-closing posture although its own reads of that matter's closing confirmation letter and closing checklist (evidence seen at [72]-[87]) show the deal closed; matters opened later were never screened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The reviews at [99] and [117] asked to confirm from the chosen matter's files that it was still open with no close record; the check stage only edited wording and citations.",
+    "stage": "Write the response",
+    "start": 100,
+    "end": 105
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts.",
+     "label_check": "ignored",
+     "end": 13
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide list of file names with engagement, opening, status, closing, termination and administration words (about 75K chars).",
+     "label_check": "none",
+     "end": 19
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for status and date terms prints about 432K chars; the review flags broad terms and no cap.",
+     "label_check": "none",
+     "end": 25
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a precise scan times out, and a parallel rerun without range arguments times out again.",
+     "label_check": "none",
+     "end": 33
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Reads opening, dormancy and closing records of the oldest candidates and three of the highest-numbered matters, lists two folders after guessed paths fail, and reads more opening and closing records. The review flags two high-numbered matters never opened.",
+     "label_check": "none",
+     "end": 67
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "declared: Read a chosen matter's documents in depth. A listing made with no stage open is refused; then lists one older matter and reads closing records of three older matters; none of the leading candidate's documents is opened.",
+     "label_check": "ignored",
+     "end": 80
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 81,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: reads the leading candidate's engagement letter, dormancy memo and outside-date letter, plus closing records of older matters (one path fails).",
+     "label_check": "none",
+     "end": 92
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the leading candidate, classified dormant after a lapsed outside date, as the longest-running open matter. The review questions whether a dormant matter counts as open.",
+     "label_check": "none",
+     "end": 98
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads, brace-glob path checks that find nothing, single-path globs, and an edit softening coverage wording.",
+     "label_check": "none",
+     "end": 118
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: re-reads the response and the three decisive records; the review says keep the matter unless contradicted.",
+     "label_check": "none",
+     "end": 127
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: reads later sections of two records and edits the answer to say the matter is dormant, not shelved.",
+     "label_check": "none",
+     "end": 141
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 4: one edit stating the dormant-is-open rule and a re-read.",
+     "label_check": "none",
+     "end": 149
+    },
+    {
+     "stage": "Finish the run",
+     "start": 150,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 150
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read that the chosen matter was classified dormant after a lapsed deal and still counted it as open; the newer matter that qualifies appeared only in folder and file-name listings and was never opened.",
+   "first_error": {
+    "stage_no": 9,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts as open a matter that its own reads (evidence seen at [36]-[91]) show was classified dormant after its deal lapsed, although the request excludes shelved matters; matters opened later were not screened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The write review at [98] questioned whether a dormant matter counts as open; the later check reviews told it to keep the matter unless a record contradicted it, and the edits only explained the dormant treatment.",
+    "stage": "Write the response",
+    "start": 93,
+    "end": 98
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail the same way, at the write stage: each run ranked candidates by the oldest dates its scans and file-name listings showed, screened only the oldest few, and wrote an old matter that its own reads showed closed (T0, T1) or dormant (T2) as still open (over-inclusion). The matter that qualifies, opened later and in closing posture, appeared only in folder and file-name listings and was never opened. In every run a review named the chosen matter's open status as doubtful (screening review in T0, check-stage recommendations in T1, write review in T2); the agents only adjusted wording."
+}

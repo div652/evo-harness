@@ -1,0 +1,48 @@
+type: tool
+name: glob
+description: >-
+  Find files or directories matching a glob pattern with stable pagination,
+  newest first. Defaults to the documents directory and files only. Every
+  result begins with shown, total, truncated, and next_offset metadata. A page
+  is exhaustive only when truncated=false; otherwise repeat the same call with
+  offset=next_offset. For a matter census, use pattern '*' and
+  entry_type='directories', then search within each candidate matter. Prefer
+  this tool over broad bash find/ls output.
+input_schema:
+  type: object
+  properties:
+    pattern:
+      type: string
+      description: Glob pattern, such as '**/*.docx' or '*' for direct children.
+    path:
+      type: string
+      description: Directory to search. Defaults to the documents directory.
+    offset:
+      type: integer
+      minimum: 0
+      default: 0
+      description: Zero-based result offset. Use the prior page's next_offset.
+    limit:
+      type: integer
+      minimum: 1
+      maximum: 500
+      default: 100
+      description: Maximum entries on this page.
+    entry_type:
+      type: string
+      enum: [files, directories, all]
+      default: files
+      description: Return only files, only directories, or both.
+    candidate_discovery:
+      type: boolean
+      default: false
+      description: >-
+        Set true only for a corpus-rooted search whose returned matter roots are
+        legally plausible candidates that must each receive a ledger disposition.
+        Keep false for a neutral directory census, local matter inventory, or a
+        search whose hits are not candidate entities.
+  required:
+  - pattern
+  additionalProperties: false
+disable_parallel: true
+binding: tools.glob:glob

@@ -1,0 +1,664 @@
+{
+ "task": "016",
+ "context": "Request: year-by-year share of the firm's executed credit-agreement financings that carry an always-on (not springing) financial maintenance covenant, for a client market read; excluded structures named in the request (warehouse, repurchase, securitization, project and real-estate-secured financings). Rubric: twelve financings in year buckets (1006-00001, 1021-00001, 1042-00001, 1008-00001, 1012-00001, 1038-00002, 1010-00001, 1043-00001, 1005-00001, 1036-00001, 1013-00001, 1019-00002), the year-over-year shares, and population precision; 1043-00001 (data-center term loan) and 1036-00001 (REIT facility) count as in scope, while 1001-00007, 1003-00003, 1041-00003, 1012-00002, 1006-00002, 1010-00002 and 1020-00002 are outside the population.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a matter-folder listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints file counts per matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: saves the full path list of the store to a file and prints counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for credit, loan, facility and financing words plus exclusion words over the saved list; 106 matters (about 45K characters, cut in the log). The review flags noise and no paging.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broader pattern, results grouped per matter and saved (107 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide covenant-wording scan times out; a rerun over the 107 path candidates finds hits in one matter only. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 51,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: range scans with several timeouts; outputs combined into a file and only the head shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: counts hit files per range output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 71,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Filtered file listings of the 107 candidate matters (one heredoc error, one parse mistake), printed in two parts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves unfiltered file listings of the 107 matters to a file; only counts shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: script cross-checking the listing against the candidate list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of 14 executed credit, loan and bridge agreements from 13 matters. The review flags that covenant sections were not read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 103,
+     "end": 116,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "A script call refused because no stage is open, then snippet scripts over agreement files of the candidate matters for covenant and springing wording, and a date script.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 117,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes yearly always-on counts and shares for 14 agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 125,
+     "end": 130,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the year table for 14 agreements with classifications and exclusions; a data-center term loan is excluded as project financing and a REIT facility as draft-only.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 143,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths (one failed run), edits wording from matter-level to agreement-level.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 144,
+     "end": 151,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-extracts dates and covenant flags of the 14 cited agreements and recomputes the table; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 152,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded two in-scope financings (one as a project financing, one as draft-only) and counted four agreements outside the population, so the yearly shares were wrong.",
+   "first_error": {
+    "stage_no": 15,
+    "stage": "Write the response",
+    "start": 125,
+    "end": 130,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The last check review asked to make sure no qualifying matter was dropped; earlier reviews pushed toward excluding drafts and out-of-scope structures.",
+    "why": "The answer drops a data-center term loan as project financing and a facility grepped at [107]-[110] as draft-only, although both are executed agreements in scope (evidence seen at [86]-[112])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 15,
+     "stage": "Write the response",
+     "start": 125,
+     "end": 130,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review asked to confirm no amendment or out-of-scope structure was included; the agent kept its list.",
+     "why": "The answer counts an amended and restated agreement and three acquisition-related credit agreements from other practice matters in the population, changing the yearly denominators."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file counts by extension.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: saves an inventory of all matters with sample file names and extension counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for credit, facility and exclusion words (first run fails); 104 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider agreement-name pattern; 76 matters with operative-looking files flagged.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 44,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide covenant-wording scan times out; a threaded rerun finds 85 matters; then prints snippets for hits in agreement-named files (about 92K characters). The review flags the file-name filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 45,
+     "end": 52,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: one-snippet-per-matter index of the 85 matters (one heredoc error).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 69,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads openings of six executed credit agreements and runs three covenant-snippet scripts on them. The review flags unread candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 70,
+     "end": 81,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Filtered file listings of the 85 scan matters and greps for agreement names. The review flags the filters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 82,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: full listing of the 85 matters saved, then a filtered view of financing-related files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 90,
+     "end": 123,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads openings of mezzanine, bridge, amended, super-priority and other credit agreements of about ten matters, with covenant-snippet scripts. The review flags front-page-only reads.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 124,
+     "end": 127,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opens the stage and closes it with no tool call, stating a final inclusion rule and yearly counts; the review reports goal not reached for lack of evidence.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 128,
+     "end": 141,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads cover pages of nine counted agreements. The review flags that no covenant section was opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 142,
+     "end": 147,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 3). Script extracting covenant passages from 18 named agreement files.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 148,
+     "end": 153,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the year table for 18 agreements, counting bridge, mezzanine, restructuring and amended facilities and excluding a data-center term loan as project financing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 154,
+     "end": 162,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths (one failed run).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 163,
+     "end": 172,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-extracts dates and covenant flags, clarifies the cited-path count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 173,
+     "end": 178,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: recomputes shares and confirms one amendment's underlying agreement date.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 179,
+     "end": 186,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: rebuilds the table from an explicit record list and edits the small-sample caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 187,
+     "end": 194,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: reads the two agreements of one matter to confirm they are separate.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 195,
+     "end": 195,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded two in-scope financings as project or real-estate financings and counted seven agreements outside the population (restructuring, amended and acquisition-related facilities), so the yearly shares were wrong.",
+   "first_error": {
+    "stage_no": 15,
+    "stage": "Write the response",
+    "start": 148,
+    "end": 153,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The first check review asked to make sure no qualifying executed agreement was omitted; no review named either excluded matter.",
+    "why": "The answer drops a data-center term loan read at [55]-[67] as project financing and a REIT facility seen in its listing at [86]-[87] as real-estate financing, although both are in-scope executed financings."
+   },
+   "other_errors": [
+    {
+     "stage_no": 15,
+     "stage": "Write the response",
+     "start": 148,
+     "end": 153,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [127] said counting mezzanine, bridge and restructuring-exit facilities as core risked inflating the count; the agent kept them.",
+     "why": "The answer counts restructuring, amended and acquisition-related credit agreements from other matters in the population, changing the yearly denominators (evidence seen at [92]-[145])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file counts by extension.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders and the largest file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-keyword path searches saved to a file, and a content grep on *.docx that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: consolidated path regex with generic words (about 77K characters). The review flags the noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "script error",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: credit-specific path regex (88 matters) after a heredoc error; a stage_start for the scan is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 51,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scans time out; a scan restricted to the path candidates prints about 112K characters; a snippet script over 29 named matters prints about 177K characters. The review flags the uncapped output and the hand-picked list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 52,
+     "end": 61,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: batch scans time out after the first range; then a file-name filter for executed credit agreements that drops names with security, mortgage, project, real-estate, memo and similar words. The review names this filter as silently dropping agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 87,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the openings of 13 executed credit agreements and a memo, then scripts that summarise filtered agreement files and extract covenant passages.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 88,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads further sections of six agreements of matters already counted.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 99,
+     "end": 106,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Reads three agreements at offset 120 (definitions only).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes yearly counts and shares for 16 facilities.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reconciles the 16 rows to matter and document identifiers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 119,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the year table for 16 facilities; a data-center term loan is excluded as project financing; one in-scope facility is absent.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "end": 135,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths (one failed run); no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 141,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: arithmetic reconciliation of the table; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 142,
+     "end": 142,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A file-name filter that excluded real-estate and similar words dropped one in-scope facility from the list it worked from; it also excluded a data-center term loan as project financing and counted out-of-population agreements.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Scan document text with an extraction script",
+    "start": 52,
+    "end": 61,
+    "events": "[58]-[59]",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [61] said the file-name filter that excluded memo, security and similar words silently dropped differently named agreements; the agent read from the filtered list.",
+    "why": "The path searches and the snippet script had reached the facility, but the follow-up file-name filter excluded mortgage, real-estate and similar words, so the facility dropped out and the answer was built without it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 119,
+     "end": 124,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Write and check reviews asked only to confirm rows and exclusions; none questioned this exclusion.",
+     "why": "The answer drops a data-center term loan read at [64]-[83] as project financing although it is an in-scope executed financing."
+    },
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 119,
+     "end": 124,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The screening review at [87] flagged mezzanine and amended instruments counted without covenant reads; the agent kept them.",
+     "why": "The answer counts restructuring, amended and acquisition-related credit agreements from other matters in the population, changing the yearly denominators (evidence seen at [64]-[104])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the write stage, with the same ten year-bucket criteria passing: each counted out-of-population agreements (amended and restated, restructuring and acquisition-related credit agreements from other matters) and excluded the same data-center term loan as a project financing, so the yearly shares and population precision failed. Each also lost the REIT facility, in different places: T0 grepped inside it and called it draft-only, T1 judged it a real-estate financing from its listing, and T2 dropped it with a file-name filter during scanning (flagged by that stage's review). Reviews raised scope inflation (specifically once, in T1) but no run changed its population."
+}

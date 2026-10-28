@@ -1,0 +1,41 @@
+type: tool
+name: read
+description: >-
+  Read one file from the input directory or workspace. Handles .docx, .xlsx,
+  .pptx, .pdf, and plain text; extraction is automatic. Every result begins
+  with a read_result header containing the normalized source path, returned
+  line range, total lines, completion status, next_offset, and any limiting
+  reason. To prevent a multi-read burst from exhausting context, each result is
+  capped at 800 parsed lines and about 40,000 characters, and all read calls in
+  one assistant turn share an approximately 120,000-character output budget.
+  Calls beyond that aggregate budget return status deferred without document
+  text. Do not retry a deferred read in the same batch: synthesize returned
+  facts into the source-bound ledger, then request only specific unresolved
+  source ranges on the next turn. Batched results may arrive out of request
+  order, so bind facts to the header's source path, never result position. If
+  complete is false, continue only when the remainder can affect a requested
+  fact or candidate disposition; otherwise record why it is irrelevant.
+input_schema:
+  type: object
+  properties:
+    file_path:
+      type: string
+      description: >-
+        Relative path (resolved against workspace then input directory) or
+        absolute sandbox path.
+    offset:
+      type: integer
+      minimum: 0
+      description: Parsed-text line number to start reading from (0-based).
+    limit:
+      type: integer
+      minimum: 1
+      description: >-
+        Requested maximum parsed-text lines. The tool may return fewer because
+        per-result or aggregate turn bounds always take precedence; use the
+        returned next_offset rather than assuming this count was delivered.
+  required:
+    - file_path
+  additionalProperties: false
+disable_parallel: true
+binding: tools.read:read

@@ -1,0 +1,475 @@
+{
+ "task": "048",
+ "context": "Request: completed Capital Markets offerings whose proceeds were earmarked primarily for general corporate purposes, with proof of the earmark and of closing. Rubric: 1045-00001 (Belmont Ridge Bank subordinated notes) as qualifying, its use-of-proceeds and closing documents, and a precision criterion permitting only 1045-00001 and 1014-00001; 1009-00001 (Skybridge convertible-note bridge) is outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob with a file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Counts all matter folders and prints the first and last twenty names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for offering and proceeds words, plus a content grep over .docx files that returns nothing; the review flags the cut-off lists.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened document-name patterns; 279 hits across 67 matters and the rest of the earlier list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: a second sweep with broad words prints only the matter numbers of 210 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 46,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan times out twice; reads the partial shard files (about 180K chars) and tallies hits per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 52,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: shard coverage check shows hits in 31 matters; a tighter store-wide rerun times out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Keyword-filtered file listing for every matter in the union of earlier hits (211 matters, about 142K chars); the review flags the filter and a hand-picked shortlist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 59,
+     "end": 64,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: file counts per matter of the union; no paths listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 95,
+     "tags": [
+      "huge output",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads offering memoranda, prospectuses and closing documents of about ten candidates, a snippet script over ten offering documents (about 520K chars), and closing papers of a note financing; one path is not found.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 96,
+     "end": 108,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads offering and closing documents of four more candidates to confirm exclusions; the review lists many surfaced matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as qualifying, including a convertible-note bridge financing sold under a note purchase agreement, with exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 123,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check against the workspace root fails, the rerun on the output folder finds all paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the openings of the offering and closing documents of the three included matters; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the right offerings but also wrote a privately placed note financing as a qualifying offering.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 109,
+    "end": 114,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer asserts a privately placed convertible-note bridge financing as a qualifying offering beside the two acceptable ones (evidence seen at [88]-[93]).",
+    "critic": "not-flagged",
+    "critic_note": "Reviews pushed for wider coverage of unopened matters; none questioned the note financing, and the write and check reviews only warned in stock terms against adding marginal matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob, folder names to depth two (first 80) and a file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex over all files for offering, proceeds and closing words (about 78K chars), plus two content greps over .docx and .eml files that return nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: offering-specific path regex; 41 matters with their paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: broader path regex; prints 204 matter numbers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 42,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan times out three times; a scan over the first ten matter series prints about 410K chars, the next series prints file names only.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 43,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: bounded per-matter summary scan over the remaining series; the review flags a hand-picked shortlist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 49,
+     "end": 79,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads offering, closing and use-of-proceeds documents from eight candidates, a seed preferred-stock financing and a SAFE round; one path is not found. The matter that surfaced in the summary scan is not opened.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes three private financings as qualifying, excludes the opened notes offerings.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths silently.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: explicit path check; the first run against the workspace root fails.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter that surfaced in its summary scan was never opened; the answer instead lists three private financings.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 49,
+    "end": 79,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The subordinated-notes matter appeared in the summary scan at [46] and in the agent's own candidate list at [47], but the reads at [51]-[77] went to other matters and it was never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The scan review at [48] and the reading review at [79] said the shortlist was hand-picked and likely an undercount, without naming this matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts a seed preferred-stock financing, a convertible-note bridge and a SAFE round as qualifying offerings (evidence seen at [51]-[77]).",
+     "critic": "not-flagged",
+     "critic_note": "Reviews flagged undercounting and unread exclusions, not the three included financings."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob, folder names to depth two (first 80) and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex over all files for offering and closing words (about 82K chars) plus three name globs that return nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: agreement-name path regex; 63 matters with paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 38,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan times out twice; a parallel file-name check finds use-of-proceeds file names in five matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 48,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: extraction scripts in three matter-number batches over offering, transaction and closing folders, then a filter for the request phrase with per-matter counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 49,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads offering memoranda, prospectuses and closing documents of about a dozen candidates (some at offsets), two snippet scripts, and the offering and closing documents of the subordinated-notes matter and a note financing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 103,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads offering and closing documents of four more candidates; a stage_start for writing is refused while this stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 118,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as qualifying, including a convertible-note bridge financing, with exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths silently.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 141,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: explicit path check and re-reads of the closing documents of the three included matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads one offering memorandum's proceeds table against the response; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 149,
+     "end": 149,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the right offerings but also wrote a privately placed note financing as a qualifying offering.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 118,
+    "end": 123,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer asserts a privately placed convertible-note bridge financing as a qualifying offering beside the two acceptable ones (evidence seen at [94]-[100], [105]-[113]).",
+    "critic": "not-flagged",
+    "critic_note": "Reviews pushed for wider coverage and checked amounts; none questioned the note financing, and the last review said to keep the matter set unchanged."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail. T0 and T2 failed the same way: they surfaced and read the acceptable offerings and wrote them as qualifying, but also included a privately placed convertible-note bridge financing at the write stage; no review questioned it (reviews pushed for wider coverage). T1 failed earlier: its summary scan surfaced the needed matter, but at the reading stage it chose other candidates and never opened it, then wrote three private financings as qualifying. In T0 and T1 the reading stage was declared as reads from the file listing despite the label note."
+}

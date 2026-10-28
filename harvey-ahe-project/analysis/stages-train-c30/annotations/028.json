@@ -1,0 +1,451 @@
+{
+ "task": "028",
+ "context": "Request: every restructuring matter that involved DIP financing in any capacity (debtor, DIP lender, creditor responding to a DIP), for a precedent bank. Rubric: 1006-00002, 1011-00002, 1020-00002, 1024-00001, 1044-00003 (a never-filed standby DIP package) plus a precision criterion; 1007-00002 (stalking-horse buyer in a seller's Chapter 11 sale with a DIP) is outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per top-level folder, then lists all matter folders with file counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide path regex for request words and related court-financing terms; hits grouped by matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path regex; eleven matters with hits, several only on generic restructuring words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; a rerun split into three matter ranges prints snippets for about 44 matters, then a per-matter hit list. The review flags generic terms and a hand-picked shortlist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 47,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a stricter phrase scan by ranges times out; reads the first lines of the range outputs and reruns one range.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 21 candidate matters (about 65K chars). The review flags about 60 surfaced matters left unlisted.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads openings of financing motions, credit agreements, an objection and engagement letters from six candidates, including an asset-purchase agreement and engagement letter of a sale-side matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 83,
+     "end": 98,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Five reads sent with no stage open are refused; attempt 2 repeats them: cover pages of intercreditor agreements and a restructuring term sheet of other candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 99,
+     "end": 104,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with direct work of the requested kind plus the sale-side matter as relevant on a broad reading, with exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 105,
+     "end": 113,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check first fails on an incorrect response path, then finds all 41 cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the cited documents of the contingency matter and the sale-side matter; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It added a sale-side buyer matter as qualifying on a broad reading of the request, after reading only its asset-purchase agreement and engagement letter.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 99,
+    "end": 104,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It had read only the sale-side matter's asset-purchase agreement and engagement letter (evidence seen at [56]-[80]), which show a buyer in a sale under a court-authorised financing, yet the answer adds it as a DIP-related matter on a broad reading.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The write review asked it to decide whether the peripheral matter had actual DIP involvement and move it to the exclusions if not; the check stage re-read its agreement and engagement letter and kept it, and the last check review endorsed keeping it labelled separately."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing capped at 80 lines and file counts by extension.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide path regex with broad financing words; 92 matters with hits (about 33K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower path regex for order, budget and objection words; 24 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 46,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Extraction script fails twice on an email-parsing error, then times out three times including a range-split rerun; partial range outputs are counted and filtered to seven named matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 54,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter hit counts in ten small ranges; the run times out and the partial outputs are read with a line cap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 55,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters, including the sale-side matter; the review flags about 60 surfaced matters unlisted.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 83,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads an objection, strategy memos, credit agreements, term sheets, a draft financing motion and engagement letters from six candidates; the sale-side matter is not opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 84,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the credit agreement, proposed final order and a lender letter of one matter already settled on.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five qualifying matters with roles and documents, and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 108,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check first fails on an incorrect response path, then finds all 38 cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-opens one source per listed matter; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: spot-checks amounts and status in five sources; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 129,
+     "end": 129,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script saves about 332K chars to a file and prints a 15K summary of 71 matters; a second strong-phrase scan prints about 107K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Per-matter file-name regex for request and court-case words; the review notes no text was scanned.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidate matters, including the sale-side matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists the first twelve files of 22 more surfaced matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: full listings and a file-name filter for seven more surfaced matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads sixteen documents: engagement letters, financing motions and agreements of the candidates, the sale-side matter's engagement letter and diligence memo, a dormancy memo and a sibling matter's memos. The review flags the sale-side role as resting on thin evidence.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads proposed financing orders, the sale-side matter's draft closing checklist (about 33K chars) and asset-purchase agreement, a demand letter and the contingency matter's drafts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with actual involvement of the requested kind, counting the sale-side buyer as one, plus the contingency matter separately.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 94,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check first fails on an incorrect response path, then finds all 30 cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads one source per matter; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted a sale-side buyer matter among the qualifying matters because the buyer coordinated with the seller's financing facility.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 80,
+    "end": 85,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts the sale-side matter as a matter with actual DIP involvement because the buyer coordinated with the seller's DIP facility, from its engagement letter, diligence memo and a draft closing checklist (evidence seen at [48]-[75]).",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The screening review said the buyer classification of that matter rested on thin evidence; it read the draft checklist and asset-purchase agreement and kept the matter, and both check reviews said not to change the matter set."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0, T2 fail on precision only). All three runs found the same five matters through file-name searches and scans and read their financing documents. They split at screening: T0 and T2 read the asset-purchase agreement, engagement letter (and in T2 the diligence memo and closing checklist) of a sale-side buyer matter and then wrote it into the answer, T0 as relevant on a broad reading and T2 as actual involvement. T1 listed that matter's files but never opened its documents and left it out. The critic's reviews did not differ in a way that explains the split: in T0 the write review asked whether the peripheral matter belonged and in T2 the screening review called its role thinly evidenced, but in both runs later check reviews said not to change the matter set."
+}

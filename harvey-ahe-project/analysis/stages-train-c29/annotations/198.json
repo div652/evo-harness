@@ -1,0 +1,407 @@
+{
+ "task": "198",
+ "context": "Request: executed credit agreements from the firm's deals valued over $1 billion, as comparables. Rubric: 1003-00003 (Harrowgate PE / VeloPay), 1005-00001 (Nexford Industrial), 1041-00003 (Solara Digital / Cloudium), each with its executed credit agreement, plus a precision criterion. Over-included by the agent: 1043-00001 (Ironhaven, $950M TLB with about $1.36B sources-and-uses) and 1021-00001 (Verimark, $700M refinancing).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for financing and value terms times out after about 2M characters; the agent names candidates from it, the review answers goal not reached."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. find | grep for executed credit-agreement file names, plus filtered file lists of four candidates from the scan (labelled by the store-wide search); the review flags the narrow name pattern."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type (attempt 2). Broader find | grep for credit and loan agreement names: 109 files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 35,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scripts over files whose names suggest an executed credit or loan agreement, printing each one's opening text; the first prints nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 46,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six executed credit agreements; a glob of one matter uses a path form the tool does not accept and returns nothing (the harness notes a stage mismatch)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing and post-closing memos and a merger agreement of six candidates for deal values."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 58,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts for large dollar amounts inside named candidate matters; one matter shows a facility below the threshold alongside larger capitalisation figures, which the review flags as unreconciled."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 66,
+     "end": 73,
+     "tags": [
+      "huge output",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Script over every matter with a financing-type file name, listing amount snippets per file (about 144K characters); a premature stage_start for writing is rejected."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying comparables, one of them on a sources-and-uses total although its facility is below the threshold."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 88,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that cited paths exist (the first check script opens a response path that does not exist); no change."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited all three needed agreements but added a fourth matter whose facility is below the threshold, counted on a derived capitalisation figure.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Evidence seen at [58]-[61] showed that matter's facility below the threshold next to larger asset and capitalisation figures; the answer counts it as a qualifying deal on a derived sources-and-uses total.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the reviews at [65] and [73] flagged that matter's value as unreconciled and as a derived figure rather than a deal value; the answer kept it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 17,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). A folder glob that returns nothing, run in parallel with file-name globs for credit, loan, facility and financing words (labelled by the store-wide search)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for value terms times out after about 1.6M characters; the agent names three candidates from it."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "end": 40,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Credit-agreement file-name globs inside eight candidate matters; three return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 49,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads executed credit agreements, a commitment letter, memos and certificates of three candidates; one guessed path does not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 50,
+     "end": 59,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Further file-name globs and one full listing inside two of those matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 60,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of ten more candidate matters picked from earlier results."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 75,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Script over every matter listing files whose names contain credit or loan agreement words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "end": 103,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of fifteen credit or loan agreements from that list, then six more documents of four matters; parallel results come back in a different order from the calls."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 104,
+     "end": 107,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script over files named as executed credit or loan agreements, printing value snippets."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 108,
+     "end": 115,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Longer reads of two chosen agreements; three guessed paths do not exist, so it lists one matter's files."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 116,
+     "end": 117,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script for large dollar amounts inside four chosen matters (about 110K characters)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 118,
+     "end": 126,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing memos, a solvency certificate, a binder index and an agreement of three chosen matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes two matters as strict matches, one project-finance match and one supplemental comparable; a matter whose executed agreement it read is listed under another company's name and screened out as below the threshold."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 133,
+     "end": 151,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs the cited paths (the harness notes the stage mismatch), re-reads and edits the bottom line to grade the matches; the two extra matters stay."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 152,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the executed agreement of one needed matter but listed it under another company's name and screened it out, and it added two matters below the threshold as comparables.",
+   "first_error": {
+    "stage_no": 15,
+    "stage": "Write the response",
+    "start": 127,
+    "end": 132,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "The matter's executed agreement was read at [79]-[94] among fifteen parallel reads, but the answer gives it another company's revenue context and screens it out as below the threshold without any value document read for it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the write review at [132] said the list 'may be under-inclusive' because of unopened matters; no review after the read named this matter, and earlier ones ([59], [74]) named it only as unopened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 15,
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer adds a matter with a facility below the threshold on a capitalisation figure and another as a supplemental comparable on portfolio value, neither a stated deal value above the threshold.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) [59], [132] and [151] questioned the two extra matters' values; the check-stage edit only relabelled them."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. A folder glob that returns nothing, run in parallel with file-name globs for credit-agreement names (labelled by the store-wide search)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders (attempt 2)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script for financing terms and any dollar amount, with no output cap; times out with about 5.4M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The first store-wide extraction script printed millions of characters, the context filled and no deliverable was written.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 22,
+    "end": 25,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The store-wide extraction script matched any dollar amount and printed every hit with no cap, returning about 5.4M characters at the timeout and ending the run before any reading or writing.",
+    "critic": "no-review",
+    "critic_note": "the run ended before this stage's review; no earlier review warned about output size."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T2 overflowed the context with its first store-wide extraction script (no review reached). T0 and T1 both found and opened all three needed executed agreements through credit-agreement file-name searches and failed at the writing stage: both counted a matter whose facility is below the threshold on a derived capitalisation figure (over-inclusion, flagged by the reviews in both runs and kept); T1 also added a below-threshold refinancing and screened out one needed matter under another company's name after a large parallel read batch (only a generic under-inclusion flag from the critic)."
+}

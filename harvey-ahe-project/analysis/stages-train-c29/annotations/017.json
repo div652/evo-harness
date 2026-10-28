@@ -1,0 +1,320 @@
+{
+ "task": "017",
+ "context": "Request: across signed Banking & Finance deals, how often EBITDA add-backs were conceded in sponsor-controlled vs strategic-corporate borrower deals, with buckets, add-back status and rates. Rubric: 6 of 8 sponsor deals (75%) and 3 of 4 corporate deals (75%); add-back matters 1005-00001, 1006-00001 (Crestline Packaging), 1012-00001, 1043-00001, 1019-00002, 1042-00001 (sponsor) and 1021-00001, 1038-00002, 1010-00001 (corporate); precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Saves all matter folder names to a file and shows the first and last 30."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A first extraction script fails on its heredoc; a second, writing to a file, times out with nothing shown."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over all paths for financing words, cut at 240 lines. The review flags the unrerun scan and the file-name fallback that misses differently named files."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters picked from the file-name hits. The review flags dozens of surfaced matters left unlisted."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep for credit / loan / facility agreement file names filtered to execution versions; adds several new matters. The review flags the narrow name pattern."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 36,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of eight reads of executed agreements and deal memos (first 100-120 lines), then snippet scripts pulling EBITDA definitions from the agreements. The review flags first-page reads and unopened candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 68,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Full reads of two agreements and a deal memo, and a header skim script over the remaining agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 9 sponsor and 4 corporate signed deals with add-back status and rates of 88.9% and 75.0%."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and changes nothing. The review flags possible inclusion of non-qualifying matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for a document type → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The content scan timed out and its file-name fallbacks never showed one sponsor deal with add-backs, so it is missing; the answer also counts a deal outside the set, which skews the sponsor rate.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for request keywords",
+    "start": 20,
+    "end": 23,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After the content scan timed out it fell back to a file-name grep cut at 240 lines, which did not show one sponsor deal with add-backs; the review named the unrerun scan and the file-name gap, but the agent only ran a narrower file-name search, which also missed it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) [23] named the unrerun scan and that a file-name fallback misses differently named files, not the matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a deal outside the qualifying set as a sponsor deal with add-backs (evidence seen at [47]-[57]), giving 8 of 9 instead of 6 of 8; the check-stage review named possible non-qualifying inclusions and the agent changed nothing.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) [90] named possible inclusion of non-qualifying matters, not the deal."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script for broad finance terms over every document; it times out after about 6M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "A store-wide extraction script with no output cap returned millions of characters and the run ended on a full context with no deliverable.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The store-wide extraction script printed millions of characters of snippets with no output cap; the result filled the context and the run ended before any answer was written.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Saves all matter folder names to a file and shows the first and last 20."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad terms times out after about 600K characters of per-file hits that include every deal it later needed and many others. The review flags the timeout and broad terms."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Bounded scan over financing / closing file names writing per-matter indicators to a file, viewed through head, then a grep of that file limited to higher-numbered matters. The review flags the name allowlist and the prefix filter."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep for credit / loan / facility agreement names that also contain execution words, to fix the candidate set; 19 matters. The review flags that signed matters with other file names are missed."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists financing and closing files of about 19 matters from that set. The review flags many surfaced matters left unlisted."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 40,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of eight reads of agreements, deal memos and closing memos, then snippet scripts pulling EBITDA definitions. The review flags snippet-based add-back calls and memo-only judgements."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 72,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Calculate figures for the answer. A store-wide script flags each matter for signed-credit and add-back words, then one snippet read of a further agreement; adds one more sponsor deal. The review flags the regex-only denominator."
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 8 sponsor and 4 corporate deals with rates of 100% and 75%."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 97,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, adds a small-sample caveat and checks that cited paths exist (the first script looks in a path that does not exist)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 98,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → List files in candidate matters → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Every deal it needed appeared in its scans, but it fixed the candidate set with an execution-version file-name search that dropped one sponsor deal; the answer also counts two deals outside the set as sponsor deals with add-backs.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Search file names for a document type",
+    "start": 28,
+    "end": 33,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "why": "The scans at [16]-[25] showed all needed deals, but it fixed the candidate set with a file-name search requiring credit / loan agreement names with execution words, which dropped one sponsor deal; the review named this gap and the agent moved on to listing that set.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) [33] named the execution-name pattern as dropping signed matters, not the matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts two deals outside the qualifying set as sponsor deals with add-backs (one added from a keyword count at [74]-[77]), giving 8 of 8; the reviews at [79] and [85] named the keyword-only addition and possible unsigned inclusions, and the agent only added a caveat.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) [79] named the matter added from a keyword count; the other extra deal was not named."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T1 ended at its first store-wide extraction script, whose uncapped output overflowed the context (no-review). T0 and T2 both reached 9/12 and both left out the same sponsor deal and over-counted the sponsor bucket. They split at the first scan: T0's scan (redirected to a file) timed out with nothing, and its file-name fallbacks never showed that deal (search-miss); T2's scan output did show it, but a later execution-version file-name search fixed a candidate set without it (over-narrow-filter). In both runs the stage review named the gap (unrerun scan / narrow name pattern) and the agent moved on."
+}

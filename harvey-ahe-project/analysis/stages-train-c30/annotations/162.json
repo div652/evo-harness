@@ -1,0 +1,452 @@
+{
+ "task": "162",
+ "context": "Request: the firm's first traditional, non-SPAC IPO, with its offering documents and a document showing the deal closed. Rubric: 1037-00001 (Solstice Biomedical ADS IPO, closed March 2023), an offering document from it (underwriting, registration-rights or lock-up agreement), a closing deliverable (checklist, officers' or secretary's certificate), and a precision criterion; 1010-00002 (Arbor Health, 2024) is outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob with a parallel listing of the first 80 folders and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path sweep for offering, registration and closing words (about 90K characters). The review flags the generic words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower path sweep for offering-document words, one line per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script and a range-split rerun both time out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 57,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads openings of 16 documents from eleven candidates (one path fails), then lists one candidate's files and reads seven of its documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 58,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents. Lists the files of the matter it settles on and a sibling, then reads six of its closing and offering documents. The review flags unopened surfaced matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 80,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads seven documents from four earlier-dated candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of four of those candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one matter as the earliest such offering with its offering documents and closing proof; other candidates are listed as excluded or later.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads three cited documents and the response opening.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 116,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "A read sent with no stage open is refused; reopens the check stage and reads the rest of the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. The review advises re-listing in pieces.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Script prints per-matter file counts with file names filtered by offering words (about 66K characters).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path sweep for offering-document words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path sweep, one line per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of nine candidates. The review flags the hand-picked set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eleven documents from four candidates, including two of the one it later picks.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice, then a range-chunked rerun prints per-matter hits (about 45K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 56,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script. Reads five closing, offering and filing documents of the matter it settles on.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads seven documents from five other candidates. The review notes the proposed answer's documents were not opened in this stage.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one matter as the first such offering with offering documents, closing proof and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Checks cited paths and rewrites the exclusion section.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 109,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the response and eleven cited documents. The review flags a proceeds figure that differs from the checklist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: edits the proceeds line to separate the firm tranche from the full exercise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: re-reads two cited documents and the response; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 126,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the summary names only the few visible matters. The review advises re-listing per folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file of every matter folder with counts (about 814K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path sweep for offering-document words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path sweep with lock-up, comfort-letter and pricing words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Extraction script over five named candidates prints about 86K characters of snippets. The review flags the hand-picked scope.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 47,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads openings of eleven documents from seven candidates, including three of the one it later picks; one path fails.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide scan times out; a rerun in four batches prints about 31K characters, visibly only the first batch.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 56,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six offering and closing documents of the chosen matter and four of a later candidate's (final prospectus, closing receipt, post-closing memo, underwriting agreement).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 71,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: re-reads the underwriting agreement, a filing letter and two closing documents of the chosen matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 3). Lists the chosen matter's files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter as the first such offering with offering documents and closing proof; the comparison section calls a later candidate a completed offering of the same kind that closed later.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check that prints nothing, one wording edit on a filing date, and a re-read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads three cited documents and prints the path check; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The answer's comparison section calls a later candidate a completed offering of the requested kind, which was read as asserting a second qualifying matter.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 86,
+    "end": 91,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews only repeated stock advice not to add or drop matters; none named the comparator described as qualifying.",
+    "why": "The comparison section describes a later candidate as a completed offering of the requested kind, which the precision check read as a second qualifying matter (evidence seen at [56]-[70]); T0 used almost the same wording and passed."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0, T1 pass; T2 fails the precision criterion only). All three runs settled on the same matter from file-name sweeps and reads, and cited the same offering and closing documents. They split at the write stage: T1 left the later completed candidate out of its answer, T0 and T2 both described it as a completed offering of the same kind that closed later; the judge accepted this in T0 and counted it as qualifying in T2. The write and check reviews did not differ in a relevant way: in all runs they gave the stock advice not to add or drop matters and named no comparator."
+}

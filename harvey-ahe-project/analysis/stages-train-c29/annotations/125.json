@@ -1,0 +1,495 @@
+{
+ "task": "125",
+ "context": "Request: general commercial litigation matters (not specialty litigation such as IP, employment or antitrust) where the firm is seeking compensatory damages, with the pleadings that spell out the damages. Rubric: 14 qualifying matters (1005-00005, 1006-00005, 1010-00005, 1012-00006, 1020-00005, 1021-00006, 1022-00005, 1023-00002, 1024-00003, 1033-00006, 1034-00003, 1035-00004, 1044-00006, 1045-00004), a proof pleading for each, plus a precision criterion (1019-00001 is outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 17,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; reviewer said partly (listing capped, visible matters not the whole store)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2); counts files per matter folder for all folders. Reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for damages and pleading words: first run fails on a heredoc error, rerun times out with no output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Scan document text with an extraction script (split); find | grep over file paths for pleading and damages words, piped through its own 300-line cap. Reviewer said no; flagged the timed-out scan, the line cap and that no document was read."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of ten pleadings from ten matters on that list, then six further pleadings and filings of the stronger ones."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Screen candidate matters by reading documents (split); two extraction scripts over two halves of the store, limited to pleading-named files and printing only those that contain one damages word."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 58,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads six more pleadings picked from the script output and lists the files of eight candidate matters (labelled by the dominant intent). Reviewer said partly; flagged many unopened candidates and a matter read but left off its list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 59,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eleven matters the reviewer named."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the petition of one listed matter (twice, the second at an offset) and the openings of three other pleadings. Reviewer said partly; flagged sibling matters and exclusions resting on listings."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 72,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing; reads one sibling matter's counterclaim. A premature stage_start for writing is rejected because the stage is still open. Reviewer said no; flagged exclusions made without opening documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes ten matters as qualifying with their pleadings and an exclusion list, then edits one matter's cited pleadings down to one. Reviewer said partly; flagged possible under-inclusion and the edited citation."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths and matter numbers. Reviewer said partly; flagged an 11-vs-10 matter-count mismatch and asked to settle whether one excluded matter qualifies."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its capped file-name search and its one-word scans never surfaced three qualifying matters; it also dropped two matters it had read, cited only the petition of one matter, and added a non-qualifying matter.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for request keywords",
+    "start": 20,
+    "end": 23,
+    "events": "[20]-[21]",
+    "kind": "search-miss",
+    "why": "The fallback file-name search was cut by its own 300-line cap, and the later chunked scans only kept pleading-named files containing the word 'compensatory', so three qualifying matters never appeared in any result.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "Review [23] flagged the line cap and the un-chunked scan; the agent reran the scan in two halves but with a one-word filter, and the three matters stayed unseen."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 71,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "why": "The listing at [61]-[62] showed one matter's default-judgment motion and damages affidavit, but it read only the petition and cited only that, so the proof-document criterion for that matter failed.",
+     "critic": "not-flagged",
+     "critic_note": "Review [71] questioned exclusions and unopened siblings but not the unread filings of a matter it included."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 80,
+     "end": 87,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer excludes two matters whose pleadings it had read at [26]-[48] (one as a specialty matter, one as defence-side), though both seek damages as the rubric expects.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [94] asked to reconcile the count and decide whether one excluded matter qualifies; the agent finished without acting."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 80,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists an arbitration counterclaim matter as qualifying general commercial litigation although it is outside the qualifying set.",
+     "critic": "not-flagged",
+     "critic_note": "No review named that matter's inclusion."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; reviewer said partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2); counts files per matter folder. Reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script: heredoc error, then a timeout with no output; a per-prefix folder count follows. Reviewer said no; flagged no candidate set and no batching."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Python walk matching file names against pleading and damages words across the store. Reviewer said partly; flagged pattern gaps and that no document was opened."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2. Broader file-name pattern saved to a file and printed per matter (843 lines). Reviewer said partly; flagged noise and named candidates still unopened."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 80,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the openings of about twenty pleadings from about twenty candidate matters in three batches, then short re-reads of five; one guessed path does not exist. Reviewer said partly; flagged about sixty surfaced matters never opened and judgements from one pleading each."
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes qualifying matters with pleadings and an exclusion list, then edits an exclusion bullet that mixed up two matters. Reviewer said partly; flagged identity mix-ups, a category-based exclusion and unopened candidates."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks that cited paths exist and re-reads the response; no edit. Reviewer said partly; flagged that only path existence was checked."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 97,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Both file-name searches listed every qualifying matter, but it read only some of them, then excluded or merged several it had read and added a non-qualifying one.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 80,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches at [26]-[33] listed three qualifying matters' pleadings, but the twenty-odd pleadings it chose to read left those matters out and they never reached the answer.",
+    "critic": "flagged-ignored",
+    "critic_note": "Reviews [35] and [80] flagged many surfaced candidates as unopened (naming other matters); the agent went straight to writing."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 80,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "why": "The file-name search listed one matter's amended complaint next to its original complaint, but it read and cited only the original.",
+     "critic": "not-flagged",
+     "critic_note": "No review named that matter's pleadings."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 88,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer excludes three matters whose pleadings it read at [38]-[60] (as an employment dispute, as memo-only, as defence-only) and drops a fourth it read by merging it with another matter of the same client.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [88] flagged the category-based exclusion of one of them and possible identity mix-ups; the check stage only verified paths."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 88,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer describes one qualifying matter under another matter's client name and pleading, pairing the matter number with the wrong documents.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [88] warned that matter-number and identity mix-ups may remain; the check stage made no edit."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 88,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists an arbitration counterclaim matter as qualifying although it is outside the qualifying set.",
+     "critic": "not-flagged",
+     "critic_note": "No review named that matter."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 21,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; reviewer said partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2); lists all matter folder names. Reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 30,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; reruns it in four shards writing to files, then filters the hits by pleading-type path words and lists the matters with hits. Reviewer said partly; flagged unverified shard completion and the path filter."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 31,
+     "end": 44,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type; per-matter listing of files whose names contain pleading and litigation words (first run fails on a heredoc error), then a per-matter view of part of that list. A premature stage_start for reading is rejected. Reviewer said partly; flagged noisy matches and only part of the list reviewed."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of nineteen candidate matters, almost all from the lower half of the numbering. Reviewer said partly; flagged that only a subset of surfaced matters was listed."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 51,
+     "end": 58,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2); store-wide walk for pleading, court-filing, litigation and arbitration folders, listing their files (80 matters). Reviewer said partly; flagged that no pleading was opened."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 59,
+     "end": 64,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files; extraction script over the files of those 80 matters for damages and prayer-for-relief language (about 317K characters). Reviewer said partly; flagged that most of the output was unseen and that classification lacked opened pleadings."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 65,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of sixteen pleadings or filings of the matters it settled on and lists one more matter's files. Reviewer said partly; flagged memos, a cover sheet and a letter read in place of operative pleadings."
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes fifteen qualifying matters with pleadings and exclusions. Reviewer said partly; flagged possible over-inclusion, unverified matter numbers and exclusions not backed by reading."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Edits out two matters as defence-only, updates the count and re-reads the response; a further edit after stage_end is rejected because no stage is open. Reviewer said partly; questioned the defence-only removals."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2. Adds an exclusion note for the two removed matters and re-reads the response. Reviewer said partly; flagged that the removals were still unchecked."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One qualifying matter surfaced repeatedly but was never opened; it excluded another from its file listing alone, later edited out a third as defence-only, cited a letter instead of a pleading for a fourth, and added a non-qualifying matter.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 45,
+    "end": 50,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The matter list at [38] (and later [56] and [62]) included a qualifying matter, but the nineteen matters it chose to list, and every later read, left it out, so it is absent from the answer.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "Review [50] flagged that only a subset of surfaced matters was listed; the agent reopened the stage and widened its scan, but never opened that matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer excludes one matter as an employment dispute, judged from its file listing at [47]-[48] without reading its complaint.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [96] flagged exclusions not backed by reading documents; the check stages did not reopen it."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "missing-identifier",
+     "why": "For one included matter the answer grounds the demand in a pre-conference letter read at [78] instead of a pleading, so the proof-document criterion fails.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [90] flagged the letter read in place of the operative pleading and asked to open it; the agent wrote without doing so."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists an arbitration counterclaim matter as qualifying although it is outside the qualifying set.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [96] flagged possible over-inclusion and asked to confirm every listed matter; the check stages removed two other matters instead."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 112,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "An edit removes a matter whose counterclaim seeks damages, calling it defence-only on a strict reading of the request.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "Review [110] questioned the defence-only removals; attempt 2 only added an exclusion note."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, each in a different way after the same opening (capped listing, folder listing, a store-wide scan that timed out). T0's fallback file-name search hit its own line cap and its later scans filtered on one damages word, so three matters never surfaced (search miss at the file-name search; the critic flagged the cap and the agent's fix stayed too narrow). T1 and T2 surfaced every qualifying matter with file-name searches but chose subsets to open: T1 left three unread at its single big screening stage (critic flagged unopened candidates generically, ignored), T2 left one out at its candidate listing (critic flagged, the reopened stage did not reach it). All three runs then excluded matters they had read on narrow category judgements and asserted the same non-qualifying arbitration matter; reviews flagged some exclusions late and the agents finished without acting."
+}

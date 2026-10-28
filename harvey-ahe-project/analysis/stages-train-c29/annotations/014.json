@@ -1,0 +1,403 @@
+{
+ "task": "014",
+ "context": "Request: how many of the firm's credit facilities are covenant-lite in the market sense (institutional term loans with no always-on financial maintenance covenant), and which. Rubric: 1005-00001 (Nexford Industrial), 1021-00001 (Verimark Hospitality), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find that printed nothing. Review: partly."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts folders and prints the first 30 matter names. Review: yes."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. Counts matter folders and files without names (attempt 3). Review: yes."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel store-wide extraction script (timed out), a find over paths for credit-document words and an email-only grep; hit lists span many matters. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 42,
+     "tags": [
+      "timed out",
+      "script error",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Search file contents for request keywords. A narrower extraction script times out; shell loops relying on a missing unzip tool write empty hit files (attempt 2). Review: no."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 43,
+     "end": 54,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Three range scripts fail on a syntax error, then rerun restricted to files whose names contain credit or memo words; hit paths span many matters (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads summaries, memos, commitment letters and credit agreements from six candidate matters; none from the other hit matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over three named credit agreements for covenant terms. Review: partly (unopened hit matters; one agreement's covenant reading unresolved)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 79,
+     "end": 86,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads one agreement at length, lists one matter's files and reads a later section of another agreement (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three facilities as covenant-lite. Review: partly (unopened hit matters)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, fixes a mistyped folder number and globs each cited path. Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A needed matter surfaced in three searches but was never opened; the answer omits it and counts two facilities that do not qualify.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 55,
+    "end": 72,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The matter it needed appeared in its first content and file-name searches and again in the file-name-filtered scan, but the six matters it chose to read left it out and it was never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews at [54], [78] and [86] listed unopened hit matters by number range (the last one including the needed matter's series among many); the agent never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted two matters whose term-loan agreements it had read only in part as covenant-lite although they do not qualify (evidence seen at [55]-[86]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [78] named the unresolved covenant section of one counted agreement; the agent reopened the stage, read more of it and kept both."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts and lists all matter folder names. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for covenant and loan terms; times out after about 1.7M chars of snippets. Review: no (uncapped output, broad terms)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Narrower extraction script writing to a file; times out with no output (attempt 2). Review: no."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of eight documents (credit agreements, a memo, a schedule, emails) from five candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 37,
+     "end": 42,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Snippet scripts over four named matters' credit documents, plus a listing of two of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 43,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads further sections of a schedule, a commitment letter, an agreement and a closing agenda of matters already in play, plus a snippet script. Review: partly (one count rests on a schedule; a conflicting covenant snippet unresolved)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five facilities as covenant-lite. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 59,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and narrows the opening wording. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 67,
+     "end": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths (one folder off), fixes the path and the total (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the first 25 lines (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Both needed matters were found and included, but the answer also counts three facilities that do not qualify.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 53,
+    "end": 58,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It counted three facilities that do not qualify, two of them on evidence the review had just questioned (a disclosure schedule, an agreement whose snippet showed financial covenants; evidence seen at [26]-[52]).",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [52] named the schedule-based count and the conflicting covenant snippet for two of the counted matters; the agent went straight to writing."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. A glob of matter folders returns nothing; a shell find lists all matter names. Review: yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over paths for broad credit words; 1,656 hits printed. Review: partly (too broad, truncated)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower path search with exclusions, grouped by matter (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 43,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script fails on a heredoc error, then times out; rerun over the matters from the file-name list, greps of the saved hits and a store-wide scan for the exact term. Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of 16 agreements, commitment letters, term sheets and memos from 12 candidate matters. Review: partly (first pages only; a draft and a term sheet treated as confirmed)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 66,
+     "end": 77,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Snippet script over the covenant sections of 15 named agreements, plus three short reads (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight facilities, five executed and three still in negotiation. Review: partly (headline includes drafts)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Rewrites the headline to five executed facilities with three listed as pipeline; checks paths. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-checks cited paths and adds a scope caveat (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Adds a list of unopened hit matters to the caveat (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Both needed matters were found and included, but the answer also presents six other facilities as covenant-lite (three as pipeline).",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 78,
+    "end": 83,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It asserted six facilities beyond the two that qualify, including a draft agreement and a term sheet; after the review it moved three to a pipeline list but still presented them as covenant-lite (evidence seen at [44]-[77]).",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews at [65] and [77] named the draft agreement and the term sheet treated as confirmed; the agent separated them as pipeline in the check stage but kept them and the other extra facilities."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the precision criterion at the write stage by counting facilities that do not qualify (over-inclusion); in each run a review had questioned the evidence for some of them (T1 moved on, T0 and T2 acted partly and kept them). T0 also never opened one needed matter: its content, file-name and filtered scans surfaced it, but it read only six other candidates (surfaced, never opened), while reviews only named unopened matters generically. T1 and T2 opened both needed matters, T1 from a broad scan, T2 from a file-name candidate list."
+}

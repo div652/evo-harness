@@ -1,0 +1,326 @@
+{
+ "task": "230",
+ "context": "Request: real-estate matters with an assignment-consent requirement on the deal itself (lease, purchase agreement or property interest), with the executed documents. Rubric: 1017-00009, 1026-00004, 1027-00004, 1031-00004, 1036-00004, 1043-00002, 1043-00003, each with a named executed document; plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an agreement, a redline, memos and an opinion of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for assignment, consent, lease and property words; times out after about 254K chars from low-numbered matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of the first matter in the scan output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that matter's real-property diligence summary."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script over three named documents from two candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 18,
+     "end": 22,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the closing checklist, officer certificate and two ancillary agreements of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one asset-purchase matter with a landlord-consent closing condition as the only precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 25,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only search was a store-wide scan that timed out in the low-numbered matters; it built the answer from the first two matters in that partial output.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 10,
+    "end": 11,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a store-wide scan that timed out before reaching any of the matters it needed; it did not narrow or rerun the scan or search file names."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (no output) plus whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists the last 100 matter folders and subfolders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 9,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for assignment and consent terms; times out after about 208K chars from low-numbered matters."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over file paths for lease, purchase, property, assignment and consent words, first 240 hits only."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of a lease, purchase agreements and schedules from five candidate matters picked from that list."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over those documents for assignment and consent clauses."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of three candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of one executed purchase agreement."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over that agreement for assignment and consent clauses."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 29,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads two assignment-and-assumption documents of two matters it is including."
+    },
+    {
+     "stage": "Write the response",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters plus a close analogue, including an asset-purchase matter with a lease assignment."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 35,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its file-name search was cut at 240 hits and missed three qualifying matters; it left out a fourth that the search did list, and added an asset purchase.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Search file names for request keywords",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its file-name search printed only the first 240 hits, which left out three qualifying matters; it neither paged further nor searched contents another way."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 20,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The file-name search listed one more qualifying matter's documents, but the five matters it chose to open left that matter out and it never returned to it."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 33,
+     "end": 34,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted an asset-purchase matter with a lease assignment as a qualifying real-estate precedent."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, PDFs, documents); the PDF glob returns nothing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 6,
+     "end": 8,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Two content greps with single-extension globs for assignment-consent and real-estate words; both return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 9,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, an agreement, an opinion and a request list of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the checklist, redline, closing email and a support agreement of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a de-SPAC matter whose lease needed landlord consent as the only precedent, noting limited files."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Both greps returned nothing; it read only the matters at the top of the listing and named one of them.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 6,
+    "end": 8,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both greps used single-extension globs and returned nothing; it neither retried with another pattern nor searched file names, and fell back to the matters at the top of the listing."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed at a search stage, each a different way. T0's only search was a store-wide scan that timed out in the low-numbered matters, and it answered from the first matter in that output. T2's two greps used single-extension globs and returned nothing, so it fell back to the listing-top matter. T1 got furthest: a file-name search cut at 240 hits reached four of the seven qualifying matters, it opened three of them (leaving one surfaced but unopened), and it added an asset purchase (search miss, then surfaced-not-opened and over-inclusion)."
+}

@@ -1,0 +1,361 @@
+{
+ "task": "184",
+ "context": "Request: stale-pipeline review as of Aug. 6, 2026 - commercial deals signed on or before May 8, 2026 that have not closed. Rubric: nine matters (1004-00003, 1009-00006, 1013-00001, 1017-00001, 1019-00002, 1027-00002, 1029-00001, 1036-00005, 1038-00009), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folders and counts files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction times out, then a four-range rerun also times out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Starts the extraction in the background, polls it, then greps the growing output file for signing and closing words; the result is about 7.7M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its background scan's grep printed millions of characters and the context filled before any document was opened.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 22,
+    "end": 29,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The grep over the background scan output printed whole extracted documents (about 7.7M characters) because the head cap counted lines, and the run ended without a deliverable.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all file paths for deal, signing and closing words; 2,856 hits printed (about 245K characters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two extraction scripts writing date and status snippets to files; prints only file counts and per-matter hit counts."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of the five highest-numbered matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Search file contents for request keywords. Extraction for not-yet-closed wording; three store-wide runs time out and only one number range completes."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 46,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, checklists and closing emails of three high-numbered matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Read a chosen matter's documents in depth (second part). Two find | grep passes over file paths for years and for delay, pending and closing-condition words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads delay letters, agreements, emails and trackers of five candidate matters, then closing records of one."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 83,
+     "end": 94,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of two matters and reads their trackers, checklists and certificates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two deals as signed and not closed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs the files of five cited matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scan counted hits in the matters it needed, but it listed only the five highest-numbered matters and later opened few others, so seven qualifying deals were never opened.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 28,
+    "end": 33,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The per-matter hit counts at [24]-[25] included the qualifying matters, but it chose the five highest-numbered matters to list and never opened most of the surfaced ones.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the listing review said the five matters were chosen by number adjacency and about 60 surfaced matters stayed unopened, without naming them."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Python listing of all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction times out; two range reruns write empty output; a debugging read of one agreement; a fixed rerun times out."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Scan document text with an extraction script (second part). Python pass over file names for deal and closing words; the first heredoc fails, the second writes 1,669 paths."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 48,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads twelve agreements, checklists and closing emails of seven matters picked from the file-name list."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 49,
+     "end": 61,
+     "tags": [
+      "no matches",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Read a chosen matter's documents in depth (second part). A store-wide grep for the year returns nothing (single-level glob) and eight range scans fail because the script file does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 62,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Writes the range scan script, runs four ranges into files and greps them for pending-closing and signing phrases; the greps list hits in many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 74,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (second part). Lists files of seven picked matters, reads checklists, memos and emails of six, lists one folder and computes day counts."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Python listing of ten reviewer-named matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "File-name screen over 58 surfaced matters for execution and closing files, writing to a file; it excludes others from file names."
+    },
+    {
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three deals as signed and not closed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response opening and confirms the output file."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scan greps listed hits in most of the qualifying matters, but it opened only a hand-picked few; others were excluded from file names alone and an extra matter was counted.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 74,
+    "end": 93,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The greps over its range scans at [70]-[73] listed status and signing text in several qualifying matters, but of the seven matters it then picked it read only a few, and three surfaced qualifying matters were never opened.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the scan review said many surfaced matters were never opened and candidates were hand-picked, without naming them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Three qualifying matters appeared in its file-name screen at [100]-[105], but the answer excludes them from file names alone without reading their status documents.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the write review said surfaced matters were dropped without a stated reason."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer flags a matter whose closing checklist and deal memo it read at [74]-[93] as signed and unclosed, outside the qualifying set.",
+     "critic": "not-flagged"
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T0 ran a background extraction and printed its growing output, about 7.7M characters, and the context overflowed. T1 and T2 both had the needed matters in their own scan results but opened few of them: T1 listed only the five highest-numbered matters after its scan and found two qualifying deals later through reads; T2 picked a handful of matters from a grep of its range scans, left most surfaced ones unopened, excluded others from file names only, and added a matter outside the set. In both, the critic flagged the narrow candidate choice in general terms; the agent listed more files but did not open the surfaced matters."
+}

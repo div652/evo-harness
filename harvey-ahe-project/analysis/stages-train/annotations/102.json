@@ -1,0 +1,275 @@
+{
+ "task": "102",
+ "context": "Request: Labor & Employment matters that included equity-vesting acceleration, with the documents describing the terms. Rubric: 1017-00004 (aldrich-settlement-agreement-execution.docx, Section 3(a)), 1017-00005 (Section 10.3; remedial-recommendations-memo.docx or final-investigation-report.docx), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one empty extension, one document type)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters and an opening memo of three matters at the top of the listing; no keyword search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 11,
+     "end": 31,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an executed agreement, a redline, a diligence memo and a letter of one matter in several passes at offsets, then a draft agreement and a request list of another."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes two matters from the top of the listing as the qualifying ones."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; answered from two matters at the top of a capped listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 10,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any keyword search, so neither qualifying matter ever surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two files-with-matches greps for request words plus a glob for matter folders that returns nothing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 11,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Shell walk matching request words in file paths."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and draft agreements of four matters whose file names matched."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms; times out after about 275K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of an executed agreement, two memos and two drafts from four matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 30,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one matter's relevant file names, then a snippet script over three named documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters as qualifying, three of them from draft agreements and memos."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Found and cited both qualifying matters but also listed three draft-only matters as qualifying.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 34,
+    "end": 35,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Having read that three matters' agreements were drafts or unsigned offers, it still listed them as matters that included the term alongside the two that did."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for request words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script printing request-term hits; about 690K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and draft agreements of three matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of one draft agreement."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Extraction script over documents in folders whose names match request words, across the store; about 74K chars."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, a draft, an email and an award draft of the three matters it settled on."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet script over one draft agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the three draft-stage matters as the qualifying ones."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Both qualifying matters surfaced in the first grep and scan but were never opened; the answer names three draft-stage matters.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 7,
+    "end": 13,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep and scan both listed the two matters it needed, but it chose drafts from three other matters and never opened either."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, in different stages. T0 never searched and answered from the top of a capped listing (partial listing). T2's first grep and scan listed both qualifying matters, but it read only draft agreements of three other matters (surfaced, never opened). T1 opened both after a scan and cited them, but its answer also listed three draft-only matters (over-inclusion at the write stage)."
+}

@@ -1,0 +1,203 @@
+{
+ "task": "059",
+ "context": "Request: fund and asset-management matters that include a management-fee offset or waiver, with the relevant fund documents. Rubric: 1001-00002 (Ardent), 1003-00002 (Harrowgate), 1023-00001 (Ironside), 1027-00002 (Pellegrino), a proof document for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Recursive ls and a find of the first 200 files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Lists matter folder names and runs find | grep over file paths for request words in one shell command (labelled by the dominant intent); the path hits span many matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script over document and email text; times out after about 10K chars from a few matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters picked from the path hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, side letters and a memo from four of those matters in one parallel batch."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Second extraction script limited to documents whose paths contain request-related words; times out after about 55K chars listing many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of nine documents from six matters picked from the scan output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight matters as precedents, grouped into drafting patterns."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 35,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "It found and documented all four qualifying matters but also asserted four other matters from its scan output as qualifying precedents.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 33,
+    "end": 34,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It listed every matter whose documents mentioned a fee reduction, offset or waiver (including drafts, a tax narrative and side letters of other vehicles) as a qualifying precedent alongside the four that met the request."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one file type that returns nothing, documents)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script over document and email text printing every matching snippet; times out after about 4M chars."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 8,
+     "end": 9,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Snippet-extraction script over one matter's documents; returns about 450K chars and the run stops with the context full, before any response is written."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search within a candidate matter's files",
+   "failure_point": "Two uncapped extraction scripts returned about 4.5M chars in total; the context filled and no response.md was written.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 6,
+    "end": 7,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its first search was a store-wide scan with broad terms and no output cap that returned about 4M chars; one more uncapped script on a single matter then filled the context before any response was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 7,
+     "tags": [
+      "script error",
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "A store-wide extraction script with broad terms fails on a syntax error, is rerun, and returns about 22M chars; the run stops with the context full, before any response is written."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "An unbounded scan dump filled the context; no response.md was produced.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 4,
+    "end": 7,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Ran a store-wide scan with broad terms (including very common words) and no output cap; its ~22M-char output overflowed the context and the run ended without a deliverable."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, two of them the same way. T1 and T2 ran a store-wide extraction script with no output cap as their first search; the multi-million-character output filled the context and no response was written (context overflow at the first scan stage). T0 kept its outputs bounded, found and opened all four qualifying matters through file-path searches and a path-filtered scan, but its answer also asserted four other matters (over-inclusion at the write stage)."
+}

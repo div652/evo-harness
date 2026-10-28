@@ -1,0 +1,199 @@
+{
+ "task": "211",
+ "context": "Request: the highest-value financing the firm has closed. Rubric: 1005-00001 (Nexford Industrial, $1.4B senior secured term loan B); precision allows only 1005-00001 or 1041-00003 (Solara Digital).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find (empty)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads deal memos, agreements and closing spreadsheets of the two matters at the top of the listing; no search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a securitization from a listing-top matter as the largest financing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 14,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; named the largest deal among the two matters visible at the top of a capped listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 11,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any search for financing size, so larger financings elsewhere never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, PDFs, documents); the PDF glob returns nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads deal memos, agreements and a closing spreadsheet of the three matters at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Content grep across the store for an amount and deal term seen in those documents (not words from the request); finds one more matter of the same client."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 18,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists that matter's files and reads two of its emails (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 19,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that matter's closing letter, checklist, term sheet and purchase agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a notes offering of the same size from that matter as the largest financing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 26,
+     "end": 26,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Read only listing-top matters, then grepped for an amount it had already seen, so the search could only find deals of that size.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 12,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the matters at the top of a capped listing; its only later grep looked for an amount taken from those documents, so larger financings never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 13,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads funds-flow memos, checklists, agreements and emails of the two matters at the top of the listing; one guessed path does not exist; no search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a securitization from a listing-top matter as the largest financing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 16,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; named the largest deal among the two matters visible at the top of a capped listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 13,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any search for financing size, so larger financings elsewhere never surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way: each read only the matters at the top of the capped whole-store listing and named the largest deal among them (partial listing as corpus, at the first reading stage). T1 also ran one grep, but for an amount it had already read, which led only to another matter of the same client. The matter it needed never appeared in any tool result."
+}

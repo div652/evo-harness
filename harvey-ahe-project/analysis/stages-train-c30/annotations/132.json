@@ -1,0 +1,571 @@
+{
+ "task": "132",
+ "context": "Request: deals in the firm's files where a fraud carve-out to the indemnity cap was negotiated (M&A indemnity playbook), with how it was papered. Rubric: 27 qualifying M&A matters (1001-00003/04/05/07, 1003-00003/04, 1004-00003, 1005-00006, 1006-00006/07/08, 1007-00006, 1008-00008, 1009-00003, 1011-00006, 1013-00006, 1015-00004, 1017-00006, 1018-00008, 1032-00005, 1037-00006, 1038-00008/09, 1039-00004, 1041-00003, 1042-00004, 1046-00001), each identified correctly, plus precision (1022-00002 is outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the complete file list and counts files, matter folders and transaction-document files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Greps of the saved file list for fraud, indemnity, cap and agreement words, each capped at 120-240 lines, and per-matter hit counts. The review flags the caps.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path grep saved to a file; 228 paths in 83 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: separator-insensitive pattern; 309 paths in 101 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: merges the two saved path lists and confirms nothing was lost.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 41,
+     "end": 48,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide fraud-near-cap scan times out; a chunked rerun over the 101 path-candidate matters lists 1,405 hit documents (about 127K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: tighter scan over all 266 matters with two snippets per matter (about 148K characters). The review flags the size and false positives.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 55,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: scan restricted to transaction and analysis folders, ranked by matter (about 118K characters). The review flags the folder filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the first 180 lines of eight executed agreements from eight candidate matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 74,
+     "end": 81,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Section-extraction script over chosen agreements and redlines (about 171K characters), plus a store-wide phrase scan over agreement files. The review flags the unread output.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 82,
+     "end": 85,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Script printing the phrase-hit sections for 14 kept matters with no cap; about 4.1M characters fill the context before the stage is closed, and no deliverable is written.",
+     "label_check": "ignored"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files",
+   "failure_point": "After several scans of 120K-170K characters each, a final uncapped section-printing script over 14 matters returned about 4.1M characters and filled the context before any answer was written.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Search within a candidate matter's files",
+    "start": 82,
+    "end": 85,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended before stage_end; the previous review had flagged the unread 170K-character extraction output.",
+    "why": "The script printed every phrase-hit section for 14 matters with no output cap, on top of several earlier outputs of 120K-170K characters, so the context filled and the run ended with no response written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level folder listing (120 lines) and file counts by extension.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path greps for deal-type and indemnity words; 1,267 hits in 214 matters. The review flags generic words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: specific agreement and indemnity names; 280 hits in 97 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: union with abbreviations; 222 matters. The review flags substring noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 44,
+     "tags": [
+      "timed out",
+      "no matches",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; a range rerun finds nothing (broken matter filter); a raw grep of .docx XML for the fraud word prints about 213K characters of paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 45,
+     "end": 56,
+     "tags": [
+      "huge output",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: batch scan with two snippets per file (about 215K characters), then phrase greps over the saved output (about 291K and 55K characters; one script error).",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 14 hand-picked matters. The review says about 60 surfaced matters were never listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 63,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: ranks matters by strong scan phrases and lists filtered files of 16 more matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 71,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. First reads (up to 220 lines) of executed agreements, drafts, memos and schedules from about 15 matters, in two parallel batches whose results return in a different order from the calls. The review flags an internal matter number in one memo that differs from its folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 101,
+     "end": 108,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Section-extraction script over five matters' agreements (about 92K characters); a stage_start for writing is refused because this stage is still open.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes executed precedents for about nine matters plus draft-only and excluded matters; some documents are described under other matter numbers. The review flags identifier confusion and draft-only entries.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 123,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response and checks cited paths (first run fails on the file location); no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 124,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It listed and read only a hand-picked subset of the matters its scans had surfaced, and in the answer it described documents under the wrong matter numbers and counted an extra matter.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "List files in candidate matters",
+    "start": 57,
+    "end": 62,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The listing review said about 60 surfaced matters were never listed; the agent listed 16 more in attempt 2 but most needed matters stayed unopened.",
+    "why": "Most needed matters appeared in the agent's path searches and scan output, but when choosing what to list and read it took 14 (later 30) hand-picked matters and never opened many of the others."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review warned of identifier confusion between internal and folder numbers; the check only confirmed that paths exist.",
+     "why": "The answer pairs documents read in parallel batches at [73]-[98] with the wrong matter numbers (one matter described as another client's deal, siblings swapped), so several needed matters are misdescribed."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the exclusion.",
+     "why": "The answer excludes a matter it listed at [59]-[60] as a preferred-stock financing although its documents carry a negotiated fraud carve-out."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review flagged draft-only and sibling entries inflating the count.",
+     "why": "The answer asserts a further matter as an executed precedent with a fraud carve-out."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob in parallel with a two-level listing (200 lines) and file-type counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 18,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for deal and indemnity words (214 matters, about 89K characters) and four name globs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 19,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-bucket path counts and matter lists.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: word-bounded pattern for agreement abbreviations; 52 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 31,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: stem search without word boundaries; 213 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 48,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; a range rerun writes about 12K lines (169K characters shown); a phrase filter over it (one heredoc error, 130K characters); a further scan over transaction files (63K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 52,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (continued). Snippet script over 17 hand-picked matters (about 244K characters). The review names the hand-picked list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: confirmation scan over two matter ranges limited to transaction-document paths; 312 hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 76,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. First reads of executed agreements, memos and redlines of about ten matters (results return in a different order from the calls), then a snippet script over nine more matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 77,
+     "end": 84,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Excerpt script over executed agreements saved to a file; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 85,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads the saved excerpt file and the openings of two internal memos.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 12 precedents with cap and carve-out mechanics; one is described under another client's name from a memo header.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 112,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads, fails a path check on the file location, edits the heading on support levels.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: confirms cited paths and spot-checks figures in saved excerpts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: extracts cap and fraud paragraphs for the listed matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 134,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 4: one wording edit on support levels.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It worked from a hand-picked list of 17 scan candidates and read only about a dozen, leaving most needed matters unopened; it also misnamed one matter's client and counted an extra matter.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Search within a candidate matter's files",
+    "start": 49,
+    "end": 52,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [52] named the hand-picked 17-matter list; the agent ran a wider confirmation scan but still opened only about a dozen matters.",
+    "why": "Most needed matters appeared in the agent's path searches and scans, but it chose 17 matters for its snippet script and later reads and never opened many of the others."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews in reach asked to check rows and keep the matter set unchanged.",
+     "why": "Matters whose agreements or escrow papers it read or grepped at [61]-[74] are left out of the answer without a stated reason."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) Reviews at [76] and [101] named the internal memo matter numbers that differ from folder numbers; the agent's reconciliation kept the memo's client name for one matter.",
+     "why": "The answer describes one needed matter under another client's name taken from an internal memo header read at [91]-[93]."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review flagged matters supported only by snippets or memos inflating the count.",
+     "why": "The answer asserts a further matter as a fraud carve-out precedent."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T0 overflowed the context with an uncapped section-printing script after several large scans, before any answer or review. T1 and T2 failed the same way: both surfaced nearly all needed matters through path searches and scans, then hand-picked a few dozen candidates and read only about a dozen, so most needed matters were never opened (the reviews named the hand-picked lists; the agents widened slightly). Both also misattributed documents in the answer (parallel read results returning in a different order, or an internal memo number and client name) and counted one extra matter."
+}

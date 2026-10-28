@@ -1,0 +1,261 @@
+{
+ "task": "210",
+ "context": "Request: the top five clients by number of matters, with counts. Rubric names clients, not matters: Cascade Retail (1038), Lumos Analytics (1008) and Quorum Insurance (1025) at 10 matters each; Dunmore Energy (1016), Aurelius Media (1017) and Penterra Pharma (1018) tied at 9; plus a client-level precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Four whole-store globs (all files, spreadsheets, documents, PDFs); the PDF glob returns nothing."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs for engagement folders, engagement-letter files, matter-opening memos and emails across the store; each list is capped and shows only high-numbered matters."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 12,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters of six matters from the top of those lists."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing, for every matter folder, the files whose names start with 'engagement'; only folders holding such a file appear."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 33,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the openings of engagement letters from several high-count number series to confirm which client each series belongs to; four guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of four matters to find the real engagement-letter paths."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 51,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two more batches of short engagement-letter reads across the number series it is ranking; two paths do not exist."
+    },
+    {
+     "stage": "Write the response",
+     "start": 52,
+     "end": 53,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a ranking with two clients at ten, two at nine and five tied at eight, reporting all nine."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 54,
+     "end": 54,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Read documents picked from the file listing → Search file names for a document type → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "It ranked clients from a listing of engagement-letter files, which dropped a matter without such a file, and its tally left out one ten-matter series that the listing showed.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for a document type",
+    "start": 19,
+    "end": 20,
+    "events": "",
+    "kind": "miscount",
+    "why": "It counted matters per client from a listing restricted to folders that hold an engagement-letter file, so one client's series came out one matter short and the cutoff tie was misstated."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 33,
+     "events": "",
+     "kind": "miscount",
+     "why": "Its tally from that listing left out a ten-matter number series shown in full there; it never checked that series' client and omitted it from the ranking."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the engagement letters of the five matters at the top of the listing, then re-reads one of them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes that the store holds five matters for two clients and ranks only those two."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 15,
+     "end": 15,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Treated the five matters in a capped listing as the whole store and ranked their two clients.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 12,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Took the five matters in the capped listing as the whole store and never listed matter folders or searched, so none of the high-count clients surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Four whole-store globs (all files, documents, spreadsheets, PDFs); the PDF glob returns nothing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 7,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Lists the store's top folder, then every matter folder name in reverse order; the full list of number series is visible."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 11,
+     "end": 18,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep for engagement, opening and retention files (first 240 hits), then a script listing engagement-letter files per matter folder (one heredoc failure, then the full list in two pages)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 32,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of engagement-letter reads from the number series it chose to verify; four guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Shell loop locating the engagement letters of nine matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 35,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two more batches of short engagement-letter reads to confirm client names for the series it is ranking."
+    },
+    {
+     "stage": "Write the response",
+     "start": 48,
+     "end": 49,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a top five of one client at ten, one at nine, two at eight and one at seven."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 50,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "With complete folder and engagement-letter listings in hand, its ranking left out four number series with equal or higher counts and filled the top five with smaller clients.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 19,
+    "end": 32,
+    "events": "",
+    "kind": "miscount",
+    "why": "With complete folder and engagement-letter listings in hand, it chose to verify number series that left out four series with ten or nine matters, and its ranking never counted them."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T1 never got past the capped listing: it read the five matters at the top and ranked their two clients (partial listing as corpus). T0 and T2 did enumerate every matter, mainly through listings of engagement-letter files, but miscounted: T0 counted from a listing that only shows folders with an engagement-letter file (one series one short) and its tally left out a ten-matter series; T2 had the full folder list and still left four of the six top series out of its ranking. In both, the error sits at the stage where the per-client tally was formed from the listing (new kind: miscount)."
+}

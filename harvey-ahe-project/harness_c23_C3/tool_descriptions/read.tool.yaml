@@ -1,0 +1,32 @@
+type: tool
+name: read
+description: >-
+  Read one file from the input directory or workspace. Handles .docx, .xlsx,
+  .pptx, .pdf, and plain text; extraction is automatic. Every result begins
+  with a read_result header containing the normalized source path, returned
+  line range, total lines, completion status, and next_offset. Batched results
+  may arrive out of request order, so bind facts to the header's source path,
+  never to result position. If complete is false, continue from next_offset
+  unless the remaining content is demonstrably irrelevant. Use bounded offset
+  and limit windows for large files.
+input_schema:
+  type: object
+  properties:
+    file_path:
+      type: string
+      description: >-
+        Relative path (resolved against workspace then input directory) or
+        absolute sandbox path.
+    offset:
+      type: integer
+      minimum: 0
+      description: Parsed-text line number to start reading from (0-based).
+    limit:
+      type: integer
+      minimum: 1
+      description: Maximum parsed-text lines to return.
+  required:
+    - file_path
+  additionalProperties: false
+disable_parallel: true
+binding: tools.read:read

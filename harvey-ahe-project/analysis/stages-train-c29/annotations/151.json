@@ -1,0 +1,327 @@
+{
+ "task": "151",
+ "context": "Request: most recent M&A deal with a working-capital adjustment, by executed APA signing date, as a template for a new SPA. Rubric: 1006-00008 (Crestline / Lakewood, executed APA 16 June 2025), its asset-purchase-agreement-execution.docx, and a precision criterion (no other matter asserted as qualifying).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Counts the matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script with broad agreement and date terms; times out after about 4.9M chars of snippets and the run ends without a stage_end or deliverable."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The first store-wide scan printed about 4.9M characters and the context filled before any document was read.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The extraction script printed every match of broad terms (agreement names, dates) with no output cap, and its 4.9M-character result ended the run.",
+    "critic": "no-review",
+    "critic_note": "The run ended before the stage_end of the scan stage."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Parallel globs and a find | grep over file paths for agreement-name and adjustment words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script over transaction-like files for adjustment and date terms; times out after about 680K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the openings of six purchase agreements from six candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 33,
+     "end": 44,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads a later section of the agreement it favours, a snippet script over two agreements, one more agreement's opening and a closing letter (labelled by the dominant intent). The review flags short reads of the other agreements and about 60 unopened matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 45,
+     "end": 56,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for executed agreement names (first returns nothing), listings of the highest-numbered matters (head-capped), and a date-extraction script over agreement-like files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over transaction-document folders for adjustment language and dates, listing 38 files, plus one read."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the openings of three later-dated agreements and rules them out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter and its executed agreement as the most recent, with a date comparison that presents several other matters' agreements as executed deals with the same adjustment. The review flags thin coverage and exclusion reasons that may rest on snippets."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 81,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "It named the right deal and agreement, but its date comparison asserts several other matters as qualifying deals with the same adjustment.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 80,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The date comparison lists other matters' purchase agreements, of which it had read only the openings at [26]-[32], as executed deals with a working-capital adjustment, so the answer asserts them as qualifying.",
+    "critic": "not-flagged",
+    "critic_note": "The write review at [80] flagged thin coverage and snippet-based exclusions, not comparators asserted as qualifying."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; a matter-folder glob returns nothing, then find prints all folder paths."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store; find | grep over file paths for agreement-name and adjustment words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for adjustment and agreement terms; times out after about 2.8M chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script; lists agreement-type files of eleven candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 30,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed agreement, schedules, escrow agreement and officer certificates of the matter it favours, plus agreements of two comparators."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 43,
+     "end": 47,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of five high-numbered matters and one comparator, and the subfolders of three matter series."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 57,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, a memo and closing papers of two of those matters; a stage_start at [54] is rejected because the listing stage is still open, and the stage_end closes it."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists filtered file names of five more matters named by the review."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 64,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Extraction script pulling the adjustment sections and definitions from the favoured agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 70,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the favoured matter with its adjustment mechanics and a comparator section; after the review it ends the stage again with goal not reached (empty result)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script over agreement-like files with adjustment language, printing the first dates per file."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 92,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the openings of two comparator agreements; a stage_start at [89] is rejected because this stage is still open. The review flags a misread comparator date."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the comparator section with the new dates, re-reads the response. The review flags a late-added comparator that may not qualify."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Search within a candidate matter's files → Write the response → Scan document text with an extraction script → Screen candidate matters by reading documents → Check or revise the response → Finish the run",
+   "failure_point": "It named the right deal and agreement, but its comparator section asserts several other matters' agreements as executed deals with the same adjustment.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 70,
+    "end": 77,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The comparator section presents other matters' agreements, read only at their openings ([32]-[40]) or seen in scan snippets, as executed deals with a working-capital adjustment, so the answer asserts them as qualifying.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the check review at [102] flagged late-added comparators that may not qualify; the agent finished without checking them."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 overflowed the context with its first store-wide extraction script (4.9M characters) before any review or read. T1 and T2 both found and read the qualifying matter's executed agreement and named it, but failed the same way at Write the response: their date comparison presented other matters' agreements, read only at their openings, as executed deals with the same adjustment. T1's write review did not flag this; T2's check review flagged possibly non-qualifying comparators and the agent finished unchanged."
+}

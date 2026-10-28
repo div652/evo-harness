@@ -1,0 +1,385 @@
+{
+ "task": "169",
+ "context": "Request: all New York-law credit facilities the firm ran out of its Banking & Finance practice as counsel on the facility itself, excluding warehouse/repo/securitization facilities and real-estate-secured mortgage or construction financings. Rubric: nine matters (1005-00001, 1006-00001, 1010-00001, 1012-00001, 1019-00002, 1021-00001, 1038-00002, 1042-00001, 1043-00001), each with its executed facility document, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of a guessed readme path."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 21,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two batches reading engagement letters, memos, filings and an agreement of the four matters at the top of the listing; two guessed paths fail; no keyword search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 22,
+     "end": 26,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of filings and memos of one listing matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no matter qualifies and discusses one listing matter as the closest."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits a matter-number cross-reference section."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 31,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never searched; answered zero from the four matters at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 21,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the four matters at the top of a capped listing without any keyword search, so none of the nine qualifying matters surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Recursive ls plus find, first 50 files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 4,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Two find | grep passes over file paths for request keywords; the second counts matching files per matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists up to twelve files from each of 23 matters picked from the counts."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of five agreements and an opinion."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep for agreement-type file names, first 300 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 40,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches: openings of ten agreements, then engagement letters and agreement sections of seven candidates; several guessed paths fail."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists engagement, closing and agreement files of five candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 45,
+     "end": 58,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, opinions, closing memos and agreement sections of the matters on its short list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 59,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of two candidates to find engagement letters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreement openings and later sections of four candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 69,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters, excluding two as property- or construction-secured."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 71,
+     "end": 71,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Path patterns anchored at the start of file names missed two matters, two surfaced matters were never opened, two read matters were excluded, and two non-qualifying matters were added.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 4,
+    "end": 7,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its path patterns only matched file names that start with a facility word, so two matters whose executed agreements carry a prefix never surfaced, and it never searched document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "List files in candidate matters",
+     "start": 8,
+     "end": 9,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The per-matter counts just before listed two more qualifying matters, but the 23 matters it chose to list left them out and it never opened them."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 69,
+     "end": 70,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read two matters' executed agreements and excluded them as property- or construction-secured financings."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 69,
+     "end": 70,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted two other matters as qualifying from their agreement openings and engagement letters."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find to depth two (empty)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Files-with-matches grep for request keywords alongside a folder glob that returns nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Two find | grep passes over file paths for agreement-type words, first 200 and 240 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of six agreements from six matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 22,
+     "tags": [
+      "no matches",
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction scripts over agreement-named files for governing-law wording; the first prints nothing, the second times out after about 84K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 29,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters at guessed paths for six candidates; five fail."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists engagement-letter files of seven candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters of six candidates, then the openings of four agreements and one more letter."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 45,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction scripts printing the governing-law clauses of four named agreements, then two."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep for execution-version agreement file names across the store."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one candidate matter's files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 78,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Works through five more candidates one by one: engagement letters, agreement openings and governing-law snippets, with file listings in between (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes seven matters, excluding one as property-secured."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 81,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Two surfaced matters were never opened: one was excluded unread as property-secured, the other omitted.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 12,
+    "end": 18,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its grep and both file-name searches listed one matter's executed agreement, but of the six agreements it chose to open it left that matter out; it never opened it and later excluded it as property-secured without reading its documents."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 52,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The execution-name search just before listed another matter's executed agreement, but it went on to list and read other candidates and never opened that matter."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed. T0 never searched and answered zero from the top of the listing (partial listing as corpus). T1 searched file names with patterns anchored at the start of the name and missed two matters (search miss first); it also left two surfaced matters unopened, excluded two it had read, and added two. T2 surfaced all nine matters through greps and file-name searches but never opened two of them; one it excluded unread, the other it omitted (surfaced, never opened)."
+}

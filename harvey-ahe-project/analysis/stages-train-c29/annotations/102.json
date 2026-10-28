@@ -1,0 +1,310 @@
+{
+ "task": "102",
+ "context": "Request: Labor & Employment matters that included equity-vesting acceleration, and the documents describing the terms. Rubric: 1017-00004 (Aldrich settlement, Section 3(a)) and 1017-00005 (Hale investigation; remedial-recommendations-memo.docx or final-investigation-report.docx), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Shallow listing of all 266 matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction for acceleration terms times out; a range rerun also times out; it greps the partial hit file and filters hit paths for employment words."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of five candidate matters picked from the filtered hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared span split at [36]. Lists files of 27 more surfaced matters in one loop."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (second part). Reads twelve employment agreements, memos and one executed settlement from six matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 51,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over a named set of agreements and memos, then one closing memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 59,
+     "end": 64,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes two matters as direct Labor & Employment precedents and two transaction matters as related precedents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 65,
+     "end": 73,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails on the response path, then passes on the output path."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 74,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads one closing memo and settlement section, confirms the output file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the full response and settlement section, lists matter numbers in the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads two source windows and edits the headline to four matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the headline back to two direct matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Prints the full response with string checks."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 113,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans timed out and it treated the partial output as complete, so the second matter never surfaced; it also counted other matters as precedents.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 25,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both the store-wide scan and the range rerun timed out, and it worked from the partial hit file without checking coverage, so the second matter never appeared among its candidates.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the scan review said the timed-out partial output was treated as complete."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 59,
+     "end": 64,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer names an executive-hire negotiation and two transaction diligence matters as acceleration precedents beside the settlement matter.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) the write review named the two transaction matters as possible over-inclusion."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for acceleration, vesting and equity words; times out after about 2.1M characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 22,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four parallel range scans with a tighter pattern; one range returns nothing, the others list hits across many matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads memos, a complaint, the executed settlement, a board-report memo and agreements of six matters, then later sections of four."
+    },
+    {
+     "stage": "Write the response",
+     "start": 39,
+     "end": 44,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters, separating implemented, contractual and proposed acceleration."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 45,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the opening to qualify the six matters and re-reads it."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the scope caveat."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 59,
+     "end": 59,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and named both matters, but also counted four other matters with proposed, negotiated or separation-related acceleration.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Write the response",
+    "start": 39,
+    "end": 44,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts six matters, including proposed or negotiated acceleration and separation disputes it read at [23]-[38], beyond the two the request covers.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the write review named counting proposed or negotiated acceleration as over-inclusion risk."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. Counts matter folders and prints the first and last 30 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Unbounded store-wide extraction for acceleration and equity words; prints about 7.3M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first content scan printed millions of characters and the context filled before any document was opened.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The extraction script wrote all matches to stdout with no cap, about 7.3M characters, and the run ended without a deliverable.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, in three ways. T2's first store-wide extraction scan printed about 7.3M characters and the context overflowed. T0's scans timed out, and it treated the partial range output as complete (the critic flagged this and the agent moved on), so the second matter never surfaced; its answer also counted other matters. T1 ran batched scans that surfaced both matters, read both and named them, but also counted four further matters (proposed or transaction-related acceleration) that the request does not cover. The critic flagged over-inclusion at the write stage in T0 and T1; both kept the extra matters."
+}

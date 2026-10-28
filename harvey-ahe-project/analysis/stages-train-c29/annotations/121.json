@@ -1,0 +1,408 @@
+{
+ "task": "121",
+ "context": "Request: the spread of settlement amounts (recovered and paid) across the firm's general commercial litigation matters. Rubric: 11 Litigation (General) settlements (1005-00005, 1006-00005, 1007-00005, 1008-00007, 1012-00006, 1021-00006, 1027-00003, 1033-00006, 1035-00004, 1038-00007, 1044-00006) with count, range ($425K-$87.5M), mean, total, shape, recovered/paid split and a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap and recommends enumerating matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Counts matter folders and prints only the first and last 20 names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all file paths for settlement and outcome words; 775 hits printed in one call; the review calls the pattern too broad."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower anchored file-name search summarised as hit counts per matter (50 matters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; follow-up scripts limited to the matters on the file-name count list crash twice, then print about 220K chars of amount snippets."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 40,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one closing memo, letter or summary from each of 16 matters picked from the scan output to confirm amounts and payment direction; the other matters on the count list are not opened."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 62,
+     "end": 69,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "A statistics call made with no stage open is rejected; the stage then computes count, sum, range, median and mean over hardcoded recovered and paid amounts."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 70,
+     "end": 77,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Same rejection, then quartiles and outlier sensitivity over the same hardcoded lists."
+    },
+    {
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 18 resolutions split into recovered and paid tables with spread statistics and sources."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Adds a reviewed-sample limitation to the opening, removes duplicated headings and re-reads the file twice."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Three matters that belonged in the set surfaced in its searches but were never read, and the answer counts out-of-scope disputes, so count, range, mean, total and split are off.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 40,
+    "end": 61,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches and scan listed three matters whose settlements belonged in the set, but of the 16 matters it chose to read it left them out (reading a sibling matter of one instead), so none reached the answer.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the reviews at [39], [61] and [83] flagged many surfaced candidate matters as never opened (generic, without naming these three); the agent added a sample caveat instead of opening them"
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts patent, trademark, trade-secret, insurance and corporate disputes read at [42]-[59] as general commercial litigation settlements, which skews the count, range, mean and split.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) the review at [61] named unverified matter types for several of these matters; the agent never re-checked scope"
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap and recommends enumerating matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "script error",
+      "timed out",
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Two extraction scripts fail on heredoc errors, one writes about 31K hit lines to a file, a narrower one times out; ends with a find | grep over file paths cut at 300 lines (labelled by the declared scan intent)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over 17 matters picked from the file-name hits, printing amount snippets (about 79K chars)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script; reads the settlement agreements or memos of about 14 candidate matters in three batches."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type; file-name match for settlement-agreement and release names across the store, grouped by matter (28 matters)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 60,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type (attempt 2); broader inventory of settlement, release and stipulation file names (269 files) saved to disk."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the settlement agreements of 12 more matters from that inventory, then re-reads four of them."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 82,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Statistics over hardcoded recovered and paid lists; closes the declared search span."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 86,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Search file names for a document type (attempt 3); groups file names with settlement, mediation, award, judgment and payment words by matter, 12 per matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 90,
+     "end": 98,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads four more documents; a stage_start for the next stage is rejected because this one is still open."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 99,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Statistics over ten recovered and six paid amounts."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 105,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Recomputes with the non-cash item split out and with and without the largest recovery."
+    },
+    {
+     "stage": "Write the response",
+     "start": 109,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 16 resolutions (10 recoveries, 6 payments) with matter tables, statistics and sources, inside the declared calculation span."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 111,
+     "end": 116,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Recomputes recovery statistics over nine values; a stage_start is rejected because the calculation stage is still open."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 154,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Edits counts and statistics to nine recoveries, deletes one row and changes another row's matter number, runs a store-wide grep and a docx loop for a party name (both empty, flagged by the harness as off-stage), then checks cited paths."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 155,
+     "end": 180,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-opens two settlement agreements and the response, then edits back to ten recoveries, re-adds a matter as a recovery and rewrites the statistics."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 181,
+     "end": 188,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Full re-read of the response and one edit on double counting."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 189,
+     "end": 189,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Calculate figures for the answer → Search file names for request keywords → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Calculate figures for the answer → Check or revise the response → Finish the run",
+   "failure_point": "It read nearly all matters it needed but mixed up which matter number goes with which parties, amounts and payment direction, left one read matter out and counted out-of-scope disputes.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 109,
+    "end": 110,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "The answer pairs several matter numbers with the parties, amounts or payment direction of other matters (evidence read in parallel batches at [32]-[51] and [64]-[81]); edits at [117]-[180] changed some pairings, left others and set one paid settlement as a recovery.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the review at [116] asked whether a value was a mapping error and [154] flagged unverified row swaps; the agent re-opened two sources but most mis-pairings stayed"
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 109,
+     "end": 110,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the settlement agreement of a matter with a large paid settlement twice ([64], [77]) but left that matter out of the answer with no stated reason.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews only flagged unopened matters; this matter had been read"
+    },
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 109,
+     "end": 110,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts patent, copyright, trademark and vendor-dispute settlements as general commercial litigation.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the review at [59] flagged that no matter was checked for being general commercial, [180] repeated it for one added matter; scope was never re-checked"
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap and recommends enumerating matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts matter folders and prints all 266 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search file contents for request keywords; four parallel calls: three find | grep file-name listings cut by sed and a store-wide extraction script printing every match of broad settlement words, which times out after about 10.4M chars; the run ends here."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The first content scan printed about 10M chars; the context filled and no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 20,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The extraction script printed every match of broad settlement and payment words across the store with no cap (about 10.4M chars), which filled the context before any review or answer.",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before its stage_end review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, in different ways. All listed the store and then matter folders. T0 searched file names and scanned, then read one closing document from each of 16 matters it picked and left out three matters its own outputs had listed (surfaced-not-opened at the reading stage); it also counted out-of-scope disputes. T1 read almost every needed matter but its answer paired matter numbers with other matters' parties, amounts and payment direction, dropped one read matter and counted out-of-scope disputes (all at the write stage). T2's first content scan printed about 10M chars and the run ended by context overflow. The reviews flagged unopened matters and scope only generically; the scope flag was not acted on in T0 or T1."
+}

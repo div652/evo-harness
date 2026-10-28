@@ -1,0 +1,238 @@
+{
+ "task": "200",
+ "context": "Request: conflict check, has the firm ever been adverse to Vantor Holdings Corp. in any prior matter. Rubric: 1012-00005 (Stonefield Logistics), 1023-00002 (Ironside Capital), 1038-00007 (Cascade Retail), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three globs: whole store, .pdf (none) and .docx."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement and pleading documents of the matter at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide content grep for the party name; hits are email lines from two matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four emails from the two matters with hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of one of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 22,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the conflict memo, engagement letter, complaint and an email of the two matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two adverse matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The grep reached plain-text files only; the third matter never surfaced.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 13,
+    "end": 14,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a grep for the party name, which reads emails but not .docx text; it accepted the two matters with email hits and never scanned document text."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a content grep for the party name; hits are email lines from two matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists both matters' files, with a parallel files-with-matches grep that returns the same two matters (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the conflict memos, engagement letters, pleadings and a demand letter of the two matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 18,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of both conflict memos, a response letter and an email."
+    },
+    {
+     "stage": "Write the response",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two adverse matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 25,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The grep reached plain-text files only; the third matter never surfaced.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its greps for the party name read emails but not .docx text; it accepted the two matters with email hits and never scanned document text."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Content grep for the party name plus whole-store glob; hits are email lines from two matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four emails of the two matters with hits."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 10,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists one matter's files, with a grep inside it and a store-wide files-with-matches grep that returns the same two matters (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the conflict memo, engagement letter, complaint and a client update of one matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two adverse matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The grep reached plain-text files only; the third matter never surfaced.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its greps for the party name read emails but not .docx text; it accepted the two matters with email hits and never scanned document text."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way and passed 3 of 4 criteria. Each ran a store-wide grep for the party name; it returned email hits from two matters only, and none scanned .docx text, where the third matter's mention lies. All three then read those two matters well and wrote them up (search miss at the grep stage). T0 read the listing-top matter first, T1 and T2 grepped at once; the outcome was the same."
+}

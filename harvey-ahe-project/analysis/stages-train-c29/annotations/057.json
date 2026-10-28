@@ -1,0 +1,407 @@
+{
+ "task": "057",
+ "context": "Request: fund formations in the firm's files that carry a key-person provision. Rubric: 1001-00002 (Ardent), 1003-00002 (Harrowgate), 1024-00002 (Driftwood), 1027-00002 (Pellegrino / Ridgeline-Clarion co-invest), plus a precision criterion. All runs excluded 1001-00002 (LPA amendment) and 1024-00002 (key-person event amendment) as post-formation work and asserted 1041-00005 (Solara master fund).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms times out after about 1.1M characters; the review answers goal not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: a narrow key-person scan (first attempt fails on a heredoc error) saved to a file with per-matter samples, then a script listing files that pair the defined event term with partner language."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters, including two it later sets aside without reading."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 36,
+     "end": 43,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request words, plus a per-matter content script (labelled by the declared file-name search)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the governing agreements and structuring memos of five candidates, a snippet script over those agreements (about 104K characters), then closing opinions, certificates and a tracker."
+    },
+    {
+     "stage": "Write the response",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four formation precedents, including a master-vehicle reorganisation; two listed matters are named as post-formation work and excluded."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 73,
+     "end": 86,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Reads the opening, softens the completeness claim and checks cited paths (the first check opens a response path that does not exist)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It listed the files of two needed matters but excluded them as post-formation work without reading any of their documents, and counted a master-vehicle reorganisation as a formation.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 67,
+    "end": 72,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "Two needed matters were listed at [30]-[35] and seen only in scan snippets; the answer calls them post-formation work and excludes them although none of their documents was read.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the write review at [72] said the list 'may be under-inclusive' and that 'exclusions of non-formation matters may rest on snippets rather than opened documents', naming neither matter; the check stage only softened wording."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 67,
+     "end": 72,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a master-vehicle reorganisation, read at [46]-[56], as a qualifying formation precedent.",
+     "critic": "not-flagged",
+     "critic_note": "no review questioned this matter or raised over-inclusion."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "script error",
+      "timed out",
+      "no matches",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script: heredoc error, a timeout, an unzip pipeline that finds nothing because unzip is missing, then four parallel range scripts writing 1,521 hit files to disk."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: counts the saved hits per matter and lists request-type file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, offering documents and memos of eight candidates, including an amendment and a key-person event memo from two matters it then treats as post-formation."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 58,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Script listing request-type file names in every matter with a key-person hit (first attempt fails on a heredoc error)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 59,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over eight named candidates (about 135K and 145K characters), then clause extraction from three agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four formation precedents, including a master-vehicle reorganisation; two matters it read are listed as related amendment or event precedents, not qualifying."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths, fixes one path and re-reads the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit sent with no stage open is rejected; reopens the stage and removes one citation; the qualifying set is unchanged."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 108,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Greps the response (first at a path that does not exist)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read documents of two needed matters but classed them as amendment or event work rather than formations, and counted a master-vehicle reorganisation as a formation.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 80,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "Evidence seen at [36]-[48] (an amendment and a key-person event memo) came from two needed matters, but the answer classes them as post-formation amendment work and excludes them.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the write review at [80] raised 'possible under-inclusion' from unopened matters; no review questioned the exclusion of these two (the review at [92] listed one of them only as an unopened candidate)."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a master-vehicle reorganisation, read at [36]-[48] and [67]-[70], as a qualifying formation precedent.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) the review at [92] said this matter 'may not be a true fund formation'; the following edits only changed citations."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; three parallel range scripts print one line per file; a grouped rerun fails, a last one times out."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 39,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel file-name globs for request words (three return nothing), then find | grep over all paths: 276 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the governing agreements of four candidates; the agent notes the parallel results seem mismatched."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 51,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Store-wide script over files named as governing or key-person documents, printing key-person snippets per file (about 86K characters)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 55,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Clause-extraction scripts over named agreements of three candidates."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 63,
+     "end": 72,
+     "tags": [
+      "no matches",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: three parallel range scripts print nothing; a combined rerun times out with partial output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three formation precedents and one co-investment vehicle, including a master-vehicle reorganisation; two matters seen in snippets are excluded as post-formation event work."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the method paragraph."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Snippets from two needed matters showed key-person amendment and event documents; it excluded them as post-formation work and counted a master-vehicle reorganisation as a formation.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 73,
+    "end": 78,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "Evidence seen at [53]-[54] included key-person text from two needed matters, but the answer excludes them as post-formation event and amendment work after reading only snippets.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the write review at [78] raised 'possible under-inclusion' from unopened matters; the review at [39] had agreed that one of the two held 'an event notice and memo, not a formation'."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a master-vehicle reorganisation, read at [42]-[48], as a qualifying formation precedent.",
+     "critic": "not-flagged",
+     "critic_note": "the write review at [78] raised over-inclusion only for a different (qualifying) matter."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the writing stage. Each surfaced all four needed matters through store-wide scans and file-name searches, opened the two clear formation matters, and then classed the other two needed matters (an amendment and a key-person event matter) as post-formation work and excluded them, while counting a master-vehicle reorganisation as a formation. They differed only in how much of the excluded matters they saw: T0 listed their files but read nothing, T1 read an amendment and an event memo, T2 saw scan snippets. The critic never named the two excluded matters: every write-stage review gave only a generic under-inclusion flag (T0's also said exclusions may rest on snippets), and in T2 an earlier review endorsed one exclusion. The extra matter was flagged specifically only in T1, and kept."
+}

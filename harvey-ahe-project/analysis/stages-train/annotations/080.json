@@ -1,0 +1,253 @@
+{
+ "task": "080",
+ "context": "Request: past patent-infringement matters where the firm retained a technical expert, with the documents showing each retention. Rubric: 1007-00003 (Vantage Mobility; litigation-status-memo.docx), 1014-00003 (Optiwave v. Lumos), 1014-00004 (Optiwave v. Lumicore), 1037-00004 (Solstice Biomedical), proof documents for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for request words; the hit list holds only emails."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Four globs over file names for expert, report, disclosure and technical."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Four batches of reads of retention letters, reports and memos: first the two matters with expert-engagement folders, then expert documents of about ten more matters; nothing from one matter whose file names had matched."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs the expert folders and all files of the two matters it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 45,
+     "end": 46,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters as the only qualifying ones."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 47,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Finish the run",
+   "failure_point": "One qualifying matter never surfaced (its grep reached only emails) and another surfaced in its first searches but was never opened; the answer names two of four.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its content grep only reached email text, and neither it nor the file-name globs listed one qualifying matter whose evidence sits in a memo; it never searched document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 39,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The grep and file-name globs listed another qualifying matter's expert and claim-construction files, but across four reading batches it never opened that matter."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find (empty)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Files-with-matches grep for request words plus a repeat of the whole-store glob; the hit list holds only emails."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two find | grep runs over file paths for expert and litigation words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of retention agreements, memos, a complaint and reports from seven matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 26,
+     "end": 27,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Grep for an expert's name and expert words within one candidate matter; returns nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Single reads of retention letters from four matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes four matters, flagging one as evidenced only indirectly by a work-product memo."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 38,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "All four matters were named, but for one it cited an assessment memo instead of the document recording the expert's retention, which it never found.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Search within a candidate matter's files",
+    "start": 26,
+    "end": 27,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its grep inside the matter whose expert it had seen only in an assessment memo returned nothing (the grep did not read document text), and it did not list that matter's files, so the status memo recording the retention was never found."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep; the hit list holds only emails."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 10,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Five globs over file names (one capitalised variant returns nothing)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 24,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads retention agreements, prep memos and complaints from three matters; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script over all expert-, retention- or engagement-named documents printing the opening of those that mention patent litigation or a technical expert."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 27,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs all files of the three matters already read."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [
+      "run ended: text reply without finish"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters; the run then ends with a text reply and no finish call."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → List files in candidate matters → Write the response",
+   "failure_point": "A fourth qualifying matter appeared in its scan output but was never opened; the answer names three of four.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 27,
+    "end": 30,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan just before printed the engagement letter of a fourth patent-defence matter, but it then listed only the three matters it had already read and never opened that one."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found the same three matters through file-name searches of expert folders and differ on the fourth, whose evidence sits only in a memo. T0 never surfaced it (its grep reached only emails; search miss) and also never opened a second matter its searches listed. T2's late scan surfaced it, but it then listed only the matters it had already read (surfaced, not opened). T1 opened the fourth matter through an assessment memo, but its in-matter grep returned nothing, so it cited that memo instead of the document recording the retention (search miss within the matter)."
+}

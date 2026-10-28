@@ -1,0 +1,363 @@
+{
+ "task": "149",
+ "context": "Request: the firm's M&A deals that included a working-capital adjustment, with their purchase agreements. Rubric: 15 matters (1001-00003, 1001-00004, 1001-00007, 1006-00006, 1006-00007, 1006-00008, 1007-00006, 1008-00008, 1011-00006, 1013-00006, 1017-00006, 1037-00006, 1038-00008, 1038-00009, 1041-00003), each with a qualifying and a purchase-agreement criterion, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 28,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for working-capital and price-adjustment terms; times out after about 750K characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: chunked scan over agreement-named files with one line per document; the first run returns zero hits from a path bug, fixed with sed and rerun. The review flags the file-name restriction."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: per-matter scan over all documents in chunks; the first chunk times out, the last completes."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 30,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings (definitions) of eight executed agreements, twice at different offsets. The review notes the operative adjustment sections were not reached."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 52,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads the same eight agreements at later offsets."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 63,
+     "end": 68,
+     "tags": [
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "A brace glob over seven matters returns nothing; shell loops list files of 16 candidate matters filtered by agreement, purchase and merger name words, first 20-30 lines each."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight agreements (executed and drafts) picked from those filtered listings."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 78,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered file listings (stock, purchase, merger, SPA) of three matters reported as lacking an agreement. The review flags that these were judged to have no purchase agreement from a file-name grep only."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the matters with executed agreements, draft-only precedents and exclusions; one matter is excluded as having no purchase agreement file. The review flags draft-versus-executed risk."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Path checks, reads drafts of two other matters, edits exclusions, adds one more matter."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 111,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: reads part of the added matter's agreement and confirms the output file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: extracts that agreement's working-capital text and removes the added matter; re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 129,
+     "end": 129,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its file listings were filtered by agreement-type words that missed one matter's purchase agreement, so the answer excludes that matter as having none; it also presents a draft-only and an extra executed agreement from other matters as precedents.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "List files in candidate matters",
+    "start": 63,
+    "end": 68,
+    "events": "[67]-[68]",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the matter as concluded to have no purchase agreement after a file-name grep only.",
+    "why": "Its scans had listed the matter, but the file listing it ran for that matter kept only names containing agreement, purchase, merger or similar words, which dropped that matter's differently named execution agreement; the review of this stage flagged the filename-grep-only conclusion and the agent kept the exclusion."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The final review named the draft matter; the write review flagged draft-versus-executed risk generally.",
+     "why": "The answer presents one executed agreement and one draft-only agreement from matters outside the qualifying set as precedents; the write review flagged mixing draft and executed precedents and the final review named the draft matter, but neither was removed."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 30,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 6,
+     "end": 13,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List files in the document store (continued). Parallel globs for working-capital, purchase-agreement, merger-agreement and similar file names; two return nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Lists matter folders and greps all paths for transaction, purchase, merger and working-capital words (first 400 lines)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for working-capital terms; times out after about 1.1M characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: tighter scan over transaction documents; a heredoc error, then a timeout with no output."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists transaction and closing files of 17 candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: unfiltered file listings of further surfaced matters (about 48K characters)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 46,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 16 executed agreements, runs two snippet scripts, reads three draft agreements and two memos, and a final snippet script."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). One script extracting the adjustment sections from each chosen agreement. The review names the three draft matters and says the claims about them are not backed."
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 14 executed precedents, three draft-only precedents and exclusions. The review flags possible over-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 109,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path checks (first on a response path that does not exist), fixes URL-encoded paths, adds a coverage note, re-reads the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 119,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit issued with no stage open is rejected; then edits the count explanation and reads the opening."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "All 15 matters and agreements are correct, but the answer also presents two draft-only agreements from other matters as working-capital precedents.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Search within a candidate matter's files",
+    "start": 80,
+    "end": 85,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the draft matters and said the claims about them were not backed.",
+    "why": "The answer lists draft-only agreements of two matters outside the qualifying set as precedents; the review just before writing named those draft matters as not backed by evidence, and the agent kept them (evidence seen at [70]-[83])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shallow find that returns nothing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists matter folders and samples the first 30 file paths."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 18,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search file contents for request keywords. Store-wide extraction script printing working-capital and price-adjustment snippets with no cap; times out and returns about 82M characters; the run ends before stage_end."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first store-wide extraction script printed uncapped snippets; the timed-out output filled the context and no deliverable was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 15,
+    "end": 18,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "",
+    "why": "The scan printed snippets for common transaction terms across every document with no output cap, so its result filled the context before the stage could be closed or reviewed."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T2 ended at its first store-wide extraction script, whose timed-out output (about 82M characters) overflowed the context before any review. T0 and T1 both reached all 15 matters through file-name searches and extraction scans and read the executed agreements. They split at the step that picked each matter's agreement: T1 listed every candidate's files unfiltered and found the one agreement with an unusual file name (all 15 matters correct), while T0 listed files through a name filter that hid that agreement and excluded the matter as having no purchase agreement; the critic flagged that filename-only conclusion and the agent moved on. Both then failed precision by presenting draft-only agreements from other matters as precedents (T0 also one executed agreement); in T1 the critic named those draft matters before the write, in T0 it flagged draft-versus-executed risk; neither run removed them."
+}

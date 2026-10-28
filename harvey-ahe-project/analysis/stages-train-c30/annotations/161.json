@@ -1,0 +1,460 @@
+{
+ "task": "161",
+ "context": "Request: the most recent data-breach matter the firm has handled, as a rapid-response reference. Rubric: 1008-00009 (Lumos Analytics credential-stuffing response, 2024) as the answer, plus a precision criterion that fails if another matter (e.g. 1025-00006, Quorum/Palomar 2023 incident response) is asserted as qualifying.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing (first 100) and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folder names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for request words grouped per matter (89 matters); a grep-tool search over text files returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path regex; 140 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a heredoc error; then the script is rerun over five named candidates with dated snippets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: raw-text scan with one line per matter times out after reaching part of the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of two candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads engagement, assessment, notification and closing documents of the two dedicated matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: exact request-term path regex over the later-numbered matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 68,
+     "end": 77,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Two scan calls are refused with no stage open; attempt 3 reruns them as two range-split text scans over later-numbered matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Names the later matter as the most recent and describes the earlier dedicated matter as another confirmed matter of the requested kind.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the openings of three cited documents and the response; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 100,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the most recent matter but described an earlier dedicated matter as also qualifying.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 78,
+    "end": 83,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read both dedicated matters (evidence seen at [52]-[59]) and named the later one as most recent, but the answer also presents the earlier matter as another confirmed matter of the requested kind.",
+    "critic": "not-flagged",
+    "critic_note": "Write and check reviews asked for date evidence and identifier checks; the last review said to keep the other matter only as a comparison, and the agent did not re-read the wording."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a two-level listing of 200 entries.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for request words grouped per matter (79 matters) alongside a grep-tool content search.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path regex; 192 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; three range-split reruns save hits, then a grep over the saved output (about 66K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: post-processing of the saved scan prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: per-matter table of strong-term hits and latest dates (183 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads three documents each of the two dedicated matters and four diligence memos of other candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 65,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Store-wide path regex for file names of the requested work type; the review flags a later-numbered dedicated matter and no date comparison.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Names the later matter as the most recent and describes the earlier one as another dedicated engagement of the requested kind.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 85,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths; the first path script fails on the working directory.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads short openings of three cited documents and the response; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the most recent matter but described an earlier dedicated matter as also qualifying.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 71,
+    "end": 76,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read both dedicated matters (evidence seen at [52]-[62]) and named the later one, but the answer also presents the earlier matter as another dedicated engagement of the requested kind.",
+    "critic": "review-endorsed",
+    "critic_note": "The last check review told the agent not to remove that matter if it was already listed as a comparison; earlier reviews only asked for date checks."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a two-level folder listing (first 80) and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for request words, and per-keyword matter lists.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Store-wide path regex printing the hit files of 32 matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement, assessment and closing documents of the two dedicated matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 45,
+     "end": 56,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range script prints nothing; three range-split runs print about 215K chars of dated hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: narrower scan for more specific request terms, one line per file.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 73,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads six documents of later-numbered leads and rules them out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Names the later matter as the most recent and describes the earlier one as another comparable engagement of the requested kind.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads three source documents of the named matter and the response; no change.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the most recent matter but described an earlier dedicated matter as also qualifying.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read both dedicated matters (evidence seen at [36]-[42]) and named the later one, but the answer also presents the earlier matter as another comparable engagement of the requested kind.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The last check review said not to add non-qualifying matters as secondary precedents; the agent finished without re-reading the comparison wording."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed the same way at the write stage: each found and read both dedicated matters, correctly named the later one as most recent, and described the earlier one as another qualifying matter. No review named the qualifying wording; in T0 and T1 the last check review said to keep the earlier matter as a comparison (T1: do not remove it), and in T2 the last review gave a stock warning against non-qualifying secondary precedents. All check stages only re-read sources and the response."
+}

@@ -1,0 +1,275 @@
+{
+ "task": "056",
+ "context": "Request: the matter with the firm's most recent FERC work (for a pitch). Rubric: 1016-00005 (Dunmore Energy / Ridgeline Midstream FERC rate and interconnection proceeding), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, a spreadsheet and emails of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Shell loop unzipping each document and grepping for the request's key acronym; prints nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a first response saying no matching matter exists in the store."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "After writing, a recursive grep -Ril over the store for the acronym and related terms lists files in several matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads seven emails and a filing across five matters from that list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of three candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads status reports, memos and letters from two candidates to date their latest work."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Overwrites the response, naming one matter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 39,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Write the response → Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads four large documents of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 12,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script: a syntax error, then a rerun that times out after about 48K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists the files of one matter that appeared in the partial output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script matching only the request's key acronym and printing snippets; lists files in several matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 17,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four filings and letters of the matter it picked, with large limits."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one matter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 24,
+     "end": 24,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (no output) plus whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, an email and an engagement letter of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script over documents and emails; times out after about 97K chars."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Byte-match scan of document text for the key acronym plus a find | grep over file paths in the same command."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads opening memos, analyses and letters from three candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 25,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six more filings and memos of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one matter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Shared procedure: each run first read documents of the matter at the top of the listing, then searched document text store-wide for the request's key acronym (T1 and T2 with an extraction script narrowed after a syntax error or timeout; T0 with grep -Ril after an empty unzip loop and a provisional 'none found' response), which listed the candidate matters; each then read the picked matter's status reports and filings to date its latest work, and all three named the same matter."
+}

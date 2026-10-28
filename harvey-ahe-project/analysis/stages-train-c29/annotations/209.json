@@ -1,0 +1,417 @@
+{
+ "task": "209",
+ "context": "Request: the longest-running matter that is still open (shelved matters excluded; files winding down in closing posture count as open), and when it opened. Rubric: 1044-00006 (Thalassa Shipping, opened October 16, 2023), precision, opening date.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob and a folder listing capped at 200 lines. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Folder count with the last 30 names, a path search for status words capped at 300 lines and per-matter file counts, in parallel (labelled by the search). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 20,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for status and opening terms; times out with no output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script. Path searches for status words (2,046 hits) and for hold or dormancy words. Review: no."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 27,
+     "end": 38,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of the 12 lowest-numbered matters and reads opening, closing and dormancy memos of four of them. Review: partly (only top-of-listing matters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads engagement letters and closing memos of ten low-numbered matters and one matter's closing checklist. Review: partly (open status inferred from that checklist)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 56,
+     "end": 63,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Store-wide script over engagement and status files listing dates and status words; heredoc error, then rerun. Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 64,
+     "end": 75,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate's files, reads its engagement and post-closing letters and runs a store-wide script sorting engagement-letter dates (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 83,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that candidate's closing checklist and the other candidate's new-matter memo (attempt 3). Review: partly (open status rests on absence of a closure marker)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the earliest-opened matter without a closure document as still open, with its opening date. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and removes the hedge. Review: partly (hedge dropped without new evidence)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Adds a scope phrase back (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → Read documents picked from the file listing → Screen candidate matters by reading documents → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It ranked matters by earliest engagement date and treated an old offering matter as open for lack of a closure record; the matter that qualifies surfaced in two outputs but was never opened.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 84,
+    "end": 89,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It presented an offering matter that closed years earlier as still open because its closing checklist showed no formal closure (status evidence read at [39]-[83]), after reviews said the checklist did not establish open status.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews at [55] and [83] named the chosen matter's checklist as weak evidence of open status; the agent reopened the reading stage, read one more document of the matter and kept it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Folder listing and file sample capped at 80 and 120 lines. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Folder count and a path search for status words that matches nearly every file (about 790K chars). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Path search for status and administration words grouped by matter, 249 matters (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "Extraction script for status records written to a file, then a script over status-named files listing dates and status; heredoc error, rerun. Review: partly."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of 20 low-numbered matters. Review: partly (selection by matter number)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 52,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads opening, dormancy and closing memos of six low-numbered matters and one closing checklist; a scan stage is refused because this stage is still open. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 53,
+     "end": 66,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide script for open-status phrases times out; three range scripts write to files, which it prints. Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 81,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads dormancy and new-matter memos of two matters and the conflicts records of a third. Review: partly (the picked folder is a declined engagement)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 82,
+     "end": 93,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search file contents for request keywords. A store-wide content script for the picked client's name times out; a path search for that name and three reads in the picked matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the picked matter as open, with an opening date from its conflicts records. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and strengthens the claim. Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It screened low-numbered matters, then picked a folder of conflicts and declination records as the oldest open matter; the matter that qualifies was never opened.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 94,
+    "end": 99,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It named a folder of conflicts and declination records as the oldest open matter, dating it from a conflicts entry (evidence read at [67]-[93]), after the review said the folder was a declined engagement.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [81] named the picked folder as a declined engagement with only secondary date evidence; the agent searched for the client's name and read three more of its documents, then kept it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Folder count with the first 40 and last 20 names. Review: partly (number order assumed to be age)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for status terms times out; four range scripts in parallel (two time out, two write to files)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 26,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "Path search for status words capped at 240 lines. Review: partly."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 27,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of the lowest-numbered matters (about 68K chars)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 31,
+     "end": 58,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: List files in candidate matters. Reads opening, closing, dormancy and engagement documents of about a dozen low-numbered matters; a stage change is refused because this stage is still open. Review: partly."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 59,
+     "end": 69,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path search for opening, engagement, status and closing file types, then extraction of their text in four ranges (one times out). Review: partly."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 70,
+     "end": 83,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Scan document text with an extraction script. Greps of the saved extraction output for named matters, snippet scripts over named documents and one closing checklist. Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 84,
+     "end": 92,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads 25-35 lines of four documents from other low-numbered matters. Review: no (picked matter not opened in this stage)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 93,
+     "end": 99,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the picked matter's new-matter memo and closing checklist (attempt 2). Review: partly (checklist shows only early items)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the picked matter as still open in closing posture, with its opening date. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Removes the hedge and re-reads the response. Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 114,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search file names for a document type → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It worked through the lowest-numbered matters and treated an old offering matter as open from its closing checklist; the matter that qualifies surfaced in a path-search output but was never opened.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 100,
+    "end": 105,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It presented an offering matter that closed years earlier as still open in closing posture from its closing checklist (status evidence read at [31]-[99]), after reviews said nothing showed it was still open.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews at [92] and [99] named the picked matter's missing open-status evidence; the agent reopened the reading stage, read two of its documents and kept it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way at the write stage: working from the lowest matter numbers or earliest engagement dates, each named an older matter as still open without evidence of open status (T0 and T2 an offering matter whose early closing checklist showed no formal closure; T1 a folder of conflicts and declination records), an over-inclusion. Reviews named the weak open-status evidence for the specific pick before the write stage in all three; the agents reopened a stage or read one more document and kept it. The matter that qualifies surfaced in T0's and T2's path-search or scan outputs but no run opened it."
+}

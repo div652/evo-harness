@@ -1,0 +1,396 @@
+{
+ "task": "170",
+ "context": "Request: the firm's M&A deals that never reached closing, including mergers that could not be cleared (lessons-learned review). Rubric: eight qualifying matters (1018-00008, 1020-00006, 1032-00005, 1001-00005, 1002-00004, 1011-00005, 1017-00007, 1003-00001) plus precision; 1023-00001, 1038-00001 and 1006-00003 are outside the set.",
+ "runs": [
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the agent reports five matters. The review asks for the full matter list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). File counts per matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Matter and file totals, counts per number prefix and sample names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 4). Extension counts and file counts per matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for deal, regulatory and termination words, hit lists per matter (about 40K characters, cut in the log).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened pattern with agreement abbreviations and agency names; 161 matters summarised.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for termination and non-closing words times out; range reruns time out partly; reads the heads of the range outputs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 13 hand-picked candidate matters. The review says about 58 surfaced matters were never listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: filtered file listings of every matter in four number series. The review names other surfaced matters, including one it later needed, as still unlisted.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads termination memos, notices, withdrawal letters, status and closing memos of six matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files. Store-wide file-name check for definitive agreements together with failure words. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 92,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Reads status documents of two matters already chosen.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 101,
+     "end": 108,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files (attempt 3). Store-wide script over status and termination files for non-closing phrases (795 lines), then views of its output.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 109,
+     "end": 128,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files (attempt 3, continued). Reads memos and agreements of two further matters and lists their files. The review flags many surfaced matters never opened.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 129,
+     "end": 137,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads status emails, a checklist and an engagement letter of the two added matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 138,
+     "end": 147,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads their executed agreements, an amendment and another matter's closing memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 148,
+     "end": 153,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes seven executed deals that did not close, with status caveats and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 154,
+     "end": 164,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Re-reads, checks cited paths, edits the headline classification.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 165,
+     "end": 176,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads one status document per listed matter; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 177,
+     "end": 177,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Four needed matters surfaced in its path searches but were never listed or read, because it chose a hand-picked set and number series to open; it also counted a matter whose deal only stalled.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "List files in candidate matters",
+    "start": 50,
+    "end": 55,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The listing reviews at [55] and [61] said surfaced matters were never listed, the second naming one of the needed matters; the agent widened to four number series but never opened them.",
+    "why": "All needed matters appeared in the agent's path searches at [29]-[35], but when choosing what to list it took 13 hand-picked matters and then whole number series, and four needed matters were never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 17,
+     "stage": "Write the response",
+     "start": 148,
+     "end": 153,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned that matter's status.",
+     "why": "The answer counts a stalled acquisition whose outside date expired as a deal that never closed alongside the terminated ones (evidence seen at [64]-[98])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (120 lines) and file counts by extension.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for deal, regulatory and termination words (about 126K characters), a brace glob that returns nothing, and a matter-folder list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened pattern; per-matter hit lists (about 71K characters) for 240 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 32,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for non-closing words times out; a range rerun fails on a path bug; three range scans then list hit files for nearly every matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 40,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: strong-phrase scan times out, reruns by range with two snippets per matter (about 264K characters). The agent's summary names a candidate it never reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 66,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads termination memos, notices, withdrawal letters and status memos of about ten matters; two guessed paths fail. The review flags dozens of surfaced matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 81,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists files of three matters and filtered files of 15 more, then reads status documents of five matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes nine deals that did not close, four of them stalled or dormant, and one live agency challenge.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 100,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads, removes one cross-matter citation, checks paths (one failed run).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 114,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads one status source per listed matter; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: re-reads the response; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Three needed matters surfaced in its searches (one named in its own shortlist) but were never read, while three stalled or still-pending matters were counted as deals that never closed.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 41,
+    "end": 66,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The screening review said dozens of surfaced matters were never opened; the agent screened more in attempt 2 but not the needed ones.",
+    "why": "The needed matters appeared in the path searches and scans (one in the agent's own list of matters to read at [39]), but the screening reads at [43]-[52] left them out and they were never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review asked to move stalled matters without non-closing evidence to an uncertain section; the agent kept them in the count.",
+     "why": "The answer counts dormant or stalled deals and a pending agency challenge as transactions that never closed (evidence seen at [43]-[79])."
+    }
+   ]
+  }
+ ],
+ "divergence": "T0 has no trace (no events) and cannot be compared. T1 and T2 failed the same way: both surfaced every needed matter through path searches and scans, then opened a hand-picked set (T1 by listing chosen matters and number series, T2 by choosing what to read), so three or four needed matters were never opened despite reviews flagging unopened surfaced matters; both also counted stalled or dormant deals as non-closings. The reviews at the choice stages were similar (generic, with one specific mention in T1) and neither run acted on them beyond small widening.",
+ "missing_runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 9,
+   "reason": "The trace has no events (agent_error: no response content or tool calls, 0 assistant turns, about 577 s wall clock), yet a 15 KB response.md was graded 6/9; no stages can be annotated, and check.py cannot take a run with no calls, so the run is left out of runs."
+  }
+ ]
+}

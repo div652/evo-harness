@@ -1,0 +1,274 @@
+{
+ "task": "028",
+ "context": "Request: which restructuring matters involved DIP financing in any capacity (debtor, DIP lender, or responding creditor). Rubric names five matters (1006-00002, 1011-00002, 1020-00002, 1024-00001, 1044-00003) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three parallel globs (all files, one document type, another type that returns nothing)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script over document text; times out with partial output."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 18,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Rewrites the scan as a script file after a heredoc error and runs it in five parallel matter-number ranges."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 30,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of engagement letters, memos and court filings from five candidate matters; some guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 31,
+     "end": 36,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Locates the real subfolder of a candidate matter after file-not-found errors (find, glob, ls)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads documents from three candidate matters to confirm each one's role."
+    },
+    {
+     "stage": "Write the response",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response with five matters and a list of excluded hits."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 45,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 7,
+     "end": 8,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script; times out but prints about 309K chars of hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 9,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of four candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for a request keyword; returns five matter numbers."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of the one new candidate matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads: memos and engagement letters from five candidate matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response with five matters, one flagged as contingency only."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Re-reads the top of one source document to check a cited detail."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad terms; prints about 555K chars of snippets."
+    },
+    {
+     "stage": "Write the response",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the response directly from the scan snippets without opening any document; lists more matters than the later-confirmed set."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Four edits: adds a further matter as a secondary precedent and fixes a stray character."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 16,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Asserted extra matters as qualifying on the strength of keyword snippets alone.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Write the response",
+    "start": 6,
+    "end": 7,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Wrote the answer straight from scan snippets without opening any document and listed a non-qualifying matter as a concrete example."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "Check or revise the response",
+     "start": 8,
+     "end": 15,
+     "events": "[8]-[9]",
+     "kind": "over-inclusion",
+     "why": "A later edit added another non-qualifying matter as a secondary precedent."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs surfaced every needed matter (extraction scans and a file-name search). The passing runs (T0, T1) opened documents from each candidate before writing and listed borderline matters as excluded; T2 wrote straight from a 555K-char scan dump without opening a single document, asserted an extra matter, then added another in an edit (fails precision only)."
+}

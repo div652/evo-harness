@@ -1,0 +1,364 @@
+{
+ "task": "238",
+ "context": "Request: which Tax matters include a tax indemnity in an executed agreement, with the documents. Rubric: 1001-00006 (Ardent Capital Partners, proof: closing-tax-memorandum.docx) and 1015-00005 (Calloway-Briggs Renewables, proof: tax-indemnity-agreement.docx), plus a precision criterion (no other matter may be asserted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell find of folders and files, each cut by head; one matter's standalone agreement shows in the sample."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Parallel matter and file counts, a full folder list and a path search for request words cut at 300 lines (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Four parallel path searches: request words together, tax-named folders, indemnity-named files and index-like files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 30,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over every matter that has a tax-named folder (603 hit records, about 347K chars). Review: limited to matters with such a folder."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 31,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Opening reads of standalone agreements and closing indexes of a dozen candidates and a snippet script over execution-version agreements. Review: many matters marked confirmed from few reads."
+    },
+    {
+     "stage": "Write the response",
+     "start": 50,
+     "end": 57,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 16 matters with qualifying agreements; a stage_start for the check stage is refused until the stage is closed. Review flags possible over-inclusion from execution-version wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 58,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Raises the count to 18, separates closing-index-confirmed documents from execution-version file names, and checks cited paths."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Rewords the headline and inclusion rule and rechecks paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 82,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited both qualifying matters, but counted every matter with execution-version deal agreements containing tax-indemnity language, ending with 18.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Write the response",
+    "start": 50,
+    "end": 57,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer asserts 16 (later 18) matters, counting deal agreements with ordinary tax-indemnity clauses in execution-version files (evidence seen at [25]-[49]) as qualifying, beyond the two matters that qualify.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The write review warned of over-inclusion from the execution-version wording without naming matters; the check stages relabelled evidence types and raised the count."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a folder find to depth three cut at 200 lines."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Parallel store-wide extraction script (times out after about 1M chars), a find for tax-named folders and a path search for agreement words (labelled by the scan)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 26,
+     "tags": [
+      "mixed intents",
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Search file contents for request keywords (attempt 2). Two extraction scripts over matters with tax-named folders time out; a path search for execution and agreement names follows."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 27,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists tax, transaction and closing files of eleven candidate matters. Review: only eleven of about 60 surfaced matters listed."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script listing name-filtered files of all 42 matters with tax-named folders."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Opening reads of standalone agreements, a closing index and a receivable agreement, snippet scripts over execution-version agreements, six more reads. Review: partial reads, several matters confirmed without being opened."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 75,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Opening reads of six remaining executed agreements; a stage_start for writing is refused until the stage is closed. Review: goal not reached, only cover pages read."
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 15 qualifying matters; one matter is listed only as a related precedent. Review flags possible over-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 98,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, path check (first attempt fails), lists two folders and fixes two cited paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 99,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read one qualifying matter's receivable agreement but never its closing tax memo and counted it only as a related precedent, while asserting 15 other matters with ordinary tax-indemnity clauses.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 76,
+    "end": 81,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It opened one qualifying matter's receivable agreement ([41]-[60]) but never the memo that shows its tax-indemnity escrow, and the answer lists the matter only as a related precedent that does not count.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review at [62] said reads were partial and several matters were judged without being opened, without naming this matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts 15 matters whose executed deal agreements carry ordinary tax-indemnity clauses (evidence seen at [39]-[75]) as qualifying.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review named possible over-inclusion of the 15 matters without naming one; the check stage only fixed paths."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and prints all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "huge output",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel path search for tax, indemnity and agreement words (about 205K chars) and a content grep with a bare glob that returns nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 38,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script times out; a range split crashes on every range; two patch attempts (stage check notices). Review: goal not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 42,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Rewritten range scan; times out."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 43,
+     "end": 46,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: same stage, continued. Extraction script over a hand-picked list of candidate matters (about 147K chars). Review: goal not reached, other matters never scanned."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Opening reads of executed agreements and standalone agreements of about a dozen candidates and snippet scripts over them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 14 qualifying matters. Review flags possible over-inclusion of dated standalone agreements treated as executed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Edits the evidence wording, adds a surfaced-but-not-included section, re-reads and corrects a provision."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One qualifying matter (and its closing tax memo) appeared only in the broad path search; the hand-picked scan set and all reads left it out, and the answer asserts 14 other matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Search within a candidate matter's files",
+    "start": 43,
+    "end": 46,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The path search at [16]-[17] listed one qualifying matter's closing tax memo, but the hand-picked matters it scanned (and later read) left that matter out, and it was never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [46] said the scan covered only a hand-picked set of matters, without naming this one; it moved on to reading."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts 14 matters whose deal agreements carry ordinary tax-indemnity clauses (evidence seen at [47]-[72]) as qualifying.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(generic flag) The write review named possible over-inclusion of dated standalone agreements treated as executed; the edit only reworded the evidence basis."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the precision criterion the same way at the write stage: each counted every matter whose executed or execution-version deal agreement has a tax-indemnity clause (14 to 18 matters) instead of the two qualifying matters. T0 also cited both qualifying matters; T1 opened one of them but read only its receivable agreement and set it aside (under-inclusion); T2 never opened it although its path search had listed the closing tax memo (surfaced, never opened). Every write review flagged possible over-inclusion generically and no run narrowed its set."
+}

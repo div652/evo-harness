@@ -1,0 +1,475 @@
+{
+ "task": "016",
+ "context": "Request: track year over year the share of executed credit-agreement financings with an always-on (not springing) financial maintenance covenant, bucketed by signing year. Rubric: 12 financings (1005-00001, 1006-00001, 1008-00001, 1010-00001, 1012-00001, 1013-00001, 1019-00002, 1021-00001, 1036-00001, 1038-00002, 1042-00001, 1043-00001) each in its year bucket, the year-over-year shares, and a population-precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request words and agreement words; about 1,300 hits printed."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower file-name pattern for agreement and facility names; about 120 hits saved to a file."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A store-wide scan times out; a scan over the saved file-name list follows, then a summary script that keeps only files whose names mark them as executed."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan rerun in five matter-number batches after a first attempt returns nothing and a second times out."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of ten executed agreements from ten matters, then a snippet script over several of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads ten agreements at a fixed later offset; most passages returned are definitions and mechanics."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes year-by-year counts and shares over sixteen agreements, with exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks the arithmetic."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 94,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One required agreement was filtered out by file name and never opened; the answer excludes another it had read and counts several agreements outside the population, so the yearly shares are off.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 26,
+    "end": 35,
+    "events": "[32]-[33]",
+    "kind": "over-narrow-filter",
+    "why": "Its saved file-name list included one required agreement, but the summary script kept only files whose names marked them as executed, which dropped that agreement; the later batch scan listed the matter again and it was never opened.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The scan-stage review said the execution-name filter could drop executed agreements named differently; the agent reran a full batch scan but never opened the matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read a required matter's executed agreement (evidence seen at [52]-[62] and [69]-[79]) but the answer excludes it as a project-style facility.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review said the yearly denominator is likely incomplete; the check stage only re-read the arithmetic."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts several agreements outside the requested population (amendment, take-back and other facilities), which also skews the yearly shares.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review warned about counting drafts or unsigned agreements without naming these ones."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts matter folders and prints the first and last names only."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request and facility words (about 540 hits printed), with a parallel content grep limited to emails that returns nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 32,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A heredoc error, a timed-out store-wide scan, then a scan over extracted text files and a summary filtered to execution-named files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide search of the extracted text for five phrases, with hit counts per phrase."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 37,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script. Lists files of fifteen hand-picked matters through a file-name filter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 62,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads five executed agreements, runs snippet scripts over named agreements and reads deal-summary memos of several matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 74,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the first lines of five more agreements; a call to open the next stage is refused by the protocol because this one is still open."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Script computes yearly shares from counts typed in by hand."
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes yearly shares over thirteen agreements with an audit trail."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and adds a coverage note."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Softens the coverage note."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One required matter surfaced but was left off the hand-picked list and never opened; the answer excludes three opened matters and counts several agreements outside the population.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "List files in candidate matters",
+    "start": 37,
+    "end": 40,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name search and text scans listed a required matter, but the fifteen matters it chose to list left it out and it was never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review of that span said the hand-picked fifteen-matter list and file-name filter risk dropping matters the scan showed; the agent moved on to reading."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Three required matters it had opened (evidence seen at [43]-[74]) are excluded in the answer as project-style, unexecuted or property-secured facilities.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review said the thirteen-agreement population may be under-inclusive; the check stages only reworded the coverage note."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts several agreements outside the requested population, which skews the yearly shares.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The reading-stage review said one counted matter's classification rested on a diligence memo, not the executed agreement."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 14,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Folder count and names in parallel with a capped find | grep over file paths for financing words and excluded facility types."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 28,
+     "tags": [
+      "script error",
+      "timed out",
+      "huge output",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A heredoc error and a timed-out store-wide scan, then a file-name candidate list, a scan over it (about 240K chars) and a find for execution-named files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 46,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide rerun in matter-number batches: three empty runs, three heredoc errors, a timeout, then three completed batches printing only their last lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 80,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads seven executed agreements, snippet scripts over them and over execution-named files, lists three matters and reads the openings of seven more agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 81,
+     "end": 88,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the first lines of three more agreements."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Script computes yearly shares from counts typed in by hand."
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes yearly counts and shares over sixteen agreements."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 126,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: Write the response. Edits the table, totals and narrative several times after a document-header check; a grep of the response for the old figures returns nothing."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 127,
+     "end": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads, compares two documents by hash and removes one agreement as a duplicate."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 147,
+     "end": 158,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Restores that agreement as a separate observation."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 159,
+     "end": 170,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Removes it again as a duplicate and updates the totals."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 171,
+     "end": 171,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One required matter surfaced in the file-name scan but was never opened; the answer excludes two opened matters and counts several agreements outside the population.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 47,
+    "end": 80,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name list and the scan over it listed a required matter, but when choosing agreements to read it worked from execution-named files and never opened that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews said about 60 surfaced matters were unopened and, after writing, that the population may be incomplete, without naming this matter; the check stages only reworked a duplicate."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 98,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Two required matters it had opened (evidence seen at [49]-[78]) are excluded in the answer as property-secured and project-style facilities.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The reading-stage review said one of them was classified both as springing and as an excluded type; the agent resolved it by excluding it."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 98,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts several agreements outside the requested population, including facility types the reading-stage review called out as outside scope.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The reading-stage review said several facility types were counted as core facilities without confirming scope; they stayed in the count."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the write stage: each counted agreements outside the requested population (precision and shares fail) and excluded one to three agreements it had opened. Each also lost one required matter before reading: T0 through a file-name filter in its scan stage (over-narrow-filter), T1 and T2 by choosing which matters to list or read from execution-named files (surfaced-not-opened). The critic named the filtering in T0 and T1 and a scope doubt in T2 at the reading stage; the runs reran scans or moved on, and no review named the extra agreements as such."
+}

@@ -1,0 +1,426 @@
+{
+ "task": "061",
+ "context": "Request: has the firm ever set up a vehicle of the requested kind using an American (deal-by-deal) distribution waterfall? Rubric (one criterion, no matter numbers): the answer must say there is no such precedent; a single-asset co-investment vehicle with deal-by-deal carry (ICM Cascadia Co-Invest, 1023-00001) must not be presented as one.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "find | grep over all paths for request words, plus a content grep limited to emails that returns nothing. The review flags the noisy name pattern and unopened candidates."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "A refined path search plus full file listings of six candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A store-wide extraction script fails on its heredoc; the rerun and a subset rerun both time out."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads draft agreements, structuring memos and an amendment from four candidate matters, then later sections of three of them."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 48,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Snippet script pulling distribution passages from two draft agreements."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 55,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Exact-phrase extraction over files whose names match request words; zero hits. The review flags the two unrerun timeouts and the name filter, and that zero hits are treated as proof of absence."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 56,
+     "end": 67,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Batched extraction scans by matter range; the first batch prints nothing (top-level files only), the rerun returns short hit lists."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 74,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads four hit documents, including an executed agreement of a co-investment vehicle. The review flags unopened hit matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 75,
+     "end": 78,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Narrower regex over every document; about 1M characters of snippets come back."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads a side letter and the agreement of the co-investment vehicle and a tax memo; the side letter states carry is calculated deal by deal."
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Answers yes: names the co-investment vehicle as a firm-formed vehicle with the requested structure, qualified as single-asset, and lists counter-examples. The review flags unopened matters, not the yes."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and adds a scope caveat; the yes stays."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 99,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the co-investment vehicle's side letter and answered yes on it, although that single-asset vehicle is outside what the request covers.",
+   "first_error": {
+    "stage_no": 13,
+    "stage": "Write the response",
+    "start": 85,
+    "end": 90,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Having read the co-investment vehicle's side letter (evidence seen at [79]-[82]), it answered yes on that single-asset vehicle, a loose reading of what the request asks to count; the write and check reviews flagged only unopened matters and possible under-coverage.",
+    "critic": "not-flagged"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder paths."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for request terms times out after about 275K characters of hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A capped rerun to a file times out; three range-split scans to files then return short per-file term lists."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs all files of six candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs all files of seven more matters that surfaced in the scans."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read a chosen matter's documents in depth. Reads agreements, memos and closing papers of five candidate matters, later sections of two agreements, and snippet scripts over one draft agreement's distribution section."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 87,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files. Reads six documents behind the remaining phrase hits, including the co-investment vehicle's side letter, and a snippet script over its agreement."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 100,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Range-split variant-phrase scan across all matters, then one read of a carry agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Answers no for commingled funds and describes the co-investment vehicle as a single-asset exception."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads, edits the opening to give a direct scoped answer, re-reads."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 133,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Two edits to the methodology wording."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 134,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file contents for request keywords. Three file-name globs for request words and a content grep limited to emails; the grep and one glob return nothing, and a harness stage-check notice appears on one call."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "timed out",
+      "huge output",
+      "script error",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared (same stage). A store-wide extraction script times out after about 925K characters; a rerun fails on its heredoc and the next writes zero hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 33,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file contents for request keywords. Lists two candidate matters and reruns a store-wide scan that reports zero hit files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads agreements, a placement memorandum and memos of the two listed matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "find | grep over paths for request and document-type words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 56,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads drafts, memos and a carry agreement from two more matters, globs one matter series and runs a snippet script over two draft agreements."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 60,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file contents for request keywords. A rewritten extraction scan, tested on a known document, times out with partial hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 65,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads two hit documents from two matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Answers no, with counter-examples from the matters it read."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads, checks cited paths and edits one sentence."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Rechecks paths and edits the headline and bottom line to the reviewed scope."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T1 and T2 passed; T0 failed. All three ran store-wide extraction scans that timed out and then range-split or narrowed them. T0 and T1 both read the co-investment vehicle's side letter with per-investment carry; they split at the write stage: T1 framed it as a single-asset exception and answered no for the requested kind, T0 answered yes on it (over-inclusion). T2 never opened that vehicle and answered no. The critic's write-stage reviews did not differ in substance: both flagged only coverage gaps, and T0's review never questioned the yes."
+}

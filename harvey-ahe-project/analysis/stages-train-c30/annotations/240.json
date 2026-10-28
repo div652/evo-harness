@@ -1,0 +1,550 @@
+{
+ "task": "240",
+ "context": "Request: the firm's most recent Tax matter with a tax indemnity provision in an executed agreement, and the document evidencing it. Rubric: 1001-00006 (Ardent Capital Partners) and its closing-tax-memorandum.docx, plus precision (no other matter asserted as most recent). Runs named 1046-00001 (Helix Bio de-SPAC, T0) and 1036-00005 (Harbor Point JV tax protection agreement, T1 and T2).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; its summary names three high-numbered matters as the main candidates. The review says not to narrow yet.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). File counts for every matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Saves the full file inventory and prints matter totals with per-matter counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path script for tax, indemnity and agreement words prints about 153K characters. The review recommends ranking the candidates by matter number and checking from newest to oldest.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide and range scans time out; a scan of the highest-numbered matter only; then a script lists, newest first, each matter's tax-named and execution-named files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a tight phrase scan restricted to the six highest matter-number series times out; per-series reruns cover part of the range.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of three high-numbered candidates. The review flags selection by matter number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: filtered listing of 14 matters from the highest numbers down. The review flags recency-by-number selection again.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: lists seven more recent matters. The review names low-numbered surfaced matters left unopened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 64,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads tax memos, an executed credit agreement and a closing memo of the picked matter, and two documents of the newest matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Snippet script for tax-indemnity terms over three agreements.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a financing matter's credit agreement tax indemnity as the most recent.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, a closing memo, a later section of the credit agreement and a merger agreement opening.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: snippet scripts on two agreements and a closing email, then rewrites the answer to name the newest matter's business combination agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It ranked candidates by matter number and never opened the low-numbered matter it needed, naming the newest matter instead.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 38,
+    "end": 45,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its path sweep at [22]-[23] and file-name index at [34]-[35] listed the matter it needed with tax closing documents, but it ranked candidates by matter number and restricted its scan, and then its listings and reads, to the highest-numbered matters, never opening that matter.",
+    "critic": "review-endorsed",
+    "critic_note": "Review [25] told it to rank matters by number and check from newest to oldest, which it did; later reviews [51], [57] and [63] flagged selection by number, and only [63] named low-numbered matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a listing cut at 200 lines. The review says not to treat matter number as recency.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders and file types.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find per keyword (matter numbers only) and two globs; five candidates named, one a draft tax-indemnity markup in the matter it needed. The review flags truncated lists.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-keyword matter sets and their intersection (22 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan to a file (about 90K characters shown), then an exact-phrase and execution filter with dates. The review names the matter it needed as one the phrase filter may drop.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 37,
+     "end": 42,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of 14 candidates into a file and prints the first 260 of 838 lines, so the last-listed matters are cut. The review flags selection by recency and matter number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 43,
+     "end": 46,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists files of tax-path matters, skipping every matter numbered below a cutoff.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Six reads from three high-numbered candidates; picks a later-dated tax protection agreement. The review names the cutoff that skipped lower-numbered matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 56,
+     "end": 72,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files. Reads the picked agreement at three offsets, its closing certificate, operating agreement and checklist, with two clause scripts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the later-dated tax protection agreement as the most recent precedent. The review questions whether it is a tax indemnity.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks paths and adds an execution caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the agreement opening and closing certificate.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: reads three more sections of the agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: reads two more sections; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 113,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its own line cap and a matter-number cutoff kept it from opening the matter it needed; it named a later-dated joint venture agreement.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "List files in candidate matters",
+    "start": 43,
+    "end": 46,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches named the matter it needed (a tax-indemnity markup) and its scan listed it, but its first listing cut that matter off with its own line cap and this listing skipped every matter below a number cutoff, so it never opened it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) Review [36] named that matter's tax closing folders as dropped by the phrase filter and review [55] named the number cutoff; the agent went on to confirm a higher-numbered matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a folder listing cut at 80 lines and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: matter total, first and last numbers and per-series counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: the same counts on one line.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 27,
+     "end": 33,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find per keyword cut at 120 lines each (about 49K characters), with a content grep that returns nothing on .docx files. The review flags the caps and the empty grep.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every path with a tax word, grouped by matter (82 matters); a stage_start is refused while this stage is open. The review flags the literal-word filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: agreement and execution path sweep (236 matters); it names the highest-numbered candidates. The review flags ranking by matter number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Three batches of reads from about a dozen candidates, including the matter it needed (an executed tax receivable agreement and a draft tax-indemnity markup) and three sections of a later-dated tax protection agreement. The review questions whether that agreement is a transaction tax indemnity.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 73,
+     "end": 82,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Scan of tax-named files for indemnity language with dates, then two clause scripts on the tax protection agreement. The review flags the path filter and blank signature lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 83,
+     "end": 88,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: scan of every document in the tax-path matters prints about 140K characters of dated rows.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 89,
+     "end": 99,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads a newer candidate's purchase agreement, redline and tax opinion; two guessed sibling paths fail.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of three matters in that series.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 106,
+     "end": 115,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Snippet script for indemnity and tax terms in the newer purchase agreement (a general indemnity only), then two reads of another candidate's purchase agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 116,
+     "end": 121,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the 2026 tax protection agreement as the most recent precedent, with an execution caveat and older alternatives. The review says to make a fully signed older matter primary if execution is unconfirmed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 122,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks paths; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads five cited documents briefly; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 139,
+     "end": 145,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: reads the signature passage and indemnity article; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 146,
+     "end": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It opened the matter it needed but not its closing tax memorandum, and named a later-dated joint venture tax protection agreement.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 72,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "Its tax-path listing at [36]-[37] showed the needed matter's closing tax memorandum, but when it opened that matter it read only a tax receivable agreement and a draft indemnity markup and set the matter aside.",
+    "critic": "not-flagged",
+    "critic_note": "Reviews named unopened matters and questioned the later-dated agreement; none named this matter or its closing documents."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 116,
+     "end": 121,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It presents a joint venture's partner tax protection agreement as the most recent Tax-matter tax indemnity (evidence seen at [57]-[80]), although its own reads showed blank signature lines and the reviews questioned the fit.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) Reviews [72] and [82] said the agreement is a partner tax-protection agreement rather than a transaction tax indemnity, with unconfirmed execution; review [121] said to make a signed older matter primary. The agent kept it with a caveat."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the answer (a later-dated matter named instead of the needed one), but went off course at different stages. T0 and T1 never opened the needed matter although their searches listed it: T0 followed a review's advice to rank candidates by matter number and restricted its scan and listings to the highest numbers (critic: review-endorsed); T1's listing of that matter was cut off by its own line cap and its next listing skipped every matter below a number cutoff, though one review named the matter and another named the cutoff (surfaced, not opened). T2 did open the matter but read only a tax receivable agreement and a draft markup, leaving out the closing tax memorandum shown in its own listing (listed document not opened), then named a joint venture's tax protection agreement that three reviews questioned. Label notes were ignored in each run (three times in T0, once in T1 and T2)."
+}

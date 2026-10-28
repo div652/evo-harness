@@ -1,0 +1,496 @@
+{
+ "task": "238",
+ "context": "Request: the firm's Tax matters that include a tax indemnity in an executed agreement, with the documents pulled (for drafting a new tax indemnity). Rubric: 1001-00006 (Ardent Capital Partners; proof document closing-tax-memorandum.docx) and 1015-00005 (Calloway-Briggs Renewables; executed tax-indemnity-agreement.docx), plus precision. Transaction matters whose purchase or merger agreements indemnify pre-closing taxes, the tax protection agreements in 1015-00004 and 1036-00005, and 1038-00009 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file-type counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Python path regex for tax, indemnity, agreement and closing words (216 matters, about 142K characters), per-term matter counts, and a content grep on *.docx that returns nothing. The review flags the broad terms and the empty grep.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction scan over matters with tax-named paths, then a grep of its output for a hand-picked matter list. The agent's summary calls one candidate's tax-indemnity document a draft markup. The review flags the hand-picked filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: scan over every .docx with a tax-named path, labelling hits as agreement or draft/analysis; 104 hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: store-wide scan times out twice; a parallel file-name sweep for agreement names. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 47,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: range scan first returns zero matters (path bug), then covers the first range only.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads two tax protection agreements, one tax indemnity agreement, tax opinions, closing indexes and JV agreements from three matters chosen from its scans. The review flags reads confined to three matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 65,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet scripts over executed merger, stock and asset purchase agreements of five other matters for tax indemnification clauses.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a strict set of two matters (one tax indemnity agreement, one acquisition agreement), a broader set adding two tax protection agreements, secondary tax-representation precedents, and lists the draft-markup matter as an exclusion. The review flags padding with secondary precedents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 92,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, demotes the two tax protection agreements and the representation precedents from the headline; path check fails once, then passes. The review flags the demotion as possible narrowing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: an edit refused because no stage is open, then the same edit restores the two tax protection agreements to a headline of four matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It dropped one candidate on a scan snippet from a draft markup without opening its documents, and counted an acquisition agreement and two tax protection agreements as qualifying.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 64,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The reading review said reads were confined to three matters and the candidate set looked partial; it did not name this matter.",
+    "why": "A needed matter appeared in its path search and scan output (the agent called its tax-indemnity document a draft markup at [23]), but when choosing what to read it opened only three other matters and never opened that matter's documents, including its closing tax memorandum."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review at [80] flagged padding with secondary precedents; the agent demoted them but kept an acquisition matter in the strict list.",
+     "why": "The answer lists an acquisition agreement's tax indemnification clause and two tax protection agreements as qualifying Tax-matter indemnities (evidence seen at [50]-[72])."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "(specific flag) The check review at [92] called the demotion of the two tax protection agreements a possible narrowing and asked to restore them; the agent did.",
+     "why": "The edit restored two tax protection agreements to the headline count of qualifying matters after they had been demoted."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (100 lines) and file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-term path counts for tax, indemnity, covenant, agreement and execution words, and a content grep that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-term path listings incl. purchase-agreement words (about 70K characters, cut in the log); a stage_start for the scan is refused because this stage is still open. The agent's summary names a draft-markup tax-indemnity file of one matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: candidate inventory grouped by matter: 82 matters with tax-named files, direct tax-indemnity file names in about seven.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for tax indemnity wording times out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 47,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: parallel range scans time out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 62,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads tax indemnity and tax protection agreements, the matching executed transaction agreements and a tax memo from four matters; a stage_start is refused because this stage is still open. The review flags about 60 surfaced matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 63,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Thirteen snippet scripts over named tax and transaction agreements of about ten matters for indemnity, signature and pre-closing tax wording.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 93,
+     "end": 100,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Snippet script on one more stock purchase agreement; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nine matters with executed agreements as qualifying, excluding the standalone tax indemnity agreement it read as unsigned and a draft-markup matter. The review flags the eight-versus-nine count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: Write the response (attempt 2). Edits the headline count to nine.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 119,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a candidate whose tax-indemnity file name said draft markup, excluded a tax indemnity agreement it had read as unsigned, and counted nine transaction matters with indemnification clauses as qualifying.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 62,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said only four matters were opened while about 60 surfaced; its examples did not include this one.",
+    "why": "A needed matter surfaced in the agent's own path searches (its draft-markup tax-indemnity file named in the summary at [28]), but the screening reads covered four other matters and it was never opened, so its closing tax memorandum was never found."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews in reach asked to verify signature pages, which pushed the same way; none questioned the exclusion.",
+     "why": "The agent read the standalone tax indemnity agreement and its witness clause but judged it unsigned and listed it as an exclusion (evidence seen at [50]-[70])."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Write and check reviews asked only about the count and cited paths.",
+     "why": "The answer counts nine transaction matters whose purchase or merger agreements indemnify pre-closing taxes, and a tax protection agreement, as qualifying Tax matters (evidence seen at [65]-[96])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the agent names candidates from the five visible matters. The review asks for a full listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Script listing agreement-like file names per matter for all matters (about 99K characters, cut in the log).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 14,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opens the stage and closes it with no tool call, saying grep cannot read .docx text, then starts the extraction-script stage.",
+     "label_check": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for tax-indemnity wording times out after about 72K characters of hits. The review flags the partial coverage.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 42,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four range scans refused because no stage is open; after reopening, the same four return no output; reruns print hits for three ranges.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eight executed agreements from eight matters, including one matter's tax receivable agreement. The review names that agreement as not a tax indemnity and says that matter was not checked against its other documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 56,
+     "end": 65,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over named candidate matters and executed agreements for tax indemnity clauses; the first times out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes about 14 matters with executed agreements as qualifying and lists the tax-receivable-agreement matter as a near miss.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 86,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, edits one summary sentence and fixes one cited path.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It opened one needed matter's tax receivable agreement only and listed the matter as a near miss without reading its other documents, while counting many transaction matters with indemnification clauses as qualifying.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 66,
+    "end": 71,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review at [55] named the matter and said it was not checked against its other documents; the agent did not open them (the same review also said its agreement was not a tax indemnity).",
+    "why": "The agent opened the matter and read its tax receivable agreement, then listed it as a near miss without reading its other documents, including the closing tax memorandum (evidence seen at [45]-[63])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Write and check reviews asked only to verify clauses, signatures and paths.",
+     "why": "The answer counts many transaction matters whose purchase or merger agreements indemnify pre-closing taxes as qualifying Tax matters (evidence seen at [56]-[63])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same two ways. Every run counted transaction matters whose purchase or merger agreements indemnify pre-closing taxes (and, in T0 and T1, tax protection agreements) as qualifying Tax matters, and every run dropped the matter whose proof sits in a closing tax memorandum: T0 and T1 never opened it, having seen only a draft-markup file name or snippet, while T2 read only its tax receivable agreement and called it a near miss. T1 also excluded the standalone tax indemnity agreement as unsigned. Reviews mostly flagged unopened matters in general; in T0 a check review pushed two tax protection agreements back into the count, and the agent followed it."
+}

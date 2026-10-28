@@ -1,0 +1,283 @@
+{
+ "task": "059",
+ "context": "Request: which fund and asset-management matters include a management-fee offset or waiver, and pull the relevant fund documents. Rubric: 1001-00002 (side-letter-compliance-memo.docx), 1003-00002, 1023-00001 (lp-agreement-icm-co-invest-execution.docx), 1027-00002 (co-invest-lpa-execution-version.docx), each with a proof document, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 18,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Six parallel file-name globs for request words and document-type abbreviations; one returns nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 19,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script lists all paths matching a broad set of request and document-type words (about 400 files)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 36,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Heredoc error, a timed-out store-wide scan, then a scan restricted to named candidate matters and a grep of its file list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan run in the background and polled while still running."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads twelve documents from six candidate matters and a snippet script over several more."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 70,
+     "end": 83,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Aggregates the finished background scan, filters strong hits, then reads one more matter's agreement and runs a snippet script on it."
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters as qualifying, listing one opened matter only as excluded."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, lists six matters' files and adds a method and scope section."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 106,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded one required matter after reading only its governing agreement, and presented three other matters, partly draft or negotiation-stage, as qualifying.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 84,
+    "end": 89,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It opened one required matter's governing agreement at [53]-[65] but the answer lists that matter as excluded; the memo documenting its qualifying terms was never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The write review flagged possible under-inclusion only through about 60 unopened matters, not this excluded one."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts three matters outside the requested set, resting partly on draft and negotiation-stage documents.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review warned that draft or negotiation materials may be counted and the check review named two of the extra matters as loosely tied; the check stage only added a scope section."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out after printing about 770K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Bounded scan run in the background and polled to completion, then a filter printing hits for nine named matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads eighteen documents from nine candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads ten documents from seven more matters and a snippet script over one agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the matters it found, separating executed from draft or lapsed ones but presenting both."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 96,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths (first against the workspace root) and edits the method section."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 97,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Every required matter and document is in the answer, but it also presents four draft, lapsed or negotiation-only matters as having the requested terms.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 76,
+    "end": 81,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It read the required matters and their documents, but the answer also presents four other matters (draft, lapsed or negotiation-only) as matters with the requested terms.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The write review said 'possible over-inclusion or under-inclusion' from snippet-based judgements; the check stage edited only method wording."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide scan with broad terms and no output cap; the partial result of about 164M chars fills the context."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The run ended with a context overflow during its first scan; no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The scan printed every match of broad terms across the store with no cap, and the result filled the context before any review.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed. T2 overflowed on an uncapped store-wide scan before any review. T0 and T1 both reached all four required matters through scans and reads and failed precision at the write stage by also presenting draft, lapsed or negotiation-stage matters; T0 also excluded one required matter after reading only its governing agreement, while T1 read that matter's compliance memo and included it. Reviews after writing flagged over-inclusion risk in both (specifically in T0, generically in T1); neither run removed the extra matters."
+}

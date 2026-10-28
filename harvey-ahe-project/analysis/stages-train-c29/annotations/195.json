@@ -1,0 +1,447 @@
+{
+ "task": "195",
+ "context": "Request: all closed M&A deals whose executed agreements include indemnification sections (for an indemnification clause bank). Rubric: 15 matters with their executed agreements (1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00007, 1008-00008, 1009-00003, 1013-00006, 1015-00004 contribution-agreement-execution.docx, 1017-00006 mipa-execution-version.docx, 1037-00006, 1039-00004 offer-to-purchase-agreement-execution.docx, 1041-00003, 1042-00004, 1046-00001 business-combination-agreement-execution.docx), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob; reviewer said partly (capped listing, visible matters unopened)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2); lists all 266 matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 12,
+     "end": 15,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Split from the same declared span: per-matter listing of file names matching deal, agreement, closing and indemnity words (about 93K characters). Reviewer said yes but flagged generic words and a likely truncated output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script counts indemnity mentions, then a second script keeps only files whose names match acquisition-agreement types and marks which have an indemnity article. Reviewer said partly; flagged that the file-name filter could drop agreements named differently."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the first 110-180 lines of twenty executed agreements from twenty candidate matters and lists closing file names for them."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 52,
+     "end": 68,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script pulls indemnity headings from the 22 chosen agreements, plus reads of closing certificates for ten of those matters (labelled by the dominant intent). Reviewer said partly; flagged that the set was fixed at 22 and closing evidence was read only for some."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters; reads an agreement, certificate and two memos from two candidates with unusual file names, and judges one of them a misfiled copy of another matter. Reviewer said partly; flagged that exclusion as resting on two memos."
+    },
+    {
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 23 deals with clause locations, closing evidence and exclusions. Reviewer said partly; flagged a possible double-count between two matters, unopened matters, and execution-version documents counted as executed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Edits the count, deletes one matter's row as a duplicate of another deal, adds a misfile note, re-reads and sets the count to 21. Reviewer said partly; flagged that the duplicate was dropped without opening the other matter."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 107,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2. Row-count script fails on the file location, reruns on the output file (21 rows), adds a scope caveat."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 115,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3. A read made with no stage open is rejected; reopens the stage and reads the first 12 lines of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A file-name filter on agreement types dropped a matter whose agreement had another name; it then excluded one opened matter as misfiled, deleted another as a duplicate, and kept several matters that do not qualify.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 16,
+    "end": 23,
+    "events": "[20]-[21]",
+    "kind": "over-narrow-filter",
+    "why": "Its file-name listing had reached every needed matter, but the follow-up scan kept only files named as acquisition-agreement types, so a matter whose executed agreement has another name never entered the candidate set.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "Review [23] named the file-name filter risk; the agent later checked two candidates with unusual file names ([69]-[77]) but never re-ran the scan without the filter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read a memo and closing memo of the needed matter at [69]-[77], judged the folder a misfiled copy of another matter because the memos carried another number, and left it out of the answer.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [77] flagged that the exclusion rested on two memos without checking the matter's own agreement; the agent went straight to writing."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists several matters as closed qualifying deals that do not qualify, judged from opening lines of execution-version agreements and file names (evidence seen at [24]-[68]).",
+     "critic": "flagged-ignored",
+     "critic_note": "Reviews [68] and [83] flagged closing evidence read only for some matters and execution-version documents counted as executed; the revisions only changed counts and added a caveat."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 97,
+     "events": "[88]-[89]",
+     "kind": "under-inclusion",
+     "why": "An edit deleted a needed matter's row as a duplicate of another deal although its own executed agreement had been listed, so the final answer omits it.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [83] prompted the de-duplication; review [97] then flagged that the duplicate was dropped without opening the other matter, and the agent did not revisit it."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob; reviewer said partly (capped listing)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folder names; reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for indemnity, deal and closing words; times out after about 1.1M characters. Reviewer said no (partial, uncapped, noisy)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2. Two range scripts over files in transaction-document and closing folders requiring indemnity, deal and execution words; output lists candidate files. Reviewer said partly (folder-name restriction, large output)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 61,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the first 160-180 lines of 24 executed agreements (one guessed path does not exist), then lists agreement and closing file names per matter and runs two snippet scripts over chosen matters. Reviewer said partly; flagged that only a subset of surfaced candidates was opened."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 62,
+     "end": 76,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs the files of ten more candidate matters it had named. Reviewer said partly (pre-selected matters only)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 77,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, status memos and trackers of the remaining doubtful candidates and greps two matters' documents for closing words. Reviewer said partly; flagged two matters excluded on a keyword grep with no closing document opened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 17 closed deals with agreements, closing evidence and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter paths in the response and adds a closing-documents section."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2. Path-check script and a full re-read; a finish call is rejected because the stage is still open."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Two needed matters surfaced in its scan but were left out of the agreements it read; a third was excluded on a keyword grep; several non-qualifying deals were included.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 27,
+    "end": 61,
+    "events": "[27]-[53]",
+    "kind": "surfaced-not-opened",
+    "why": "The folder-restricted scan just before listed both matters, but the 24 agreements it chose to read left them out, and no later stage opened them.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "Review [61] flagged that only a subset of surfaced candidates was opened; the agent listed ten more matters it had named but not these two."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It had read the needed matter's executed agreement at [29] but excluded it after a keyword grep for closing words at [89]-[90], with no closing document opened.",
+     "critic": "flagged-ignored",
+     "critic_note": "Review [92] named this exclusion and recommended opening the matter's closing documents; the agent wrote the response next."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists several matters as closed qualifying deals that do not qualify, judged from the opening lines of their agreements and closing-file snippets (evidence seen at [27]-[61]).",
+     "critic": "flagged-ignored",
+     "critic_note": "Reviews [61] and [92] flagged closing status taken from file names and snippets and indemnity sections never confirmed for included matters; the agent did not re-check them."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob; reviewer said partly (capped listing)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2); one call lists all matter folders and runs find | grep over file paths for deal-agreement words, with a parallel email-only content grep that returns nothing (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 20,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script printing every file with indemnity mentions; about 909K characters. Reviewer said partly (uncapped output)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2. Same scan aggregated per matter, keeping only files whose paths contain deal-agreement words. Reviewer said partly (docx only, bare except, unopened matters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 62,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads opening lines of agreements and closing papers for many candidates, lists closing files for 23 matters, and runs snippet scripts for indemnity terms. Reviewer said partly; flagged included matters verified only by keyword hits and weak closing evidence."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 83,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2. Reads status memos, drafts and certificates of remaining candidates (two guessed paths missing), lists two matters; an early write-stage start is rejected."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 98,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3. Reads the first 18-20 lines of ten agreements and a tracker named by the reviewer."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 99,
+     "end": 109,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 4. Reads six status memos, trackers and agreement covers of remaining candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 110,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 21 closed deals with agreements, patterns and exclusions; a check-stage start before closing this stage is rejected."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the first 35 lines of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 124,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its aggregated scan kept only files with deal-agreement words in the path, dropping one matter whose agreement had another name; the answer also kept several non-qualifying deals.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 21,
+    "end": 26,
+    "events": "[23]-[24]",
+    "kind": "over-narrow-filter",
+    "why": "The first scan had reached every needed matter, but the aggregated rerun kept only files whose paths matched deal-agreement words, so a matter whose executed agreement has another name dropped out of the candidate set.",
+    "critic": "not-flagged",
+    "critic_note": "Review [26] flagged docx-only coverage, silent exceptions and unopened matters, not the path filter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 110,
+     "end": 117,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists several matters as closed qualifying deals that do not qualify, judged from cover pages, keyword hits and short certificate reads (evidence seen at [27]-[109]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "Review [62] flagged included matters verified only by keyword hits and weak closing evidence for one of them; the agent reopened screening three times but read only cover pages and kept them."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same criterion set in part: one needed matter whose executed agreement has a non-standard name never entered the candidate set (T0 and T2 through a file-name or path filter on agreement types after a broad scan reached it, T1 by leaving it, and another surfaced matter, out of the agreements it chose to read). All three also included non-qualifying deals judged from opening lines and file names. T0 and T1 additionally dropped opened matters on thin evidence (misfile note, duplicate removal, keyword grep), each named by a review the agent did not act on; T2 kept those matters and had the highest score."
+}

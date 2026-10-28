@@ -1,0 +1,417 @@
+{
+ "task": "057",
+ "context": "Request: fund formations in the firm's files that carry a key-person provision. Rubric: 1001-00002 (Ardent), 1003-00002 (Harrowgate), 1024-00002 (Driftwood), 1027-00002 (Pellegrino), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a depth-limited find that returns nothing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide files-with-matches greps for request terms (hits are mostly emails) plus a find piped to grep over file paths cut at 240 lines by its own limit; the path list spans many matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Content greps for the provision term inside five candidate matters; three return nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the same five candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads emails, drafts and an execution-version agreement from three candidates."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 28,
+     "end": 32,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Greps inside four single documents; all return nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 33,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of three agreements."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 37,
+     "end": 38,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "Script extracts provision text from three agreements (about 313K characters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 40,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide text scan for the provision term; times out, and its partial output names further matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of one matter from the scan output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads that matter's amendment, analysis memo and two letters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 48,
+     "end": 49,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three formation matters plus one amendment matter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 50,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search within a candidate matter's files → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The file-path search listed one qualifying matter, but it was never among the candidates opened; the other three were found and answered.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search within a candidate matter's files",
+    "start": 9,
+    "end": 14,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-path search listed one qualifying matter's formation and governing documents, but the five matters it chose to grep left that matter out and it never opened it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for the provision term; the hits are mostly emails."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists files of three matters from the grep hits, plus a broader store-wide grep (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 10,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three file-name globs for agreement and offering words plus a content grep limited to `**/*.docx` that returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 19,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists files of three matters from the glob hits and reads one agreement (labelled by the listings)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of four agreements and memos from four candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 25,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of four agreements and a review memo at repeated offsets; one read past the end returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters with an express provision."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 48,
+     "end": 48,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "File-name globs listed all qualifying matters, but it opened only one of them and filled the answer with others.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "List files in candidate matters",
+    "start": 15,
+    "end": 19,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The file-name globs just before listed three more qualifying matters, but the three matters it chose to list were others and it never opened those three."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 46,
+     "end": 47,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted two matters outside the permitted set as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide files-with-matches greps for request terms; hits are mostly emails."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six emails from two matters in the hits."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide grep for the provision term."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 22,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads three emails of one candidate and lists the files of two candidates (labelled by the reads)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 23,
+     "end": 24,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Grep limited to `**/*.docx` returns nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script lists, per matter, the file names with agreement and offering words."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 27,
+     "end": 31,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Content greps inside four candidate matters; three return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of four agreements."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 37,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of three agreements at repeated offsets."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 55,
+     "end": 56,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide text scan for the provision term; times out with partial output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed amendment, analysis memo and engagement letter of a matter from the scan output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 61,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three formation matters and lists the amendment matter separately."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 63,
+     "end": 63,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → List matter folders → Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Search file names for request keywords → Search within a candidate matter's files → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The file-name list showed all qualifying matters, but it opened only one of them early, set aside a later one, and added a non-qualifying matter.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Search within a candidate matter's files",
+    "start": 27,
+    "end": 31,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its per-matter file-name list showed all qualifying matters, but the four it chose to grep included only one of them; it never opened two others and found the fourth only later."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 61,
+     "end": 62,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Read a qualifying matter's executed amendment and memo but set it aside as a post-formation amendment (evidence seen at [57]-[60])."
+    },
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 61,
+     "end": 62,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted a matter outside the permitted set as qualifying."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed at the same kind of step: after a search listed qualifying matters by file name, the agent chose a few candidates to grep or list and left some out (surfaced-not-opened at T0 stage 3, T1 stage 4, T2 stage 9). Content greps mostly matched emails only, which pushed every run to file-name hits. T1 and T2 also asserted non-qualifying matters, and T2 set aside one matter it had read."
+}

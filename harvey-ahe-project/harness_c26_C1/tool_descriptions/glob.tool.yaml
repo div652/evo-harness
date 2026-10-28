@@ -1,0 +1,32 @@
+type: tool
+name: glob
+description: >-
+  Find regular files whose relative paths match a glob pattern. Results are
+  sorted by relative path and returned as a page with total_matches, showing,
+  next_offset, and an explicit COMPLETE or PARTIAL status. A PARTIAL page is
+  not a complete inventory: follow next_offset or, preferably, narrow or
+  partition the pattern before making corpus-wide, comparative, or negative
+  claims. This searches filenames and paths, not document contents.
+input_schema:
+  type: object
+  properties:
+    pattern:
+      type: string
+      description: Glob pattern such as '**/*.docx' or 'matters/*/Closing/*'.
+    path:
+      type: string
+      description: Directory to search. Defaults to the documents directory.
+    offset:
+      type: integer
+      minimum: 0
+      description: Zero-based result offset for pagination. Default is 0.
+    limit:
+      type: integer
+      minimum: 1
+      maximum: 500
+      description: Maximum paths on this page. Default is 100; maximum is 500.
+  required:
+    - pattern
+  additionalProperties: false
+disable_parallel: true
+binding: tools.glob:glob

@@ -1,0 +1,317 @@
+{
+ "task": "046",
+ "context": "Request: Capital Markets deals whose proceeds were earmarked primarily for growth, with documents showing the growth earmark and that each offering closed. Rubric: 1013-00002 (Genome Dx), 1033-00002 (Redstone Gaming), 1037-00001 (Solstice Biomedical), 1039-00002 (Torchlight Mining), a use-of-proceeds and a closing proof document for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three globs: all files, PDFs (none) and documents."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Three batches reading memos, agreements, closing checklists and emails of the two matters at the top of the listing; no keyword search."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 24,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Script over all documents that keeps only those two matters and prints growth and proceeds lines; times out."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the two listing-top matters as closed growth financings."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Never searched the store; judged it from the two matters at the top of a short listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 23,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any keyword search, and even restricted its one script to those two matters."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for capital-markets, growth, proceeds and closing words."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over file paths for offering-related words, first 200 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads use-of-proceeds sections, prospectuses, checklists and an offering supplement of three matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep for prospectus, offering-memorandum and underwriting-agreement names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 26,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads prospectuses, checklists and agreements from six matters on that list; two guessed paths do not exist."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 27,
+     "end": 28,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Content grep for use-of-proceeds words in files named as prospectuses; returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 31,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads that matter's two closing checklists, a later prospectus section and a pricing email, plus a later section of another candidate's prospectus supplement."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 43,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads use-of-proceeds certificates and offering memoranda of four more matters; two paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of three candidate matters, then of one of them again."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 48,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads that matter's readiness memo, closing checklist and underwriting agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 52,
+     "end": 53,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two completed growth offerings and lists other candidates as excluded, one for lack of closing proof."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads one document of another matter, searches file names for one issuer and changes the matter number cited for an excluded candidate."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 60,
+     "end": 60,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One qualifying matter never surfaced, one surfaced but was never opened, and one was read but excluded; the answer names one qualifying matter.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for request keywords",
+    "start": 16,
+    "end": 17,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its content grep and two capped file-name searches never reached one qualifying matter whose files carry no offering-type names, and it did not search another way."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 26,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The file-name search just before listed another qualifying matter, but it left that matter out of the six it opened and never opened it later."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 52,
+     "end": 53,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Read a qualifying matter's prospectus supplement and closing checklist but excluded it, judging the closing not shown."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches reading memos, agreements, checklists and emails of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 20,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide python-docx scan printing growth and proceeds lines; times out after about 3.6M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 25,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing documents of three matters from the scan output; one path does not exist."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three completed growth financings."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "The one scan timed out after reaching one qualifying matter; the answer adds two other financings read only through closing documents.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 19,
+    "end": 20,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search was a store-wide scan that timed out after reaching one of the four qualifying matters; it accepted the partial output and did not narrow or rerun it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted a notes offering and a mezzanine loan as growth capital-markets deals after reading only closing letters and certificates."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T0 never searched and judged the store from the two matters at the top of the listing (partial listing as corpus). T1 searched contents and file names but never reached one qualifying matter (search miss), left a surfaced one unopened and excluded one it had read. T2's single store-wide scan timed out after reaching one qualifying matter (search miss) and it added two other financings read only through closing documents."
+}

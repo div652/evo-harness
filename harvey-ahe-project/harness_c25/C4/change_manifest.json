@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C4",
+  "parent_checkpoint": "C3",
+  "objective": "Prevent oversized multi-document read bursts from exhausting context while preserving source-bound, resumable legal review.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/read.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-9dabb3b2195cccc9f961/result.json: context-overflow-large-read",
+        "debugger/tasks/task-d7111383e8a507d9570c/result.json: context-overflow-large-read",
+        "debugger/tasks/task-ac9185f050a3c5dd24da/result.json: context-overflow-large-read"
+      ],
+      "failure_pattern": "One assistant response could request many long legal documents and inject hundreds of thousands of raw lines before the agent had a chance to synthesize, write, verify, or finish.",
+      "mechanism": "Cap each read by lines and characters, share a deterministic character budget across all reads from one assistant response, and return explicit deferred or continuation metadata instead of success-shaped truncation.",
+      "rationale": "The earliest recurrent failure is in the read result path itself, and one diagnosis classifies it as a tool-implementation defect; enforcing the bound at that strongest surface prevents a model instruction from bypassing it.",
+      "predicted_fixes": [
+        "task-9dabb3b2195cccc9f961",
+        "task-d7111383e8a507d9570c",
+        "task-ac9185f050a3c5dd24da"
+      ],
+      "risk_tasks": [
+        "task-1b49d6dec14930eca83e",
+        "task-34d2d825d4376bda2239"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "middleware",
+      "paths": [
+        "middleware/coverage_state.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-d7111383e8a507d9570c/result.json: coverage reminders preceded overflow and lacked an equally strong context-budget guard",
+        "debugger/tasks/task-9dabb3b2195cccc9f961/result.json: repeated broad reads continued after a draft existed",
+        "attribution/C3/transition.json: chg-1 PARTIALLY_EFFECTIVE"
+      ],
+      "failure_pattern": "The retained coverage reminder kept unread ranges salient but did not establish a synthesis boundary between large batches, sometimes reinforcing exhaustive ingestion instead of convergence.",
+      "mechanism": "Reset the shared read budget once per model turn, detect when the prior batch reached the safe watermark, and replace exhaustive pressure with an auditable synthesize-ledger-narrow transition while retaining open coverage intervals.",
+      "rationale": "C3's state-preserving middleware was partially effective and had no observed predicted-risk regression, so it is improved rather than rolled back; middleware is the appropriate cross-turn surface for resetting and interpreting the tool budget.",
+      "predicted_fixes": [
+        "task-9dabb3b2195cccc9f961",
+        "task-d7111383e8a507d9570c",
+        "task-ac9185f050a3c5dd24da",
+        "task-b3592420498762aa7750"
+      ],
+      "risk_tasks": [
+        "task-1b49d6dec14930eca83e",
+        "task-34d2d825d4376bda2239"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/read.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/tasks/task-9dabb3b2195cccc9f961/result.json: large batched reads lacked a safe batching rule",
+        "debugger/tasks/task-d7111383e8a507d9570c/result.json: full-document ingestion replaced staged candidate extraction"
+      ],
+      "failure_pattern": "Without operational semantics for aggregate caps and deferred reads, the agent could immediately retry broad batches or mistake a bounded result for a completed document.",
+      "mechanism": "Describe exact per-result and per-turn bounds, the deferred status, authoritative continuation metadata, and the required ledger synthesis step before targeted continuation.",
+      "rationale": "The model must correctly interpret the new enforced result states and choose a narrow next call; the API schema description is the faithful point-of-use contract for that behavior.",
+      "predicted_fixes": [
+        "task-9dabb3b2195cccc9f961",
+        "task-d7111383e8a507d9570c",
+        "task-ac9185f050a3c5dd24da"
+      ],
+      "risk_tasks": [
+        "task-1b49d6dec14930eca83e"
+      ]
+    }
+  ],
+  "validation": [
+    "Python syntax and YAML parsing",
+    "Synthetic bounded-read paging and continuation smoke test",
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

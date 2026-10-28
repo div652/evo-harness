@@ -1,0 +1,357 @@
+{
+ "task": "155",
+ "context": "Request: every M&A matter where a no-shop or exclusivity covenant made it into an executed definitive acquisition agreement or a standalone executed exclusivity agreement (not an LOI, term sheet or draft), with those agreements. Rubric: 21 matters (1001-00003, 1001-00004, 1001-00005, 1001-00007, 1002-00004, 1003-00003, 1003-00004, 1006-00006, 1006-00008, 1007-00006, 1008-00008, 1009-00003, 1017-00006, 1018-00008, 1032-00005, 1037-00006, 1038-00009, 1039-00004, 1041-00003, 1042-00004, 1046-00001), each with its executed agreement (1002-00004: a standalone exclusivity agreement in its Term Sheet folder), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 28,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Content-mode grep for request keywords alongside globs for transaction-document folders and for file names containing a request keyword (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of four executed agreements from the folder glob; none of the files from the file-name glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 15,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for covenant wording; times out after about 1.3M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 22,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists three candidate matters' files and reads the openings of three agreements (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 23,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two snippet-extraction scripts pulling covenant wording and signature markers from seven named agreements."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction script over transaction-document folders listing non-draft agreements whose text has covenant wording and an agreement-type opening."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches reading the openings of eleven agreements from that list, including a property purchase-and-sale agreement, an offer to purchase and a support agreement."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script printing the first paragraphs of six named agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 44,
+     "end": 45,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eighteen matters with their executed agreements, folding two related matters into one transaction."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 46,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two edits: the matter count and one entry's matter number."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 50,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Recall fell short three ways: a standalone exclusivity agreement listed by its own file-name glob was never opened, a folder-limited scan never reached four matters, and two opened matters were dropped; two non-qualifying matters were added.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 9,
+    "end": 13,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The file-name glob just before listed one matter's standalone exclusivity agreement and its amendments, but it opened only executed agreements from the folder glob and never read that matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 28,
+     "events": "",
+     "kind": "search-miss",
+     "why": "Its later scan was limited to transaction-document folders and to particular covenant phrasings; four matters whose executed agreements it needed never appeared, and it did not search another way."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 44,
+     "end": 45,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It had read one matter's executed merger agreement but folded it into another matter's deal, and dropped another matter after reading only its support agreement."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 44,
+     "end": 45,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted an offer-to-purchase document and a property purchase-and-sale agreement, seen only in short openings, as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads an agreement, a redline, a memo and a letter from the matter at the top of the listing and a draft agreement from its neighbour; no keyword search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 10,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections of the agreement, a support agreement, closing emails, a checklist and an opinion, plus more documents of the neighbour."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one matter and its agreement as the only qualifying precedent."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 24,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits file references after deciding the file under the executed-agreement name holds another deal's draft; re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never searched; answered from the two matters at the top of the listing and named one of twenty-one qualifying matters.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 9,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the two matters at the top of a capped listing, never searched, and treated them as the whole store."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 40,
+   "n_criteria": 43,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus per-extension globs; the PDF glob is empty."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, a redline, an NDA and emails from the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for covenant wording; times out after about 856K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists the transaction-document folders of six candidates from the scan output; one is empty."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Glob for execution-named files in transaction-document folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over agreement-named files in transaction-document and pre-signing folders, printing which covenant words each contains."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over about twenty named executed agreements, printing their openings and covenant wording."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over every execution-named acquisition agreement, printing its first covenant hit."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes twenty-six matters with executed agreements plus four standalone exclusivity agreements."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 32,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks four agreements for covenant wording, removes two matters and updates the counts."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 42,
+     "end": 42,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A folder-limited scan showed only drafts for one matter whose executed exclusivity agreement sat in another folder; the answer also added one non-qualifying matter.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 24,
+    "end": 25,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its scan was limited to transaction-document and pre-signing folders, so for one matter it saw only drafts and never the executed standalone exclusivity agreement kept in another folder; it did not search file names for such agreements."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It listed a property purchase-and-sale agreement as a qualifying acquisition agreement on a scan hit."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed. T1 never searched and answered from the top of the listing with one matter (partial listing as corpus). T0 and T2 both ran timed-out store-wide scans and then folder-limited extraction scripts that recovered most qualifying matters. T0 first went off course right after its file-name glob listed a standalone exclusivity agreement it never opened (surfaced, never opened); its later scan also missed four matters and it dropped two matters it had read. T2's scan saw only drafts for that same matter because the executed agreement sat outside the folders it scanned (search miss). T0 and T2 each also counted a non-qualifying purchase agreement (over-inclusion)."
+}

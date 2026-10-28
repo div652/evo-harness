@@ -1,0 +1,203 @@
+{
+ "task": "221",
+ "context": "Request: pull the right-of-first-refusal clause from Aurelius Media's lease. Rubric: matter 1017-00009, the executed agreement-of-lease-execution.docx, and a finding that the lease grants a right of first offer, not a ROFR.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus ls of the store folder."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script listing files that mention the client name or request terms; times out after about 525K chars."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed agreement, an exhibit, a review memo and a redline of the one matter the scan pointed to."
+    },
+    {
+     "stage": "Write the response",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response citing the matter, the executed agreement and the exhibit."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 14,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 9,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two greps with single-extension globs return nothing; a recursive grep for the client name lists emails, and a parallel document grep returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the matter the grep pointed to."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 12,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the exhibit, executed agreement, review memo and a terms email of that matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response citing the matter, the executed agreement and the exhibit."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 19,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script listing files that mention the client name or request terms; times out after about 570K chars."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 6,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed agreement, exhibit and review memo of the matter the scan pointed to."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Content grep inside that matter for the clause terms; returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "answer lacks matter number",
+     "note": "Writes the response citing the agreement and exhibit by title and date, without the matter number."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 14,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "It found and read the right documents, but the written answer never states the matter number.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Write the response",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "missing-identifier",
+    "why": "The answer identifies the agreement by title, parties and date but never states the matter number, although the paths it read contain it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs reached the one relevant matter (T0 and T2 through a timed-out extraction scan, T1 through a recursive grep), read its executed agreement and exhibit, and reached the same conclusion. T2 failed only because its written answer never states the matter number; T0 and T1 cite it."
+}

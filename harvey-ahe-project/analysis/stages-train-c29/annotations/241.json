@@ -1,0 +1,373 @@
+{
+ "task": "241",
+ "context": "Request: standalone internal-investigation matters directed by the board or the audit committee. Rubric: 1016-00009 (Dunmore Energy), 1021-00008 (Verimark Hospitality), 1039-00005 (Torchlight Mining), plus a precision criterion (1025-00010, a scoping-stage engagement, is outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction for investigation and board words; times out after about 4.1M characters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Search within a candidate matter's files. find | grep over file paths for investigation and committee words, first 240 lines only."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files (second part). Reads the engagement letters of eight candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a retention letter, plans, findings memos and reports of eight matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 48,
+     "end": 51,
+     "tags": [
+      "run ended: context overflow"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters; the run ends right after the write, with the context full."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response",
+   "failure_point": "Its scan timed out and its file-name search stopped at 240 lines, so one qualifying matter never surfaced; the answer also counts a scoping-stage engagement.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for request keywords",
+    "start": 20,
+    "end": 23,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After the content scan timed out, its file-name search printed only the first 240 matching paths, which did not reach the matter's investigation files, and it fixed its candidate set from that list.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the next review named the 240-line cap; a later review named the matter among those never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 48,
+     "end": 51,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts an engagement whose scoping memo it read at [35]-[47] (investigation only at scoping stage) as a qualifying investigation.",
+     "critic": "no-review"
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction for investigation and committee words; times out after about 3.4M characters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 28,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script. Parallel globs for investigation, audit-committee and board file names; one returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 14 candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Filtered file listings of 16 more matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, plans and reports of ten matters, then two more documents of one."
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five matters and lists the energy-company investigation as not shown to be board-directed."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 93,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; brace-pattern globs return nothing; a script confirms the cited paths."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 105,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads five source openings; an edit after the stage closed is refused because no stage is open."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the conclusion to separate one matter as a workstream."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Moves that matter to a comparator section, renumbers, re-reads."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 124,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the qualifying matter's engagement letter, plan and final report but excluded it as not board-directed, and counted a scoping-stage engagement instead.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 75,
+    "end": 80,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It read the matter's engagement letter, plan memo and final report at [41]-[74] but the answer excludes it, stating board or committee direction was not established.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the screening review called that exclusion weakly justified."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts an engagement read at [41]-[74] whose investigation was only at scoping stage.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) two reviews named the scoping-stage matter as included without justification."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Python listing of all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction for investigation and committee words; times out after about 2.8M characters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script. Phrase scan over nine hand-picked matter folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Uncapped python pass over all file names for investigation, committee and whistleblower words, grouped by matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 61,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidates, reads 22 engagement letters, plans and reports, then a snippet script over four matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads seven more engagement, plan and report documents, including borderline matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters, one with a scoping-only status caveat."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 93,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, rewrites cited paths; a grep and two reads fail on the response path."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs six cited files."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 106,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search within a candidate matter's files → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found all three qualifying matters but also counted a scoping-stage engagement, with only a status caveat.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts an engagement whose scoping memo it read at [32]-[61] as a qualifying investigation, adding only a status caveat.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the write review named the scoping-stage matter as included with only a caveat; the agent refined the caveat and kept it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed precision the same way: each counted a scoping-stage audit-committee engagement as a qualifying investigation, and the critic named that inclusion in T1 and T2 without the agent dropping it. The runs split on the third matter. T0's file-name search was capped at 240 lines after a timed-out scan, so that matter never surfaced (search miss; the critic named the cap and the unopened matter); T0 also ran out of context right after writing. T1 found and read the matter but excluded it as not board-directed, a judgement the critic called weak (under-inclusion). T2 used an uncapped file-name pass, read the matter's report and included it (3/4)."
+}

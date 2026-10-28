@@ -1,0 +1,343 @@
+{
+ "task": "093",
+ "context": "Request: the shortest post-employment non-compete the firm negotiated and executed itself, the matter, and the signed terms. Rubric: 1038-00006 (Cascade Retail), 9 months, standstill-settlement-agreement-execution.docx, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob, an empty shell find, then a glob of the matters folder."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 7,
+     "end": 8,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing matching text; times out after about 9M chars and the run ends without a deliverable."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "A store-wide scan printed about 9M characters and the run ended without writing a response.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 7,
+    "end": 8,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The store-wide scan printed about 9M characters, filling the context before any response was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep for request words."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Four file-name globs for agreement, offer, execution and signing words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads emails, letters and a memo from three matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate matter's files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 18,
+     "end": 22,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three more file-name globs plus a content grep over emails for execution words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an email, a merger agreement and three employment agreements of two matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 29,
+     "end": 48,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of five employment agreements in three passes, with two empty globs in one candidate matter, then a signing email."
+    },
+    {
+     "stage": "Write the response",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a two-year term in one matter as the shortest executed term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 51,
+     "end": 51,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The matter it needed surfaced in three searches but was never opened; the answer names a longer term from another matter.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 10,
+    "end": 15,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep and file-name globs listed the matter it needed, but it chose emails and letters from other matters and never opened that matter, even after a later glob listed its memo."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "ls of the store and an empty find, then a shell listing of the first 240 files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for request terms; times out after about 156K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists one matter's files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "find/grep over file paths for agreement and execution words, first 260 hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Second store-wide extraction script; times out after about 155K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 14,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of five candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over files whose names mark them executed, signed or closing; the output lists hits from many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the opening of one employment agreement from another matter."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 22,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two snippet scripts over that agreement."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a closing index of another matter in three parts."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet script over that index."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script listing documents with term-length words; about 87K chars of hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the opening of one more agreement."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet script over two agreements of that matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 41,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads another agreement's opening."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Script over files whose names mark them as restrictive agreements, listing duration words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 45,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads another agreement's opening."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet script over that agreement."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Script over the same named files, printing their term definitions."
+    },
+    {
+     "stage": "Write the response",
+     "start": 50,
+     "end": 51,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a two-year term in one matter as the shortest executed term."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 52,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "The matter it needed surfaced in two scans but was never opened; the answer names a longer term from another matter.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 20,
+    "end": 21,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The executed-file scan just before listed the matter it needed with request-term hits, but it opened agreements of other matters and never opened that one, even after a later scan listed it again."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 ended in a context overflow from its first store-wide scan. T1 and T2 both had the matter they needed in their own search output (grep and file-name globs in T1, an executed-file scan in T2) but opened only other matters' agreements and named a longer term from another matter (surfaced, never opened)."
+}

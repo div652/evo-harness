@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C9",
+  "parent_checkpoint": "C8",
+  "objective": "Add one bounded independent pre-draft candidate-closure audit so corpus-wide legal work reopens omitted or unsupported candidates before answer-set selection, without restoring heuristic finish blocking.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "sub_agent",
+      "paths": [
+        "agent.yaml",
+        "sub_agents/candidate_reviewer/agent.yaml",
+        "sub_agents/candidate_reviewer/systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/overview.md: 52 of 80 diagnoses share the candidate-set-closure failure family",
+        "debugger/tasks/task-1dfd29b10b878e0397bf/result.json: candidate-ledger-reconciliation-gap",
+        "debugger/tasks/task-ec5f609e1344e379057c/result.json: incomplete-document-reading",
+        "debugger/tasks/task-2a2741ff34a37ac427a8/result.json: incomplete-document-reading",
+        "evidence/tasks/e2d949cc878835d3.json: repeated broad-census closure without an independently tested answer set"
+      ],
+      "failure_pattern": "The lead agent often surfaced plausible matter roots but then omitted them, closed them from filenames or partial sources, or treated a populated ledger as proof that the candidate set was complete.",
+      "mechanism": "A registered read-only reviewer receives the user gates, cardinality, ledger, and completed discovery routes, then independently tests recall and closure quality with bounded read/glob/grep access and returns source-bound discrepancies for the lead to resolve.",
+      "rationale": "Repeated prompt and middleware ledger reminders made state visible but could not independently challenge the lead's own premature closure; a bounded sub-agent supplies the missing independent search-and-review pass while remaining unable to overwrite deliverables or decide the final answer.",
+      "predicted_fixes": [
+        "414dcffcccfe8ce8",
+        "0721042b076d9bfe",
+        "6c0f259c5aae31b3",
+        "2c92cfc8f3b9b6b6"
+      ],
+      "risk_tasks": [
+        "dac3bc3411872ac5",
+        "3b6d89a9fc2176b6"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/tasks/task-97ad3cc1634ed4cc3069/result.json: incomplete-document-reading",
+        "debugger/tasks/task-68d2f05da19f15d8b69a/result.json: issue-coverage-gap"
+      ],
+      "failure_pattern": "The lead's own pre-draft self-check did not reliably discover omitted candidates or change a mechanically reconciled answer set.",
+      "mechanism": "The lead protocol now calls the independent reviewer exactly once at the post-reconciliation transition, supplies a concrete audit packet, and requires candidate-local resolution of every discrepancy before drafting.",
+      "rationale": "The root system prompt is the routing surface that controls when to delegate, what context crosses the boundary, how results are integrated, and when named-file work must skip the added cost.",
+      "predicted_fixes": [
+        "bf6dc1ed09375414",
+        "3d47d6035d1d105b"
+      ],
+      "risk_tasks": [
+        "dac3bc3411872ac5",
+        "3b6d89a9fc2176b6"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/candidate-dossier-workflow/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/tasks/task-8d48b40fab0b13e7555d/result.json: incomplete-document-reading",
+        "attribution/C8/transition.json: chg-2 and chg-3 had partial gains but repeated candidate omissions and unsupported exclusions remained"
+      ],
+      "failure_pattern": "Candidate designation and reconciliation were used as bookkeeping: neutral census roots could be prepopulated and designated roots could be closed without a completed candidate-local source read.",
+      "mechanism": "The workflow defines designation as a source-review obligation, forbids neutral census prepopulation and filename-only closure, specifies the reviewer packet, and requires the lead to verify discrepancies from candidate-local evidence.",
+      "rationale": "The registered skill is the progressively disclosed surface for the detailed designation, closure, reviewer-integration, and final-verification procedure.",
+      "predicted_fixes": [
+        "a578ecd1bbd984b7",
+        "346ba8fd80aeef7d"
+      ],
+      "risk_tasks": [
+        "dac3bc3411872ac5",
+        "3b6d89a9fc2176b6"
+      ]
+    }
+  ],
+  "validation": [
+    "nexau-evolution-guide validate_agent.py: valid with only the expected local NexAU import warning",
+    "candidate validation: adapter policy, schema, syntax, and NexAU smoke checks passed with one registered sub-agent"
+  ]
+}

@@ -1,0 +1,524 @@
+{
+ "task": "148",
+ "context": "Request: the most recent closed M&A deal with disclosure schedules to use as a template. The log header names no matters; the criteria require 1006-00008 (Crestline Packaging APA signed June 16, 2025, closed August 15, 2025) and its disclosure-schedules.docx, and nothing else as qualifying.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a folder-name listing capped at 80 lines and a file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts; the review notes the display was cut after about a third of the folders.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: same listing split into three number ranges.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 3: per-prefix folder counts and first/last names; the review says goal reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 27,
+     "end": 34,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path script for schedule, purchase-agreement, merger and closing words fails once, then lists 231 matters (about 199K chars); the review flags that candidates were then named by highest matter number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: intersects schedule-file and agreement-file names, 28 matters; the review flags the intersection filter and ranking by matter number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 66,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, schedules, certificates and checklists of five high-numbered matters, then eight more reads; one guessed path fails. The review lists surfaced matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 67,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of nine high-numbered candidate matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 71,
+     "end": 78,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: List files in candidate matters. Reads five closing emails, memos and drafts from the listed matters; the review flags about 60 surfaced matters never listed or opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over the 35 matters with schedule-named files for closing-status and date phrases (about 90K chars); the review flags the schedule-name restriction and candidates judged from snippets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 85,
+     "end": 100,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads cover pages of agreements, schedules and closing certificates from four candidates to compare closing dates; one guessed path fails; a stage_start for writing is refused while this stage is open.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter closed in mid-2025 as the most recent deal with schedules, with older backups and exclusions; the review flags the hedged recency claim and comparison candidates that could inflate the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths, replaces one missing path with an existing letter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the letter, the agreement and the closing certificate; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 126,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It picked candidates by highest matter number, and when a later scan showed more closed deals it opened them but not the matter with the latest closing, which it excluded as unverified.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 41,
+    "end": 66,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The matter with the latest closing appeared in the agent's own file-name results at [32] and [38] (schedules plus agreements), but it chose the highest-numbered matters to read; the scan at [82] showed it again and the reads at [87] again left it out, so the answer excluded it as unverified.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) Reviews warned that candidates were picked by matter number and that many surfaced matters were unopened, but never named this matter. The agent listed more matters and ran a scan but never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists older closed deals as qualifying backups beside its chosen matter, beyond the single most recent deal the request asks for.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review said the comparison candidates could include older or non-qualifying matters that inflate the answer; the check stages kept them."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a top-level folder listing (returns only the store root) and a file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two path scripts for schedule, merger, purchase-agreement and closing words; the first prints about 218K chars. The review flags a candidate set fixed from truncated output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower schedule/agreement file-name list saved to a file (174 lines).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: wider agreement-name pattern, 69 matters; dismissed as mostly unrelated. The review asks to carry every surfaced matter forward.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Document-text scan for schedule wording; 173 matters, about 169K chars. The review flags the noisy pattern and unopened matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 56,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads twelve agreements, schedules and closing records of the five highest-numbered candidates; the review flags a set hand-picked from top-of-listing matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 57,
+     "end": 62,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. Lists all files of two candidates in parallel with a store-wide pass for schedule-named files.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 74,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads an agreement and schedules of two other candidates and a closing letter; one guessed path fails. The review names several schedule-bearing matters never listed or opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 75,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Store-wide listing of every matter with schedule-named files, its agreements and closing-evidence files.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "end": 94,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads schedules and certificates of three candidates chosen by recency, an in-matter file search and two closing records; the review flags that selection followed recency, not the surfaced list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter closed in mid-2025 as the most recent deal with schedules, plus an older matter as secondary precedent; the review flags that addition as widening the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 111,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and sources; a path check first fails against the workspace root, then passes in the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: spot-checks closing dates of compared matters; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Every file-name pass and its own schedule/closing-evidence table showed the matter with the latest closing, but the agent read candidates by matter number and recency and never opened it.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 40,
+    "end": 56,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The matter with the latest closing appeared in the agent's file-name results at [18]-[19] and later in its schedule and closing-evidence table at [78], but at each choice it read high-numbered or recent-looking matters and never opened it.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) Reviews warned that candidates were picked by matter number and that many surfaced matters were unopened, but never named this matter. The agent widened its listing and read three more matters, not this one."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer adds an older deal as a secondary precedent and names several other matters with schedules, beyond the single most recent deal asked for.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review named the older secondary precedent as widening the answer; the check stages kept it as a comparison."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a folder listing capped at 120 lines.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path script for schedule, merger and purchase words (about 114K chars), a content grep with a bare `*` glob that returns nothing, and a list of schedule-named files. The review flags a candidate set fixed from partial views.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broad per-matter file-name sweep, about 35K chars; concludes the highest-numbered matter with schedules is the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: writes a 222-matter index to disk and prints the newest matters; the review flags stopping at the newest matters by number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: filters matters with both schedule-named files and agreement names; the review flags dismissals without opening.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 53,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads agreement, schedules, certificates and checklist of the highest-numbered schedule matter and two near neighbours; the review flags a narrow candidate set.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 62,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads four documents of three nearby candidates and switches its answer to a 2024 merger; the review lists unopened surfaced matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Re-reads the chosen matter's closing email and agreement and the fallback's checklist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a 2024 merger as the most recent deal with schedule content, with an older merger as clean fallback; the review flags the fallback as possibly inflating the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 86,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails against the workspace root, then passes in the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the agreement and closing email; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It ranked candidates by matter number from file names, read only the highest-numbered schedule matters, and never opened the matter with the latest closing that its file-name searches listed.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 42,
+    "end": 53,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The matter with the latest closing appeared in the agent's own schedule-file and agreement lists at [18]-[21] and [39], but the agent chose the highest-numbered schedule matters to read and never opened it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews warned that candidates were picked by matter number and that many surfaced matters were unopened, but never named this matter. The agent only re-read the two matters it already had."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer offers an older merger as a fallback precedent beside its chosen matter, so two matters are asserted where one most recent deal was asked for.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review named the fallback precedent as possibly inflating the answer; the check stages left it."
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail the same way. Every run's own file-name searches listed the matter with the latest closing among dozens of schedule-bearing matters, and every run chose what to read by matter number or apparent recency, so it was never opened (first error at the first screening stage after it surfaced). Reviews in all runs warned about selection by number and unopened surfaced matters without naming it; T0 and T1 widened their reads after the warnings (T0 even scanned closing dates and saw it) but still left it out, T2 did not widen. Each answer also adds an older fallback or comparison deal, which the write reviews flagged and the agents kept."
+}

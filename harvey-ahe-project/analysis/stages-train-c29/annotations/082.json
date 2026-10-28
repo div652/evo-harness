@@ -1,0 +1,350 @@
+{
+ "task": "082",
+ "context": "Request: semiconductor IP disputes of the firm where it actually litigated an injunction (conflicts and precedent check for a new chip-patent case). Rubric: one criterion, that no matter qualifies (the closest patent matter, 1014-00004, has only a contingency preliminary-injunction draft on hold and a permanent-injunction analysis).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and recommends enumerating folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders and files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "find | grep over all paths for chip, patent and injunction words; 318 hits. The review flags substring noise."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: word-bounded pattern; prints only the 26 hit matter numbers."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing snippets for chip, patent and injunction terms with no cap; times out and returns about 12M characters; the run ends before stage_end."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script",
+   "failure_point": "Its first store-wide extraction script printed uncapped snippets for broad terms; the timed-out output filled the context and no deliverable was written.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 26,
+    "end": 29,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "",
+    "why": "The scan printed snippets for common terms across every document with no output cap, so the timed-out result filled the context before the stage could be closed or reviewed."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and shows the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script fails on a heredoc error; the rerun times out with no output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (continued). find | grep over all paths for chip, patent and injunction words. The review flags that no text was extracted and no candidate opened."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 33,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: extraction scripts in matter-number batches and a scan for files with both chip and injunction terms (about 2.9M characters), then counts hits per matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Lists filtered file names of eight candidate matters, first 80 lines each."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in candidate matters (attempt 2). Store-wide find | grep for injunction and restraining-order file names; 106 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 70,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Reads injunction drafts, analyses, complaints and motions from eight matters, a snippet script, five more reads, and two in-matter greps that return nothing. The review flags that the injunction conclusion for the leading matter rests on a contingency draft on hold."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 71,
+     "end": 76,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). One file-name listing of ten more matters, first 40 lines; the review notes no document was opened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one patent matter as qualifying, with a caveat that its preliminary motion was a draft, and lists exclusions. The review flags unopened candidates and that the strict reading may be too narrow."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Edits the scope wording to cover only the matters reviewed, re-reads the response; the matter stays qualifying."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read that the patent matter's preliminary-injunction motion was a contingency draft on hold, yet wrote that matter as one where an injunction was litigated.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 77,
+    "end": 82,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review named the contingency draft on hold as the basis of the conclusion.",
+    "why": "The answer presents a patent matter as qualifying although its own reads showed only an on-hold contingency draft and an internal injunction analysis; the screening review at [70] flagged this, and the later edits only narrowed scope wording (evidence seen at [48]-[64])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for chip, patent and injunction terms; times out after about 48K characters, naming a patent matter with an injunctive-relief folder."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of three candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 33,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "find | grep over all paths for injunction, restraining-order and chip words; prints the first 240 injunction-word hits."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Snippet-extraction script over 16 named candidate matters for chip and injunction terms. A stage for in-depth reads is opened at [38] with no tool call; its stage_end summarises this script."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 48,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scan for files with both chip and injunction terms in two matter-number batches; the lower batch times out."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of two more patent matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 55,
+     "end": 60,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file names for request keywords. Filtered file listings of a dozen named matters (the leading patent matter and sibling series); the review notes the output was cut."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 61,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the complaint, the contingency injunction draft, the injunction analysis, a status report and a conflict memo of the leading matter plus three filings from other matters. The review flags that only a contingency draft on hold was found."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one patent matter as the qualifying dispute with a caveat that its motion was a contingency draft. The review flags over-inclusion risk from that caveat."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads and edits the response to a strict answer of no confirmed match, with that matter as the closest non-qualifying candidate."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: removes an empty heading and renames the candidate section."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: edits the coverage statement and re-reads the opening."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Search within a candidate matter's files → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 ended at its first store-wide extraction script, whose timed-out output overflowed the context before any review. T1 and T2 both screened the same patent matter with an on-hold contingency injunction draft and wrote it as qualifying. They split at the write/check stages and the critic's reviews differed: in T2 the review of the write stage flagged over-inclusion because the response itself admits the motion was only a contingency draft, and the agent rewrote the answer to a strict no-match with that matter as the closest non-qualifying candidate (pass). In T1 the screening review had flagged the same point, but the write-stage review flagged the opposite risk (a reading too narrow, unopened candidates); the agent only narrowed its scope wording and kept the matter as qualifying (fail)."
+}

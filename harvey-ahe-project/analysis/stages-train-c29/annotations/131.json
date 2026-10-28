@@ -1,0 +1,326 @@
+{
+ "task": "131",
+ "context": "Request: the most recent M&A matter where a MAC was actually invoked in a dispute. Rubric: 1018-00008 (Penterra / Veridian; termination notice invoking an MAE), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. Counts folders and files and prints twenty names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide scan for request terms times out after about 500K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower co-occurrence scan with per-matter counts and snippets."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 32,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five documents of the leading matter, three of a comparison matter and one email of another."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files. A bounded store-wide scan for co-occurring terms, to check for a later matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading matter with its chronology and documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 59,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and fixes one citation path."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 67,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell listing of the first 200 entries."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan with broad terms in parallel with a find | grep over file paths and a folder count (the protocol notes the count is off-stage); the scan prints about 370K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 22,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Narrower scan with per-matter counts still prints about 377K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of three candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 38,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. A store-wide scan for notice language times out; a narrower rerun completes."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 39,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six documents of the leading matter and five of later candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 62,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Filtered file listings of eight later or sibling matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading matter with its chronology and documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 75,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads part of the response; a glob with a doubled path prefix returns nothing."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited files exist and reads the rest of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 83,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Six parallel file-name globs for request words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 30,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan prints about 1.8M chars without filling the context."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 31,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six documents of the leading matter and two of an older candidate."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Lists the leading matter's files."
+    },
+    {
+     "stage": "Write the response",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading matter with its chronology and documents."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 66,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads six documents of later or sibling matters; one guessed path does not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 67,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of four later matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 85,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit made before opening a stage is refused by the protocol; after opening, edits the response with the later-matter screening and re-reads it."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 86,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Screen candidate matters by reading documents → List files in candidate matters → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three passed with the same procedure: a store-wide text scan (T2 also file-name globs) surfaced the leading matter, the agent listed its files, read its notices and dispute memos, wrote it as the most recent, and screened later-numbered candidates before or after writing."
+}

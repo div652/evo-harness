@@ -1,0 +1,360 @@
+{
+ "task": "206",
+ "context": "Request: how many patent-infringement cases are actively in litigation now, with a list of the cases. Rubric: 1013-00005 (Genome Dx v. Helios) and 1014-00004 (Optiwave v. Lumicore) as active cases, plus a precision criterion; the failing runs also counted 1031-00001, a conflicts/ethics file that mentions a Pinnacle v. Veritas patent case.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the stage review says the listing is capped and covers few matters."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts and prints all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for broad litigation and patent terms; times out after printing about 2.7M chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrowed rerun requiring co-occurring patent and infringement terms over the first documents of each matter; names six candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered file listings of the six candidate matters (pleadings, status, closing names)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide find over file paths for patent and claim-construction words, collapsed to matter numbers."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered file listings of fourteen matters from that list; the review notes one candidate (a conflicts file) still unlisted."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints, status reports and dismissal papers of four candidates plus an email and an ethics memo from the conflicts file; the review flags that the conflicts-file case rests on ethics documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a count of three active cases, including the case known only from the conflicts file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 63,
+     "end": 72,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths exist and edits the opening to state the dates of the status evidence and the basis for treating two cases as active; re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 73,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It took a non-litigation conflicts file into its candidate set from a co-occurrence scan and counted the case that file mentions as active, alongside the two cases it confirmed from their own pleadings.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 57,
+    "end": 62,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Counted as active a patent case seen only through conflicts and ethics correspondence in a non-litigation file (evidence read at [44]-[56]), with no pleading or status document of its own.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the review at [56] said that case was classified as active on conflict/ethics documents and recommended opening its pleadings; the agent wrote it in and later only hedged its wording at [67]."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says it is capped."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store; counts matter folders and prints the first and last twenty names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for broad patent and litigation terms; prints about 3.3M chars covering nearly every matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Aggregating rerun scoring strong patent-litigation phrases per matter; times out with no output."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs the full file lists of six candidate matters named after the first scan."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Bounded rerun over files whose names carry patent words; seven matters returned."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 39,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints, trial and status documents of the two matters it treats as qualifying."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 67,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads closing letters and memos of five other candidates and reads further into an email chain of the conflicts file and a diligence memo (one path not found). The review flags that a case was counted active with no file of its own opened."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files; store-wide find over file paths for the opposing party and patent-litigation words, looking for a separate folder of that case."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a count of three active cases, one of them known only from the conflicts file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and adds a caveat that the count is repository-based and that one case needs a live docket check."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans put a non-litigation conflicts file among the candidates; it counted the case mentioned there as active although no folder of that case was found.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Counted as active a patent case known only from conflicts correspondence in a non-litigation file, dated well before the other status evidence (read at [48]-[67]); the follow-up search found no folder of its own.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the review at [67] flagged that the case rested on second-hand conflicts correspondence; the agent searched for its own folder at [68]-[73], found none and still counted it, then added a caveat at [84]."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review says it is capped."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts and prints all matter folder names."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "mixed intents",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel store-wide extraction script (times out after about 436K chars), file-path find and files-with-matches grep for patent and litigation words."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 28,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters; full file lists of five candidate matters in parallel with a store-wide find for patent-infringement file names (labelled by the search, merge convention 3)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Shell unzip pipeline over every .docx for the phrase patent infringement; returns nothing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 40,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Search file contents for request keywords; Python extraction tested on one pleading, then over all .docx files; times out with no matter list."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 41,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints, status reports and dismissal or closing papers of the five candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 54,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads settlement and closing papers of one candidate whose status memo looked stale, and later status emails of the other two."
+    },
+    {
+     "stage": "Write the response",
+     "start": 64,
+     "end": 69,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes a count of two active cases and lists the settled ones as excluded."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 70,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, globs the three matters' file lists and adds a scope caveat."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 81,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file contents for request keywords → Search file names for request keywords → Search file contents for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs found and confirmed the same two active cases from their pleadings and status reports. They split at candidate selection after the store-wide scans: T0 (co-occurrence scan, [20]-[25]) and T1 (broad scan, [14]-[19]) took a conflicts/ethics file into the candidate set, read its correspondence and counted the case it mentions as active (over-inclusion at the write stage). T2's file-name and grep searches never put that file among its candidates; it read five litigation candidates and also dropped one whose earlier status memo was superseded by a settlement. The critic flagged the weak evidence in both failing runs ([56] in T0, [67] in T1); T1 searched for the case's own folder and still counted it, T0 only hedged. T2's reviews had nothing comparable to flag."
+}

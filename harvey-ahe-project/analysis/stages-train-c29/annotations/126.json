@@ -1,0 +1,439 @@
+{
+ "task": "126",
+ "context": "Request: the full list of general-litigation matters where the firm sought fee-shifting, with the underlying documents. Rubric: fourteen matters (1006-00005, 1008-00007, 1010-00005, 1012-00006, 1019-00005, 1020-00005, 1021-00006, 1023-00002, 1024-00003, 1027-00003, 1033-00006, 1035-00004, 1038-00007, 1044-00006), each with proof documents, plus a precision criterion. All runs listed many other matters (e.g. sibling matters 1008-00005, 1035-00003, 1038-00006 and others such as 1005-00004, 1011-00003).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Shell listing of store folders, file types and the first 80 paths; the review flags the head limits."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and files by type."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for fee terms, patched to run by matter range; five parallel range runs write hit files, four of them time out; the review flags the timeouts."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Reopened: checks the last line of each hit file and filters the saved hits by request phrases and litigation-type paths (outputs of about 93K, 36K and 142K characters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reopened: counts the matters with hits per range file (196 of 266) and treats the rest as having none."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of pleadings, motions and briefs from about twenty candidates, then greps the saved hits for named files and matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a long list of matters with document paths, including sibling matters of clients it had read."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 93,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Checks cited paths, fixes one, re-checks (first at a response path that does not exist)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 103,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "A grep sent with no stage open is rejected; reopens the stage and confirms the fixed path; a last check outside a stage is rejected."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Four of its five range scans timed out and their partial hit files were treated as complete, so four needed matters never surfaced; three that did surface were never opened; the answer listed many other matters.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 29,
+    "events": "[20]-[27]",
+    "kind": "search-miss",
+    "why": "Four of the five parallel range scans timed out and left partial hit files, which it later treated as complete; four needed matters never appeared in any output.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the review at [29] flagged that six of seven runs timed out and completion was never seen; the agent only checked the files' last lines and counted matters, and the review at [39] repeated the coverage doubt."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 75,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "Three needed matters appeared in its filtered hit lists at [33]-[35], but the documents it chose to read came from other matters and those three were never opened.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) the review at [75] named one of them among matters never opened."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists many matters beyond those requested, including sibling matters read at [48]-[64] in place of the needed ones, on pleading skims and grep hits.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the write review at [81] raised 'possible over-inclusion from keyword hits and snippets'; the check stages only fixed paths."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 22,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range rerun also times out after about 3.1M characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: a bounded scan over litigation-type folders and file names printing one affirmative hit per document (681 lines)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 58,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the openings of 28 pleadings, motions and memos from about 25 candidates; two guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 59,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of eight candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads answers, a complaint, motions and a demand letter of those and earlier candidates."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 82,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. Script listing, for every matter, its subfolders whose names are dispute-type words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 86,
+     "end": 91,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Greps the saved scan hits for later-numbered matters (about 50K characters); a premature stage_start for writing is rejected."
+    },
+    {
+     "stage": "Write the response",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 39 matters with document paths and a screened-out list that includes one matter it never opened."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists one matter's files, replaces a wildcard citation and re-reads the opening."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search file names for a document type → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its bounded scan surfaced every needed matter, but three were never opened (one screened out unread), and the answer listed 39 matters.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 28,
+    "end": 58,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The bounded scan at [24]-[25] listed hits for all needed matters, but the 28 documents it chose to read left out three of them, which were never opened later either.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) the review at [91] named one of the three among surfaced matters never opened; the agent went on to write."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 92,
+     "end": 97,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists 39 matters, many on pleading skims and scan snippets from [30]-[87] that show fee language without a request by the client.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the write review at [97] flagged 'over-inclusion from keyword hits, snippets or short skims'; the check stage only fixed a citation."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 17,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script, patched and rerun in background range batches whose outputs are stitched (about 306K characters), then a narrower strong-term pass and counts."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 34,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Lists every matter with dispute-type subfolders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script over those matters for affirmative request phrases near fee terms, aggregated per matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads pleadings and motions of eight candidates."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 51,
+     "end": 56,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Filters the saved affirmative hits into a shorter list per matter (first attempt fails on a heredoc error)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches reading pleadings, motions and settlement papers of about twenty candidates, including two sibling matters of one client."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 83,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Greps the saved hits for named files of three matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 87,
+     "end": 98,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: a narrow affirmative-request scan in nine background batches over all matters (about 99K characters); a premature stage_start for writing is rejected."
+    },
+    {
+     "stage": "Write the response",
+     "start": 99,
+     "end": 104,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 25 matters with document paths, naming one sibling matter of a client and not the other."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 105,
+     "end": 120,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Checks cited paths, lists one matter and fixes two file names."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Four needed matters surfaced in its scans but were never opened, it dropped one it had read in favour of a sibling matter, and it listed many other matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 42,
+    "end": 50,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its per-matter aggregation at [40]-[41] listed four needed matters, but the candidates it chose to read here and later left them out and they were never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the review at [86] flagged that the candidate set was fixed early and surfaced matters were left unread, naming none of the four."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 99,
+     "end": 104,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Both sibling matters of one client were read at [57]-[68], but the answer lists only the other sibling.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the write review at [104] raised possible under-inclusion and misattributed matter numbers without naming the matter."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 99,
+     "end": 104,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists many matters beyond those requested, on scan snippets and skims from [38]-[94].",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the write review at [104] raised a 'risk of over-inclusion'; the check stage only fixed paths."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at two points: needed matters that surfaced in their scans were never opened (first error in T1 and T2, a later error in T0), and the answer listed far more matters than requested, including sibling matters of the same clients (over-inclusion in all three). T0 failed first and worst at its scan: four of five parallel range scans timed out, it accepted the partial hit files, and four needed matters never surfaced at all. The critic flagged the timeouts (only partly acted on), named one unopened matter specifically in T0 and T1 (ignored), and raised over- and under-inclusion only generically."
+}

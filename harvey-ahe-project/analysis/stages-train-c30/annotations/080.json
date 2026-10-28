@@ -1,0 +1,477 @@
+{
+ "task": "080",
+ "context": "Request: past patent-infringement matters where the firm retained a technical expert, with the documents showing each retention (expert roster for a new patent case). Rubric: 1007-00003 (Vantage Mobility, Dr. Yeoh; proof: litigation-status-memo), 1014-00003 (Whitfield), 1014-00004 (Ashford) and 1037-00004 (Ostrowski), each with proof documents, plus a precision criterion (1013-00005 draft-only is tolerated).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a per-folder re-listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with file counts and types.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: compact total of folders and files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide file-name regex mixing case-type and generic document words; 264 matters, about 90K characters. The review flags the noisy list and a hand-picked shortlist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: separate case-type and expert file-name regexes with per-matter counts (15 and 142 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 54,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script and four range runs time out; after a syntax error and a silent run, the fixed script prints about 363K characters for the first range, then path-filtered hits for the other ranges.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 55,
+     "end": 67,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: stronger-phrase scan times out store-wide, then runs in four ranges with per-matter file counts and snippets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight shortlisted matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: filtered listings of nineteen sibling matters named in the review.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 80,
+     "end": 123,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 22 documents (status memos, retention agreements, engagement letters, complaints) across the shortlisted and sibling matters, one mistyped path, a folder listing to fix it, and two more read batches. The review flags a draft-only matter counted as qualifying.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 124,
+     "end": 129,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: filtered listings of the ten remaining case-type matters; none added.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 130,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with retained experts and their proof documents, plus one draft-only matter kept apart. The review flags the draft-only matter as an inflation risk.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 144,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, a path check fails on the workspace root, and fixes one spelling error.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 145,
+     "end": 161,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check passes against the output folder; re-reads the openings of eight cited documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 162,
+     "end": 167,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the response end to end; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 168,
+     "end": 168,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints every matter folder with file counts; the stage-start note pointed to folder listing and the agent kept the store-listing label.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Prints the folder total and all folder names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 4). Prints the first and last twenty folder names and the total.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide file-name regex mixing case-type and generic document words; 264 matters, about 90K characters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower case-type and expert file-name regex; 54 matters with counts. The review flags an eight-matter shortlist from the list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a second script extracts text only from the 58 file-name candidates (about 123K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: range scans time out; prints the heads of partial output files and greps them for a named list of candidates, which shows per-matter hit counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. A keyword-filtered file listing of nine candidates (two files shown for one case-type matter), then reads fifteen retention agreements, engagement letters and memos from five of them; the stage-start note pointed to screening and the agent kept its label. No document of that case-type matter is read.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 78,
+     "end": 89,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists two more candidates and reads three documents; a write-stage start is refused while this stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters with retained technical experts; the case-type matter with no document read is excluded as having no retention found, and a draft-only matter is excluded.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 106,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response; a path check fails on the workspace root, then passes against the output folder; one wording edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the openings of the three cited retention agreements; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 115,
+     "end": 115,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A keyword-filtered listing showed only two files of one case-type matter and none of its documents was read; the answer excludes it as having no retention found.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 90,
+    "end": 95,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews named the matter only inside candidate lists; none questioned excluding it without reading its documents.",
+    "why": "The answer excludes a case-type matter its scans had flagged with expert hits, judged from a filtered listing of two files without reading any of its documents (evidence seen at [52]-[53] and [58]-[59]); its proof document never appeared in a listing."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over all paths for case-type and expert words, capped at 300 lines, in parallel with a content grep on a bare *.eml glob that returns nothing. The review flags the cap and that no document text was searched.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; three parallel range scans print per-file hits (about 30K characters each).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). A per-matter regex over file paths only, printing one line per matter with its case-type and expert file names; the stage-start note pointed to file-name search and the agent kept the scan label. The review says it is a file-name scan and names one case-type matter as matched only by a privilege-log retention memo.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Keyword-filtered file listings of eleven candidate matters; one case-type matter from the previous list is not included.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints, retention agreements, engagement letters, reports and memos from four candidates, then one more engagement letter. The review flags unopened surfaced matters and a draft-only exclusion.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 68,
+     "end": 75,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide per-matter path regex for case-type and expert names (four matters with both), plus one read of a retention agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path regex; the same four plus noisy hits, including the matter shown with a privilege-log retention memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters with retained technical experts and a draft-only near candidate; the matter never opened is not mentioned.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 96,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response; a path check fails on the workspace root, then passes against the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 109,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads openings of four retention agreements and two draft-only documents; one wording edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 110,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One case-type matter surfaced in its path scans, but it never listed or read it, so the answer leaves it out.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 32,
+    "end": 37,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The scan review at [31] warned that the hand-picked shortlist risked dropping matters and named this matter, but only as a weak hit matched by a privilege-log memo.",
+    "why": "The matter appeared in the path scan at [29] with a case-type analysis file and a retention memo, but the agent left it out of the eleven matters it listed and never opened it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0 passes; T1, T2 fail on the same matter). All runs found the three matters with retention agreements. They split at the candidate-listing stage: T0 listed all files of the matter whose retention shows only in a status memo and read that memo; T1 listed it through a keyword filter that showed two files and read nothing; T2 never listed it. The reviews there did not differ in substance: none asked to open that matter (T2's review named it only as a weak hit), and later reviews told the agent to keep the matter set."
+}

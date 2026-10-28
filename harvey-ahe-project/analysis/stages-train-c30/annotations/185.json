@@ -1,0 +1,374 @@
+{
+ "task": "185",
+ "context": "Request: the most recent matter handled for a named retail client, what it is about and when it was opened. Rubric: 1038-00003 (Cascade Retail Holdings Form S-3 universal shelf registration, opened April 6, 2026) as the only answer, its subject and open date, plus precision. The client has ten matters in the 1038 series.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing capped at 200 lines. The review recommends counting matter folders and searching for the client name.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and files and saves both listings to scratch files.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "One call: grep of the saved path list for client words plus a content grep over .eml/.txt files, both capped at 200 lines. The review flags that .docx text was never searched.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide .docx/.eml extraction script for the client name, saved to a file; the head shows the client's matter series and unrelated look-alike names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 27,
+     "end": 32,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Script over the ten matters of the client's series that lists files and pulls dates from each document (about 105K characters). The review flags that dates were picked per matter rather than from intake records.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Exact-name check over a hand-picked list of 15 other matters that surfaced in the scan; none names the client.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 39,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the new-matter memorandum, engagement letter and kick-off agenda of the latest-looking matter plus two comparison engagement letters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Script printing dates from engagement and intake documents of all ten matters of the series.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 55,
+     "end": 60,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the answer naming the matter with the latest opening record, its subject and opening date, with a comparison table.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 61,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and narrows one exclusion sentence.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the three cited documents and the response; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 78,
+     "end": 78,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file contents for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a folder listing (first 80 lines) and a file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for client words, a content grep on *.docx that returns nothing, and a folder-name match that returns nothing. The review flags the empty grep and other parties sharing the name.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: counts files in each matter of the client's series and regroups path hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the ten matters in the series. The review flags that other surfaced matters were not listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan with broad client words times out; reads its partial output, then exact-name scans in two matter-number ranges.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-name scans over three matter-number ranges, per-matter counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 71,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letters of all ten matters in the series and of two look-alike matters (two guessed paths fail, then found by listing), and the new-matter memorandum of the latest-looking matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the answer with the latest matter, subject, opening date and comparison reasoning.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the two cited documents and the response; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a top-level listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "find | grep over paths for client words, a content grep that returns nothing, and a count of matter folders. The review flags generic-word hits and the empty grep.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Attempt 2: path searches for the client name only, and listings of five matters with name hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide .docx/.eml extraction scans: a loose pattern (about 51K characters), then an exact-name pattern grouped by matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Script over the ten matters of the client's series printing one line per file with date clues.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: store-wide scan for the client's full legal name; only the ten matters of the series match.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 45,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the new-matter memorandum, engagement letter and kick-off agenda of the latest-looking matter and the engagement letters of the other nine.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the answer with matter, opening date, subject and the comparison set. The review notes the facts cannot be checked from the write call alone.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the cited documents and edits the opening-date label wording.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: an early whole-store listing, a client-name search by paths and by extracted text that surfaces one numbered matter series, a date comparison across all ten matters of that series (by script or by reading their engagement letters), reading the latest matter's new-matter memorandum, then writing and two rounds of checks. Reviews repeatedly pushed for completeness outside the series; the extra checks found nothing and did not change the answer. The label-check note on the opening stage was ignored in two runs (folder listing under the store-listing label)."
+}

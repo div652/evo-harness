@@ -1,0 +1,356 @@
+{
+ "task": "111",
+ "context": "Request: the largest settlement the firm has ever reached, and in which matter, counting each settlement at the amount its executed agreement defines. Rubric: 1021-00006 (Verimark Hospitality, $87.5M), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: List files in the document store. Folder count with the first 20 names and a path search for settlement words capped at 200 lines. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for settlement words, 792 hits. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "mixed intents",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a path search picks 127 settlement-named files and a script prints their amount snippets (about 680K chars). Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads three executed settlement documents from three matters and a snippet script on two. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Script ranking dollar amounts across settlement-named files store-wide. Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 56,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Lists two matters with large ranked amounts and reads three of their documents. Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter and its agreement-defined amount. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 63,
+     "end": 70,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the method text. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Rewords the coverage statement (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 83,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. Counts folders and shows the first and last 20 names. Review: yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad path search; 1,721 hits printed (about 156K chars). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower path search with per-matter counts (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Path search with added words, grouped by matter (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Extraction script writing about 5.4M chars to a file; only a sample printed. Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Script ranking amounts in settlement-named files, 80 lines (attempt 2). Review: partly."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of ten candidate matters (about 48K chars). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "declared: List files in candidate matters. Store-wide path search limited to settlement folder and file names, 42 files (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads ten settlement agreements from nine matters (up to 200 lines each). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 71,
+     "end": 77,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists one matter and reads its outcome report, closing memo and a later section of its agreement (attempt 2)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 78,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script over agreement-named files for large amounts (about 140K chars)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 80,
+     "end": 86,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the executed agreement and closing documents of the matter it then picked; one guessed path is missing. Review: partly (switched matter mid-stage)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 87,
+     "end": 97,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the matter's settlement files and reads the closing memo, later sections and the term sheet (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 98,
+     "end": 106,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all of the matter's files and re-reads the agreement opening; a write stage is refused because this stage is still open (attempt 4). Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter and its agreement-defined amount. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the coverage statement. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Rewords the coverage statement and re-reads part of the file (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "One more wording edit (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts and lists all matter folder names. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing up to eight snippets per file for broad settlement terms, followed by a path search in the same command; times out after about 11.6M chars and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The first store-wide scan printed uncapped snippets for broad terms; the context filled and the run ended with no response.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The uncapped snippet output of the first store-wide scan filled the context before any document was opened or a response written.",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before its stage_end review."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T1 found the matter by path searches for settlement files, compared executed agreements across candidates (T0 with an amount-ranking script, T1 by reading ten agreements and then a broad amount scan) and wrote the same matter and amount. T2's first store-wide scan printed uncapped snippets for broad settlement terms (about 11.6M chars); the context filled and the run ended without a response (context overflow, no review). The runs split at the first scan: T0 and T1 searched file names first and kept their scans' output in files or narrow lists; T2 scanned the whole store and printed everything."
+}

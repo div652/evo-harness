@@ -1,0 +1,253 @@
+{
+ "task": "241",
+ "context": "Request: which standalone internal-investigation matters were directed by the board or the audit committee. Rubric: 1016-00009 (Dunmore Energy), 1021-00008 (Verimark Hospitality), 1039-00005 (Torchlight Mining), plus a precision criterion (1017-00005 and 1039-00001 also tolerated).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell find listing every file in the store (about 790K chars), not capped."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 4,
+     "end": 5,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Python walk printing the files of folders whose names contain request words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 6,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Three batches of reads of engagement letters and reports/memos (first 50-140 lines) from about ten candidate matters from that list, then two single engagement letters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying and explains why several others, including one it had read, are not counted."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "All three needed matters surfaced and were opened; the answer excluded one of them on a narrow reading and added a matter outside the qualifying set.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Write the response",
+    "start": 26,
+    "end": 27,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It had opened the engagement letter and report of a qualifying matter but excluded it as a regulatory-defense engagement with the general counsel as contact, on a reading of only their first 70-80 lines."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted a matter still at the scoping stage as a qualifying investigation on the strength of its engagement letter alone."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads six memos, reports and an engagement letter of one matter at the top of the listing; no keyword search."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 11,
+     "end": 14,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads three more documents of the same matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes that the store contains one standalone investigation matter, the one it read, and that it qualifies."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 17,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; read one listing-top matter, called it the only investigation in the store, and asserted it as qualifying.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 10,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It read only one matter from the top of a capped listing and treated it as the only investigation matter in the store, so none of the needed matters surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "Write the response",
+     "start": 15,
+     "end": 16,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted the one listing-top matter, a regulator enforcement defense, as a qualifying standalone investigation."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shallow shell find that lists no files."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads six memos, reports and an engagement letter of one matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for request phrases; times out after about 111K chars with hits from several matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 15,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell find of matter subfolders whose names contain request words, plus a file listing of two candidate matters in the same command (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 31,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters, then two batches of reads of engagement letters, scope memos and reports (first 45-100 lines) from those matters (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over three documents of one candidate matter for lines on who directed the work."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as qualifying and lists others, including two it had read, as excluded."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "All three needed matters surfaced and were opened; the answer excluded two of them on narrow readings and added a matter outside the qualifying set.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 34,
+    "end": 35,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "Having opened all three needed matters, it excluded one as directed by the general counsel and another as not standalone, reading the request's qualifiers more narrowly than the documents required."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted a matter still at the scoping stage as a qualifying investigation."
+    }
+   ]
+  }
+ ],
+ "divergence": "The runs failed in two ways. T1 never searched and treated the one listing-top matter as the whole store (partial listing as corpus, stage 2). T0 and T2 found and opened all three needed matters (T0 via a full file listing and folder-name walk, T2 via folder-name search after a timed-out scan) but failed at Write the response: each excluded needed matters on a narrow reading (one in T0, two in T2) and each also asserted the same out-of-set matter."
+}

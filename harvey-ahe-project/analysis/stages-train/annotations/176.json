@@ -1,0 +1,262 @@
+{
+ "task": "176",
+ "context": "Request: the full list of matters handled for Cascade Retail Holdings Inc. (conflict check). Rubric: 1038-00001 through 1038-00010, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel whole-store glob and a content grep for the client's full name."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists matter folders to depth two, first 200 lines."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 7,
+     "end": 8,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Files-with-matches grep for shorter forms of the client name; returns the same candidate matters plus scattered single hits."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 9,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters and of one other matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letter and one key document of each of the five candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing memos, settlement and signing correspondence of the five matters it settled on."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes the response presenting five matters as the complete list."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List matter folders → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its two content greps returned the same five matters; it never scanned document text, so the other five matters never surfaced and the answer lists five of ten.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 7,
+    "end": 8,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both searches were grep-tool content searches that returned the same five matters; it did not scan document text or look for sibling matters, so the other five never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 11,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for the client name and abbreviation."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads documents of the matter at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script unzipping document text and reading emails, listing files that mention the client name."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and a conflict memo from five candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Extraction script printing the opening of engagement, new-matter and conflict documents across one series of matter folders."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and agreements from six more candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 28,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of closing memos, certificates and other supporting documents across the matters it settled on."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response listing ten matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 43,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 11,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads: eight documents of the matter at the top of the listing, then engagement letters of four other listed matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 22,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script over documents, emails and spreadsheets; times out after about 300K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one candidate matter's files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Threaded store-wide scan of document text for the client name; lists files from ten matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letter of each of nine candidate matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response listing ten matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 39,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Passing runs (T1, T2) ran an extraction script that unzipped document text and matched the client name, which listed files from all ten matters, then read each matter's engagement letter. T0 relied on two grep-tool content searches that returned only five matters, never scanned document text, and wrote a five-matter list as complete (search miss)."
+}

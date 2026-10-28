@@ -1,0 +1,242 @@
+{
+ "task": "161",
+ "context": "Request: the most recent data-breach matter the firm has handled, as a rapid-response reference. Rubric: 1008-00009 (Lumos Analytics, credential-stuffing incident) plus a precision criterion (no other matter asserted as a breach matter).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus per-extension globs; the PDF glob is empty."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an opening memo, an engagement letter and two memos of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request keywords; times out after about 2.2M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letter and three memos of one candidate and the engagement letter of another."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter as the most recent and describes the other candidate as an earlier matter of the same kind."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Picked the qualifying matter but described a second matter, seen only through its engagement letter, as also qualifying.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Write the response",
+    "start": 19,
+    "end": 20,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It named the qualifying matter but also presented a second matter, read only through its engagement letter, as another genuine matter of the requested kind."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus per-extension globs; the PDF glob is empty."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of four matters."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Files-with-matches grep for request keywords alongside a folder glob that returns nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 15,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of four candidate matters from the grep hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing and assessment memos and an email of two candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 25,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the engagement letter, two memos and an email of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter as the most recent and describes the other candidate as a full matter of the same kind."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List files in candidate matters → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Picked the qualifying matter but asserted that the other candidate it screened also qualified.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 30,
+    "end": 31,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It named the qualifying matter but also asserted that the other candidate it had screened was a full matter of the requested kind."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus per-extension globs; the PDF glob is empty."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 22,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Three batches reading memos, letters and engagement letters of six matters at the top of the listing; no keyword search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 23,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a request list (in three parts), a memo and a draft agreement of one listing matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that no matter of the requested kind is identifiable and offers a listing matter as the closest."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; read only matters at the top of the listing and answered that none qualifies.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 22,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the matters at the top of a capped listing without any keyword search, so the matter it needed never surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed. T0 (timed-out scan) and T1 (grep) both found, read and named the qualifying matter, but each also described a second screened matter as qualifying, so they failed only the precision criterion (over-inclusion at the write). T2 never searched, read only matters at the top of the listing and answered that none qualifies (partial listing as corpus)."
+}

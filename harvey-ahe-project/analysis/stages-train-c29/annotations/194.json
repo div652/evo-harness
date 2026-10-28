@@ -1,0 +1,406 @@
+{
+ "task": "194",
+ "context": "Request: all deals with a 'most favored nation' provision, for an MFN clause bank. Rubric: 17 matters (1001-00002, 1001-00007, 1003-00003, 1004-00001, 1005-00001, 1008-00003, 1009-00001, 1013-00002, 1013-00003, 1018-00006, 1019-00002, 1021-00001, 1022-00008, 1023-00001, 1027-00002, 1041-00003, 1042-00002) plus a precision criterion. Every run named Harrowgate 1003-00002 instead of 1003-00003; T1 also excluded 1041-00003.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap and recommends enumerating matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Counts matter folders and prints only the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A store-wide extraction script for clause words times out twice; between the runs a find | grep over file paths for clause and agreement words, cut at 300 lines."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Threaded extraction script writes 521 hit files to disk and prints the hit matters; a grep of the hit file is cut at 240 lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 51,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2); reads seven documents with clause words in their names, runs a snippet script over named agreements and a hit-count filter that returns nothing, reads five more documents and lists the files of the seven matters it is weighing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 52,
+     "end": 63,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files; turns the saved store-wide hit file into per-matter snippets (first call fails on a heredoc), pages the output, then lists files of 14 more hit matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads the first 35-45 lines of one agreement or side letter in each of 13 matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 17 matters with the clause plus two functional equivalents, sources and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Softens completeness wording, edits the exclusions section and re-reads the file."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 98,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A second matter of one client surfaced in its scans but was never opened; the answer names that client's sibling matter and adds other matters without the clause.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 30,
+    "end": 51,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The scan hit list showed a second matter of the same client as a matter it opened; it read only that sibling's side letter and documents and never opened the second matter, even after the triage at [57] listed it again.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) from [51] on every review listed the matter among surfaced matters never opened or listed; the agent opened 13 more matters at [64]-[79] but not this one"
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists the sibling matter and a settlement-agreement matter as deals with the clause (evidence read at [30]-[46] and [66]-[79]).",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) the review at [51] said the sibling matter was included on thin evidence; it stayed in the answer"
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 15,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap and recommends enumerating matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store; counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 36,
+     "tags": [
+      "timed out",
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; split-range reruns return nothing three times until a working pair writes 514 hit files to disk; then per-matter hit counts and a filtered list of hit paths. One parallel call is a find | grep over file names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 46,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Extraction script with PDF support and snippets times out after 847 lines; its summary line is missing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Background extraction script polled with sleeps; prints the hit matters while it is still running."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 73,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads eight agreements and side letters of hit matters, then a snippet script over five of them."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 74,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filters the hit file by file-name words and lists the files of about 25 hit matters in one loop."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 78,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads ten more agreements, side letters and a draft partnership agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 22 matters with the clause, three M&A matters with it in underlying contracts, and an exclusions list."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Changes the count to 21, adds draft-status wording and fixes one matter's description."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 118,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Counts table rows (24) and checks key paths after one path error, then rewrites the summary as a 21/3 split."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read a chosen matter's documents in depth; re-reads the first 100 lines of the documents behind the three underlying-contract entries and keeps them."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 127,
+     "end": 127,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Two needed matters were listed and seen in snippets but excluded as non-operative, and the answer adds matters without an operative clause.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 91,
+    "end": 96,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It listed the files of two matters it needed at [76]-[77] and saw their scan snippets, but the answer puts both among exclusions as non-operative mentions without reading their agreements.",
+    "critic": "not-flagged",
+    "critic_note": "Reviews flagged unopened matters and shallow reads in general; neither exclusion was questioned"
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a sibling matter of the same client, two draft-only matters and three M&A diligence matters as deals with the clause.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) the review at [96] flagged drafts counted in the total and [118] the three added matters; the agent re-read those three at [121] and kept them"
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Parallel whole-store glob and a two-level folder listing cut at 80 lines, plus a file count."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 18,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script prints every match (about 588K chars); a second writes hit paths to a file and lists the hit matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Rerun with one snippet per file, more phrase variants and PDF support; 558 files in 76 matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broader stem pattern over all file types; 560 files in 77 matters, plus a slide-deck pass."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 66,
+     "tags": [
+      "file not found",
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 20 agreements, side letters and memos in two batches (one path does not exist, one is a folder), then lists seven matters' files and reads six diligence memos and certificates, one of them from a second matter of a client it already had."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files; extraction script over all 77 hit matters filtered by file-name words, printing per-matter snippets (about 112K chars)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 80,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 20 matters with the clause, six M&A matters with it in underlying contracts, proposal-only items and exclusions; a stage_start is rejected because the write stage is still open."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Raises the counts to 22 and 7, adds a scan-only caveat, greps for stale figures and counts table rows."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It opened the second matter of one client but named only the sibling, and the answer adds matters without the clause.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 73,
+    "end": 80,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It read a diligence memo of the second matter of the same client at [57]-[62] but the answer names only the sibling matter for that client.",
+    "critic": "not-flagged",
+    "critic_note": "No review named the matter; it had been opened, so it never appeared in the unopened lists"
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 73,
+     "end": 80,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists the sibling matter, a settlement-agreement matter, another transaction matter and several M&A diligence matters as containing the clause.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) the review at [80] flagged possible over-inclusion; the next stage raised the counts instead"
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way in outcome: each found the hit set with store-wide extraction scans and listed a sibling matter of one client in place of the second matter of that client, and each over-included. They split at where that matter was lost: T0 never opened it (surfaced-not-opened at the first screening stage), T1 listed its files and excluded it, plus a second needed matter, at the write stage, and T2 read a memo from it but named only the sibling at the write stage (both under-inclusion). Only in T0 did the reviews name the matter, in their list of surfaced matters never opened; the agent opened other matters but not this one."
+}

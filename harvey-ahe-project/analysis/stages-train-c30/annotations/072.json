@@ -1,0 +1,541 @@
+{
+ "task": "072",
+ "context": "Request: count and list the Healthcare & Life Sciences matters that involved informed consent or an IRB, for a pitch. Rubric: three qualifying matters (1018-00004, 1029-00001, 1037-00002) plus a precision criterion; sibling life-sciences matters with incidental IRB or consent mentions (1018-00003/5/6/8, 1037-00001, 1046-00001 and others) are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "label_check": "ignored",
+     "note": "Whole-store glob in parallel with a capped folder-name listing and a file count."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "label_check": "ignored",
+     "note": "declared: List files in the document store (attempt 2). Per-folder file counts for all matter folders, after a heredoc error."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 17,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "ignored",
+     "note": "declared: List files in the document store (attempt 3). Sums the counts, looks for root-level index files and intake-style file names, and globs engagement letters across all matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 37,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction for request terms with per-matter hit counts, a grep of the saved output (about 69K chars), an exact-term rerun after a heredoc error, and a file-name grep for request words. The review flags matters with hits left unscreened and the narrowing by file name."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 2: store-wide co-occurrence scan times out with no output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 66,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: the same scan in matter-number batches; the scripts fail, are patched with sed and rerun, one batch times out and is split. The review flags unverified completion and the narrow file types."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters, memos and agreements of three candidate matters, one file list and one more engagement letter. The review says three matters have no basis as the full set."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 86,
+     "end": 102,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Filters the saved exact-term output to 14 chosen matters and reads documents of six more matters; two guessed paths fail and one folder is listed. The review asks to open three named further candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 103,
+     "end": 118,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Lists four candidate folders and reads six documents from them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 119,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes a count of ten matters: the three first read plus seven with diligence, regulatory or licensing mentions of the request terms."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "end": 133,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Re-reads the response; a path check run against the workspace root fails, then passes against the output folder; no edits."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 134,
+     "end": 141,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 2: re-reads three source documents; no edits."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 142,
+     "end": 142,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After reviews pushed for wider coverage it counted seven further matters with incidental mentions of the request terms.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 119,
+    "end": 124,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Seven matters whose documents read at [90]-[116] mention the request terms only in diligence, regulatory or licensing contexts are counted as qualifying alongside the three matters first read at [69]-[83].",
+    "critic": "review-endorsed",
+    "critic_note": "(specific flag) The screening reviews said three matters had no basis as the full set and asked the agent to open named further candidates; it opened them and counted them, and later reviews did not question the additions."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Whole-store glob; the review flags the cut-off listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Per-folder file counts for all matter folders."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 2: total folder and file counts with the first and last names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out; a parallel range rerun also times out but leaves partial files, which are listed and grepped (about 76K and 44K chars). The review flags unverified coverage and noisy terms."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: a tighter scan in ranges times out but leaves per-range files, whose hits are printed. The review flags unverified completion."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Lists all files of eleven candidate matters (first 260 lines). The review flags about 60 surfaced matters left unlisted."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Attempt 2: filtered file names for all 46 matters with scan hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 81,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads 13 documents from 11 matters, runs a snippet script, two more reads and one folder listing. The review flags unopened sibling matters, a folder whose memo carries another number, and three matters counted from documents with no visible term content."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 82,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "ignored",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Store-wide exact-term scan in ranges with completion markers (about 121K chars) and greps of its output. The review flags a matter left out without a reason and matters judged from snippets."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 92,
+     "end": 101,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads one memo and four engagement or assessment documents of five more matters; one guessed path fails."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Lists one folder and greps the saved scan output for two matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 108,
+     "end": 113,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes a count of eight matters: the three first read plus five with diligence, regulatory or agreement mentions. The review flags inflation from rows on thin evidence and a broad inclusion wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads, edits a note on one folder's mismatched internal number and re-reads; the matter set is unchanged."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 124,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After wider screening it counted five further matters with incidental mentions of the request terms.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 108,
+    "end": 113,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Five matters whose documents read at [56]-[100] mention the request terms only in diligence, pediatric-study, safety-reporting or acquisition contexts are counted as qualifying.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review said three of these matters rested on documents with no visible term content, and the write review asked to remove rows resting on a loose link; the check stage only edited an identifier note."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "ignored",
+     "note": "Whole-store glob in parallel with a listing of the first 120 top-level entries and file-type counts."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "output capped",
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "find | grep over all paths (first 240 lines), a per-matter list of path hits, and a content grep with a bare glob that returns nothing. The review flags the line cap, noisy terms and the empty grep."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out, and again when split into ranges."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "ignored",
+     "note": "declared: Scan document text with an extraction script (continued). Uncapped find | grep for ten request-word patterns; the review flags that it matches only a few naming conventions."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 27,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Lists all files of seven candidate matters; the review flags about 60 surfaced matters left unlisted."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "ignored",
+     "note": "declared: Search file contents for request keywords. Shell pipeline that unzips each document and greps its text across the store; hits fall in six matters. The review flags the narrow file types and tag-split phrases."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 39,
+     "end": 44,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Attempt 2: lists all files of three more matters with hits and calls them unrelated from the listing alone."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 45,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads engagement letters, memos, agreements and a protocol summary of three candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 60,
+     "end": 63,
+     "tags": [
+      "no matches",
+      "script error"
+     ],
+     "hindsight": "none",
+     "label_check": "ignored",
+     "note": "A store-wide shell scan prints no hits and a stage-protocol warning; a check on one document shows the unzip command is missing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 69,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Reads the opening of one document from each of three other matters. The review flags unopened candidates and the failed scan."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 70,
+     "end": 89,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: Python extraction scan times out, range reruns fail on a path filter and then crash in most ranges; three ranges are rerun with fewer workers (about 24K chars). The review flags the unscanned ranges."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 90,
+     "end": 104,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters and memos of six neighbouring matters; three guessed paths fail and a stage_start is refused because the stage is still open. The review says the matters look hand-picked and were judged on thin evidence."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 105,
+     "end": 112,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Snippet script over three matters' documents; a stage_start is refused because the stage is still open. The review says one hit is a passing mention of a planned study and another rests on a truncated output."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 113,
+     "end": 125,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Reads memos, agreements and a draft license of three matters, then a snippet script over five more matters. The review flags reliance on a draft and on analysis memos."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 126,
+     "end": 131,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Attempt 3: lists all files of three matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 132,
+     "end": 144,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "label_check": "none",
+     "note": "Attempt 2: reads engagement letters, a comment response, a diligence memo and a conflict memo of three matters, and a snippet script over two documents. The review flags that one included matter was judged from a single document."
+    },
+    {
+     "stage": "Write the response",
+     "start": 145,
+     "end": 150,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes a count of seven matters: the three first read plus four with regulatory, safety-reporting, acquisition or offering-review mentions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 151,
+     "end": 159,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Re-reads the response; a path check run against the workspace root fails, then passes against the output folder; no edits."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 160,
+     "end": 160,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After first judging the three qualifying matters complete, it widened the screen and counted four further matters with incidental mentions.",
+   "first_error": {
+    "stage_no": 17,
+    "stage": "Write the response",
+    "start": 145,
+    "end": 150,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Four matters whose documents read at [92]-[142] mention the request terms only for a planned study, safety reporting, a hold on a target's study or an offering comment response are counted as qualifying, after the agent had first judged three of them out at [103].",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The in-matter search review called one matter's hit a passing mention of a planned study and questioned another's evidence, the in-depth review flagged reliance on a draft and analysis memos, and the second screening review flagged one matter judged from a single document; the answer counts all of them."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail the same way: every run found and named the three qualifying matters early (by store-wide scans or file-name searches) and then over-included sibling matters with incidental mentions of the request terms at the write stage. In each run the screening reviews flagged hand-picked candidates and unopened surfaced matters and pushed for wider coverage; the agent opened neighbouring matters and counted several of them. T0 followed reviews that named further candidates (review-endorsed); in T1 and T2 later reviews flagged specific added matters as thin evidence and the agent kept them."
+}

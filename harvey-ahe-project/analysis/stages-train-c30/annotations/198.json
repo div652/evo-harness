@@ -1,0 +1,456 @@
+{
+ "task": "198",
+ "context": "Request: executed credit agreements from the firm's deals valued over $1 billion, as comparables. Rubric: 1003-00003 (Harrowgate PE / VeloPay), 1005-00001 (Nexford Industrial), 1041-00003 (Solara Digital / Cloudium), each with its executed credit agreement, plus a precision criterion. Near misses the runs weighed: 1043-00001 (Ironhaven, $950M TLB), 1021-00001 (Verimark, $700M refinancing against a $3.1B appraised portfolio), 1031-00004 (Hudson Yards West, appraisal-based).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a top-level listing cut at 200 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List files in the document store (attempt 2). Matter count plus a find | grep for financing words in file names cut at 300 lines. The review flags the cap.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path scripts for credit-agreement names, then filtered to execution words. The review flags the execution-word filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 30,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: a heredoc error, then a broader per-matter path list saved to a file (102 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 38,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan for credit and value terms times out; a rerun over the path candidates prints per-matter counts (about 43K characters). The review flags the noise and unopened matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 60,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of eight reads of executed agreements and deal memos, four of them guessed closing-memo paths that fail. Its summary swaps the matter numbers of two facilities; the review points out the swap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 61,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of four candidate matters to locate the right documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 65,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the credit and merger agreements of the picked matters and a closing memo, then a snippet script for amounts; the summary corrects the pairing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three qualifying matters with amounts, documents and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 94,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, a path check fails on the working path, and three edits remove citations to documents it had not read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the three agreements' openings and checks cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: amount snippets from two agreements; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 110,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a folder listing cut at 80 lines and file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Three path searches for financing and value words (two cut by head). The review flags the caps and the lack of value evidence.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 26,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Scan of financing-named files for value terms writes 1,810 lines; a filter prints nothing; a per-matter summary of execution-like files. The review flags the hand-picked handful and unopened matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 45,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of executed agreements and memos from six candidates, and a value-snippet script. The review flags unopened siblings and an unexplained exclusion.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: openings of seven more executed agreements; all excluded on amount. The review questions excluding the $950M facility on facility size alone.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads a sibling matter's loan analysis to judge whether the near-threshold deal's billion-dollar figure is a deal value; it is excluded.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Two more reads on the same question; exclusion kept.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three qualifying matters with amounts and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check and five short re-reads; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a folder listing cut at 80 lines and file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path script for financing words (94 matters, about 43K characters). The review flags the truncated view.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broader patterns saved to a file; 169 matter numbers with counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 50,
+     "tags": [
+      "timed out",
+      "script error",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide value scan times out; reruns over the path candidates return no hits or fail; range scans write partial files; a patched rerun prints about 133K characters and greps for billion-dollar values. The review flags the path filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 51,
+     "end": 60,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: range scans over all documents without the path filter (one times out), then an execution-name scan.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered file listing of nine candidate matters. The review flags the hand-picked nine.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in candidate matters (attempt 2). File counts per folder for all 169 candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 73,
+     "end": 99,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads agreements, deal memos and closing documents from eight candidate matters and a value-snippet script.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 100,
+     "end": 112,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: closing, signature and escrow documents of three picked matters; a stage_start for writing is refused while this stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four core matters, one a refinancing that clears the threshold only on an appraised asset value, plus an appraisal-only supplement. The review flags the appraisal basis.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 141,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks paths; relabels the supplement as a near match but keeps four qualifying matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 151,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads four agreements' openings. The review notes the refinancing's facility is under the threshold.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 164,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: reads value documents and rewords the headline as four matters under a broad deal or asset-value screen.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 165,
+     "end": 171,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: confirms the deliverable path. The review flags the refinancing still counted.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 172,
+     "end": 197,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 5: moves the refinancing to the near matches and counts three. The review questions the narrowing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 198,
+     "end": 209,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 6: adds a note that the near matches count only if appraised value counts; three stay qualifying.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 210,
+     "end": 215,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 7: confirms the file and wording.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 216,
+     "end": 216,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → List matter folders → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs passed. The shared procedure: store-wide file-name searches for credit-agreement and financing names, an extraction scan for value terms (timeouts in every run), reads of the executed agreements and deal-value documents of a dozen candidates, and exclusion of facilities whose deal value is under the threshold. Reviews shaped each run: in T0 the screening review caught two facilities whose matter numbers were swapped after parallel reads, and the agent listed the folders and fixed the pairing; in T1 a review questioned excluding the near-threshold facility, and the agent read further and kept the exclusion; in T2 the write counted a refinancing that clears the threshold only on appraised value, three reviews flagged it, and the fifth check stage moved it out of the count. Label notes were ignored in T0 (once), T1 (twice) and T2 (once)."
+}

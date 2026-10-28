@@ -1,0 +1,484 @@
+{
+ "task": "154",
+ "context": "Request: the last M&A deal the firm closed that included an earnout, and the agreement, as a drafting precedent. Rubric: 1009-00003 (Skybridge de-SPAC business combination, closed July 21, 2025) and its executed business-combination agreement, plus precision: no other matter asserted as a qualifying closed earnout deal (earlier closed earnout deals such as 1037-00006, 1013-00006, 1001-00003, 1008-00008 are outside).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders with file counts and subfolders.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for earnout and deal words grouped by matter, plus three globs; 74 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; three range reruns each print about 200-235K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: compact scan times out; the partial output file is printed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the agreement and closing papers of the two highest-numbered candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 53,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Reads the lead matter's earnout form and a later section of its agreement, with a file-name listing of the matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the lead deal and its agreement, with a recency cross-check listing earlier closed earnout deals. The review questions whether a de-SPAC deal counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 67,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths, and adds an earlier conventional deal as an alternative precedent.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads three source documents; the review flags the alternative precedent as widening the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: removes the alternative-precedent fallback; the cross-check list stays.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the latest deal correctly but listed earlier closed earnout deals in a recency cross-check, which reads as asserting them.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 61,
+    "end": 66,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer lists earlier closed deals with earnouts, seen in its scans and reads at [31]-[50], as cross-checks to the lead deal, so they are asserted as closed earnout deals.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The attempt-2 check review named the added conventional alternative as widening the answer; the agent removed it but kept the cross-check list."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find loops over earnout and deal words and three globs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broad path regex with per-matter counts; 214 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: strong-pattern path list grouped by matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 48,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; four range reruns print their first 220 lines each.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: aggregates the range outputs by matter, filtered by file name.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 55,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: unfiltered by-matter summary of the range outputs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 77,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads agreements, closing papers and earnout memos of nine candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 78,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five unresolved candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 82,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (continued). Reads closing papers of four candidates and a later section of one agreement.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 93,
+     "end": 103,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the lead matter's earnout form, agreement section, closing memo and a letter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 104,
+     "end": 113,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: two later agreement sections and a filtered file search; a stage_start for writing is refused because the stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 114,
+     "end": 122,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: full file listing of the lead matter and three re-reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 123,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the lead deal and its agreement, with earlier closed earnout deals as comparison precedents. The review flags the comparison precedents as widening the answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 144,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the response and three sources.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 145,
+     "end": 145,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the latest deal correctly but added earlier closed earnout deals as comparison precedents.",
+   "first_error": {
+    "stage_no": 15,
+    "stage": "Write the response",
+    "start": 123,
+    "end": 128,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer adds earlier closed deals with earnouts, read at [63]-[91], as comparison precedents and a conventional alternative, asserting them as closed earnout deals.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The write review said the comparison precedents widen the answer with older matters; the check stages only re-read files."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a folder listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Writes all folder names to a file and prints the count and first ten.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find loop (malformed, runs twice) and three globs for earnout and deal words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broad agreement and closing path regex (about 118K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: narrow path regex; 29 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 45,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A scan times out; a fast rerun prints about 126K chars and a grep of the later ranges is cut at 260 lines.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter earnout hit counts with files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads agreements and closing papers of four candidates and the lead matter's earnout form.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: scan for earnout and closing-date evidence across the candidate set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the lead deal and its agreement, with earlier closed earnout deals as supporting matters. The review questions whether a de-SPAC earnout is in scope.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths, and adds a bottom line pointing to an earlier conventional deal as the precedent for conventional acquisitions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 100,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named the latest deal correctly but listed earlier closed earnout deals as supporting and alternative precedents.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 79,
+    "end": 84,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer lists earlier closed deals with earnouts, read at [60]-[70], as supporting matters, asserting them as closed earnout deals; the check stage then made one of them a conventional alternative.",
+    "critic": "not-flagged",
+    "critic_note": "The write review questioned whether the de-SPAC deal was in scope, not the other deals; the check stage's added alternative followed that flag."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way, at the write stage. Each found the lead deal through scans, read its closing memo, agreement and earnout form, and named it correctly with its agreement, but the answer also lists earlier closed earnout deals as recency cross-checks, comparison precedents or a conventional alternative, which the judge read as asserting them. The reviews differed in effect. In T0 and T2 the write review questioned whether a de-SPAC deal counts, and the check stage then added an earlier conventional deal as an alternative; T0's next review flagged that alternative and the agent removed it but kept the cross-check list. In T1 the write review named the comparison precedents as widening the answer, and the agent left them."
+}

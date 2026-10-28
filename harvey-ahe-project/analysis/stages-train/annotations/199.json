@@ -1,0 +1,274 @@
+{
+ "task": "199",
+ "context": "Request: due-diligence memos from the firm's healthcare-services M&A deals (hospital systems, provider groups). Rubric: 1001-00003 (its due-diligence summary memo), 1001-00007 (five diligence documents) and 1006-00008 (five diligence documents), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find to depth 3 (no output) plus whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads diligence documents and memos from the three matters at the top of the listing; no search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 11,
+     "end": 14,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the rest of one diligence memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes that the store has no fitting deal and offers the listing-top memo as the only completed one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 17,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the three matters at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 10,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any search, so none of the matters it needed surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and a request list from the three matters at the top of the listing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 11,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Globs for 'diligence' and 'due' in file names plus a non-recursive *.docx content grep (nothing); the 'diligence' glob stops at 100 files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Three batches of reads of diligence reports and memos from about ten matters in those lists."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 41,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists two candidate matters; the first pattern returns nothing and is rerun with the matter folder as path."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads three diligence memos of each of the two matters it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters and their diligence memos."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 51,
+     "end": 51,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its 'diligence' file-name glob stopped at 100 files before one needed matter; it also left one listed document of a picked matter out.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file names for request keywords",
+    "start": 11,
+    "end": 14,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its 'diligence' glob stopped at 100 files before reaching one needed matter, whose file names lack the other word it globbed; it never paged further or searched document text."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 48,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "why": "Its listing of one picked matter showed five diligence files, but it read four of them and left the fifth out of the answer."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find to depth 2 (no files)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target missed",
+     "note": "find | grep over paths for request words, cut at the first 300 lines (about 33 matters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads diligence memos and reports from four matters in that list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 15,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide .docx scan for request words printing each hit file with its opening text; about 875K chars listing hit files from many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 16,
+     "end": 22,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads diligence memos of three matters from the scan; two reads use a matter number that does not exist in that form and fail."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 23,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the folder of the mistyped matter number (no diligence files) and the diligence folders of the two other candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one more memo of a picked matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters and their diligence memos."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 31,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The scan surfaced all three matters, but it requested one under a mistyped matter number and dropped it after file-not-found.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 16,
+    "end": 22,
+    "events": "[16]-[22]",
+    "kind": "mistyped-path",
+    "why": "The scan listed the diligence files of a needed matter, but it requested them under a mistyped matter number, got file-not-found, then listed the mistyped folder and dropped the matter."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed, in different ways. T0 never searched and wrote up a diligence memo from the matter at the top of the listing (partial listing as corpus). T1 searched file names; its 'diligence' glob stopped at 100 files before one needed matter, and it also left one document of a matter it found out of the answer (search miss at the file-name stage). T2's store-wide extraction scan surfaced all three matters, but it requested one matter's files under a mistyped matter number, got file-not-found, and dropped that matter (mistyped path at the following reading stage)."
+}

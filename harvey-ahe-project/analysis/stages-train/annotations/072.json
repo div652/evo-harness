@@ -1,0 +1,274 @@
+{
+ "task": "072",
+ "context": "Request: how many Healthcare & Life Sciences matters involved informed consent or an IRB; list them. Rubric names 1018-00004 (Penterra), 1029-00001 (Thornwick), 1037-00002 (Solstice) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find with a depth limit returns nothing; a second find lists the first 100 files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 6,
+     "end": 7,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for request keywords; times out after about 252K chars."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Per-matter extraction script; times out after the first matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 26,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of short reads (engagement letters, then 25-60-line skims) of seven matters from the scan hits."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes the response counting eight matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 29,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Fixes a cited path and checks the table rows with a shell command."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Both scans timed out before reaching one needed matter; the answer then counted every keyword-hit matter.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 6,
+    "end": 7,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide scan timed out before reaching one of the matters it needed, and a per-matter retry also timed out; it went ahead on the partial hit list without a cheaper search."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted every matter with a keyword hit, including ones whose documents it had only skimmed, as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus four content greps (file list, then matching lines) for request keywords."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads emails and a memo from the three matters with the most specific grep hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for the core keywords; times out."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 22,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads documents of two further scan hits (one read points at a folder and fails)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Extracts keyword snippets from one of those documents."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 25,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads specific email sections and a memo of two of the three matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response counting three matters and stating exclusions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for broad keywords; times out with about 52K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 6,
+     "end": 12,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and schedules from three scan hits; one path has a typo."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script grouping keyword hits by matter; about 78K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 15,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of 30-50-line skims of thirteen keyword-hit matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the response counting twelve matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Counted every keyword-hit matter it skimmed as qualifying.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Write the response",
+    "start": 30,
+    "end": 31,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "After 30-50-line skims that did not show the requested activity for most hits, it counted twelve keyword-hit matters as qualifying."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T1 used content greps that surfaced all three matters, read their emails and memos, checked and dropped other hits, and counted three. T0's two extraction scans timed out before reaching one needed matter and it counted all eight keyword-hit matters; T2 surfaced all three via a per-matter scan but, after short skims, counted all twelve keyword-hit matters (fails precision only)."
+}

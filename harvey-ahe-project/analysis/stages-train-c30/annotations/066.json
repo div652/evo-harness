@@ -1,0 +1,478 @@
+{
+ "task": "066",
+ "context": "Request: the most recent fund or co-investment vehicle the firm formed that had an LPAC, with its formation/LPA documents. Rubric: 1027-00002 (Ridgeline-Clarion Co-Invest, Pellegrino; LPA effective January 30, 2026, LPAC under Section 9.1), with proof documents: execution LPA, key-terms memo, side letter, subscription agreement and Closing/closing-checklist.xlsx; plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap.",
+     "label_check": "none",
+     "end": 7
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts and extension totals.",
+     "label_check": "ignored",
+     "end": 13
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex script for request words over all files; 97 matters with per-matter file lists.",
+     "label_check": "none",
+     "end": 19
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: widened terms saved to a file; prints only the count and three matters with committee-word file names.",
+     "label_check": "none",
+     "end": 25
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for committee terms; per-matter hit counts for 277 files.",
+     "label_check": "none",
+     "end": 31
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of five candidate matters; the review flags about 60 surfaced matters left unlisted.",
+     "label_check": "none",
+     "end": 37
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: file names of every matter with scan hits, filtered by a pattern for formation and agreement words.",
+     "label_check": "none",
+     "end": 43
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, charters, certificates and memos from five candidate matters, a grep of the saved scan for one matter and a section script over its executed agreement. The review flags unopened matters and an unestablished formation date.",
+     "label_check": "none",
+     "end": 68
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over the highest-numbered matters for committee and formation terms, and a read of the leading matter's key-terms memo.",
+     "label_check": "none",
+     "end": 76
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists two later matters and re-reads the opening of the leading matter's executed agreement.",
+     "label_check": "none",
+     "end": 83
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes the leading matter as the most recent vehicle, citing its executed agreement, memo, side letter, subscription agreement and others, with a note that no formation certificate was found.",
+     "label_check": "none",
+     "end": 89
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses document",
+     "note": "Path check fails on the workspace path, reruns against the output folder, and one wording edit.",
+     "label_check": "none",
+     "end": 100
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the executed agreement, a section script, and a find over the leading matter filtered to certificate, formation and agreement names.",
+     "label_check": "none",
+     "end": 108
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 109
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never listed the chosen matter's full folder: its listings were filtered to formation and agreement file names, so the closing checklist never appeared and was not cited.",
+   "first_error": {
+    "stage_no": 7,
+    "events": "[40]-[41]",
+    "kind": "search-miss",
+    "why": "Its only listing of the matter it later picked was filtered to formation and agreement file names, so the closing checklist never appeared; after choosing the matter it again ran only a filtered find at [103] and never listed the full folder.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The check review at [100] asked to confirm the stated document gap against the matter's file listing; the agent ran a find filtered to formation and agreement names, which again left out the checklist.",
+    "stage": "List files in candidate matters",
+    "start": 38,
+    "end": 43
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level listing (first 200 lines).",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex script for request words over all files, in parallel with a content grep whose glob lacks a path prefix and finds nothing.",
+     "label_check": "none",
+     "end": 15
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: tighter path pattern with per-matter lists.",
+     "label_check": "none",
+     "end": 21
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: hits saved to a file, 49 matters with counts.",
+     "label_check": "none",
+     "end": 27
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for committee terms times out after writing a partial hit file; per-matter counts from it.",
+     "label_check": "none",
+     "end": 37
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, memos and charters from four candidate matters.",
+     "label_check": "none",
+     "end": 56
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidate matters (about 48K chars).",
+     "label_check": "none",
+     "end": 62
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (attempt 2). A filtered path sweep over the 49 surfaced matters, then reads eleven documents including the leading matter's closing checklist, opinion, funds-flow memo and subscription agreement.",
+     "label_check": "ignored",
+     "end": 80
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Section script over the leading matter's executed agreement for committee and closing terms.",
+     "label_check": "none",
+     "end": 86
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 87,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: re-reads the closing checklist and agreement passages and one later matter; a stage_start for writing is refused as still open.",
+     "label_check": "none",
+     "end": 97
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 98,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: lists all files of the five highest-numbered matters.",
+     "label_check": "none",
+     "end": 103
+    },
+    {
+     "stage": "Write the response",
+     "start": 104,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading matter as the most recent vehicle with its agreement, side letter, subscription agreement, closing checklist and memo.",
+     "label_check": "none",
+     "end": 109
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and the cited agreement, side letter and closing checklist.",
+     "label_check": "none",
+     "end": 118
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: script confirms cited paths and the committee article text.",
+     "label_check": "none",
+     "end": 124
+    },
+    {
+     "stage": "Finish the run",
+     "start": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 125
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-term find \\| grep over file paths, plus a prefix-anchored path pattern; the review flags the anchoring.",
+     "label_check": "none",
+     "end": 15
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: unanchored path pattern with broader terms; 1,211 files grouped by matter.",
+     "label_check": "none",
+     "end": 21
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for committee terms times out, then reruns in number ranges with per-matter hits.",
+     "label_check": "none",
+     "end": 29
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "File names of eight candidate matters filtered to formation, agreement, committee and closing words.",
+     "label_check": "none",
+     "end": 35
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: per-matter file summaries of the highest-numbered matters.",
+     "label_check": "none",
+     "end": 41
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads formation papers and later sections of a draft agreement from one candidate, then the leading matter's executed agreement, opinion and closing checklist and another candidate's papers, with a section script over the executed agreement.",
+     "label_check": "ignored",
+     "end": 67
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the leading matter's full folder and reads its key documents.",
+     "label_check": "none",
+     "end": 76
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads the executed agreement, closing checklist and key-terms memo.",
+     "label_check": "none",
+     "end": 84
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: full folder listing again and reads of the committee article and the full closing checklist.",
+     "label_check": "none",
+     "end": 98
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 99,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 4: reads the key-terms memo, a negotiation tracker and a redline.",
+     "label_check": "none",
+     "end": 106
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 107,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 5: full folder listing, executed agreement and closing checklist together.",
+     "label_check": "none",
+     "end": 114
+    },
+    {
+     "stage": "Write the response",
+     "start": 115,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading matter as the most recent vehicle with its documents including the closing checklist.",
+     "label_check": "none",
+     "end": 120
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Path check (one missing path), edits correcting comparison citations, re-reads.",
+     "label_check": "none",
+     "end": 136
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: full path existence checks and one citation edit.",
+     "label_check": "none",
+     "end": 148
+    },
+    {
+     "stage": "Finish the run",
+     "start": 149,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 149
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1, T2 pass; T0 fails one document criterion). All three runs found and chose the same matter through path searches and a store-wide scan. They split at how the chosen matter's files were listed: T1 listed its full folder at [57]-[62] and T2 read its closing checklist during screening and later listed the full folder, so both cited the checklist; T0 saw the matter only through a listing filtered to formation and agreement file names and never listed the full folder, so the checklist never appeared. The reviews did not differ in a way that explains the split: in T0 the reviews flagged unopened matters and, at the check stage, asked to confirm the document gap against the folder listing, which the agent answered with another filtered find."
+}

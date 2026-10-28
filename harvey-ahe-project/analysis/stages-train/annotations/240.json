@@ -1,0 +1,269 @@
+{
+ "task": "240",
+ "context": "Request: the firm's most recent Tax matter with a tax indemnity provision in an executed agreement, and the document evidencing it. Rubric: 1001-00006 (Ardent Capital Partners) and its closing-tax-memorandum.docx, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an executed agreement, a subscription agreement and two memos from the two matters at the top of the listing; no store-wide search."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads two further sections of one executed agreement, then that matter's closing opinion and email plus a draft agreement of the other listing-top matter (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Content grep with a single-extension glob inside the other listing-top matter; returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing-top matter and its executed agreement as the most recent precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Never searched the store; picked the most recent qualifying matter from the two matters visible at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 8,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the two matters at the top of a capped listing and never searched the store, so the matter it needed never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shallow shell find that lists no files."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 10,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads an agreement, memos and a draft from the two matters at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 12,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for request keywords in document text; times out after about 305K chars of hits from several matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of an indemnity agreement, a closing index, an engagement letter and two purchase agreements from four matters in the scan output."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 19,
+     "end": 26,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of the indemnity agreement, a purchase agreement and the closing index of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter from the scan output and its standalone indemnity agreement as the most recent precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The one store-wide scan timed out before reaching the needed matter; the agent picked the most recent matter among the partial hits.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 11,
+    "end": 12,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was an extraction scan that timed out before reaching the matter it needed; it neither narrowed nor reran the scan nor searched file names."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an executed agreement, two memos and a draft from the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 11,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for request keywords in document text; times out after about 114K chars of hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of four agreements from four matters in the scan output."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script over an agreement and a closing index of one candidate matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of another candidate matter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 21,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that matter's memo, closing checklist, closing certificate and agreement opening."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two snippet-extraction scripts pulling the indemnification sections of that matter's agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes that matter and its executed purchase agreement as the most recent precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The one store-wide scan timed out before reaching the needed matter; the agent picked the most recent dated agreement among the partial hits.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 10,
+    "end": 11,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was an extraction scan that timed out before reaching the matter it needed; it did not narrow or rerun the scan or search file names."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way in effect: the needed matter never surfaced. T0 never searched and read only the two matters at the top of the listing (partial listing as corpus, stage 2). T1 and T2 read those same listing-top matters, then ran one store-wide extraction scan each that timed out before reaching the needed matter (search miss, stage 3), and each picked a different matter from the partial hits."
+}

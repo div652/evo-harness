@@ -1,0 +1,439 @@
+{
+ "task": "114",
+ "context": "Request: general litigation matters that involved a retained damages expert, and the documents showing each engagement. Rubric: ten matters (1005-00005, 1010-00005, 1011-00004, 1012-00005, 1021-00006, 1022-00005, 1033-00006, 1034-00003, 1038-00007, 1044-00006), each with an expert and proof-document criterion (16 criteria), plus a precision criterion (one more matter, not named in the log, is permitted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for expert and damages phrases with snippets; times out after about 930K characters. The summary lists about a dozen candidate matters; the review flags the partial output and boilerplate hits."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). find | grep over all paths for expert, damages and retention file names (204 files saved), but prints only the lines for the dozen matters named after the scan. The review flags that filter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads one retention letter (or declaration) from each of 13 candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six of those matters and reads one further document (closing memo, status report, report) from eleven."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 76,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two reads issued with no stage open are rejected; the agent opens a stage and reads an engagement letter and a retention agreement of two matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes twelve litigation matters with their experts and engagement documents, plus an arbitration matter separately."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 83,
+     "end": 90,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files. Reads a retention letter and closing memo of one more matter; one guessed path does not exist."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Edits the response to add that matter and update the count; re-reads the opening."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Screen candidate matters by reading documents → Check or revise the response → Finish the run",
+   "failure_point": "Its file-name search for expert-retention files was printed only for the matters its timed-out scan had named, so five needed matters never entered the candidate set; the answer also asserts nine other matters.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Search file names for request keywords",
+    "start": 20,
+    "end": 25,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the filter to a fixed set of matters.",
+    "why": "The find over all paths saved 204 expert-related file names, but the agent printed only lines for the dozen matters named after the timed-out scan, so needed matters whose retention letters were in that list (and one the scan itself had shown) were never seen or opened; the stage review flagged this fixed-matter filter and the agent went straight to reading."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) Reviews warned about thin, one-letter verification; only one of the nine (verified through a declaration) was named.",
+     "why": "The answer lists nine matters outside the qualifying set, including a sibling matter of a needed one, each judged from one retention letter or declaration; the reviews warned about unopened candidates and thin verification but did not name these inclusions (evidence seen at [26]-[76])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names to a file."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over file and folder paths for damages, expert, retention and report words (598 files, 52 folders); the long output is cut in the display."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 34,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out twice; reruns in five matter-number ranges in parallel, printing only hit counts."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Tighter expert-and-damages text scan over the same five matter ranges, printing the hit file list."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 45,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files (continued). Reads about 30 retention letters and expert memos from about 25 matters in four batches. The review flags reliance on one letter per matter and unopened surfaced matters (examples do not include the ones it skipped). Two matters the scan listed are not opened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 16 matters with experts and engagement documents and an excluded list. The review flags possible over-inclusion and unresolved citations."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Lists three matters' files, reads two letters, edits two entries and checks cited paths."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A read issued with no stage open is rejected; then edits the count to 14 confirmed plus one proposed and one flagged engagement, re-reading the opening."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its text scan listed all ten needed matters, but it never opened two of them, and its answer excluded three it had opened on the strength of one expert letter each, while asserting ten other matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 45,
+    "end": 80,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review warned about many surfaced matters left unopened, with examples that did not include the two skipped.",
+    "why": "The tight scan just before listed every needed matter, but of the roughly 25 matters it chose to read it left out two of them, which never entered the answer; the review warned about unopened surfaced matters only with examples that did not include them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "Three needed matters it had opened are excluded or omitted: in each it read a letter for a different (non-damages) expert or a memo recommending retention and judged the matter from that one document (evidence seen at [45]-[79]); no review named these exclusions."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(generic flag) 'Possible over-inclusion' and a request to check each entry for an executed engagement.",
+     "why": "The answer asserts ten matters outside the qualifying set; the write review flagged possible over-inclusion and asked for each engagement to be checked, and the agent downgraded only one matter to a proposal."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script fails on a heredoc error; the rerun to a file times out."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Scan document text with an extraction script (continued). find | grep over all paths for expert, damages and retention words, printed to a line limit. The review flags the file-name-only fallback."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads about 22 expert letters, scope memos and reports from about ten candidate matters in three batches."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 57,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over 207 store-wide files whose names or folders contain expert, damages or valuation words, printing an excerpt of each (about 157K characters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads twelve retention letters and memos picked from that output. The review flags that the scan was limited by file names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 73,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Starts a background full-text scan of all documents for retention language and polls it twice; stops while it is still running (about 400 files done). The review flags that the partial output was treated as sufficient."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Attempt 2: polls once more; the scan is still running; the agent reads the tail and moves on. The review again flags the unfinished scan."
+    },
+    {
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 16 matters with experts and engagement documents and excludes several as pre-suit or draft. The review flags over-inclusion risk for proposed engagements."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Edits the response to 14 confirmed matters and two conditional leads; re-reads parts and fixes counts."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 126,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the whole response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 127,
+     "end": 134,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: renumbers headings with a script (the first run opens a response path that does not exist)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 135,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One needed matter has no expert-named files and was never reached because the agent stopped its full-text scan while it was still running; the answer also excludes an opened matter as pre-filing and asserts six other matters.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Scan document text with an extraction script",
+    "start": 73,
+    "end": 82,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Two reviews named the full-text scan as still running when the agent moved on.",
+    "why": "Its other searches were limited to expert-named files; the background full-text scan that could reach the remaining matter was abandoned while still running, and after the review flagged this the agent polled once more and drafted anyway, so that matter never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "",
+     "why": "It read the needed matter's retention letter for a damages expert but excluded the matter because the letter describes litigation not yet filed (evidence seen at [58]-[68]); the write review flagged over-inclusion instead."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(generic flag) 'Over-inclusion risk' naming only the proposed-expert entry.",
+     "why": "The answer asserts six matters outside the qualifying set; after the write review flagged over-inclusion risk the agent moved two proposed engagements to conditional leads but kept the others."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, each by both omitting needed matters and asserting many others (precision failed in all three). They failed at different stages. T0 ran a store-wide file-name search for expert-retention files that likely reached most needed matters but displayed only the matters its timed-out text scan had already named, so five never entered the candidate set (over-narrow filter, flagged by the critic and ignored). T1's tight text scan surfaced all ten, but its screening reads skipped two of them and its answer excluded three it had opened, judging from one expert letter each (surfaced, not opened). T2 got closest (12/17): an extraction script over expert-named files reached nine of ten, but the one matter without expert-named files needed a full-text scan, which the agent stopped while it was still running after the critic had flagged that (search miss); it also excluded one opened matter as pre-filing. In every run the reviews repeated generic 'many surfaced matters unopened' warnings, and the over-inclusion flags led at most to downgrading one or two matters."
+}

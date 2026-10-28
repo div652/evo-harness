@@ -1,0 +1,324 @@
+{
+ "task": "121",
+ "context": "Request: the spread of settlement amounts, recovered and paid, across general commercial litigation matters. Rubric: count 11, range $425K-$87.5M, mean ~$16.82M, total ~$185.0M, distribution shape, eleven named matters (1005-00005, 1006-00005, 1007-00005, 1008-00007, 1012-00006, 1021-00006, 1027-00003, 1033-00006, 1035-00004, 1038-00007, 1044-00006) with amounts, recovered-vs-paid split, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, filings and discovery responses of two matters at the top of the listing; no keyword search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 21,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later memo section, a letter, an email and a notice of one of them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that only one matter fits and that no completed amounts are available."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; answered from two matters at the top of a capped listing and reported no amounts.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 20,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from two matters in a capped listing without any search, so none of the eleven qualifying matters surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "A store-wide extraction script fails on a syntax error; the rerun times out after about 131K chars."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find/grep over file paths for request words; about 53K chars of paths."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of ten executed agreements from nine matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script pulling amounts from named agreements."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of seven more agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes recovered and paid amounts with spread statistics for about ten matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 34,
+     "end": 51,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Edits the statistics and removes one matter in several passes; a grep and a read check the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 52,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Two qualifying matters were never opened; others were read but left out or given the opposite paying side, and three non-qualifying matters were added.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 11,
+    "end": 21,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The file-path search listed all eleven qualifying matters, but the agreements it chose to open left out two of them, which never appear in the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "For several matters it had read, it reversed which side paid, so recoveries and payments are misassigned."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read two qualifying matters' agreements but left them out of the answer, listing a different matter of the same client for one."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted three other matters as qualifying."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A file-name glob for a request word plus two content greps with a single-extension glob that return nothing (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eight agreements and a memo from eight matters on the glob list."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over documents whose names match a request word, printing amount snippets; about 38K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eight more agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes recovered and paid amounts with spread statistics for twelve matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "One edit to the summary statistics."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 35,
+     "end": 35,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Two qualifying matters were never opened, one that was read was left out, two amounts were misstated, and three others were counted.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 9,
+    "end": 17,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The glob listed six qualifying matters, but the agreements it chose left out two; one of those and another that its later scan listed were never opened and are missing from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "It gave amounts that do not match the agreements for two matters it had read, attributing one matter's amount to another."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read one qualifying matter's agreement but left that matter out of the answer."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted three other matters in the totals."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T0 never searched and answered from two matters at the top of a capped listing (partial listing). T1 and T2 found the qualifying matters through file-name searches but opened only some of them (surfaced, never opened), then at the write stage misassigned amounts or paying side, left out matters they had read, and counted extra matters."
+}

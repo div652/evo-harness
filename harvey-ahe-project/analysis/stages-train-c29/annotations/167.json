@@ -1,0 +1,422 @@
+{
+ "task": "167",
+ "context": "Request: deals over $1B in guaranteed (base) consideration, excluding earnout/CVR value, that were governed by Delaware law. Rubric: 1001-00004 (Ardent / Luminex), 1003-00003 (Harrowgate / VeloPay), 1038-00009 (Cascade / NovaMart), 1041-00003 (Solara / Cloudium), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder find cut at 80 lines and a file count."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 24,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; a batched rerun prints about 2M chars, and a grep for amounts in the billions prints about 437K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists name-filtered files of five candidate matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 34,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Builds a per-matter index of large amounts from its own scan output (about 271K chars)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 35,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script, continued. Lists name-filtered files of four more matters picked from the index."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 39,
+     "end": 71,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Opening reads of executed agreements of the candidates, folder listings, snippet scripts for governing-law and consideration clauses, and a grep for party names that returns nothing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the qualifying deals with base-consideration method and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response; a path-existence check prints nothing."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 85,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scan index listed all four qualifying deals, but the further matters it chose to list left one out; the answer also asserts a deal that does not qualify.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "List files in candidate matters",
+    "start": 35,
+    "end": 38,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The amount index just before ([33]-[34]) listed all four qualifying deals, but the four matters it then chose to list included a neighbouring matter instead of one of them, and it never opened that deal.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The stage review said its follow-up filter risked dropping matters and that dozens of surfaced matters were never opened, without naming this one."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer asserts a further deal whose base value and governing law it read at [39]-[71] as qualifying, although it does not qualify.",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write and check reviews warned that base consideration and governing law might rest on snippets and that included matters were not re-checked, without naming the matter."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a folder find cut at 80 lines and file counts by extension."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts matters and prints first and last folder names and a sample of deal-like file names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range rerun writes 9,458 candidate lines (about 149K chars printed)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Tighter scan limited to agreement-named files returns a single memo, which it reads as a false positive. Review: goal not reached, implausibly narrow."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 31,
+     "end": 39,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Opening reads of six executed agreements from scan-hit matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: same stage, continued. Amount scan over agreements in matter ranges and a per-matter count of amount hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: same stage, continued. Six opening reads of agreements, memos and resolutions of candidates picked from the counts."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 51,
+     "end": 54,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: same stage, continued. Prints amount blocks for eleven named matters from its own scan output (about 328K chars), then runs a qualifier scan in ranges."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 55,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "declared: same stage, continued. find | grep over all paths for deal-summary and closing-memo file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 66,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: same stage, continued. Opening reads of nine deal-summary memos from that list."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 67,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: same stage, continued. Lists name-filtered files of seven matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 69,
+     "end": 95,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads and snippet scripts over two agreements and memos of the matters it is weighing, plus a store-wide phrase scan that fails on a heredoc and then times out. Review: about 60 surfaced matters never opened."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 96,
+     "end": 103,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Snippet scripts over the agreements of the remaining principal candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 104,
+     "end": 111,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Writes one qualifying deal; a read sent after the stage closed is refused. Review flags risk of under-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 121,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Reads one more candidate agreement, edits the conclusion and re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Search file names for a document type → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its first scan and its amount counts listed all four qualifying deals, but it read agreements of other matters, dismissed one deal from a memo snippet, and answered with a single deal.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 50,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The per-matter amount counts just before ([42]-[43]) listed all four qualifying deals, but the six documents it chose to read covered only one of them, and it never opened the other three.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) Reviews at [95], [103] and [109] said dozens of surfaced matters were unopened and the one-deal conclusion risked under-inclusion; it opened other candidates, never these three."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 matter folder names."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Walks the store counting files by extension and per matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction scripts: two time out, chunked reruns fail on edits to the script, then complete; a candidate scan times out and is rerun on deal-named files only."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Tighter scan for amounts in the billions near governing-law words; times out with no output."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 44,
+     "end": 51,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for request keywords. Script over all paths for agreement-type names (first try fails on a heredoc): 119 hits."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 52,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for request keywords (attempt 2). Broader agreement-type name search grouped per matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: same stage, continued. Two batches of reads (22) of executed agreements from that list."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 86,
+     "end": 101,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "Extraction script over the listed agreements for price and governing-law clauses, then greps of its output for amounts in the billions (about 220K chars)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Confirmation script over four executed agreements."
+    },
+    {
+     "stage": "Write the response",
+     "start": 108,
+     "end": 113,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four qualifying deals with amounts and governing-law sections."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 120,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; path check fails on the file location and is not retried."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed outcomes. All runs ran store-wide extraction scans that timed out. T2 then searched file names for agreement types, read 22 executed agreements and ran a clause extraction over all of them, which reached all four deals. T0's amount index listed all four but the matters it chose to list left one out, and it also asserted a non-qualifying deal; T1's counts listed all four but it read other matters' agreements and answered with one deal. The split is at the step after the scans where each run chose which agreements to open (T2 stage 7-8 vs T0 stage 6, T1 stage 7); reviews at that point gave all runs similar generic warnings about unopened matters."
+}

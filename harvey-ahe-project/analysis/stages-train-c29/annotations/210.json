@@ -1,0 +1,279 @@
+{
+ "task": "210",
+ "context": "Request: top five clients by number of matters, with counts, for a relationship review. Rubric names no matter numbers: counts per client (Lumos 1008, Cascade Retail 1038, Quorum 1025 at 10; Dunmore 1016, Aurelius 1017, Penterra 1018 at 9) and tie handling.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store; prints all matter folder names, then find | grep over file paths for engagement and intake files (about 86K chars). The review flags the truncated output and the name filter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Extraction script pulling the opening text of engagement or intake documents for every matter (two matters have none), a count of folders per matter-number prefix, and greps of the extract for the six largest prefixes. The review flags that client identity was inferred from the prefix."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 43,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Per-prefix extraction of a client-identifying opening (the first script fails on a heredoc), file listings and text of the two matters without engagement files, and per-prefix matter lists for the leading groups."
+    },
+    {
+     "stage": "Write the response",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes six clients (three tied at 10 matters, three at 9) with matter-number ranges and source documents. The review flags an apparent inconsistency in the tie wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 50,
+     "end": 57,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that the six cited paths exist."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Recomputes the six counts from the folder list. The review flags the prefix-to-client assumption."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 64,
+     "end": 64,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 9,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a listing of all matter folders with a count and the engagement files (labelled by the declared intent)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 10,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Extraction script over engagement and matter-opening documents of every matter, a count of folders per prefix, and samples for the six largest groups. The review flags the file-name filter and prefix-based counting."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide search for the six client names: the first per-range scripts time out, a faster text extractor over three matter ranges completes and shows each name only in its own prefix group."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 38,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads nine engagement letters and one memo from the six leading groups to confirm the client names."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 50,
+     "end": 57,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes per-prefix counts from the folder list and pulls source references for the six groups. The review flags that prefixes are treated as clients."
+    },
+    {
+     "stage": "Write the response",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes six clients (three tied at 10, three at 9) with all 57 matter numbers and source documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 64,
+     "end": 71,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths and the folder count. The review flags inconsistent tie wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 81,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit first rejected because no stage was open, then the same tie-wording edit after a new stage_start, and a partial re-read."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "A further edit of the tie wording."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 15,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the silent cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store; prints all 266 matter folder names."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Per-matter scan for engagement and opening files, sample text extraction from them, and a count of folders per prefix."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 28,
+     "end": 37,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing; scripts extracting the openings of engagement documents of the eleven largest prefix groups, plus a grep of the engagement list for six of them."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files; store-wide extraction script counting where each of the six client names appears. The review flags that most matters showed none of the names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 56,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing; a script sampling one client-identifying document per prefix group, then reads of six engagement letters (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes six clients (three tied at 10, three at 9) with all matter numbers of the leading groups and source documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 63,
+     "end": 76,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and lists the files of the six cited matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 77,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs passed with the same procedure: enumerate all matter folders, count folders per matter-number prefix, confirm the client name of each leading group from engagement-letter text (scripts or reads), and report six clients with the three-way tie at 9 matters. Every review from the scan stage onward flagged treating the prefix as the client and asked for per-matter attribution; none of the runs did that, and the answers still passed. Reviews also pushed tie-wording edits in T0 and T1."
+}

@@ -1,0 +1,403 @@
+{
+ "task": "137",
+ "context": "Request: M&A deals where the firm actually invoked or litigated specific performance, with the papers. Rubric: 1018-00008 (Penterra/Veridian), its draft-counterclaim-declaratory-judgment.docx and matter-status-memo-deal-terminated.docx (pre-litigation demand), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Parallel whole-store glob and a files-with-matches grep for the request phrase; the grep returns one email."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 16,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements and memos of the matters at the top of the listing, plus the one grep hit (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for the request phrase; times out after about 120K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 19,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of six candidate matters from the scan output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 32,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the opening of one agreement from each of those matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Shell search of file paths for request words and deal-document names."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 35,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidate matters picked from the file-name hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four memos, a draft pleading and a notice of the matter it later picked and two documents of another candidate."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over four named documents of two candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 51,
+     "end": 52,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes one matter with its papers."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 53,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Found the matter and its draft pleading, but never opened the status memo that records the pre-litigation demand, although it was in the file listing.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 42,
+    "end": 48,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "The matter's file listing included the status memo recording the counterparty's demand, but it chose other memos and pleadings to read and never opened or cited that memo."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus shell find (prints only the working folder)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads pleadings, memos and agreements of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for the request phrase; times out after about 314K chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the subfolders of nine candidate matters named in the scan output."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Shell search of file paths for court-paper and dispute words, first 200 hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 24,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads briefs, complaints and memos of three matters from those hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 26,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide script for the request phrase limited by path words; times out after a few files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 33,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, a letter and a motion of five more candidates; one guessed path does not exist."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 37,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Shell loop unzipping court-paper files and grepping for the request phrase; prints nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "Shell loop listing matters that have both deal documents and court-paper file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 44,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a brief, memos and a letter of two candidates."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 48,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists files of two candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 50,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Snippet-extraction script for the request phrase over three candidate matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 51,
+     "end": 52,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one deal (under two matter numbers) as the only qualifying one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 53,
+     "end": 53,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Every scan and file-name filter missed the matter (timeouts, a loop that printed nothing); it named another deal instead.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 12,
+    "end": 13,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide extraction scan timed out before reaching the matter it needed; later scans and file-name filters also missed it (timeouts, a loop that printed nothing), and it never searched plain file names for the request phrase."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Two greps with single-extension globs; both return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and a memo of the matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for the request phrase and related remedy terms; times out after about 2.3M chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing docx files whose names contain request words or deal-document names."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the one matter whose file names matched."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six documents of that matter (memos, draft pleadings, notice, agreement)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 27,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four more memos and notices of that matter plus one filing of another matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes one matter with its papers."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 35,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits a caution section of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 37,
+     "end": 37,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Found the matter and its draft pleading, but never opened the status memo that records the pre-litigation demand, although it was in the matter's file listing.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 20,
+    "end": 26,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "The matter's file listing included the status memo recording the counterparty's demand, but across two batches of reads it chose other memos and never opened or cited that memo."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 failed the same way: they found the matter through a file-name search, listed its files, and read many of its documents, but never opened the one status memo a criterion requires (first error at the screening read right after the listing). T1 failed earlier: every scan and file-name filter missed the matter (search-miss at its first scan) and it named another deal."
+}

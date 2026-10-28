@@ -1,0 +1,342 @@
+{
+ "task": "243",
+ "context": "Request: how many matters attributed to the White Collar & Investigations practice involved an issued litigation hold, and which. Rubric: seven matters (1016-00009, 1021-00008, 1032-00007, 1034-00001, 1039-00005, 1044-00007, 1045-00007), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 22,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for attribution and hold terms times out; its rerun times out again (with a folder listing in parallel). The review flags that it was not narrowed, paged, backgrounded or rerun."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for hold, preservation, investigation and practice words, plus engagement and memo names; then a per-matter list of hold- and preservation-named files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "mixed intents",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: tighter path search for litigation-hold and preservation notices, then an extraction script reading attribution text from those matters' intake and engagement documents (about 247K characters). The review flags the file-name anchoring."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads attribution and hold documents of about a dozen candidate matters, with folder globs."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 91,
+     "end": 104,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Four reads issued with no stage open are rejected; then reads the remaining hold-status and folder documents of the matters it is weighing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 105,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes six matters with attribution and hold documents, method and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 111,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "A path-existence loop prints nothing; re-reads the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: explicit path-existence check."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 124,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After its content scan timed out twice it relied on hold-named file searches, which never reached one needed matter whose hold evidence sits in other documents.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 22,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the timed-out scan and that it was not rerun, paged or backgrounded.",
+    "why": "Its only content search over the store timed out twice and was never narrowed or rerun; the hold-named file searches it fell back on could not reach the matter whose hold evidence is not in a hold-named file."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script over all paths for hold, preservation, white-collar, investigation, intake and practice words (about 92K characters)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; a scan over a hand-picked list of candidate matters; attribution scans for the practice name (one fails with a script error)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 45,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: store-wide parallel scan of .docx files for practice attribution and hold language; after a timeout and broken split scripts it reruns in two halves and intersects attribution and hold matter lists."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (continued). Reads attribution and hold documents of the candidates in the intersection, with snippet scripts. The review flags the .docx-only scan and that hold-only matters were not checked for other attribution wording."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 81,
+     "end": 97,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads documents of seven more attribution hits and runs file-count scripts; all excluded."
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes six matters with attribution and hold documents, method and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Globs the six cited hold documents and re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its store-wide attribution scan read only .docx files, so one needed matter whose practice attribution appears in an email never entered the candidate set.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 28,
+    "end": 45,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the .docx-only scan and the unchecked hold-only matters.",
+    "why": "The store-wide scan that fixed the candidate set read only .docx files, and the needed matter's practice attribution sits in an email, so the matter fell out of the attribution-and-hold intersection; the review named the .docx-only limit and the agent screened other matters instead."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Shell find of folders and a sample of files, first 80 lines each."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders and files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out twice (a file-name find for hold and practice words runs in parallel); reruns in four matter ranges to files, then filters the output for the exact practice-group phrase (13 matters). The review flags the exact-phrase filter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Keyword-filtered file listings of the 13 candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads attribution, engagement and hold documents of the 13 candidates and a snippet script. The review flags that one matter was excluded from its engagement letter alone."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 74,
+     "end": 82,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Lists the files of four unresolved candidates and reads one document from three of them; the exclusions stand. The review flags absence-of-hold conclusions resting on file names and single reads."
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five matters with attribution and hold documents, method and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Path-existence loop and re-read of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "An exact-phrase attribution filter dropped one needed matter, and another it opened was excluded because it found only an instruction to circulate a hold.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 37,
+    "events": "[30]-[35]",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review named the exact-phrase filter and the risk to differently worded attributions.",
+    "why": "The range scans covered every matter, but the agent kept only matters whose text contained the exact practice-group phrase, which dropped a needed matter attributed in other wording; the review of this stage flagged the exact-phrase filter and the agent listed only the 13 matches."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The screening review named this exclusion as resting on the engagement letter alone; the agent listed the folder and re-read the letter but kept the exclusion.",
+     "why": "It opened the needed matter's engagement letter and folder listing but excluded the matter because no separate hold notice was found, although the letter directs a hold (evidence seen at [62]-[80])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs found the matters whose hold notices are in hold-named documents and whose attribution is in documents, and all three missed the same matter, whose practice attribution sits in an email and whose hold evidence is not in a hold-named file; they missed it in different ways. T0's store-wide content scan timed out twice and was not rerun (the critic said so); it fell back to hold-named file searches, which never reached that matter (search miss). T1 completed a store-wide scan, but only over .docx files, so the matter's attribution was never seen and it was filtered out of the candidates; the critic named the .docx-only limit and the agent did not act on it (search miss). T2 ran the scan over all file types and the matter surfaced and was opened, but the agent excluded it because it found only an engagement-letter instruction to circulate a hold; the critic flagged this exclusion and the agent re-read the same letter and kept it (under-inclusion). T2 also lost a second matter through an exact-phrase attribution filter that the critic had flagged (over-narrow filter, its first error)."
+}

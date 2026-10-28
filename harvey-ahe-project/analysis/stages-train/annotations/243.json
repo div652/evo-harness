@@ -1,0 +1,281 @@
+{
+ "task": "243",
+ "context": "Request: how many White Collar & Investigations matters (by practice attribution in the files) involved an issued litigation hold, and which ones. Rubric: 1016-00009, 1021-00008, 1032-00007, 1034-00001, 1039-00005, 1044-00007, 1045-00007, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory); one listed matter is among those it later read."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide content-mode grep for practice-group and request words (output of about 39K chars, all email lines from about 30 matters), in parallel with reads of three memos from two listing-top matters (labelled as a search because the grep is its only store-wide step; see proposals Issues)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 15,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists the files of the two matters whose emails showed the practice-group name and reads three of their emails (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the request-related notices, engagement letters and an advisory memo of those two matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a count of two matters, the two it read in depth."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 24,
+     "end": 24,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "One grep returning email lines from a subset of matters became the whole search; the answer counts two matters and omits five.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 5,
+    "end": 9,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one store-wide grep returned only email lines from a subset of matters, and it took the two matters with the practice-group name in those lines as the full set without any other search."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It had read a listing-top matter's memo imposing the requested measure but left that matter out of its count without discussing it."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one listed matter is among those it later read."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight engagement letters and memos from the four matters at the top of the listing; no keyword search."
+    },
+    {
+     "stage": "Write the response",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a count of one matter from the listing top and explains why another listing-top matter is excluded."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 17,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never searched; counted one matter from the few visible at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 12,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It judged the whole practice group from the four matters at the top of a capped listing without any search, so six of the needed matters never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a files-with-matches grep, then a content-mode grep for practice-group and request words; the hits are email files only (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 11,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four emails from four matters whose lines showed the practice-group name."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 12,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide content grep for the practice-group name alone; email lines from five matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Six greps for a request word inside six candidate matters; each returns a few email lines or nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 26,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the email passages around those hits in four matters; one path does not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 32,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads a notice and an email of that matter plus a read of another matter's folder that is rejected as a directory (labelled by the dominant intent)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of another candidate matter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one request-related reminder memo from that matter's files."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a count of two matters and lists several others it saw as not counted."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 39,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Search within a candidate matter's files → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Store-wide greps reached email text only, so two needed matters never surfaced; three that did surface were excluded on email-only greps, leaving a count of two.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its store-wide greps returned email lines only, so matters whose evidence sat in documents never surfaced, and it ran no file-name search or document-text scan."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It judged three candidate matters from in-matter greps that reached only their emails, never listed or read their documents, and counted them as having no issued measure (evidence seen at [14]-[20])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs undercounted, at different stages. T1 never searched and counted from the listing top (partial listing as corpus, stage 2). T0 and T2 relied on the grep tool, whose hits were email lines only: T0 took the two matters from one grep as the full set (search miss, stage 2), T2 searched more but excluded three surfaced matters after email-only in-matter greps (search miss, stage 1, plus a later under-inclusion)."
+}

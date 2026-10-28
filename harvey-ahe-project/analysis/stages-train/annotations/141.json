@@ -1,0 +1,266 @@
+{
+ "task": "141",
+ "context": "Request: across the M&A practice (including deals in negotiation, JV formations, minority investments), how often signed deals carry a fraud carve-out from indemnification caps and baskets, and which deals. Rubric: 27 qualifying matters (1001-00003 … 1046-00001), a rate criterion (27 of 35 M&A matters, about 77%), and a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a shallow find that prints nothing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over file paths for deal-document words, first 300 hits only."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the first 400 lines of six executed agreements from six matters on that list."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the next 500 lines of the same six agreements."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 27,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, memos and an issues list from five further matters on the list."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 28,
+     "end": 40,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads later sections of four agreements, plus a memo and draft of one new candidate (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a five-of-five rate over the signed agreements it read."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 43,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only search was a capped file-name list; it read about ten matters from it and reported a rate over five agreements.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 5,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one search was a file-name list cut at 300 lines that reached five of the 27 qualifying matters, and it never ran a store-wide content search or widened the list."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, a redline and an issues list of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 9,
+     "end": 13,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two greps inside those matters with a non-recursive glob (both empty), plus two reads, one at a guessed path."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 18,
+     "tags": [
+      "run ended: text reply without finish"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads later sections of the two agreements; the run then ends with the answer as a chat message and no file written."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search within a candidate matter's files → Read a chosen matter's documents in depth",
+   "failure_point": "It read only the two matters at the top of the listing, and ended the run with the answer as chat text and no response file.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 8,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "It chose what to read from the two matters at the top of a capped listing and never searched the store, so it counted one signed deal."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 14,
+     "end": 18,
+     "events": "",
+     "kind": "answer-not-written",
+     "why": "It ended the turn with the answer as a chat message instead of writing the response file and calling finish, so the judge saw no output."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four whole-store globs by file type (one type has no files)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, memos and an issues list of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Extraction script over agreements with two specific file-name patterns across the store, printing matching clauses."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Six file-name globs for deal-structure words; two return nothing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of five agreements from four matters on those lists."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Two store-wide extraction scripts for deal-structure and clause terms; both time out, the second after about 196K chars."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a twelve-of-twelve rate and also lists negotiation and other matters outside the signed set."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "Both store-wide scans timed out part-way; it wrote a rate over the twelve agreements in the partial output and also asserted extra matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 28,
+    "end": 31,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both store-wide scans timed out before covering the store and it wrote the answer from the partial output without narrowing or rerunning them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer presents negotiation, JV and other matters outside the qualifying set as qualifying examples."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs reached only a fraction of the 27 qualifying matters, by different routes. T0 relied on one capped file-name list (search miss); T1 read only the two matters at the top of the listing and then ended without writing a file (partial listing as corpus, no deliverable); T2's store-wide scans timed out and it wrote from the partial output (search miss), also asserting extra matters. All three reported a near-100% rate over a small set."
+}

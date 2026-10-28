@@ -1,0 +1,297 @@
+{
+ "task": "034",
+ "context": "Request: the latest Bankruptcy & Restructuring matter where a plan of reorganization the firm produced was actually confirmed. Rubric: 1006-00002 (Crestline Packaging), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folder names. Review: yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script with broad terms; times out after about 1.2M chars. Review: no."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 26,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path search for request words in parallel with full listings of six candidate matters (labelled by the search). Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 27,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower path search and a folder-name search; one matter has dedicated court-stage folders (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 48,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the order, the filed document, effectiveness notices and the engagement letter of the matter it picked; one guessed path is missing, so it lists the folder. Review: yes."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 49,
+     "end": 55,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Lists six other candidate matters and reruns a narrow path search in parallel. Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter it read, with its dates and the firm's role. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 62,
+     "end": 70,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks paths (no visible output) and edits the recency wording. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks paths with visible output (attempt 2). Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 77,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. Counts folders and shows the first and last 20 names. Review: yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 24,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four globs for request words return nothing; a find | grep over paths lists 407 hits. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-word path searches grouped by matter (attempt 2). Review: partly (narrow patterns, nothing opened)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 31,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Separator-agnostic path search, 18 hits (attempt 3). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 40,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing up to six snippets per file for broad terms; times out after about 72M chars and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script",
+   "failure_point": "File-name searches had already shown the matter with court-stage folders, but an uncapped store-wide scan filled the context and the run ended with no response.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 37,
+    "end": 40,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The uncapped snippet output of a store-wide scan filled the context before any document was opened or a response written.",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before its stage_end review."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. Review: partly (listing capped)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts folders and prints the first 30 and last 10 names. Review: yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for request words (329 hits) and a folder-name search in parallel. Review: partly."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 27,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Narrow path search plus full listings of four candidate matters in parallel (labelled by the search; attempt 2). Review: partly."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script; times out after about 690K chars. Review: no."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Bounded rerun times out with no output; lists one candidate matter's files (attempt 2). Review: no."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the order, the filed document, the engagement letter, effectiveness notices and a memorandum of the matter it picked. Review: partly."
+    },
+    {
+     "stage": "Write the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the matter with its dates and evidence documents. Review: partly."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 59,
+     "end": 65,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths. Review: partly."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 66,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 found the matter through file-name searches (it has dedicated court-stage folders), read its order, filed document and engagement letter in depth and passed; their store-wide extraction scans timed out with 0.7-1.2M chars of output without filling the context. T1 made the same file-name finds but then ran a store-wide scan that printed snippets for broad terms with no cap (about 72M chars); the context filled and the run ended without a response (context overflow, no review). The runs split at the extraction scan: T1 scanned after its file-name searches instead of opening the matter they had shown."
+}

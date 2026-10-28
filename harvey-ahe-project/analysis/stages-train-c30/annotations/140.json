@@ -1,0 +1,466 @@
+{
+ "task": "140",
+ "context": "Request: the firm's healthcare-services, biotech or pharma M&A matters that used rep-and-warranty insurance, with the policy documentation. Rubric: 1001-00003, 1001-00007, 1006-00008 (Crestline; RWI shown only in secretary-certificate-buyer.docx and equity-commitment-letter.docx), 1013-00006, 1018-00008, each with a proof document, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 100 lines) and extension counts.",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex script for insurance, sector and deal words (192 matters, about 89K chars) and four single-word globs.",
+     "label_check": "none",
+     "end": 18
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: path pattern for insurance-policy name variants; 75 matters.",
+     "label_check": "none",
+     "end": 24
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: union with insurance, policy, binder and indemnity words; 140 matters.",
+     "label_check": "none",
+     "end": 30
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for insurance and sector terms times out, also in two ranges; background runs polled for two minutes with empty output, then killed.",
+     "label_check": "none",
+     "end": 54
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 55,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: extraction limited to files whose names carry insurance, policy or binder words (252 lines). The review flags that documents named otherwise were never scanned.",
+     "label_check": "none",
+     "end": 60
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eleven candidate matters with insurance-named documents.",
+     "label_check": "none",
+     "end": 71
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads policy memos, binders, diligence memos and agreements from eleven candidate matters.",
+     "label_check": "ignored",
+     "end": 96
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five matters with insurance-policy documents, one of them a device deal.",
+     "label_check": "none",
+     "end": 102
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads, relabels the device matter as adjacent, fixes one path; the review says the device matter still widens the answer.",
+     "label_check": "none",
+     "end": 124
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: removes the device matter and re-checks paths.",
+     "label_check": "none",
+     "end": 137
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: removes leftover count wording and confirms four entries.",
+     "label_check": "none",
+     "end": 145
+    },
+    {
+     "stage": "Finish the run",
+     "start": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 146
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After the store-wide text scans timed out, it scanned only files with insurance words in their names, so a matter whose insurance appears only in other closing papers never surfaced and is missing from the answer.",
+   "first_error": {
+    "stage_no": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only completed content scan read only files whose names carry insurance, policy or binder words, so a matter whose insurance is recorded only in a certificate and a commitment letter never surfaced; it had appeared earlier only in the 192-matter path dump at [14], with no insurance word in its paths.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [60] said the scan was restricted to insurance-named files so documents named otherwise were never scanned; the agent moved on to list hand-picked matters.",
+    "stage": "Scan document text with an extraction script",
+    "start": 55,
+    "end": 60
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 11,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 200 lines).",
+     "label_check": "none",
+     "end": 8
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-keyword path find loops capped at 120 lines, per-matter file counts and three single-word globs.",
+     "label_check": "none",
+     "end": 18
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path search for insurance-policy name variants and sector words, with matters per pattern.",
+     "label_check": "none",
+     "end": 24
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for insurance and sector terms times out, also in three ranges.",
+     "label_check": "none",
+     "end": 32
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: prints the first 160 lines of each partial output (about 139K chars).",
+     "label_check": "none",
+     "end": 38
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: tight-pattern extraction over all document text run in the background and polled four times while it runs; the review flags that it was still running.",
+     "label_check": "none",
+     "end": 52
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 53,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: a wait loop times out; the finished output's tail is printed.",
+     "label_check": "none",
+     "end": 60
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eleven candidate matters from the scan.",
+     "label_check": "none",
+     "end": 66
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: a script meant to list every scanned matter matches only the first one, then a grep of the matter lines in the scan output.",
+     "label_check": "none",
+     "end": 74
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads deal summaries, executed agreements, certificates and policy papers of about a dozen candidate matters.",
+     "label_check": "none",
+     "end": 106
+    },
+    {
+     "stage": "Write the response",
+     "start": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes eight matters plus one caveated adjacent matter with policy papers and terms.",
+     "label_check": "none",
+     "end": 112
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Edits the answer to six core matters and two adjacent ones, fixes one path and checks citations.",
+     "label_check": "none",
+     "end": 136
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response.",
+     "label_check": "none",
+     "end": 142
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 143,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: pages through the response and confirms the headings and paths.",
+     "label_check": "none",
+     "end": 150
+    },
+    {
+     "stage": "Finish the run",
+     "start": 151,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 151
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level listing (first 120 lines) and extension counts.",
+     "label_check": "none",
+     "end": 9
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 10,
+     "tags": [
+      "output capped",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path find loop capped at 80 lines, a folder-name grep that returns nothing and a brace glob with no matches.",
+     "label_check": "none",
+     "end": 17
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 18,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: separate uncapped path searches for insurance-policy and sector words, with per-matter counts.",
+     "label_check": "none",
+     "end": 25
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction for insurance and sector terms times out.",
+     "label_check": "none",
+     "end": 29
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 30,
+     "tags": [
+      "huge output",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (continued). Snippet scripts over twelve named candidate matters (about 290K and 390K chars) and full file listings of four matters.",
+     "label_check": "none",
+     "end": 35
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: range-by-range extraction requiring insurance and sector terms per matter.",
+     "label_check": "none",
+     "end": 45
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: tighter policy-language scan over all ranges; an aggregation error prints about 150K chars.",
+     "label_check": "none",
+     "end": 51
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists policy-like files of ten candidate matters; the review flags the hand-picked list.",
+     "label_check": "none",
+     "end": 57
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads binders, policy memos and agreements from seven candidate matters and a snippet script over two agreements; the matter with no policy-named file is not read.",
+     "label_check": "ignored",
+     "end": 79
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 80,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 4: scan of policy-like file names only for insurance and sector terms; nine hits. The review flags that this file-name filter drops matters whose insurance papers are named otherwise.",
+     "label_check": "none",
+     "end": 85
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five matters with policy documents and excludes others, including one with no policy-named document.",
+     "label_check": "none",
+     "end": 91
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none",
+     "end": 98
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-opens the cited policy papers.",
+     "label_check": "none",
+     "end": 109
+    },
+    {
+     "stage": "Finish the run",
+     "start": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "end": 110
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its range scans flagged and it listed a matter whose insurance appears only in other closing papers, but it never read that matter's documents and excluded it because no policy-named document was found.",
+   "first_error": {
+    "stage_no": 11,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It listed the matter's files at [30]-[33] and [54]-[55] and its range scans at [40]-[49] flagged it, but it never opened the matter's documents and the answer excludes it because no policy-named document was found.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [85] said the last scan's file-name filter silently dropped matters whose insurance documents are named differently; the agent wrote the exclusion without reading the matter.",
+    "stage": "Write the response",
+    "start": 86,
+    "end": 91
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 miss the same matter, whose insurance appears only in a certificate and a commitment letter, with no insurance word in its file names). They split at the content-scan stage. T1 let a tight scan over all document text finish, listed and read that matter, and included it. T0's store-wide scans timed out and it then scanned only insurance-named files, so the matter never surfaced (search-miss). T2's range scans surfaced it and it listed the matter's files, but its reads skipped it and its last scan filtered to policy-named files, so the answer excluded it (under-inclusion). In both failing runs a review named the file-name filter as the cause; neither agent acted on it."
+}

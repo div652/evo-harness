@@ -1,0 +1,167 @@
+{
+ "task": "179",
+ "context": "Request: conflicts and cross-sell review of everything the firm has done for Pinnacle Venture Fund II LP across its funds and portfolio companies. Rubric: 26 qualifying matters in the 1002, 1008, 1009 and 1010 series, plus precision (only those ranges).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Store-wide extraction script for the client name and broad name words, no output cap; returns ~3.6M chars; the review flags the huge unfiltered output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. Narrower store-wide scan for the exact client names, printing hit counts and example paths per matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reopened: lists all files of 31 candidate matters (826 files)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 39,
+     "tags": [
+      "run ended: context overflow"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Eleven parallel reads of engagement letters, memos and certificates of five candidate matters (~175K chars); the run stops after the results."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents",
+   "failure_point": "An uncapped store-wide scan returned ~3.6M characters; after narrower scans and listings, a large batch of reads filled the context and the run ended without an answer.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 8,
+    "end": 13,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its first search printed every broad-term hit across the store (~3.6M chars); the context never recovered and the run ended at the next large read batch without a deliverable.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the review at [13] named the ~3.5M-char unfiltered output; the agent narrowed its next scan but kept loading large outputs."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search file contents for request keywords. Store-wide extraction script for the client name and broad name words with no output cap; returns ~4.1M chars."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first search was an uncapped store-wide extraction scan with broad terms; ~4.1M characters came back and the run ended without an answer.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The first search printed every hit for broad name words across the store with no cap; the output filled the context before any review or answer.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 27,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 11,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: Search file contents for request keywords. Store-wide extraction script for the client name and broad name words with no output cap; returns ~4.7M chars."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "Its first search was an uncapped store-wide extraction scan with broad terms; ~4.7M characters came back and the run ended without an answer.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 8,
+    "end": 11,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The first search printed every hit for broad name words across the store with no cap; the output filled the context before any review or answer.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way: the first store-wide search was an extraction script for the client name plus broad name words with no output cap, returning 3.6M-4.7M characters. T1 and T2 overflowed there with no review. T0 survived it, and its review named the huge output; it then ran a narrower exact-name scan, listed 31 candidate matters and started reading, but the run ended on a large read batch without a deliverable. All 26 needed matters had surfaced in every run's scan."
+}

@@ -1,0 +1,372 @@
+{
+ "task": "072",
+ "context": "Request: how many Healthcare & Life Sciences matters involved informed consent or an IRB; list them. Rubric names 1018-00004 (Penterra), 1029-00001 (Thornwick), 1037-00002 (Solstice) plus a precision criterion (no other matter may be asserted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and prints all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 29,
+     "tags": [
+      "script error",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script: a heredoc error, two timeouts, then five parallel matter-number ranges printing every match (up to about 650K chars per range)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 47,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Narrower rescan: one timeout, five range runs that fail on a cut delimiter, then five that print the hit matters per range (22 candidates)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists name-filtered files (first 15 each) of 16 shortlisted matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 82,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Twelve opening reads across the shortlisted matters, four single reads (one guessed path missing) and two per-matter rescans."
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a count of five matters with reasoning and source paths. Review flags possible under-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 102,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A read outside any open stage is rejected; inside the stage it rereads one excluded matter's memo, rereads the response and checks cited paths (first attempt looks in a location without the file)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited all three qualifying matters, but counted two more matters of the same client as qualifying after reading their diligence and engagement documents.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 83,
+    "end": 88,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts two further matters as qualifying on the strength of diligence and know-how documents that mention the terms (evidence seen at [54]-[80]), although they do not qualify.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said a single document per matter was often used to settle inclusion; the write review warned only of under-inclusion. The set was not changed."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matters and files and prints the first twenty folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range-chunked rerun writes hits to a file, then greps and a filter script print them (about 535K chars)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Exact-phrase rescan over all folders: 297 hit files in 129 matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 41,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Scan document text with an extraction script, continued. Opening reads of engagement letters and memos of nine hit matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Greps its hit file per candidate matter, five opening reads and a snippet script; stage_end lists ten qualifying matters. Review: goal not reached, several of the ten judged from hit lines only."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Opening reads of eleven documents, one per listed matter, to back the ten."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 74,
+     "end": 85,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "A read outside any open stage is rejected; then five reads of further hit matters; adds one more matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Screen candidate matters by reading documents (attempt 4). Groups its own hit file by matter and prints hit file paths per matter, without opening documents."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 92,
+     "end": 105,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Five opening reads and two snippet scripts on further hit matters; adds two more matters to a broader count."
+    },
+    {
+     "stage": "Write the response",
+     "start": 106,
+     "end": 113,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a direct count of eleven matters and a broader count of thirteen; a rejected stage_start for the check stage sits inside. Review flags possible under-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response. Review: the two broader matters were not re-checked."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found the three qualifying matters but kept adding matters whose documents merely mention the terms, ending with eleven in the direct count and two more in a broader count.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 106,
+    "end": 113,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts eight further matters directly and two more in a broader count, on documents that mention the terms in passing (diligence, discovery, disclosure; evidence seen at [30]-[105]).",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The screening review at [57] named several listed matters as judged from hit lines only; the agent read one document of each and kept them. The check review named the two broader matters as unre-checked."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and prints all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Broad store-wide extraction script; times out after about 1.9M chars. Review: goal not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrow word-boundary scan in two batches writing hits to a file (307 lines), then lists hit matters above a number."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "A script lists name-filtered files of every hit matter; a rejected stage_start for screening sits inside."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Seventeen opening reads across candidate matters, a grep of its hit file (stage check notice), and three single reads. Review: goal not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Extraction script over the engagement and intake documents of every hit matter for sector words."
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 86,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a confirmed count of five matters with reasoning; a rejected stage_start for the check stage sits inside. Review flags possible over-inclusion from keyword hits and possible under-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 97,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths (first attempt looks in a location without the file) and fixes one path."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 98,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited all three qualifying matters, but also counted two matters of the same client whose diligence and engagement documents mention the terms.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 79,
+    "end": 86,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer counts two further matters, an acquisition diligence matter and another matter of the same client, as qualifying (evidence seen at [42]-[72]), although they do not qualify.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The write review listed possible over-inclusion from keyword hits without naming matters; the check stage only verified paths."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way at the write stage: each found and cited the three qualifying matters but also counted matters whose documents only mention the terms (T0 and T2 two matters of the same client; T1 eight plus two in a broader count). The write-stage reviews mostly warned about under-inclusion (unopened surfaced matters); T0 got a generic flag about single-document inclusion decisions, T2's write review a generic over-inclusion flag, and T1's screening review named some of its extra matters (it read them and kept them); no run changed its set."
+}

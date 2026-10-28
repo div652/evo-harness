@@ -1,0 +1,351 @@
+{
+ "task": "223",
+ "context": "Request: how often completed real-estate matters include an environmental indemnity in the executed documents, and which ones. Rubric: 1017-00009, 1026-00004, 1031-00004, 1036-00004, 1043-00003 as qualifying; frequency 5 of 9 (~56%); precision criterion on the qualifying set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 8,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Greps inside three listing-top matters plus one store-wide grep with a single-extension glob (labelled by the store-wide search); all return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 9,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements and a memo of the three matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 15,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for request words; times out after about 186K chars from low-numbered matters."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 18,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for property, lease and purchase words (first 200 hits), then a script listing such files per matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of a purchase agreement and five environmental-indemnity documents from six candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of eleven candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 31,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of indemnities and purchase agreements from five candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a later section of one purchase agreement."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 40,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet-extraction script over three named purchase agreements for indemnity terms."
+    },
+    {
+     "stage": "Write the response",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 5 of 9 with a core sample and qualifying list that include financing matters with standalone indemnities, plus a broader-scope sensitivity count."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 44,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Found and read the qualifying matters, but its qualifying list and sample counted property financings and other matters outside the request's scope.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 42,
+    "end": 43,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It asserted several financing and land matters with standalone indemnity agreements as qualifying completed real-estate deals and built its sample from them, which the request's scope does not support."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script for environment/indemnity words; times out after about 192K chars from low-numbered matters."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 11,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script for files pairing environmental and indemnity words; one heredoc failure, then a list of 413 files across many matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 12,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads standalone environmental-indemnity agreements and closing documents of four candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 21,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Five snippet-extraction scripts over named indemnities and over closing and execution files of a fixed list of nine matters it treats as the completed real-estate set."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 3 of 10, naming three matters with standalone indemnities and a denominator built from financing and other matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The scan listed a qualifying matter, but the set of matters it chose to examine left it out; the answer also counted financing matters in its denominator and qualifying list.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 12,
+    "end": 20,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its 413-file scan listed a qualifying purchase-agreement matter, but it opened only matters with standalone indemnity agreements and left that matter out of the set it examined and counted."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It treated financing and other non-real-estate matters as completed real-estate matters in its sample and qualifying discussion."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find (empty)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files and lists matter folders and subfolders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 7,
+     "end": 8,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for environmental indemnity terms; times out after about 342K chars."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing closing and execution files per matter."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 11,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep for environmental-indemnity file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads indemnities, a post-closing letter, a credit agreement, a closing memo and a draft indemnity from four candidate matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing per matter the files whose names suggest property, lease, mortgage or financing documents."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of short reads of closing memos, checklists, mortgages, purchase agreements and a ground lease across twelve candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 36,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Five snippet-extraction scripts over named executed agreements and over property-type files of fixed lists of matters, flagging environmental indemnity language."
+    },
+    {
+     "stage": "Write the response",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 12 of 14, counting any executed document with environmental indemnity language, including asset purchases and corporate financings with mortgages."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 48,
+     "end": 48,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Read the qualifying matters but counted any executed deal with environmental indemnity language, including asset purchases and corporate financings, as a completed real-estate matter.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 46,
+    "end": 47,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It treated asset purchases and corporate financings with mortgages as completed real-estate matters and counted indemnity language in any executed document, asserting many matters outside the request."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs reached and read the qualifying matters and passed most per-matter criteria; none passed precision. T0 and T2 failed at the write stage by counting matters outside the request's scope (financings with standalone indemnities in T0; asset purchases and corporate financings in T2), which also skewed T2's frequency (over-inclusion). T1 differs earlier: its scan listed a qualifying purchase-agreement matter, but it examined only matters with standalone indemnity agreements and left that one out (surfaced, never opened), then also over-included financing matters at the write stage."
+}

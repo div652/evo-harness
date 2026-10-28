@@ -1,0 +1,465 @@
+{
+ "task": "181",
+ "context": "Request: which associates have patent-litigation experience (for staffing a new patent-infringement case). Rubric (no matter numbers in titles): associates Christy Bauer, Omar Siddiqui, Peter Vassiliev, Wendy Schultz (matters 1014-00003, 1014-00004, 1037-00004, 1013-00005) and Priya Subramaniam (lead associate on a patent-enforcement engagement referenced in the 1031-00001 conflicts file), plus a precision criterion. Hindsight values treat these five matters as the targets; all three runs named the first four associates and missed the fifth.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a folder listing cut at 80 lines and file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Path regex for patent and litigation words; 28 matters, four named as strong. The review flags the single narrow pass.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: a heredoc error, then a wider path search saved to a file (97 matters). The review flags generic terms and unpaged output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three store-wide or range scans time out; four parallel range scans print per-matter hit counts only. The review flags ranking by hit count and unopened moderate-count matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five matters picked by hit count. The review flags the hand-picked subset.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 44,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Store-wide script counts patent-specific file names per matter.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 48,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Ten reads of engagement letters, status reports and a staffing plan from the five picked matters. The review flags that about sixty surfaced matters were set aside on file names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Store-wide file-name search for staffing, biography and personnel words; no roster found.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 78,
+     "tags": [
+      "mixed intents",
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Lists files of three sibling matters, then reads later sections of three engagement and status documents; a stage_start is refused while this stage is open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one engagement letter in full.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four associates with their matters and an availability caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check and five short re-reads; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 110,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Search file names for a document type → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the conflicts matter that names a fifth associate's patent-enforcement role, so the answer lists four of five associates.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "List files in candidate matters",
+    "start": 38,
+    "end": 43,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its range scans at [31]-[35] listed a matter with a high hit count whose conflicts documents name a fifth associate's patent-enforcement role, but it listed and read only five matters picked as litigation files and never opened that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews [37] and [43] flagged hit-count ranking and a hand-picked subset, naming other matters; the agent went on to read its five."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a folder listing cut at 80 lines and file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find per keyword cut at 120 lines, with a store-wide content grep that returns nothing on .docx files. The review flags the caps and the empty grep.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: broader per-matter path search; four strong and one possible matter named.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A store-wide scan and a range scan both time out with no output. The review says the range was not shrunk and dozens of matters stayed unopened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Snippet script over the five named matters only. The review flags the five hand-picked matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 55,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Seven reads of pleadings, claim-construction memos, status reports and a staffing plan, then a role-extraction script that returns markup noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 56,
+     "end": 67,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: filtered file listing of the five matters and five reads of staffing, status and budget documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 68,
+     "end": 76,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: four reads of status and closing documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four associates with their matters and an availability caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 91,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths (a path that does not exist first); no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: five short re-reads; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the rest of the response and two documents; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "No search reached the conflicts matter that names a fifth associate's patent-enforcement role, so the answer lists four of five associates.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Search within a candidate matter's files",
+    "start": 36,
+    "end": 41,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After its store-wide and range scans timed out, it ran the content scan only over five matters it had picked from file names, so the conflicts documents naming a fifth associate were never reached by any search.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) Review [35] said the range scan was not shrunk or rerun; review [41] named the five hand-picked matters. The agent read within the five."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter for all 266 matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan writes 2,158 hit lines to a file (about 64K characters shown), then per-matter hit counts. The review flags narrowing to one matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: snippets for the top 25 matters by hit count with a narrower pattern (about 40K characters), including a conflicts-committee agenda; four matters kept. The review flags the hit-count cut and the four-matter set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 39,
+     "tags": [
+      "script error",
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 3: a heredoc error and a timed-out content scan, then a store-wide file-name sweep for patent words. The review flags that no content scan of all matters ran.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight matters (the four kept plus four patent-named siblings).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Eleven reads of staffing plans, status reports, engagement letters and memos from the four kept matters, then six more reads at later offsets. The review flags the hand-picked listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads five documents from three lower-hit patent-named matters; adds one litigation matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four associates with five supporting matters and an availability caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 89,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited paths (a path that does not exist first); no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: seven short re-reads; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the conflicts matter that names a fifth associate's patent-enforcement role, so the answer lists four of five associates.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "List files in candidate matters",
+    "start": 40,
+    "end": 43,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scan counts at [20]-[21] and snippets at [26]-[27] showed a conflicts matter whose agenda mentions a patent-enforcement engagement, but it listed only eight patent-named matters and never opened that matter.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews [29], [39] and [64] flagged the hit-count cut and the hand-picked listing, naming other matters."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same criterion: each named the four associates from the four patent-litigation matters and missed the fifth associate, whose role appears only in a conflicts matter's documents. T0 and T2 had that conflicts matter in their scan output (T0 a high hit count, T2 a hit count and an agenda snippet) but chose what to list and read by patent-specific file names and kept to the litigation matters (surfaced, not opened, at the listing stage). T1's content scans timed out and its retry ran only over five matters it had picked, so the conflicts matter never surfaced (search miss). Reviews in every run flagged hand-picked narrowing, generically in T0 and T2 and with the exact cause in T1, and none named the conflicts matter. Label notes were ignored once in each of T0 and T2."
+}

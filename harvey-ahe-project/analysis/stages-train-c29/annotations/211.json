@@ -1,0 +1,326 @@
+{
+ "task": "211",
+ "context": "Request: the highest-value financing the firm has closed, to lead a financing-credentials pitch. Rubric: 1005-00001 (Nexford Industrial, $1.4B senior secured term loan B), plus a precision criterion (1041-00003 is within the permitted set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; reviewer said partly (capped listing, visible matters unopened)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders and shows the first and last 20 names; reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script for financing terms times out; patches it into four range runs, which first fail on a path-parsing error, then write hits to files and show only line counts."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Split from the declared scan span: find | grep over all file paths for financing and debt words, printing the 749-path list."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Extraction script pulls dollar amounts from the matched files, then a filter keeps closing/execution file names with nine-digit or billion amounts, first 100 lines; it settles on one acquisition's debt package as the largest. Reviewer said partly; flagged the file-name and amount filters and several unopened candidates by number."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 40,
+     "end": 49,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the leading candidate's files and reads its commitment letters, credit agreement, funds-flow memo and a draft closing report."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Split from the declared in-depth span: reads the first 35-60 lines of one agreement from each of five other candidate matters as comparators. Reviewer said partly; flagged that competitors were checked from 35-60 lines each and that many surfaced matters stayed unopened."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files; two scripts re-filter the store-wide amount inventory for financing files at or above the leading figure."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of four agreements from four high-amount matters; reviewer said partly and recommended opening one high-amount matter's financing folder."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 71,
+     "end": 84,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2. Lists that high-amount matter and reads its commitment letter, draft credit agreement, funds-flow memo, merger agreement and an email; an early write-stage start is rejected because this stage is still open."
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one acquisition's committed debt package as the largest closed financing, listing other screened matters as smaller comparators. Reviewer said partly; flagged comparators judged from snippets and unopened matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 101,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Adds a scope caveat, re-reads the response; a path-check script fails on the file location."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2. Reruns the path check on the output file; all cited paths exist."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the opening lines of the matter it needed only as a comparator and named a larger acquisition debt package as the highest-value closed financing.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 85,
+    "end": 90,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "It opened the executed credit agreement of the needed matter for only 35 lines (evidence seen at [50]-[57]) and ranked it below one acquisition's debt package, so the answer names another matter as the highest-value financing.",
+    "critic": "flagged-ignored",
+    "critic_note": "Review [57] flagged that competing candidates were checked from 35-60 lines each and review [90] that comparators were judged from snippets; the agent instead followed up a different high-amount matter and only added a caveat."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; reviewer said partly (capped listing)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2); counts matter folders and shows a slice of the names. Reviewer said yes."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing every passage with broad financing and debt terms; returns about 7.4M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first extraction script printed every matching passage across the store; the output filled the context and the run ended without a response.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "[16]-[17]",
+    "kind": "context-overflow",
+    "why": "The uncapped store-wide scan for broad financing terms returned about 7.4M characters, filling the context before any response was written.",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the scan stage before its review; earlier reviews ([7], [13]) only warned about the capped listing."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; reviewer said partly (capped listing)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2); lists all 266 matter folder names. Reviewer said yes."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all file paths for financing, loan, credit and debt words; prints 669 paths. Reviewer said partly (overbroad pattern, output likely truncated)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2. Same search grouped into hit counts per matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 47,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide amount-extraction script times out; several patched range runs return zero files or fail before two ranges write hit files; greps those files for frequent and selected amounts. Reviewer said no; flagged the empty first range and narrow follow-up filters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2. Reruns the missing range over financing-named files and ranks amounts."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth; reads executed agreements, commitment letters, a funds-flow memo and certificates from four candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 65,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Split from the same declared span: reads the credit agreement further and the signature pages and closing deliverables of the matter it settled on. Reviewer said partly (closing rests on signature pages; unopened candidates)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 74,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2. Lists that matter's files, greps saved amount hits for five named matters, reads its funds-flow memo, closing certificate, post-closing summary and a closing letter, plus two documents from other matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 87,
+     "end": 92,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3. Store-wide scan for billion-scale figures by matter range; two of three hit files stop at the script's 1,000-line cap. Reviewer said partly (capped, noisy output)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one matter's term-loan facility as the highest closed financing it could substantiate, with closing documents and comparators."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits in a definition of value and a scope statement."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 107,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T1 overflowed the context with its first uncapped store-wide scan. T0 and T2 both surfaced the needed matter through file-name searches and amount scans and opened its executed credit agreement; they split at the reading stage. T2 read that matter's signature pages, funds-flow memo and closing certificate in depth and answered with its facility as the largest closed financing. T0 had already settled, from a filtered amount list, on one acquisition's larger debt package, read the needed matter's agreement for 35 lines as a comparator, and named the acquisition (under-inclusion). The reviews at the split were alike: both said partly; T0's review flagged the 35-60 line comparator reads, but the agent followed up a different high-amount matter instead."
+}

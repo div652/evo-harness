@@ -1,0 +1,229 @@
+{
+ "task": "111",
+ "context": "Request: the firm's largest settlement and its matter, counting each at the amount its executed agreement defines. Rubric: 1021-00006 (Verimark Hospitality), $87.5M, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 4,
+     "end": 5,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script printing snippets around request words; times out after about 207K chars."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 6,
+     "end": 7,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "find | grep over file paths for agreement-type words, first 240 hits only."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the openings of five executed agreements from five matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "The same path search, last 120 hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script limited to files whose names mark them as agreements, printing amount snippets."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of one matter's executed agreement from the scan output, then one comparator agreement and its definitions."
+    },
+    {
+     "stage": "Write the response",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one matter and its defined amount, with comparators."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 26,
+     "end": 26,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 28,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Four batches of reads (about 20 documents) from four matters at the top of the listing, several on guessed paths that do not exist; no keyword search."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 30,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing up to eight snippets per matching file; returns about 13M chars and the run ends without a response."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script",
+   "failure_point": "A store-wide extraction script returned about 13M characters and the context filled before any response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 29,
+    "end": 30,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "Its first search was a store-wide script printing up to eight snippets per matching file; the ~13M-char result filled the context, so no response was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "tool error",
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Globs for file names containing two request-related words, alongside a listing of the matter at the top of the listing."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of ten executed agreements across ten matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Globs for execution-version file names."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Re-reads the opening sections of seven agreements to compare defined amounts."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one matter and its defined amount, with comparators."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 32,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads parts of two comparator agreements and edits the comparator table twice."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 40,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Passing runs searched file names for the relevant agreement type (T2 by glob straight away; T0 after a timed-out scan, through a scan limited to such file names) and compared the amounts defined in the executed agreements. T1 never searched first: it read about twenty documents from the matters at the top of the listing, then ran a store-wide extraction script whose ~13M-char output filled the context, so no response was written."
+}

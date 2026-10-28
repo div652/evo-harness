@@ -1,0 +1,387 @@
+{
+ "task": "192",
+ "context": "Request: all the firm's merger agreements that use the phrase 'material adverse effect', pulling those documents (for an MAE language bank). Rubric: nine matters (1001-00004, 1001-00005, 1003-00003, 1003-00004, 1008-00008, 1018-00003, 1032-00005, 1041-00003, 1042-00004), each with its executed merger agreement file named, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the agent names candidates from the capped listing. The review asks for a full listing and a text scan.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Script listing, per matter, only files under transaction-document folders (about 99K characters, cut in the log). The review flags the folder filter and the truncation.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for the phrase times out with a per-file parsing bug, printing about 243K characters of error lines. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: corrected store-wide threaded scan times out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: after an indentation error, a scan of the first matter-number batch lists hit files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: next batch written to a file; shows only the first lines. The review flags the 342 hit paths never viewed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 5: next batch; the review flags filtering hits by agreement-like names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 6: next batch; two merger-agreement files shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 7: last batch; the agent keeps agreement-named paths as candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of 13 candidate merger and business-combination agreements, one per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 74,
+     "end": 75,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Snippet script over the 13 candidate matters printing every phrase hit with surrounding text and no cap; about 5.6M characters fill the context before the stage is closed, and no deliverable is written.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files",
+   "failure_point": "After finding all candidate merger agreements, an uncapped snippet script over the candidate matters printed about 5.6M characters and filled the context before any answer was written.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Search within a candidate matter's files",
+    "start": 74,
+    "end": 75,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before stage_end; earlier reviews had asked to cap output per file.",
+    "why": "The snippet script printed every phrase occurrence with context from all documents of 13 matters with no output cap, so the result filled the context and the run ended with no response written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 10,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file-type counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep for merger and acquisition agreement names (162 paths), a content grep on *.docx for the phrase that returns nothing, and a folder count; the protocol's stage check notes the grep does not fit the open stage.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 30,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide and range scans time out three times; then a scan over files with merger-agreement names and a file-name search for other agreement names. The review flags the file-name restriction.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: background store-wide scan polled to completion (1,278 hits in 169 matters), then filters hits by agreement names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Checks scan errors and searches hit paths and store paths for other agreement-like names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 3, continued). Reads the opening of 13 candidate agreements and tallies the qualifying files per matter.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes 25 documents in 12 matters with counts, status labels, method and exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and corrects the headline count to 26 documents in 13 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 110,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: script comparing listed paths and counts with the hit list (first try fails on the file location); all match.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 10,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (80 lines) and file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two path searches for merger, combination and agreement words; the broad one prints about 156K characters. The review flags the noise.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower pattern saved to a file; 89 paths in 24 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide phrase scans time out three times; range scans in parallel complete (about 1,200 hit files in 136 matters) and are intersected with the file-name list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: checks range outputs and lists agreement-like hit paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: groups all hits in agreement-like paths by matter (one heredoc error).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 3, continued). Reads the openings of 20 merger agreements, drafts and redlines across eight matters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 76,
+     "end": 83,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: script checks every hit document's text for merger-agreement markers; lists one more matter's files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes 27 documents in 13 matters with counts, method and exclusions. The review flags drafts and redlines in the list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 113,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads, checks paths, spot-reads three agreements, finds that one folder's files carry another matter number inside, records it as a caveat.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: script confirms every cited file has the phrase, the stated count and an agreement title.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs reached every needed matter through a store-wide phrase scan and opened the candidate agreements. They split after screening: T1 and T2 tallied the hits per file from their saved scan output and wrote the list (pass), while T0, which had scanned in seven separate batches, ran a final snippet script over all documents of its 13 candidate matters with no output cap; the result filled the context before stage_end, so no review ran and no answer was written. Earlier reviews in T0 had asked to cap output per file."
+}

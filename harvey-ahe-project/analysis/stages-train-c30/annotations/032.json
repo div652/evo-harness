@@ -1,0 +1,440 @@
+{
+ "task": "032",
+ "context": "Request: which Bankruptcy & Restructuring matters produced a confirmed plan of reorganization that the firm drafted. Rubric: 1006-00002 (Crestline Packaging, Chapter 11 plan confirmed) as the qualifying matter, plus a precision criterion; 1044-00003 (a Chapter 11 contingency matter) does not qualify.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for request terms grouped by matter, a content grep over .docx that returns nothing, and a name search over other file types.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 30,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "After a heredoc error, a wider path regex saved to a file reports about 170 matters with hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "A store-wide scan times out twice; a parallel scan of two candidate matters' documents prints their hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Matter-range batches time out in the wrapper but keep writing logs; the agent reads and filters the logs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). One exact-name regex over every matter folder; two matters match.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 62,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the plan, confirmation order, engagement letter and effective-date documents of the lead matter and three documents of a second candidate.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 75,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the disclosure statement, confirmation memorandum and final-decree motion of the lead matter and two closing memos of the second candidate.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one qualifying matter and explains why the second candidate does not qualify.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks that cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads four cited sources and the response side by side.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a directory listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for request terms and three file-name globs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 18,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opened and closed with no tool call after the label check; the agent switches to an extraction script.",
+     "label_check": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 45,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; split reruns print nothing (regex escaping and path bugs), a one-file test works, and the fixed split scan prints about 319K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrow store-wide scan for exact plan and confirmation phrases.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. One file-name regex over every matter.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads four documents of the lead matter and an engagement letter or memo from each of four other candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one qualifying matter with the exclusions explained.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 85,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails on the workspace path and passes on the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads four cited sources.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks paths and key facts with a script.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks the quoted drafting-role wording against the engagement letter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Search file contents for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints every matter folder with its file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Prints the folder count and the first and last names.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex with broad request terms prints about 35K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower path regex summarized per matter (49 candidates).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search file names for request keywords (second half of the span). A store-wide extraction scan times out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Batched store-wide scan saved to a file; a filter for four candidates prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 47,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Filters the saved scan for plan and confirmation phrases; its own 240-line cap cuts the output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five documents of the lead matter and documents of three other candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of seven other candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 69,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). One exact-name regex over every matter folder.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one qualifying matter with near-miss exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 91,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and two cited sources; a path check fails on the workspace path and passes on the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 92,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All pass. Every run surfaced the qualifying matter early through a path search (its folders are named for plan, confirmation and post-confirmation steps), read its plan, confirmation order and engagement letter, compared it with a contingency-only candidate and wrote it as the single qualifying matter. Reviews kept flagging surfaced matters that were never opened; all three runs answered with an exact-name file-name regex over every folder (declared as a candidate listing) rather than opening them, and the answer did not change."
+}

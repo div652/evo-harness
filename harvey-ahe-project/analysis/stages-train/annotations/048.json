@@ -1,0 +1,325 @@
+{
+ "task": "048",
+ "context": "Request: Capital Markets offerings whose proceeds were earmarked primarily for general corporate purposes (not a residual line on a specific use), completed offerings only, with proof documents. Rubric: 1045-00001 (Belmont Ridge Bank) plus its use-of-proceeds and closing proof documents; precision permits 1045-00001 and 1014-00001.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, agreements and checklists of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 12,
+     "end": 17,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads further sections and closing papers of one listing-top matter; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide script for request phrases in documents; times out with about 944K characters of partial output."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of one matter seen in the partial scan output."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a takedown summary, timeline, kick-off agenda, draft certificate and new-matter memo of that matter."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of another matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 36,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads a memo, a certificate and a checklist of a third matter and lists its files (labelled by the reads); one guessed path does not exist."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one takedown as the only qualifying completed offering."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 39,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Read the listing-top matters, then a store-wide scan timed out before reaching the matter it needed; it answered with a matter from the partial output.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 18,
+    "end": 19,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its one store-wide search was a scan that timed out before reaching the matter it needed; it did not narrow or rerun the search and followed a matter from the partial output instead."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted as qualifying a takedown outside the permitted set, read only through a summary, timeline and kick-off papers."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 12,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, memos, checklists and a certificate of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 13,
+     "end": 18,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide content grep for request phrases, with four more reads of a listing-top matter in parallel (labelled by the grep, which set the next steps)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 19,
+     "end": 27,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of eight matters picked from the grep lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 36,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads proceeds sections, agreements, checklists and memoranda of three candidates; one guessed path does not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 37,
+     "end": 42,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Content greps for proceeds wording inside five candidate folders or documents; one returns nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 43,
+     "end": 53,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads email passages at offsets, a closing memo, a cross-receipt and two sections of one candidate's registration statement; two guessed paths do not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 54,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Script extracts the proceeds section from two filings of one candidate."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 59,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists files of one more matter and of another candidate's closing folder."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 64,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the offering memorandum, closing email, funds-flow memo and checklist of another candidate."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 65,
+     "end": 66,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Script extracts the proceeds section of that candidate's offering memorandum."
+    },
+    {
+     "stage": "Write the response",
+     "start": 67,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that candidate as the only qualifying offering."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 69,
+     "end": 69,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "The content grep listed the matter it needed, but it opened eight other matters and answered with one of those.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "List files in candidate matters",
+    "start": 19,
+    "end": 27,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its content grep listed lines from the matter it needed, but the eight matters it chose to list left that matter out and it never opened it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of long reads of agreements, memos, checklists and emails from the two matters at the top of the listing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing-top transaction as the only qualifying offering."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; answered from the two matters at the top of a capped listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 17,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any keyword search, so the matter it needed never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted a listing-top transaction outside the permitted set as a qualifying offering."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed and none opened the matter needed. T2 never searched and answered from the listing-top matters (partial-listing-as-corpus at the reading stage). T0's only search, a store-wide scan, timed out (search-miss at the scan stage) and it followed a matter from the partial output. T1's content grep listed the matter, but it chose eight other matters to list (surfaced-not-opened at the listing stage). T0 and T2 also asserted a non-qualifying matter."
+}

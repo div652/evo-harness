@@ -1,0 +1,345 @@
+{
+ "task": "129",
+ "context": "Request: which Litigation (General) matters involved a punitive or exemplary damages claim actually pursued (prosecuting or defending), not boilerplate. Rubric: 1006-00005, 1021-00006, 1023-00002, 1024-00003, 1033-00006, 1034-00003, 1045-00004, plus a precision criterion (1022-00005, a folder holding the same Belmont Ridge dispute, is outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's litigation files are visible."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store. A glob of the matters folder returns nothing; a find prints the count and the first and last names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Store-wide text-extraction scan times out with partial output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file contents for request keywords. Scan rerun in two matter-number chunks saved to files and paged."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 66,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Three batches of reads (28 documents) across about a dozen candidate matters, then a snippet script over key filings."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 67,
+     "end": 83,
+     "tags": [
+      "mixed intents",
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists files of twelve more matters and reads eight of their documents; a call to open the write stage is refused by the protocol because this stage is still open."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 97,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists three more matters (after a shell syntax error) and reads one document of each, plus a snippet script."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 98,
+     "end": 106,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four more documents of two of those matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes seven matters as qualifying and also asserts a second folder that holds the same dispute's documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 127,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Checks cited paths (first against the workspace root) and edits two citations of the second folder."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 128,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "All seven qualifying matters are named, but the answer also asserts a second folder number for one dispute.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 107,
+    "end": 112,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It saw that one dispute's documents sit in two folders (evidence seen at [32]-[42]) and the answer asserts both folder numbers as qualifying.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The write review flagged the duplicate-folder handling; the check stage fixed that folder's citations but kept it as qualifying."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's litigation files are visible."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Counts matter folders, then find | grep over file paths for request and filing-type words (first 240 lines)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 32,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Heredoc error, a timed-out store-wide scan, four parallel chunk scans (one times out), the first 260 lines of hits, then a filter of hit paths by filing-type folder words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 51,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads six documents from three matters, greps the saved hits for three matters, then reads five documents of one of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 52,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five documents to reconcile a matter-number conflict and check exclusions."
+    },
+    {
+     "stage": "Write the response",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two matters as qualifying."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 68,
+     "end": 101,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Greps the saved hits for eight matters, reads eight documents of four and adds two matters to the response; a grep against the workspace root fails."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its filtered hit list showed all seven qualifying matters, but it opened only a few; the final answer names four and omits three it never opened.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 33,
+    "end": 51,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its filtered hit list showed all seven required matters, but it chose to open only three matters there and never opened three of the required ones; a later audit added two others.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) Reviews said about 60 surfaced matters were unopened and the write review said the two-matter answer may under-include; the audit added two matters but not these three."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 8,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's litigation files are visible."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Counts matter folders and prints the first and last twenty names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan with broad terms times out after about 1.5M chars."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eleven candidate matters picked from the scan."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for request words, then the first files of each hit matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 59,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search file names for request keywords. Reads twenty-four documents across ten candidate matters; one guessed path does not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 60,
+     "end": 77,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Script over a named list of candidate matters, greps of its output and three engagement-letter reads."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 78,
+     "end": 87,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for the practice-group label, a snippet script over the matched matters and one engagement-letter read."
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes seven matters with supporting filings."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks cited pleadings exist."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T2 passes). T2 listed the files of eleven scan-surfaced candidates, read engagement letters and pleadings across ten, then ran a store-wide scan for the practice-group label that surfaced the last qualifying matter. T1's filtered hit list also showed all qualifying matters, but at its first reading stage it opened only three, wrote two and added two more on audit (split at that reading stage; the reviews there named unopened matters only generically, as they also did in T2). T0 included all seven but also asserted a second folder holding the same dispute's documents (over-inclusion at the write stage); the write review named it and the check stage kept it."
+}

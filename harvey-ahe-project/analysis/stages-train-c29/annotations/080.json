@@ -1,0 +1,349 @@
+{
+ "task": "080",
+ "context": "Request: past patent-infringement matters where the firm retained a technical expert, with the retention documents (reports, disclosures, engagement papers). Rubric: 1007-00003 (Vantage Mobility, Dr. Yeoh, litigation-status-memo.docx), 1014-00003, 1014-00004, 1037-00004 with their expert documents, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two find | grep passes over file and folder paths for request words; 1,213 file hits, output long."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Narrower python pass over file names for patent-litigation and expert words, grouped by matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 72,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads complaints, retention agreements and reports of five candidate matters, then the openings of ten retention letters from other matters, plus one find listing of three folders."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 73,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Opens three further patent-related matters; one turns out to be an infringement defense with a retained technical expert named in its status memo."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 86,
+     "end": 95,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three extraction scripts for retention-plus-expert wording: a heredoc error, a timeout, then a name-filtered run listing 23 hits."
+    },
+    {
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with their experts and retention, report and declaration documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks cited paths exist, edits the opening and method text, re-reads the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 114,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folder paths."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Search file contents for request keywords. Store-wide python extraction for patent and expert words; times out after about 1.2M characters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over file paths for patent, expert and report words; a follow-up prints only the first 250 matching paths."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Uncapped python pass listing the 14 matters with patent or infringement in a path, with their expert files."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broader python pass over file names for expert, claim-construction and prior-art words in matters with a patent indicator."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of four candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 76,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads complaints, retention agreements and draft reports of the four matters, then a further matter's assessment, its folder listing, engagement letter and status memo, plus an extraction pass over one matter range."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 77,
+     "end": 83,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: Screen candidate matters by reading documents. Extraction passes over the remaining matter ranges and a per-matter count of expert-named files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 92,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the complaints of four flagged matters; all are copyright or trademark cases."
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five matters with experts and retention, report and declaration documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 108,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Path-existence check; the first run fails on the response path, a later run passes after decoding spaces."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "mixed intents",
+      "output capped",
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Parallel: two find | grep passes over file paths capped at 300 lines (out of 1,146 hits) and a store-wide extraction script that times out after about 1.9M characters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 30,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search file contents for request keywords. Globs one more candidate's files and expert-named files of three matters; the expert globs return nothing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 31,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filtered find listings of three candidate matters for expert, report and pleading files."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 40,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints, retention agreements, scope memos and report openings of the three matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 65,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters with their experts and retention, report and declaration documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 90,
+     "tags": [
+      "mixed intents",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, lists eight other matters, edits a coverage note; two checks fail on the response path before it finds the output file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the coverage note and three retention-agreement openings."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 100,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file contents for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its file-name search was capped at 300 lines and its content scan timed out, so a fourth matter never surfaced and the answer names three of the four.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 14,
+    "end": 21,
+    "events": "",
+    "kind": "search-miss",
+    "why": "The file-name passes stopped at 300 of 1,146 hits and the content scan timed out; the matter whose assessment file name contains the infringement word was in neither output, and the reopened search stage only globbed the three known matters.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) the search review named the timeout and the head -300 cap on the file-name results."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed. All runs found the three matters whose expert folders carry retention agreements. The split is the store-wide search: T0 and T1 ran uncapped file-name searches (T1 aggregated paths containing patent or infringement words) that listed the fourth matter's non-infringement assessment; both later opened that matter and read its status memo naming the retained expert, and passed. T2 paired a file-name search capped at 300 lines with a content scan that timed out; the fourth matter never surfaced, the critic flagged both truncations, and the agent's reopened search stage only globbed the three known matters, so its answer omitted the fourth (search miss)."
+}

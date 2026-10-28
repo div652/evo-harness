@@ -1,0 +1,420 @@
+{
+ "task": "201",
+ "context": "Request: conflict and precedent check, all deals the firm did opposite Crescent Harbor Bank, N.A. Rubric: 1005-00001 (Nexford), 1021-00001 (Verimark), 1038-00002 (Cascade), 1043-00001 (Ironhaven) as qualifying, plus a precision criterion. Near-misses 1006-00008 (insurance code with 'CHB') and 1016-00009 (sanctions investigation involving a different 'Crescent' bank; its number also appears as an engagement number in the Verimark documents).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob with a capped folder listing and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over paths for the counterparty and deal-document words (capped at 240 lines) in parallel with a content grep over raw files that returns nothing. The review flags the cap and the empty grep over binary files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: counts matter folders, greps paths for the two counterparty words (seven unrelated hits) and prints all folder names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; a rerun without spreadsheets prints the first 260 lines (about 43K chars): six candidate matters with hit counts and snippets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a bounded rerun and a three-range parallel rerun both time out; a spreadsheet-only scan finds nothing. The review says the six-matter set is not shown complete.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the six candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads twelve documents (credit agreements, engagement letters, closing memos, an investigation memo) across the six candidates; keeps four, excludes two.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 65,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four deals with roles, amounts and source paths, plus two exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 94,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; a path-check script fails on the workspace path; expands abbreviated citations with three edits and confirms ten cited paths with globs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the openings of the six source documents; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob with a capped folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find | grep over paths for five counterparty words (200 lines each), in parallel with a folder count and the last 30 folder names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts of path hits for the counterparty words and broad deal-document words (head -100); the review notes the folder field is misparsed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 3: a Python path search groups counterparty-word hits by matter: seven matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; a two-range parallel rerun prints about 546K chars of snippets, mostly for one matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: three bounded range scans print only matter ids, file counts and example paths: six matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 52,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing memos, an investigation report and disclosure schedules from the six scan-hit matters; a guessed path for one matter is not found.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the matter whose guessed path failed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the credit agreement, closing agenda, completion certificate and funds-flow sheet of the matter just listed, its first reads of that matter.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 68,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Re-reads one role-defining document per kept matter and one per excluded matter to build an evidence set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four deals in a table with roles, amounts and dates, plus two false-positive exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 95,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and two credit-agreement openings; a path-check script fails on the workspace path, then passes against the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 104,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads one credit agreement, the two excluded documents and the response opening; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 105,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob with a capped folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over paths for counterparty and broad deal words (1,563 paths, prints matter ids) in parallel with a content grep over raw files that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 32,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script and four sharded reruns time out; a faster byte-level scan saves hits to a file, then greps print snippets (about 59K chars) and the matters with the full counterparty name.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 38,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a narrower all-format count scan times out with no output.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 39,
+     "end": 45,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "Filtered file listings of five candidate matters (head -80 each) and the saved scan hits for three of them.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. A script over the saved store-wide scan output lists every file with the full counterparty name (about 29K chars); the pipe meant to collapse it to matters sits after the heredoc and does not run.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads ten documents (credit agreements, closing memos, an engagement letter, a binder index) of four candidates, its first reads of them.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "declared: Check or revise the response. Tallies full-name hit files per matter from the saved scan output and checks eight source paths, then writes four deals in a table with roles and dates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 73,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Checks four more paths and re-reads the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the openings of the four credit agreements and two documents of the excluded matter; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: re-reads a longer opening of one credit agreement to confirm the counterparty's role; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All pass. Shared procedure: whole-store listing, a file-name search that finds only incidental counterparty words, a store-wide text-extraction scan that times out at first and is recovered in a narrower form (fewer file types in T0, matter ranges in T1, a byte-level scan in T2), giving the same six candidate matters; then reads of the executed credit agreements and closing memos of those six, a write of four deals with two exclusions, and check stages that only re-read sources. Later scan reruns timed out in T0 and T2 and the reviews called the six-matter set unproven, but the runs kept it and it held."
+}

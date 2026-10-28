@@ -1,0 +1,427 @@
+{
+ "task": "221",
+ "context": "Request: pull the right-of-first-refusal clause from Aurelius Media's lease. Rubric: matter 1017-00009 (Aurelius headquarters lease at Greystone Tower), the executed agreement-of-lease-execution.docx as proof document, and the finding that the lease grants a right of first offer, not a ROFR (Kestrel holds the ROFR).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. The review flags that the summary treats the capped listing as the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists every matter folder name, the file count and per-folder counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for nine request and lease words (200 lines each) and two path globs; the client-name glob returns nothing. Names one candidate series with a lease agreement. The review flags lease-named files in other matters left unassessed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out with no output; a second script over four named candidates prints about 744K characters of snippets. The review flags the hand-picked scope.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide scan in matter-prefix batches for the client name and the right's name (about 66K characters), then a grep of the saved output filtered to the four candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 38,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed lease, its exhibit, a closing memo and a title memo of the chosen matter. The review flags that the folder was not listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 47,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Lists the chosen matter's files and extracts passages on the right and the senior tenant from three of its documents.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 53,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads a post-closing letter, a negotiation email and the closing checklist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that the lease grants a different, weaker right and not the requested one, quoting the clause and citing the matter and lease.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 67,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, checks cited paths and edits one section reference.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response and re-extracts the quoted passages; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: adds a sentence that no lease amendment appears in the matter and re-reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 91,
+     "end": 91,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob and a store-root file listing that prints nothing. The review advises a store-wide search.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "output capped",
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). find | grep for the client and lease words capped at 300 lines, a folder count with the last 30 names, and a content grep with a bare glob that returns nothing. The review flags the cap and the noisy pattern.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 22,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with a broad pattern prints about 438K characters. The review flags the pattern.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 28,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide rerun times out after about 37K characters. The review flags that it covered part of the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Extracts the clause text from the lease and exhibit of one matter. The review flags that the matter's identity was not shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed lease (three offsets), its exhibit and a closing memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Lists the chosen matter's files and filters them for amendment words. The review notes no document was opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 54,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads four negotiation and post-closing documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 63,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 4: re-reads parts of the lease, exhibit and closing memo and re-filters file names. The review notes the lease offset missed the clause.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that the lease grants a different right and not the requested one, quoting the clause and exhibit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the lease section, exhibit, closing memo and response; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 94,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Read a chosen matter's documents in depth → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob. The review advises listing by matter folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). A script counts all files (with a broken per-folder count) and prints every path containing the client or lease words.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with its file count. The review calls the lead an unverified lead.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 20,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opens a content-search stage and closes it at once without a call, stating the files need text extraction.",
+     "label_check": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out with no output; falls back to a path walk for client and lease words. The review flags that no text was checked.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide extraction listing files per matter that mention the client or the right (about 32K characters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five matters of one numbered series. The review flags that other surfaced matters were not listed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed lease, its exhibit, a review memo, a redline, a terms email and board minutes of the chosen matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 55,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over the chosen matter's documents for the right's names, the lease article, and a read of the closing memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that the lease grants a different right and not the requested one, quoting the article and citing the matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 73,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, a path check that prints nothing, and a heading check on the lease.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: path check with output and one wording edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 102,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: scripts compare the quoted article word for word with the lease (one fails on the workspace path) until it matches.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 103,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List matter folders → Search file contents for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass. Each surfaced the lease matter early from file names or store-wide scans, read the executed lease and its exhibit, and wrote that the lease grants a different right than the one asked about, quoting the clause. The runs differ only in how many store-wide scans they ran before reading (two to three, several timing out or printing hundreds of thousands of characters) and in how many check passes followed. Label-check notes were ignored in two runs (folder listing and file-name searches under the store-listing label) and followed once (T2 closed an empty content-search stage and opened the extraction stage)."
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C1",
+  "parent_checkpoint": "C0",
+  "objective": "Improve candidate-set completeness by making bounded corpus discovery explicit and requiring matter-level reconciliation before drafting.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/glob.py",
+        "tools/grep.py"
+      ],
+      "evidence": [
+        "evidence/tasks/7035f852d8fe9203.json: five one-criterion misses associated with silent inventory truncation",
+        "evidence/tasks/e1ffebc7f5b0572c.json: five one-criterion misses associated with incomplete candidate enumeration",
+        "debugger/overview.md: incomplete document reading and search dominate the recurrent diagnoses"
+      ],
+      "failure_pattern": "Bounded file and content searches looked complete, so agents selected a visible subset and omitted qualifying candidate matters.",
+      "mechanism": "Return deterministic pages with total counts, explicit COMPLETE or PARTIAL status, and continuation offsets; validate pagination inputs so a successful result can no longer silently imply completeness.",
+      "rationale": "The result cap and absent completeness signal originate in the search implementations, making the tool layer the strongest and earliest reusable control point.",
+      "predicted_fixes": [
+        "7035f852d8fe9203",
+        "e1ffebc7f5b0572c",
+        "80dee57052409b59",
+        "dac3bc3411872ac5",
+        "20c5504a4f9d60d6",
+        "6fce9fd6b759b7e0",
+        "2665c508cd46b4e4",
+        "65fcac645ce0d315",
+        "9a0229c773971bdd",
+        "92206e5f572d489d"
+      ],
+      "risk_tasks": [
+        "10b5acd612dfab87",
+        "15b4c673bd205edf",
+        "caf627ccbbc99589"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/glob.tool.yaml",
+        "tool_descriptions/grep.tool.yaml"
+      ],
+      "evidence": [
+        "evidence/tasks/7035f852d8fe9203.json: capped search pages were treated as the corpus",
+        "evidence/tasks/2665c508cd46b4e4.json: inconsistent search coverage despite demonstrated passing capability"
+      ],
+      "failure_pattern": "Agents lacked operational guidance for interpreting bounded results and used direct grep as though it parsed office documents.",
+      "mechanism": "Expose pagination controls and define status semantics, search boundaries, deterministic ordering, and the required follow-up for partial pages in the API schemas seen during every model call.",
+      "rationale": "Accurate schema-level instructions are required for the model to use the new implementation controls and avoid repeating broad, incomplete searches.",
+      "predicted_fixes": [
+        "7035f852d8fe9203",
+        "e1ffebc7f5b0572c",
+        "80dee57052409b59",
+        "dac3bc3411872ac5",
+        "20c5504a4f9d60d6",
+        "6fce9fd6b759b7e0",
+        "2665c508cd46b4e4",
+        "65fcac645ce0d315",
+        "9a0229c773971bdd",
+        "92206e5f572d489d"
+      ],
+      "risk_tasks": [
+        "10b5acd612dfab87",
+        "15b4c673bd205edf",
+        "caf627ccbbc99589"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "evidence/tasks/dac3bc3411872ac5.json: passing and failing runs diverged on complete candidate enumeration",
+        "evidence/tasks/92206e5f572d489d.json: an inconsistent one-criterion miss arose from candidate-set reconciliation",
+        "debugger/overview.md: recurrent reasoning and skill failures narrowed from raw hits without closing a matter inventory"
+      ],
+      "failure_pattern": "Even when candidates surfaced, agents inconsistently transferred all of them into authoritative-source review before making global, negative, or comparative conclusions.",
+      "mechanism": "Require predicate-based discovery, a compact matter ledger, closure of every surfaced candidate, two independent retrieval angles for negative conclusions, and explicit handling of partial or timed-out searches.",
+      "rationale": "Candidate reconciliation is a cross-tool legal-work state transition, so the root work protocol must define when discovery is complete and when drafting may begin.",
+      "predicted_fixes": [
+        "7035f852d8fe9203",
+        "e1ffebc7f5b0572c",
+        "80dee57052409b59",
+        "dac3bc3411872ac5",
+        "20c5504a4f9d60d6",
+        "6fce9fd6b759b7e0",
+        "2665c508cd46b4e4",
+        "65fcac645ce0d315",
+        "9a0229c773971bdd",
+        "92206e5f572d489d"
+      ],
+      "risk_tasks": [
+        "10b5acd612dfab87",
+        "15b4c673bd205edf",
+        "caf627ccbbc99589"
+      ]
+    }
+  ],
+  "validation": [
+    "Python syntax and YAML parsing",
+    "matter-neutral synthetic pagination behavior",
+    "NexAU static agent validation",
+    "candidate validation"
+  ]
+}

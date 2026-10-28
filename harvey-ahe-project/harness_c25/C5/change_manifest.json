@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C5",
+  "parent_checkpoint": "C4",
+  "objective": "Preserve every matter cluster surfaced by corpus-wide semantic discovery until it receives source follow-up, and give the agent one bounded chance to close abandoned candidates or deferred reads before finishing.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "middleware",
+      "paths": [
+        "middleware/coverage_state.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-1718583d91f3879310bd/result.json: incomplete-document-reading",
+        "debugger/tasks/task-42dd3f8d28ed3542bb79/result.json: incomplete-document-reading",
+        "debugger/tasks/task-d2b75f462ef0358fc682/result.json: incomplete-document-reading",
+        "attribution/C4/transition.json: chg-2 PARTIALLY_EFFECTIVE"
+      ],
+      "failure_pattern": "Complete semantic searches repeatedly surfaced responsive matter clusters, but the agent sampled a preferred subset, lost zero-follow-up clusters across turns, and abandoned exact reads that returned deferred with no text.",
+      "mechanism": "After the direct matter census activates corpus mode, retain matter clusters from semantic glob and grep results until a later read reaches that cluster, retain exact zero-text deferred paths until successful progress, and place both queues in one replaceable bounded framework reminder even after discovery pagination is complete.",
+      "rationale": "The earliest shared failure occurs between successful discovery and candidate-specific reading. The retained middleware already owns cross-turn coverage state but tracked only incomplete pages and partial ranges, so improving that state machine is smaller and more reliable than another general prompt reminder.",
+      "predicted_fixes": [
+        "task-1718583d91f3879310bd",
+        "task-42dd3f8d28ed3542bb79",
+        "task-d2b75f462ef0358fc682",
+        "task-2dfb82a6c33a8db08c91"
+      ],
+      "risk_tasks": [
+        "task-57f4f80cd7d41580e596",
+        "task-966931c0f5923aa3aa5d"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/finish.py"
+      ],
+      "evidence": [
+        "debugger/tasks/task-42dd3f8d28ed3542bb79/result.json: agent finished despite open coverage reminder",
+        "debugger/tasks/task-d2b75f462ef0358fc682/result.json: deferred source remained unresolved through finish"
+      ],
+      "failure_pattern": "A non-blocking coverage reminder was visible but corpus-wide runs still finished while discovered clusters had no follow-up and exact candidate reads remained deferred with zero text.",
+      "mechanism": "For activated corpus-mode state only, reject the first finish attempt when zero-follow-up clusters or deferred exact reads remain, name a bounded set of gaps, and allow a later retry regardless so heuristic false positives cannot create a stop loop.",
+      "rationale": "Finish is the strongest reusable point at which an otherwise ignored closure warning can create one repair opportunity. The one-rejection cap preserves legitimate completion when a lexical hit is incidental and leaves existing missing-deliverable checks intact.",
+      "predicted_fixes": [
+        "task-42dd3f8d28ed3542bb79",
+        "task-d2b75f462ef0358fc682",
+        "task-1718583d91f3879310bd"
+      ],
+      "risk_tasks": [
+        "task-57f4f80cd7d41580e596",
+        "task-e80b0c4675377e44f411"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "tool_description",
+      "paths": [
+        "tool_descriptions/finish.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/tasks/task-d2b75f462ef0358fc682/result.json: bounded recovery required for deferred candidate reads"
+      ],
+      "failure_pattern": "The model could not anticipate or correctly recover from a candidate-aware finish rejection because the prior finish schema described only generic completion.",
+      "mechanism": "Describe both capped checks, the meaning of a candidate-closure rejection, the required ledger reconciliation, and the safe retry behavior at the point of tool use.",
+      "rationale": "The API tool description is the authoritative model-facing contract for the changed finish implementation and prevents a bounded rejection from being mistaken for a terminal error.",
+      "predicted_fixes": [
+        "task-d2b75f462ef0358fc682",
+        "task-42dd3f8d28ed3542bb79"
+      ],
+      "risk_tasks": []
+    },
+    {
+      "id": "chg-4",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/tasks/task-42dd3f8d28ed3542bb79/result.json: ledger created only after selective drafting",
+        "debugger/tasks/task-9559125b4074876de169/result.json: answer-set-overinclusion"
+      ],
+      "failure_pattern": "Agents treated semantic hits as examples rather than a queue and sometimes copied the exhaustive internal research set into a singular user-facing answer.",
+      "mechanism": "Require immediate ledger promotion of every distinct semantic-hit cluster, exact later-turn recovery for deferred reads, and an explicit separation between exhaustive internal reconciliation and the cardinality of the requested final answer.",
+      "rationale": "Middleware can preserve candidate state but cannot decide legal relevance or requested answer cardinality; the prompt defines those semantic transitions while the deterministic components enforce only observable coverage invariants.",
+      "predicted_fixes": [
+        "task-42dd3f8d28ed3542bb79",
+        "task-9559125b4074876de169",
+        "task-d5e924d7b1fdbcf9e80e",
+        "task-0dd70aa92fd4bb363529"
+      ],
+      "risk_tasks": [
+        "task-966931c0f5923aa3aa5d"
+      ]
+    }
+  ],
+  "validation": [
+    "Python syntax and prompt-template delimiter checks",
+    "Synthetic corpus activation, semantic-hit tracking, read closure, and deferred-read smoke test",
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

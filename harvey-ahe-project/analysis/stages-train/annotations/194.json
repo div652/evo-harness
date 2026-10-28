@@ -1,0 +1,238 @@
+{
+ "task": "194",
+ "context": "Request: all deals that include a 'most favored nation' provision, for an MFN clause bank on M&A and commercial deals. Rubric: 17 qualifying matters (1001-00002, 1001-00007, 1003-00003, 1004-00001, 1005-00001, 1008-00003, 1009-00001, 1013-00002, 1013-00003, 1018-00006, 1019-00002, 1021-00001, 1022-00008, 1023-00001, 1027-00002, 1041-00003, 1042-00002) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Four parallel globs: whole store, .pdf (none), .docx and .xlsx."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 7,
+     "end": 10,
+     "tags": [
+      "script error",
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "A store-wide scan of .docx and .eml text for MFN wording fails on a syntax error; the rerun times out after printing about 4.7M chars and the run ends there."
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "The store-wide scan's output filled the context; no response file was written.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 7,
+    "end": 10,
+    "events": "[9]-[10]",
+    "kind": "context-overflow",
+    "why": "Its store-wide scan printed every matching snippet with no limit; the 4.7M-char output filled the context and the run ended before any response was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents",
+      "binary output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Whole-store glob plus a content-mode grep for MFN wording; the readable hits are email lines from about a dozen matters, the .docx hits are lines of compressed bytes."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 18,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of email reads from seven matters with readable grep hits; one guessed path does not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 19,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the emails or .docx files of five candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 25,
+     "end": 40,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements, a pricing schedule and emails of the matters it is weighing, with two more folder listings (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters with MFN provisions in executed documents and lists excluded draft-only matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 43,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Its only store-wide search reached email text only; most needed matters never surfaced in a readable form.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was a content grep that reads email text but not .docx text; most matters it needed carry the wording only in agreements, and it never scanned document text."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 18,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 14,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads ten agreements and memos from the three matters at the top of the listing, with no search."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 15,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "binary output",
+      "file not found"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A content grep over .docx files for MFN wording returns only lines of compressed bytes from many matters; four parallel reads of listing-top memos, three at guessed paths that do not exist (labelled by the grep)."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 21,
+     "end": 22,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Glob of .docx files under folders named 'Transaction Documents'; the listing stops at 100 files from about 16 matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 23,
+     "end": 30,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads seven agreements from five matters picked from that listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 31,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads later sections and other versions of the agreements of four of those matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes one matter with an express MFN clause and a second with a parity provision."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 43,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the top of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 45,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Search file names for a document type → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its content grep gave only byte noise and its fallback listing was capped; it found one needed matter and added one that does not qualify.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 15,
+    "end": 20,
+    "events": "[15]-[18]",
+    "kind": "search-miss",
+    "why": "Its only content search was a grep over .docx files, which returned compressed-byte noise rather than text; it never scanned document text and fell back to a folder-name listing capped at 100 files."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserts a matter whose agreement has only a parity provision as one that includes an MFN provision."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, in three different ways. T0 ran a store-wide extraction scan with no output limit; its 4.7M-char output filled the context and the run ended with no response (context overflow at the scan stage). T1's only store-wide search was a content grep whose readable hits came from emails; it followed those leads carefully but found four of 17 matters (search miss at the first search stage). T2 first read the listing-top matters, then ran a .docx content grep that returned only compressed-byte noise, picked agreements from a capped folder-name listing, found one needed matter and asserted one extra (search miss at the content-grep stage, over-inclusion at the write stage). No run scanned document text to completion."
+}

@@ -1,0 +1,276 @@
+{
+ "task": "190",
+ "context": "Request: all closed deals of the M&A practice with signing and closing dates (time-to-close benchmark). Rubric: 15 matters (1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00007, 1008-00008, 1009-00003, 1013-00006, 1015-00004, 1017-00006, 1037-00006, 1039-00004, 1041-00003, 1042-00004, 1046-00001) with exact dates, plus a precision criterion whose judge text names 1036-00004 and fails T0/T2 for asserting 1046-00001 (passed by C-015).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus PDF and DOCX globs; the PDF glob returns nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads (agreements, memos, spreadsheets, emails) from three matters at the top of the listing."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Date arithmetic for one deal."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 22,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Re-reads an engagement letter, a closing checklist and a memo of the same matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one closed deal from the listing-top matters as the only one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 28,
+     "end": 28,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Calculate figures for the answer → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; reported the one closed deal visible at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 19,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any search, so fourteen of the closed deals never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a shell find limited to three levels (empty)."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders and subfolders; about 92K chars."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 7,
+     "end": 8,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Script listing matters that have both transaction and closing subfolders, with their files; about 109K chars."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 10,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide .docx scan for files stating both signing and closing dates; about 363K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, a checklist, a closing package and a memo of six candidate matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 18,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script printing date lines from documents and emails of 22 named candidate matters; about 273K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 32,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of short reads (agreements, emails, checklists, a certificate) across candidates plus a glob to locate one memo; one path does not exist."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 33,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Date arithmetic for 15 deals."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of one agreement to confirm its date."
+    },
+    {
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 14 closed deals with signing and closing dates and elapsed days."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 39,
+     "end": 46,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits: adds one deal and updates statistics, sources and exclusions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 47,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Calculate figures for the answer → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Found 13 of 15 deals; two surfaced matters were never opened and one closing date came from a filing certificate.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 11,
+    "end": 17,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its subfolder filter and .docx scan both listed two matters it needed, but its first reads and its 22-matter candidate list left them out, so they were never opened and are missing from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 37,
+     "end": 38,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "For one deal it took the filing date of a certificate of merger as the closing date, four days before the closing date the rubric expects (evidence seen at [27]-[28])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, spreadsheets, an email and engagement letters of two matters at the top of the listing."
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 13,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Date arithmetic for one deal."
+    },
+    {
+     "stage": "Write the response",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one closed deal from the listing-top matters as the only one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 17,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Calculate figures for the answer → Write the response → Finish the run",
+   "failure_point": "Never searched; reported the one closed deal visible at the top of the listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 12,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the few matters in a capped listing without any search, so fourteen of the closed deals never surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 failed the same way: they never searched, read only the matters at the top of the capped listing and reported one closed deal (partial listing as corpus at the reading stage). T1 searched broadly and found 13 of 15, but left two surfaced matters out of what it opened (surfaced not opened at the first screening stage) and took one closing date from a filing certificate."
+}

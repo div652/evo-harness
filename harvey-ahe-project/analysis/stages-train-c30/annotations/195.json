@@ -1,0 +1,483 @@
+{
+ "task": "195",
+ "context": "Request: all the firm's closed M&A deals whose executed agreements include indemnification sections (for a clause bank). Rubric: fifteen matters, each with its executed agreement (e.g. 1006-00007 executed-apa-proshield, 1015-00004 contribution-agreement-execution, 1037-00006 stock purchase agreement), plus precision (1003-00004, 1007-00006, 1038-00008, 1036-00004 and similar are outside).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Broad path regex grouped by matter (about 112K chars) and three globs for indemnification, merger and purchase names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: agreement-name path patterns; prints the matching matter numbers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 43,
+     "tags": [
+      "timed out",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scans time out, range reruns print nothing, then range scans print their first 50 lines (about 60K chars each).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: per-matter summary keeping only matters with agreement-named files and closing evidence (44 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 66,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the first lines of ten executed agreements and runs a snippet script that times out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 131,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing certificates, memos and checklists of about 25 shortlisted matters, with guessed paths failing, two file listings and a heading script over executed agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 132,
+     "end": 141,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads the first 100 lines of five executed agreements; the review says no indemnification heading is shown.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 142,
+     "end": 147,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 19 closed matters with executed agreements and indemnification articles.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 148,
+     "end": 164,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response, a path check fails on a missing path, and four rows are edited.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 165,
+     "end": 170,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check against the output folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 171,
+     "end": 171,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its second path search used agreement-name patterns that dropped a deal documented by a contribution agreement, and the answer added matters outside the set.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file names for request keywords",
+    "start": 18,
+    "end": 23,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "why": "The broad path search at [14] listed every needed matter, but the agreement-name patterns written next at [20] left out the matter whose executed agreement is a contribution agreement, and later scans and reads worked from that narrower set.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review said matters whose files lack the pattern words would not surface, without naming one; the agent moved to scanning."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 142,
+     "end": 147,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists matters read at [52]-[129] whose deals are not in the set as closed M&A deals with executed indemnification sections.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked for indemnification and closing checks in general, without naming these matters."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Broad path regex grouped by matter (about 136K chars), a find \\| grep capped at 250 lines, and a folder count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: high-signal agreement-name regex; 36 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: widened naming conventions, including contribution; 99 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search file names for request keywords (attempt 4). Dumps the file names of the 167 unmatched matters (about 124K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Scan for indemnification text in agreement-named files of the 99 candidates, then a header list of hit files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 74,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements and closing papers of about twenty candidates; a stage_start for scanning is refused because the stage is still open. The review warns that dozens of surfaced matters were never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 75,
+     "end": 113,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter agreement and closing summary, reads of closing checklists, a classification scan that times out and is sharded, and a detail script over selected agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: final scan of candidates for executed agreements with indemnification headings and closing evidence; one matter shows closing evidence but a blank agreement field. The review says the agreement regex matched only some naming conventions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 120,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 17 closed matters with executed agreements and indemnification sections.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 145,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Path checks (first against a missing path), a re-read and four citation edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 146,
+     "end": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a surfaced deal documented by a contribution agreement and lost it in a final scan whose agreement regex left it blank; the answer added matters outside the set.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 43,
+    "end": 74,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scan header list at [40] showed a needed matter's executed contribution agreement, but when choosing what to read it left that matter out; the final scan at [117] then printed it with closing evidence and no agreement, and the answer omits it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review warned that dozens of surfaced matters were never opened; the final-scan review named the agreement regex as missing naming conventions but not this matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 120,
+     "end": 125,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists matters seen in its reads and scans at [45]-[117] whose deals are not in the set as qualifying closed deals.",
+     "critic": "not-flagged",
+     "critic_note": "No review named these matters."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 12,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus a top-level listing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Broad path regex (about 122K chars) and a filtered agreement-name list; a content grep returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: agreement-name regex with more conventions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Scan for indemnification text in M&A-named .docx files (100 files), then the hit matter list. The review flags that the filename regex restricts which files are scanned.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: content-only count of indemnification hits per matter (239 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 77,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads closing checklists and executed agreements of about fifteen candidates, with scripts listing agreement-named files, closing dates and article headings.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 78,
+     "end": 87,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: a ledger script over all filename candidates and two reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 88,
+     "end": 96,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads one matter's closing papers to resolve a name collision.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 14 closed matters with executed agreements and indemnification sections.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "end": 113,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Path checks (first against a missing path) and a note that paths are relative to the matter folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 114,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans kept only M&A-named agreement files, dropping two deals with differently named executed agreements; it also left out a deal whose executed agreement and closing it had printed, and added an outside matter.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 30,
+    "end": 37,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "why": "The broad path search at [18] reached every needed matter, but the scan at [32] and the candidate script at [52] only took files matching M&A agreement names, which dropped an asset deal with a non-standard agreement file name and a deal documented by a contribution agreement.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The scan review said the filename regex restricts which files are scanned; the agent ran a content-only count but kept screening from the filename candidates."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Its scripts printed one needed matter's executed stock purchase agreement with indemnification text and its closing date (evidence seen at [53]-[81]), but the answer leaves it out without a stated reason.",
+     "critic": "not-flagged",
+     "critic_note": "No review named this matter."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists a real-estate portfolio acquisition outside the set as a qualifying closed M&A deal.",
+     "critic": "not-flagged",
+     "critic_note": "No review named this matter."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail, and all miss the matter whose executed agreement is a contribution agreement. Its path surfaced in each run's first broad path search, but a narrower agreement-name pattern written next dropped it: T0's second path search and T2's filename-filtered scan (over-narrow filters, first errors), while T1 widened its patterns, saw that agreement listed at [40], did not open it in screening (first error) and lost it again in a final scan whose agreement regex left it blank. T2 also dropped an asset deal whose executed agreement has a non-standard file name and left out a matter whose executed agreement and closing date its own scripts had printed. All three answers add matters outside the set. Reviews flagged the name-based filters in T0 (generically) and T2 (specifically, after which the agent ran a content scan but kept screening from filename candidates); no review named the omitted matters."
+}

@@ -1,0 +1,16 @@
+# Batch 10 proposals (tasks 173 179 181 184 185 190; all 18 runs failed)
+
+| Kind | Name | Definition | Example | Why no existing name fits |
+|---|---|---|---|---|
+| stage | NEW: Calculate figures for the answer | A short script that computes values for the deliverable (day counts between dates, averages) from figures the agent has already read; it does not touch the document store | 190_T1 [33]-[34] (also 184_T0 [22]-[23], 184_T1 [34]-[35], 190_T0 [20]-[21], 190_T2 [13]-[14]) | It is not a search, scan or read of the store, and it comes before the write, so "Check or revise the response" would misdescribe it |
+| error kind | NEW: wrong-detail | The agent named a needed matter but stated a requested detail (a date, amount or similar) from a document giving a related but different value | 190_T1 [27]-[28] (certificate-of-merger filing date used as closing date) | missing-identifier covers an omitted number, not a misstated one; the other kinds are about which matters are found or asserted |
+
+## Issues
+
+- 181 lists no rubric matter numbers (the rubric names associates). Hindsight values that mention the target were applied to the matters the judge cites (1014-00003, 1014-00004). "answer misses target" was used for an answer that leaves out needed people, not matters. Later batches with person-level rubrics may want explicit wording for this.
+- 190's precision criterion contradicts itself: its judge text names 1036-00004 as the permitted set and fails T0/T2 for asserting 1046-00001, while C-015 requires 1046-00001 and T1 passes precision with it. For T0/T2 this was treated as a judge artefact; their first errors (partial-listing-as-corpus) do not depend on it.
+- Recurring cause of search-miss in this batch: content greps reach only email (.eml) text, because .docx files are zipped. The agent never saw links that sit only in .docx files (179_T2, 181_T0, 184_T2, 185_T0, 185_T2), and 184_T1 restricted its own scan to email files. This is not tagged now. A tag such as "grep hits from email text only" could make it countable.
+- Writing straight from a huge scan output without opening any document (185_T1, 181_T2): 185_T1's scan showed the needed matter, so it got surfaced-not-opened, with the write stage as the first-error stage because no stage in between chose reads. 181_T2's partial output lacked the missing associates' matters, so it got search-miss at the scan.
+- When a store-wide scan's output is very large (179_T0 727K, 179_T1 637K chars), "target surfaced" may overstate what the agent could use. 179_T0/T1 still got surfaced-not-opened. In T1 a later compact 1.3K-char per-matter list makes the call clear, but in T0 it rests on the large output alone.
+- 185_T0 [19]: a glob `matters/<prefix>-*/*` meant to list all of one client's folders returned "No files matching", and the agent did not retry. This is like the non-recursive grep globs in the batch-2 Issues and is tagged only `no matches`.
+- 179 needs a second hop (from the client to its related companies, then to their matters). The runs that surfaced those matters still opened only two of them. If this recurs, a separate error kind for not following related entities may be clearer than surfaced-not-opened.

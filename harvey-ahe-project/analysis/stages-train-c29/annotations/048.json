@@ -1,0 +1,320 @@
+{
+ "task": "048",
+ "context": "Request: Capital Markets offerings whose proceeds were earmarked primarily for general corporate purposes (not residual GCP lines), completed, with the use-of-proceeds and closing documents. Rubric: 1045-00001 (Belmont Ridge Bank notes) with a use-of-proceeds and a closing document, plus a precision criterion (only 1045-00001 and 1014-00001 permitted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and recommends enumerating folders and running content searches."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders and total files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script over every document for broad offering and proceeds terms with snippets, no output cap; it times out and returns several million characters, and the run ends before stage_end."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first store-wide extraction script printed snippets for broad terms with no output cap; the timed-out output filled the context and the run ended without a deliverable.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "",
+    "why": "The scan printed up to three snippets per file for very common terms (closing, offering, proceeds) over the whole store with no cap, so its output filled the context before the stage could be closed or reviewed."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and that the visible matters are not the whole store."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Parallel folder count/listing, a find | grep over paths for offering and closing words, and a content grep limited to text files that returns nothing (labelled by the file-name search). The review notes the grep did not search documents."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide document extraction script for proceeds terms; times out after about 540K characters. The agent names four candidates from the partial output; the review says the partial output was treated as complete."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of eight candidate matters. The review flags that about 60 surfaced matters were never listed."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Script over every matter counting offering-type and closing-type file names per matter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 33,
+     "end": 38,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Background extraction script over a set of matters for proceeds terms, polled and printed to 220 lines; the summary names about ten candidates."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 74,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads offering, purchase and closing documents of eight candidates, a snippet script, then the offering memorandum, file list and closing documents of one more matter (one guessed path does not exist). The review flags reliance on a draft agreement for one candidate and that many surfaced matters are unread."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 75,
+     "end": 99,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads offering and closing documents of ten more candidates and a snippet script; adds exclusions. The review again flags incomplete coverage."
+    },
+    {
+     "stage": "Write the response",
+     "start": 100,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying with documents and exclusions. A check stage is opened at [104] with no tool call and closed with a summary of the write; its review flags possible under-inclusion."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 114,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path-check script fails because it opens a file path that does not exist. The review flags that two of the four matters may not qualify."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: path check on the output file; all cited paths exist. The review notes content was not re-checked."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited the needed matter, but the answer also asserts three other matters as primary general-corporate-purpose offerings.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 100,
+    "end": 107,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review named the draft-agreement reliance and the check review named the two financings of one company.",
+    "why": "The answer lists three further matters as qualifying (one judged from a draft agreement, two financings of one company) although they are outside the permitted set; the screening review flagged the draft reliance and the next check review flagged the two financings, and the agent only verified paths before finishing (evidence seen at [39]-[99])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and files, printing the first 30 folder names; the review flags the line cap."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over all paths for proceeds, offering and closing words (about 1,700 hits, about 138K characters), with a folder-name listing in parallel."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower path pattern summarized per matter (offering memoranda, underwriting agreements, closing documents)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 36,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; a rerun limited to a hard-coded set of candidate matters returns about 89K characters of snippets. The review flags the restriction."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 46,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: multiprocessing scan and range-split variants; three of four calls time out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: background full scan, polled until done; summary lists 100 hit matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads offering and closing documents of several candidates, lists candidate files, greps scan output per matter, and reads the offering memorandum and cross-receipt of one more matter. The review flags an IPO judged primarily general-purpose despite a named debt repayment, and many unread candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as qualifying with documents, closing evidence and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 109,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Path check finds one missing path, edits it, rechecks (one script opens a response path that does not exist)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reads the first 40 lines of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited the needed matter, but also asserted an IPO with a named debt-repayment use as a primary general-corporate-purpose offering.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 92,
+    "end": 97,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review named the IPO and its debt-repayment use.",
+    "why": "The answer includes an IPO whose prospectus names a debt repayment alongside general purposes; the screening review just before writing flagged exactly this classification, and the agent wrote it unchanged (evidence seen at [63]-[89])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 ended at its first store-wide extraction script, whose multi-million-character timed-out output filled the context before any review (context overflow). T1 and T2 both reached and cited the needed matter (a file-name search surfaced it, a screening read opened it) but failed precision at the write stage by asserting extra offerings: T1 three matters (two of them flagged by the critic as doubtful before finishing), T2 one IPO whose debt-repayment use the critic had flagged in the screening review. In both the critic named the problem and the agent wrote or kept it unchanged."
+}

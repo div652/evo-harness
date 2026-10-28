@@ -1,0 +1,474 @@
+{
+ "task": "014",
+ "context": "Request: how many of the firm's credit facilities are covenant-lite in the market sense (institutional term loans with no always-on financial maintenance covenant), and which ones, for a lender update. Rubric: 1005-00001 (Nexford TLB) and 1021-00001 (Verimark TLB) qualify, plus a precision criterion. 1001-00007, 1003-00003 and 1041-00003 (term loans with springing or no covenants documented in the Financing folders of other deal matters) are outside the permitted set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob plus a find of the top two directory levels and file-type counts. The stage_start note suggested folder listing or file-name search; the declared label fits the work. The review asks for the full folder count and content searches."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Counts and lists all 266 matter folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Path regex over all files for credit, loan and covenant words in parallel with a content grep that returns nothing; labelled by the file-name search. The review flags substring noise and the empty grep."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: grouped, uncapped path sweep; 110 hit matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: supplementary path sweep with more financing words; 70 matters. The review flags common words."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 4: writes the union of path-hit matters (139) to a file."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out after writing a partial hit file; counts hits per matter, greps the file for exact phrases (about 115K characters) and prints sections. A mid-stage protocol check queries a file-size call. The review flags the partial scan and the narrow phrase filter."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 56,
+     "end": 67,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: extraction in four matter-range batches over the saved candidate list, then a filtered grep of the per-matter summary; a stage_start for screening is refused because this stage is still open. The review flags unverified coverage and the head cap."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 103,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads credit agreements, term sheets, memos and commitment letters from about a dozen candidate matters in two parallel batches, then snippet scripts on covenant sections of the leading agreements. The review flags about 60 surfaced matters never opened and unreconciled engagement numbers."
+    },
+    {
+     "stage": "Write the response",
+     "start": 104,
+     "end": 109,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes five facilities as qualifying, with exclusions. The review asks to check each against its executed agreement."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads the response, checks cited paths and re-extracts covenant passages; no edits."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 2: extracts one agreement's covenant section and edits the citation for that facility."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 133,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 3: re-extracts the same covenant section to confirm a threshold."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 134,
+     "end": 141,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 4: path-existence check and a re-read of the response opening."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 147,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 5: checks the output file for the threshold and the five matter numbers; every review asks to leave the population unchanged."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 148,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted three term loans documented in the Financing folders of other deal matters as part of the firm's credit book, alongside the two qualifying facilities.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 104,
+    "end": 109,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "The reviews asked only for fact and path checks and told the agent to keep the population unchanged unless a source contradicted it; none questioned whether the extra facilities belonged in the set.",
+    "why": "The answer lists five facilities as covenant-lite, three of them acquisition-financing term loans read in other deal matters' Financing folders, which the request's credit book did not cover (evidence seen at [70]-[101])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob plus a find of the top directory levels and file-type counts; the declared label fits the work."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Path regex for credit, loan and covenant words (127 matters) in parallel with a content grep restricted to .txt files that returns nothing; labelled by the file-name search. The review flags the noisy list and the empty grep."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: ranks matters by agreement words and execution-version names in file names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: widened path sweep; 124 matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 4: saves 585 paths in 130 matters to a file and adds alternative terms."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 43,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "A store-wide extraction script times out; a scan over the saved paths prints about 2.5M characters of snippets, and a grep of the hit file returns about 800K characters. The review flags the flooded output and partial coverage."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 53,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: a narrow phrase scan returns nothing because of a faulty range filter, then times out, then runs in matter-range batches under a per-batch timeout (45 hit matters). The review flags unchecked batch timeouts."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 61,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: phrase scan over the 585 saved paths (32 hit matters); a stage_start for reading is refused because this stage is still open."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads credit agreements and a closing memo from eight candidate matters chosen from the scan hits; the stage_start note pointed to screening and the agent kept the declared label."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 73,
+     "end": 74,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "label_check": "none",
+     "note": "Same declared stage. A snippet script over seven named agreements uses a greedy pattern on one-line document text; the result is about 810K characters and the run ends before stage_end."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files",
+   "failure_point": "A snippet script over seven named agreements printed about 810K characters and filled the context; no deliverable was written.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Search within a candidate matter's files",
+    "start": 73,
+    "end": 74,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended at this call; the scan review at [43] had flagged flooded, uncapped snippet output in an earlier stage.",
+    "why": "Its snippet script printed long windows around a greedy pattern over whole-document text with only a line cap, and the oversized result, after earlier multi-hundred-thousand-character scan outputs, filled the context before any answer was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob plus a capped find of the top directory levels; the declared label fits the work."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Three find | grep runs for credit, loan and facility words, the first capped at 500 lines, plus a per-matter count. The review flags the cap and a narrower rerun."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: uncapped union path search; 117 matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Three store-wide extraction scans all time out; the partial output of a raw-XML pass shows noisy hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads six documents (credit agreements, an analysis memo, a lender presentation) from four candidate matters. The review flags about 60 unopened matters and swapped borrower names between two matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 43,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "A snippet script over the agreements of a hand-picked set of candidate matters (about 180K characters). The review flags one leading matter's covenant section not yet read."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Attempt 2: capped covenant snippets from executed agreements, an execution-version scan, then partial reads of five more agreements. The review flags an exclusion based on a cover-page read."
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes four facilities as qualifying, with exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 77,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads the response; a path check fails on the relative path and is rerun on the output file."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 2: re-reads the four counted and two excluded agreements at offsets and edits one facility row."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 3: more offset reads of the same agreements, which land on unrelated sections; the review answers no."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 4: keyword extraction of covenant text from the counted and excluded agreements."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 113,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 5: checks cited paths and headline figures in the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 6: asserts the four amounts and triggers against the source agreements; the reviews keep saying not to add or remove matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted two term loans documented in the Financing folders of other deal matters as part of the firm's credit book, alongside the two qualifying facilities.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 63,
+    "end": 68,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews asked to confirm amounts and covenant text and repeatedly said not to add or remove matters; none questioned whether the two extra facilities belonged in the set.",
+    "why": "The answer lists four facilities, two of them acquisition-financing term loans read in other deal matters' Financing folders, which the request's credit book did not cover (evidence seen at [34]-[60])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 and T2 wrote both qualifying facilities but added term loans from the Financing folders of other deal matters (three and two), with the reviews checking facts only and telling the agent to keep the set unchanged; the error sits at the write stage. T1 never wrote an answer: after flooded scan outputs, a snippet script over named agreements overflowed the context during screening."
+}

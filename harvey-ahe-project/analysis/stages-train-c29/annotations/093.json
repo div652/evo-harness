@@ -1,0 +1,352 @@
+{
+ "task": "093",
+ "context": "Request: the shortest post-employment non-compete the firm negotiated and executed itself, and in which matter, with the signed terms. Rubric: 1038-00006 (Cascade Retail), 9 months via the executed standstill-settlement-agreement-execution.docx, plus precision (no other matter asserted).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Shell listing of folders and a file sample, both cut by head limits; the review flags the sample."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matters and files and prints the last ten folder names."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "File-name search with broad words incl. 'agreement'; 1,035 hits (~95K chars); the review flags noise."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: per-pattern file-name counts with narrower request words."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 36,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; rerun in three matter ranges, output filtered by file-name words and capped."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 46,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: snippet extraction over hit files; two timeouts, then a run over the file-name candidate list (~98K chars); the review rates it not reached."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of eight standalone covenant agreements from six matters, all picked by file name."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 58,
+     "end": 90,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Greps its saved scan output for short durations, lists one matter, reads memos and agreements of several candidates, then reads one seller covenant agreement section by section and an employment agreement; an in-matter grep returns nothing. The review flags that the pick is a sale-of-business covenant and that many candidates are unopened."
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes an 18-month covenant from one matter as the shortest located, with an execution caveat."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the top of the response and softens the bottom line."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 105,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter holding the shortest executed term surfaced in its file-name searches and scans, but it read only agreements whose file names named the covenant and picked an 18-month term elsewhere.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 47,
+    "end": 57,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name searches and scans listed the matter it needed, but it chose to read only standalone covenant agreements picked by file name and never opened that matter; the review flagged unopened candidates and the agent went straight to writing.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the review at [90] listed unopened candidates without naming this matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus shell listings of files and folders cut at 120 lines; the review flags the cap."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Counts matters and files and prints 1,131 file paths matching agreement-type words (~91K chars)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 26,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a heredoc error; then a scan of 135 files picked by file-name words (~166K chars); self- and review-rated not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 39,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: store-wide scan for covenant phrases with durations; times out, a script error, then three range runs listing hit files."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 50,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads eight standalone covenant agreements from seven matters, all picked by file name."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 74,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Re-reads the seller covenant agreement it favours, a snippet script over its file-name candidates (one heredoc error), folder listings and reads of the deal memo and one draft; the review flags unopened candidates."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 75,
+     "end": 84,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reopened: reads the purchase and merger agreements of two candidates, two other memos and one folder listing to rule out shorter terms."
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes an 18-month covenant from one matter as the shortest located."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Two edits narrowing the bottom line, then re-reads."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The matter holding the shortest executed term surfaced in its file-name search and scans, but it read only agreements whose file names named the covenant and picked an 18-month term elsewhere.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 40,
+    "end": 50,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its file-name listing and scans listed the matter it needed, but it chose to read only standalone covenant agreements picked by file name and never opened that matter; the review flagged unopened candidates and the reopened stage checked others.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) the reviews at [74] and [84] listed unopened candidates without naming this matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "mixed intents",
+      "timed out",
+      "huge output",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel store-wide extraction script (times out after ~973K chars), a capped file-name search and a capped grep of email files; the review rates it not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 39,
+     "tags": [
+      "no matches",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Reopened: caches document text per matter range (files come out empty), two filters print nothing, then a direct store-wide scan for covenant durations (~285K chars)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists one candidate matter that the scan showed with a short term."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 46,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a separation agreement and memos of one candidate and the settlement agreement, its exhibit and the engagement letter of another, then later parts of that agreement."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 61,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reopened: reads the closing memo and dismissal stipulation of the matter it picked and two documents of the listed candidate."
+    },
+    {
+     "stage": "Write the response",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a 9-month settlement-modified term as the shortest, and a 12-month term from another matter as the shortest under a narrower reading."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Adds a coverage note and re-reads."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 84,
+     "end": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found the right matter and term but also presented a second matter as the shortest under an alternative reading of the request.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 70,
+    "end": 75,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Besides the 9-month term it presented a 12-month term from another matter as the shortest under a narrower reading (evidence seen at [48]-[54]); the review questioned the scoping of the 9-month answer, not this second assertion.",
+    "critic": "not-flagged"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 and T1 failed the same way: after file-name searches and scans that listed the needed matter, they chose candidates by file name (standalone covenant agreements), never opened that matter, and named an 18-month term from another matter (surfaced, never opened); the reviews flagged unopened candidates in general and T1 reopened but checked other matters. T2 ran a direct store-wide scan for covenant durations, opened the needed matter's settlement agreement and named the 9-month term, but failed precision by also presenting a 12-month term from another matter as the shortest under a narrower reading. The split is at the candidate choice after the scans: file-name-driven in T0/T1, duration-driven in T2; the reviews at those stages did not differ."
+}

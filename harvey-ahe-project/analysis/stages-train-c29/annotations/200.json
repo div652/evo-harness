@@ -1,0 +1,309 @@
+{
+ "task": "200",
+ "context": "Request: conflict check - has the firm ever been adverse to Vantor Holdings Corp. in a prior matter? Rubric: 1012-00005 (Stonefield Logistics), 1023-00002 (Ironside Capital), 1038-00007 (Cascade Retail), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Counts matter folders and prints the first names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for the party name and variants; about 540K characters of hits."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Exact-name rerun aggregated by matter: three matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 40,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads conflict memos, engagement letters, assessments and pleadings of the three matters; one guessed path does not exist."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 41,
+     "end": 52,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Globs one pleadings folder and greps three folders (no matches); two reads after the stage closed are refused because no stage is open."
+    },
+    {
+     "stage": "Write the response",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the adverse matters with roles, dates and documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 59,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits the method paragraph."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 67,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for the party name over contents and paths; about 480K characters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Rerun with per-matter aggregation and error logging: three matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Counts file types and extends the scan to slide files; still three matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 34,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, conflict memos, pleadings and closing memos of the three matters, then later sections."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Extraction over nine reviewer-named matter folders for the name; no hits."
+    },
+    {
+     "stage": "Write the response",
+     "start": 59,
+     "end": 64,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three adverse matters with roles and documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 65,
+     "end": 74,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Path check fails on the response path, then passes on the output path; full re-read."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 75,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads six source openings."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response opening and two source windows."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the whole response and two pleading captions."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and the agent moves on to enumerate the store."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store. Lists all matter folders."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for the party name; lists hit files."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Rerun with per-matter counts and name variants: three matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared span split at [33]. Globs engagement and conflict files of one matter and all files of two."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (second part). Reads engagement letters, conflict memos and pleadings of the three matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three adverse matters with roles and documents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 52,
+     "end": 58,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks the cited paths."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 59,
+     "end": 59,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs passed with the same procedure: list the store and the matter folders, run a store-wide extraction scan for the party name, rerun it with per-matter aggregation (all three runs get exactly three matters), read the engagement letters, conflict memos and pleadings of those three matters to fix each side's role, write the three matters, and check the response. Runs differ only in how many check stages followed."
+}

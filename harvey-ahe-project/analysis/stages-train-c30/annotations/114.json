@@ -1,0 +1,552 @@
+{
+ "task": "114",
+ "context": "Request: across the firm's general litigation matters, which involved a retained damages expert and which documents show the engagement (for picking an expert for a new case). Rubric: ten matters with their experts and proof documents (1005-00005, 1010-00005, 1011-00004, 1012-00005, 1021-00006, 1022-00005, 1033-00006, 1034-00003 with Tidewater Appraisal shown in a mediation statement or case-assessment memo, 1038-00007 with Ostrowski shown in an internal retention memo, 1044-00006), plus precision (forensic, technical, arbitration and other matters such as 1012-00004, 1014-00003, 1014-00004, 1017-00003, 1037-00004 are outside).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags that five folders were treated as the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all 266 matter folders with file counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex with broad litigation and expert words, a .docx content grep that returns nothing, and a per-matter folder listing (about 137K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: narrower path regex for expert and damages words; 53 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 41,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Snippet scan over candidate matters (about 64K chars) and a retention scan (about 162K chars), a heredoc error, an exact scan that times out, and a candidate list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: all-matter scan in five ranges (about 140K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 83,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads retention letters of about 30 candidates. The review lists surfaced matters never opened and unreconciled roles.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads ten documents of flagged and sibling matters, including one matter's internal retention memo; the review says that matter was read only as a recommendation memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 99,
+     "end": 110,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 3: reads five documents; two reads of matter folders fail as directories. The review names the unverified retention of the memo matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 111,
+     "end": 116,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 18 confirmed matters with damages, economic, forensic or valuation experts and three pre-suit ones, excluding the memo matter. The review flags the headline count and the broad expert scope.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 122,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: Write the response (attempt 2). Edits the headline count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and counts table rows.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 142,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: path checks (one against a missing path), a path-convention note and a check of one retention letter's internal number.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 143,
+     "end": 154,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: greps the response and edits two exclusion bullets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 155,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a needed matter whose expert appears in a mediation statement, excluded a matter whose internal memo records the expert's retention, and counted forensic and technical engagements.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 83,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The all-matter scan at [45] listed a needed matter whose damages expert appears in its mediation and case-assessment papers, but when choosing what to read it opened only matters with retention-letter file names and never opened that one.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening reviews listed surfaced matters never opened, without naming this one."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 111,
+     "end": 116,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the internal retention memo of a needed matter at [86] but the answer excludes it as a recommendation without an executed retention letter.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) Reviews at [98] and [110] named the matter as read only from a memo with its folder never listed; the folder reads failed and the agent wrote without listing it."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 111,
+     "end": 116,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts forensic-accounting, technical, valuation and arbitration engagements read at [50]-[108] as retained damages experts in general litigation.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review said counting forensic, technical and valuation experts may pull in non-qualifying matters; the next edit only fixed the count."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a folder listing and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all 266 matter folders.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex with broad litigation and expert words; 242 matters and a 164K-char path list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: expert and damages path words intersected with litigation-structured matters; 46 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A scan times out; a parallel rerun writes 13,835 lines and a grep prints hit counts for named candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 47,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: tighter scan times out after the first 38 matters; partial output is printed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 95,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads retention letters and damages memos of about 20 candidates, one matter's internal retention memo, a folder glob and a find for an internal number. The review warns that matters elsewhere may never have been opened.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 96,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads further retention letters and memos of four borderline matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 107,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: glob of one expert folder and two reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 115,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: reads the four documents of one expert folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes eleven matters with documented damages experts, excluding the memo matter and arbitration matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 139,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and softens the headline wording.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 140,
+     "end": 151,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: path checks (first against a missing path) and one edit to an exclusion citation.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 152,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It screened only part of the surfaced matters, leaving four needed ones unopened, excluded a matter whose internal memo records the retention, and counted forensic and technical engagements.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 48,
+    "end": 95,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its path searches at [19]-[25] listed four needed matters (three with retention-letter file names), but when choosing what to read it opened none of them, so the answer omits them.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said qualifying matters elsewhere may never have been opened, without naming any."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the internal retention memo of a needed matter at [77]-[83] but the answer excludes it as only a recommendation or authorization memo.",
+     "critic": "not-flagged",
+     "critic_note": "No review named this matter."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts forensic-accounting, technical and pre-suit engagements read at [50]-[93] as retained damages experts.",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked for spot-checks and flagged one other forensic retention, not these matters."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 17,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a folder listing and file-type count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Lists all 266 folder names with a find \\| grep over paths for expert and damages words.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path searches for litigation, expert and damages words with per-matter counts and an intersection (21 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: union of path-pattern groups across all matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 39,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Scan over the union (about 58K chars), a heredoc error, and a candidate file list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 48,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: targeted scan times out; a background rerun is killed after 111 matters, with a filename-first list of expert files.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 49,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads retention and engagement letters of about 22 candidates. The review warns the population is unverified.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 87,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Store-wide script over retention and engagement documents printing expert snippets per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2, continued). Reads nine more retention letters.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 103,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Counts a hard-coded list of matter numbers; the review notes nothing was read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 109,
+     "end": 114,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 4 makes no reads; a stage_start for writing is refused because the stage is still open, and the stage is closed.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 115,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes 22 matters with retained damages, economic or forensic experts. The review flags that the scope widens to IP and arbitration matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 129,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks paths (first against a missing path).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 130,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Calculate figures for the answer → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It left two surfaced needed matters unopened, one whose expert appears only in an internal memo and one only in mediation papers, and counted forensic, technical and arbitration engagements.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 49,
+    "end": 86,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its candidate file lists at [37] and [46] showed a needed matter's internal retention memo, but when choosing what to read it opened only retention and engagement letters and never opened that matter (a second needed matter surfaced at [90] was also left unopened).",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said the population was unverified and likely incomplete, without naming these matters."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 115,
+     "end": 120,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts forensic-accounting, technical, IP and arbitration engagements read at [51]-[100] as retained damages experts in general litigation.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review said the bottom line widens general litigation to IP and arbitration matters; the check stage only checked paths."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail in the same way. Each built a candidate list from file-name searches for expert and retention words and text scans, then read retention letters picked from that list: the first error in all three is at that screening stage, where surfaced matters whose expert appears only in a mediation statement, a case memo or an internal retention memo were left unopened (one in T0, four in T1, two in T2). The answers then count forensic, technical and arbitration engagements as damages experts, and T0 and T1 read the internal retention memo of one needed matter but excluded it as a recommendation without an executed letter. Screening reviews in all runs warned generically about unopened matters; T0's reviews named the excluded memo matter three times without effect, and the write reviews of T0 and T2 named the broad scope, which the check stages left unchanged."
+}

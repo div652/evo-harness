@@ -1,0 +1,127 @@
+# Campaign 25: campaign 23's checkpoint C10 rerun on campaign 23's 20 validation
+# tasks, 1 fresh trial, with campaign 23's exact agent, judge, helper and
+# endpoint, to measure how much the validation scores that drove selection move
+# on a rerun. Only the C0 training evaluation runs (scripts/run_c0_train_only.py);
+# no evolution. Launch with scripts/run_c25.sh.
+schema_version: 1
+
+campaign:
+  name: harvey-lab-campaign-25-cao-c23C10-val20
+  artifacts_dir: ./campaign-artifacts/harvey-lab-campaign-25-cao-c23C10-val20
+  rounds: 0
+  root_seed: 42
+
+project:
+  harness_dir: ./harness_c25/C10
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    split_file: ./splits-firm-knowledge-c25-c23val20.json
+    apply_task_filter: false
+    objective: all_pass
+    judge_api: openai_responses
+    judges:
+      - model: gpt-5.6-sol
+        # LAB's judge output cap, as campaign 12.
+        max_tokens: 64000
+        reasoning_effort: high
+        temperature: null
+    # LAB's deliverable filename helper, as campaign 12.
+    helper:
+      model: claude-sonnet-5
+      max_tokens: 1024
+      temperature: 0.0
+    # CAO serves Claude only on chat completions and messages.
+    helper_api: chat
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    grading_parallel: 10
+    judge_max_concurrent_calls: 9
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    # As campaigns 20-22: an API rejection mid-run reruns the trial.
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+    - ./benchmark_adapter.py
+    - ./harvey_ahe
+    - ./splits-firm-knowledge-c25-c23val20.json
+    - ./pyproject.toml
+    - ./requirements.txt
+  meta_agent_source_roots:
+    - ./benchmark_public_all_pass
+
+models:
+  evaluated:
+    model: gpt-5.6-luna
+    max_tokens: 128000
+    reasoning_effort: provider-default
+    temperature: null
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+
+transport:
+  provider: gh_copilot_server
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  model_catalog: required
+  negative_control: required
+  max_concurrent_requests: 12
+  hung_call_retries: 2
+  transient_retries: 6
+  transient_max_wait_seconds: 120
+
+evaluation:
+  train_trials: 1
+  validation_trials: 2
+  test_trials: 3
+  max_concurrency: 10
+
+debugger:
+  max_concurrency: 20
+  max_iterations: 25
+
+recovery:
+  maximum_stage_attempts: 10
+  archive_incomplete_attempts: true
+
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+      - https://github.com/nex-agi/NexAU
+      - https://python-docx.readthedocs.io/en/latest/
+      - https://openpyxl.readthedocs.io/en/stable/
+      - https://python-pptx.readthedocs.io/en/latest/
+  role_supplements:
+    source: ./meta_supplements_all_pass/source.md
+    web: ./meta_supplements_all_pass/web.md
+    debugger: ./meta_supplements_all_pass/debugger.md
+    evolve: ./meta_supplements_all_pass/evolve.md
+  # (This runner predates meta.deprecated_metric_terms; the supplements were
+  # checked by hand for campaign 12's metric and two-judge wording.)
+  max_concurrent_model_calls: 20
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  # Campaign 12's per-role settings without temperatures (see above).
+  roles:
+    debugger:
+      max_tokens: 20000
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2

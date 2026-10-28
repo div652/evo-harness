@@ -1,0 +1,290 @@
+{
+ "task": "035",
+ "context": "Request: the full set of Capital Markets offerings that used a 180-day lock-up, with the documents showing each deal's lock-up. Rubric: 1010-00002 (Arbor Health Tech) and 1037-00001 (Solstice Biomedical), each with its form-of-lock-up-agreement.docx, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "A grep with a `*.docx` glob (no matches) alongside a glob of transaction-document folders."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Four globs for file names containing underwriting, capital, offering and engagement."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of five underwriting agreements from five matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 19,
+     "end": 24,
+     "tags": [
+      "mixed intents",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads up to 1,000 lines of three of those agreements at offsets plus two agreements from new matters; one guessed path does not exist."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 25,
+     "end": 30,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads four more underwriting agreements and an offering memorandum from five matters; one path does not exist."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Glob for underwriting-agreement file names."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 33,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Re-reads the openings of four agreements in one parallel batch."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 43,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads that matter's draft underwriting agreement and two draft lock-up letters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 44,
+     "end": 45,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes three offerings with a 180-day lock-up, citing their underwriting agreements; one offering is listed under another matter's number."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits the document path cited for one offering."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 48,
+     "end": 48,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Search file names for request keywords → Read a chosen matter's documents in depth → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Both qualifying offerings were read, but one was cited under another matter's number, a draft offering was added, and the separate lock-up forms were not cited.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 44,
+    "end": 45,
+    "events": "",
+    "kind": "misstated-facts",
+    "why": "It read the qualifying offering's agreement in its own matter folder, but the answer cites that offering under the number of another matter read in the same parallel batches and describes the true folder as a different issuer's."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 44,
+     "end": 45,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted an IPO whose underwriting agreement and lock-up letters were still drafts as a qualifying offering."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three globs: all files, PDFs (none) and documents."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 10,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the agreement, memo, engagement letter and indenture of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 11,
+     "end": 14,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "Two store-wide scans for lock-up and 180-day text; both time out (about 107K and 764K chars)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 15,
+     "end": 16,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes two proposed IPOs from scan snippets as the offerings with a 180-day lock-up, without opening their documents."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 17,
+     "end": 17,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Write the response → Finish the run",
+   "failure_point": "Two timed-out scans never reached the qualifying offerings; the answer names two draft IPOs from scan snippets.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 11,
+    "end": 14,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both store-wide scans timed out before reaching either qualifying matter; it wrote from the partial snippets without narrowing the scan or searching file names."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads documents of the two matters at the top of the listing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 9,
+     "end": 10,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Content grep with a `*.docx` glob; returns nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 11,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of a business combination agreement and three related agreements of one listing-top matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes that matter's post-closing lock-up as the only qualifying one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 21,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The one grep returned nothing; the answer names a listing-top merger's lock-up as the only qualifying offering.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 9,
+    "end": 10,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Its only search, a grep with a single-extension glob, returned nothing; it neither retried with another pattern nor searched file names, and fell back to a matter at the top of the listing."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T0 searched file names, read both qualifying underwriting agreements, but cited one offering under another matter's number (misstated facts), added a draft offering and did not cite the separate lock-up forms. T1's two store-wide scans timed out and T2's only grep (single-extension glob) returned nothing (search miss in both); T1 then named two draft offerings from scan snippets and T2 a listing-top merger's lock-up."
+}

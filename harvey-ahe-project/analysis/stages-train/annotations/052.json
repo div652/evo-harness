@@ -1,0 +1,335 @@
+{
+ "task": "052",
+ "context": "Request: the underwriting breakdown (firm-commitment, best-efforts, other) of every Capital Markets matter, including shelved, withdrawn and never-executed ones. Rubric: classify 22 matters (20 as firm commitment, 1036-00002 as best efforts, 1013-00002 as other/non-underwritten) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder, which fails because it is a directory."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 18,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements, memos, engagement letters and emails from the three matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 20,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide text-extraction script for structure terms; times out with partial output."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder across the store."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 24,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "find piped to grep over file paths for offering-document words, cut at 200 lines by its own head limit."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 26,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Script prints the text of every engagement letter in the store (about 476K characters)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of agreements, offering memoranda, engagement letters and memos from twelve candidates."
+    },
+    {
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a breakdown of seventeen matters: twelve firm-commitment, one agency program, the rest other."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 43,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Scans surfaced most qualifying matters, but it classified only the twelve it opened plus a few others, misplaced one, and added non-qualifying matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 25,
+    "end": 26,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After a timed-out store-wide scan and a capped file-name list, it relied on a scan limited to engagement letters, which never reached one qualifying matter, and ran no other search."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 40,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The engagement-letter scan showed about twenty qualifying matters, but it opened only twelve candidates and its breakdown omits most of the others."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "Read one matter's draft program prospectus supplement and placed it in an agency bucket instead of best efforts (evidence seen at [34]-[40])."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 41,
+     "end": 42,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted several non-qualifying matters in the breakdown."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements, memos, engagement letters and emails from the three matters at the top of the listing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a breakdown of the three listing-top matters: one firm commitment, none best efforts, two other."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; classified only the three matters at the top of a capped listing.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 4,
+    "end": 17,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Never searched; built the whole-book breakdown from the three matters at the top of a capped listing."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Asserted the three listing-top matters, all outside the permitted set, in the breakdown."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 17,
+   "n_criteria": 23,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "A depth-limited find returns nothing, then a whole-store glob and a glob of the matters folder that matches nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 8,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, memos, engagement letters and an email from the three matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script lists every document mentioning structure terms (about 332K characters)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Script groups file paths with offering-document words by matter."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of underwriting, purchase and note purchase agreements from twelve candidates."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script pulls status and structure sentences from key documents of a named list of 25 candidate matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists the files of one candidate."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one more purchase agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a matter-by-matter breakdown of about 26 matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 42,
+     "end": 59,
+     "tags": [
+      "file not found",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Edits counts and entries, re-reads parts of the response and greps it for stale counts; a shell grep cannot find the file."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 60,
+     "end": 60,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Classified twenty matters as expected but omitted one scan hit, misplaced one program matter, and added non-qualifying matters.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 21,
+    "end": 33,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The store-wide scan listed the one non-underwritten placement matter, but it built its candidate list from the file-name search, which did not include it, and never opened or classified it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "Classified the one program matter from extracted sentences as agency/other instead of best efforts (evidence seen at [34]-[35])."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Included several non-qualifying matters in the breakdown."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three failed. T1 never searched and classified only the listing-top matters (partial-listing-as-corpus at the reading stage). T0 and T2 scanned the store and classified many matters, but each lost matters at selection: T0 relied on an engagement-letter-only scan that missed one matter (search-miss) and then opened only twelve of the matters it showed; T2 dropped one scan hit when it switched to a file-name candidate list (surfaced-not-opened). Both placed the program matter outside best efforts, and all three included non-qualifying matters."
+}

@@ -1,0 +1,271 @@
+{
+ "task": "091",
+ "context": "Request: Labor & Employment matters where the non-compete ran 18 months or longer. Rubric: 1017-00004 (Aurelius Media / Aldrich) and 1038-00006 (Cascade Retail), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 4,
+     "end": 8,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters and an opening memo of the four matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 10,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script for covenant and duration words; times out after about 155K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and memos of two candidate matters from the scan output."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 17,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script listing, per matter folder, the documents that mention a non-compete."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over all documents of eight named candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, a settlement agreement and closing and dormancy memos of three matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters, two of them flagged as proposed rather than operative terms."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Found both qualifying matters but also asserted two matters where the long covenant was only proposed.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 27,
+    "end": 28,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It asserted two matters where the long covenant was only a draft or negotiating position, never executed, as qualifying alongside the two that met the request."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for covenant and duration words."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Glob for matter folders; returns nothing."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 7,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two ripgrep runs (file list, then matching lines) for practice-group, covenant and duration words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of email reads from seven matters; none from one matter whose emails had matched."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "ripgrep over emails for the practice-group name; lists seven matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 23,
+     "end": 24,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "ripgrep for covenant words within five named candidate matters' emails."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of those five matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 27,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the covenant memos of four of them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters, two of them flagged as negotiated rather than operative terms."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 34,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List matter folders → Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Search within a candidate matter's files → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "A second qualifying matter appeared in its searches but was never opened; the answer omits it and adds two matters with only proposed covenants.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 11,
+    "end": 20,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep and its ripgrep runs listed emails of a second qualifying matter, but none of its reading batches or shortlists included that matter, so the answer omits it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 32,
+     "end": 33,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted two matters where the long covenant was only a draft or negotiating position, never executed."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus two content-mode greps (covenant and duration words; practice-group words)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Four batches of short reads at offsets into emails of seven matters, around the grep hit lines."
+    },
+    {
+     "stage": "Write the response",
+     "start": 24,
+     "end": 25,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters, flagging their differing finality."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 26,
+     "end": 26,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Found both qualifying matters but also asserted two matters where the long covenant was only proposed.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Write the response",
+    "start": 24,
+    "end": 25,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "It asserted two matters whose long covenant appeared only in drafts or a negotiating position as qualifying alongside the two that met the request."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs reached qualifying matters through content searches, and all three asserted the same two extra matters where a long covenant appeared only in drafts or negotiation (over-inclusion at the write stage). T0 and T2 found both qualifying matters; T1's searches listed the second one but it never opened it (surfaced, not opened, before the over-inclusive write)."
+}

@@ -1,0 +1,305 @@
+{
+ "task": "125",
+ "context": "Request: general commercial litigation matters (not IP, employment or antitrust) where the firm is seeking compensatory damages, with the pleadings that spell out the damages. Rubric: fourteen matters with their pleadings (incl. 1045-00004 Belmont Ridge Bank, whose memos print matter number 1022-00005, and 1022-00005 Northgate Telecom), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "tool error",
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob, a read on the store folder (rejected) and a glob for the matters folder that returns nothing; the listing starts with files of the matter it then reads."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads pleadings, motions and memos of the one matter at the top of the listing; no keyword search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes that this is the only qualifying matter, giving it the matter number printed inside its memos."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the top of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 23,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never searched; answered with the one matter at the top of the listing, under the number printed in its memos.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 7,
+    "end": 18,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from one matter in a capped listing without any search, so thirteen of the fourteen qualifying matters never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Write the response",
+     "start": 19,
+     "end": 20,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The answer gives the matter number printed in the matter's memos instead of its folder number, so even the one matter it read is not credited."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Empty shell find plus whole-store glob; the listing starts with files of the matter it then reads."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 12,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads pleadings, a letter and a memo of the one matter at the top of the listing, then one pleading again at greater length."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 13,
+     "end": 17,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads two motions and a notice of that matter alongside one store-wide files-with-matches grep with very broad words (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 18,
+     "end": 23,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads pleadings and a memo of two matters from the grep hit list."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 24,
+     "end": 25,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Content grep in one candidate matter; nothing."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 27,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of that matter's pleading."
+    },
+    {
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter as the only qualifying one and lists the first matter it read as excluded."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 30,
+     "end": 30,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Search file contents for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "One broad grep surfaced none of the other qualifying matters; it excluded the one it had read and named a non-qualifying matter.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Search file contents for request keywords",
+    "start": 13,
+    "end": 17,
+    "events": "[13]-[14]",
+    "kind": "search-miss",
+    "why": "Its only store-wide search was a grep with words so broad that its long hit list showed none of the other qualifying matters; it did not narrow the words or search file names."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It had read the first matter's pleadings and memo but excluded it as not seeking compensatory damages."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 28,
+     "end": 29,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It asserted another matter as the one qualifying matter."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 15,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus an empty shell find."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Five globs for pleading folders and pleading-type file names across the store."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eighteen pleadings from about seventeen matters in three batches."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 38,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Globs the pleading folders of six more matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five more pleadings' openings, including a memo of the matter at the top of the listing."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists that matter's files."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 47,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads that matter's filed pleading and later sections of five pleadings of matters it settled on."
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 58,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes about a dozen matters with the pleadings and amounts sought."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 59,
+     "end": 59,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Four qualifying matters were never opened, two were misnumbered from mixed-up parallel reads, and one that was read was left out.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 11,
+    "end": 31,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The globs listed every qualifying matter's pleadings, but the eighteen it chose to open left out four qualifying matters, which it never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 57,
+     "end": 58,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "It attached pleadings from one parallel batch of reads to the folders of other reads, so two qualifying matters are misnumbered and a non-qualifying matter is asserted."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 57,
+     "end": 58,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "It read the first matter's filed pleading and memo but left that matter out of the answer."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed. T0 and T1 began by reading the one matter at the top of a capped listing; T0 never searched (partial listing) and T1's single broad grep surfaced none of the others (search miss), after which T1 excluded the matter it had read. T2 found every qualifying matter with pleading-name globs but opened only some (surfaced, never opened) and mixed up which pleading belonged to which matter when writing."
+}

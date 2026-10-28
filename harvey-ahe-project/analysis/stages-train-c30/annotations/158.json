@@ -1,0 +1,403 @@
+{
+ "task": "158",
+ "context": "Request: which privacy matters resulted in an executed (signed) data processing agreement, with the DPA from each, excluding draft-only or negotiated ones. Rubric: 1017-00008 (two executed DPAs), 1022-00007 (executed amended DPA) and 1038-00010 (executed onpoint-dpa-rider.docx), one criterion per matter and per DPA, plus a precision criterion; 1008-00010, 1009-00007 and 1025-00009 (exhibit/addendum DPAs with closing letters) are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob with a parallel listing of the first 80 folders and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path-name script for agreement and privacy words (17 matters) and a brace glob that returns nothing. The review flags that only plainly named files can match.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path sweep including execution and signature words (131 matters). The review flags the generic words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script (about 47K characters), a narrower rescan that times out, a range rerun with no hits, then a patched rerun printing about 641K characters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: bounded exact-phrase scan over five matter ranges printing only matter numbers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreement and closing documents of seven candidates (sixteen reads). The review names one candidate whose closing memo has a placeholder date and another resting on a rider and a status memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads later sections of the flagged documents and openings of two more candidates; keeps both flagged candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters as having executed agreements, with paths, execution evidence and an exclusion list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The answer counts matters whose exhibit agreements rest on closing letters or a placeholder-dated memo as executed.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 81,
+    "end": 86,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The screening review at [61] named the placeholder-dated closing memo of one of them; the agent re-read it at [64]-[74] and kept the matter; the other two were not named.",
+    "why": "The answer counts three matters whose agreements are exhibits or addenda backed only by closing letters or a closing memo with a placeholder date, not by an executed agreement (evidence seen at [42]-[78])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags that the summary treats the five visible matters as the store.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per top folder, then lists every matter folder with its file count.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path sweep with privacy and execution words, plus content greps over .docx and .eml with bare globs that return nothing. The review flags the generic words.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: uncapped path sweep with privacy words only.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: wider path sweep adding addendum and transfer-clause words, saved to a file; the display is cut.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 42,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice; a script over ten named candidates prints about 302K characters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 71,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script. Reads fifteen documents from eight candidates (one path fails), a snippet script over their agreements, a filtered file listing and six more reads of closing and status documents. The review flags the hand-picked candidate list.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 72,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: bounded store-wide scans in parallel ranges print per-matter hit counts, then file listings of about twenty hit matters (about 66K characters). The review flags conclusions drawn from counts alone.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Snippet script over ten named high-hit matters shows other meanings of the abbreviation and generic references.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with six executed agreements, paths and execution evidence. The review flags an inconsistent matter count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 103,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, path check (fails on the workspace path, passes on the output folder) and corrects the matter count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads two agreements of one matter and the response; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 121,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit sent with no stage open is refused; reopens the check stage, repeats the wording edit and re-reads the opening.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The answer counts matters whose exhibit agreements rest on closing letters and certificates as executed.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 87,
+    "end": 92,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The write review asked to confirm signature or execution evidence for each matter without naming these; the check stages reopened only another matter's agreements.",
+    "why": "The answer counts two matters whose agreements are exhibits or addenda backed by closing letters and certificates rather than an executed agreement (evidence seen at [43]-[69])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the summary names only the visible matters. The review advises re-listing every folder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad privacy and signing words (about 83K characters), a grep of its output capped at 80 lines, and a path walk for agreement-name words. The review flags the broad words and that template-named files in one matter were set aside unopened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: tighter store-wide scan pairing the agreement name with execution words (about 211K characters); picks six candidates from snippets. The review flags dropped surfaced matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads eighteen agreement, closing and status documents of seven candidates picked from the scans; a matter whose file names showed template and rider files is not opened. The review flags the narrow candidate set.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 55,
+     "end": 60,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters with seven executed agreements; the matter it did not open is excluded as remediation with templates only. The review asks to confirm execution evidence for each.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 61,
+     "end": 69,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths (fails on the workspace path, passes on the output folder); no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 70,
+     "end": 70,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A matter surfaced by its own scans was never opened and was excluded from snippets; the answer also counts matters whose exhibit agreements rest on closing letters as executed.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 30,
+    "end": 54,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [23] named that matter's template files and warned they were set aside without opening any document.",
+    "why": "A matter that appeared in its own file-name walk and scan output (template and rider files) was left out of the reads and later excluded from scan snippets alone, so its executed rider was never seen."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 55,
+     "end": 60,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review asked to confirm signature or execution evidence for each counted matter without naming these; the check stage only re-read the file and checked paths.",
+     "why": "The answer counts three matters whose agreements are exhibits or addenda backed only by closing letters or a placeholder-dated closing memo (evidence seen at [32]-[52])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail the precision criterion the same way: at the write stage each counts several matters whose agreements are exhibits or addenda supported only by closing letters or memos. T0 and T1 found all three required matters and read their agreements. T2 alone also misses one: it picked its reads from scan snippets, never opened the matter whose file names showed template and rider files, and excluded it as template-only; the scan review had named those files. Reviews named the over-included matters only in T0 (one of them, at screening); elsewhere they gave stock advice to confirm execution evidence."
+}

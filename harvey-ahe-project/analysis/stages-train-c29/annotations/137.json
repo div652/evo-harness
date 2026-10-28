@@ -1,0 +1,221 @@
+{
+ "task": "137",
+ "context": "Request: M&A deals where the firm actually invoked or litigated specific performance, with the papers. Rubric: 1018-00008 (Penterra / Veridian; demand of October 15, 2024 to compel closing), proof documents draft-counterclaim-declaratory-judgment.docx and matter-status-memo-deal-terminated.docx, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 34,
+     "tags": [
+      "script error",
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A first extraction script fails on its heredoc and a second (output to a file) times out; it then runs four folder-range scans in parallel, each viewed through head, and greps their hit files. The matter it later picked appears in the range output. The review flags the noisy terms and head-truncated views."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Exact-phrase scan with per-matter hit counts and file names; one matter has by far the most hits. The review flags the single phrase and unopened candidates."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Globs all files of six candidate matters ranked from the counts; the listing of the top matter includes its administrative folder."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 52,
+     "end": 64,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five litigation-prep and termination documents of the top matter plus one memo each from three others. The review says other papers of the top matter may be unread."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 65,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Globs one more matter and three subfolders of the chosen matter; no reads or greps. A harness stage-check notice appears on one call."
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes one matter as the only qualifying deal with its litigation papers, and lists screened-out matters."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 89,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer misses document",
+     "note": "An edit sent before opening a stage is rejected; it opens the stage, narrows the exhaustiveness wording and re-reads the top of the file."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 90,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and read the qualifying matter's litigation papers but never opened the matter-status memo that its own listing of the matter showed, so the answer lacks that proof document.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 52,
+    "end": 64,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "why": "Its listing at [43]-[49] showed the matter-status memo in the chosen matter's administrative folder, but it read only litigation-prep and termination documents and never opened or cited that memo; the review's warning about unread papers led only to subfolder listings that skipped that folder.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) [64] said other papers of the chosen matter may be unread (naming other document types), not the memo."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap and recommends a folder listing and content greps."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder paths."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script for request phrases over every document; it times out after about 71M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "A store-wide extraction script with no output cap returned millions of characters and the run ended on a full context with no deliverable.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The store-wide extraction script printed millions of characters of snippets with no output cap; the result filled the context and the run ended before any answer was written.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the cap."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and shows the first and last names only."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script for request phrases; it times out after about 6M characters and the run ends."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "A store-wide extraction script with no output cap returned millions of characters and the run ended on a full context with no deliverable.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The store-wide extraction script printed millions of characters of snippets with no output cap; the result filled the context and the run ended before any answer was written.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed. T1 and T2 ended at their first store-wide extraction script, whose uncapped output overflowed the context before any review (no-review). T0's equivalent script had its output redirected to a file and timed out quietly, so it went on to range-split and exact-phrase scans, found and read the qualifying matter, but left one listed proof document unopened (listed-document-not-opened at the in-depth reading stage; the review flagged unread papers and the agent only listed subfolders). The split is how the first scan's output was handled, a stage with no review before the outcome."
+}

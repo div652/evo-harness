@@ -1,0 +1,232 @@
+{
+ "task": "209",
+ "context": "Request: the longest-running matter that is still open (excluding shelved matters, counting matters in closing wind-down as open) and its opening date. Rubric: 1044-00006 (Thalassa Shipping, charter-party breach defense), opened October 16, 2023, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Three batches of reads from the six matters at the top of the listing: engagement letters and an opening memo, then closing memos and emails, then filings and checklists; no search at all."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 26,
+     "end": 29,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later parts of two closing emails of the two matters it is weighing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing-top matter whose deal had closed as the oldest open matter, treating its post-closing work as wind-down."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 32,
+     "end": 32,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Never searched; picked the oldest of the six matters visible in a capped listing and treated a closed deal as still open.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 25,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the six matters in a capped listing without any search for open-matter status or opening dates, so the matter it needed never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "Write the response",
+     "start": 30,
+     "end": 31,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted a matter whose transaction had already closed as still open by reading the closing-posture allowance loosely, so even among the matters it saw it named one that does not meet the request."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (empty) plus whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 17,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of engagement letters, an opening memo, a close-out memo and emails from the matters at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 18,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target missed",
+     "note": "A store-wide status-word scan times out; a narrower script over engagement, opening and closing files fails on a heredoc error, then reruns but prints only the first 240 of about 1,300 lines, covering the lowest-numbered matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 30,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads engagement letters, a post-closing letter and a strategy memo of the oldest matters in that partial output."
+    },
+    {
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the oldest matter from the scan output, whose financing had closed, as still open in post-closing posture."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 33,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "Its one working scan printed only its first 240 lines, which never reached the matter it needed; it then named an old closed financing as open.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 18,
+    "end": 23,
+    "events": "[22]-[23]",
+    "kind": "search-miss",
+    "why": "The scan that ran printed only its first 240 lines, covering the lowest-numbered matters; it never paged further or searched another way, so the matter it needed never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 31,
+     "end": 32,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted a matter whose transaction had already closed as still open by reading the closing-posture allowance loosely, so even among the matters it saw it named one that does not meet the request."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a shell find (empty)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 26,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Three batches of reads from the six matters at the top of the listing: engagement letters and an opening memo, then close-out and closing documents, then checklists, filings and an email; one guessed path does not exist; no search at all."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one listing-top matter whose deal had closed as the oldest open matter, treating its post-closing work as wind-down."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; picked the oldest of the six matters visible in a capped listing and treated a closed deal as still open.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 26,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the six matters in a capped listing without any search for open-matter status or opening dates, so the matter it needed never surfaced."
+   },
+   "other_errors": [
+    {
+     "stage_no": 3,
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted a matter whose transaction had already closed as still open by reading the closing-posture allowance loosely, so even among the matters it saw it named one that does not meet the request."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way: the matter they needed never appeared in any tool result. T0 and T2 never searched and judged the whole store from the six matters at the top of a capped listing (partial listing as corpus, at the reading stage). T1 read the same six matters, then ran a scan whose output it cut to the first 240 lines, which stopped at the lowest-numbered matters (search miss, at the scan stage). All three then named an old matter whose deal had closed as still open, reading the closing-posture allowance loosely (later over-inclusion at the write stage)."
+}

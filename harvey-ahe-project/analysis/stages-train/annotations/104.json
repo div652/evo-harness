@@ -1,0 +1,240 @@
+{
+ "task": "104",
+ "context": "Request: the latest Labor & Employment matter where the firm agreed equity-vesting acceleration terms, and the document setting them out. Rubric: 1017-00004 (Aurelius Media), its executed aldrich-settlement-agreement-execution.docx (Section 3(a)), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for request keywords; the hit list spans many matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Lists the store folder and runs find | grep over file paths for request keywords."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 7,
+     "end": 13,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads agreements, a memo and an email from three matters whose file names matched; nothing from the other grep-hit matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Content greps inside three candidate matters plus two reads in one of them (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 20,
+     "end": 28,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads later sections of two agreements and three emails of the two matters it is weighing."
+    },
+    {
+     "stage": "Write the response",
+     "start": 29,
+     "end": 30,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one matter and a draft agreement as the latest precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 31,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The matter it needed appeared in its first two searches, but it opened only matters whose file names matched and named a draft agreement from another matter.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 7,
+    "end": 13,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep and its file-name search both listed the matter it needed, but it chose to open only matters whose file names matched and never read that matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a glob of the empty output folder."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 7,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Two content greps with single-extension globs (documents, emails); both return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 8,
+     "end": 19,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements and memos from the two matters at the top of the listing; one guessed path does not exist."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a later section of one agreement."
+    },
+    {
+     "stage": "Write the response",
+     "start": 22,
+     "end": 23,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a draft agreement from a listing-top matter as the latest precedent, qualified by its draft status."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 24,
+     "end": 24,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "Both greps returned nothing; it read only the matters at the top of the listing and named a draft agreement from one of them.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 5,
+    "end": 7,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both greps used single-extension globs and returned nothing; it neither retried with another pattern nor searched file names, and fell back to the matters at the top of the listing."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Parallel whole-store glob and a files-with-matches grep for request keywords."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 5,
+     "end": 6,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists matter folders to depth two."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 7,
+     "end": 8,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Content-mode grep for request keywords, showing matching lines across matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 9,
+     "end": 10,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of four candidate matters in one shell loop."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 11,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the closing memos of three candidates and an executed agreement of one."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 16,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads two emails and the rest of the closing memo of the matter it picked."
+    },
+    {
+     "stage": "Write the response",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes one matter and its executed agreement as the latest precedent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 22,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List matter folders → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs opened with a store-wide grep. T2 followed with a content-mode grep showing matching lines, listed the files of four candidate matters including the needed one, and compared their closing memos by date. T0's grep and file-name search also listed the needed matter, but it opened only matters whose file names matched and named a draft from another matter (surfaced, never opened). T1's greps used single-extension globs and returned nothing; it read the matters at the top of the listing (search miss)."
+}

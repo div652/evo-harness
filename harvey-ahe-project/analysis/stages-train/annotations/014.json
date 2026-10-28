@@ -1,0 +1,315 @@
+{
+ "task": "014",
+ "context": "Request: how many of the firm's credit facilities are covenant-lite in the market sense (institutional term loans with no always-on financial maintenance covenant), and which ones. Rubric: 1005-00001 (Nexford Industrial), 1021-00001 (Verimark Hospitality), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Two shell finds (empty) and a whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 8,
+     "end": 9,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Files-with-matches grep for facility and covenant words; the hit list spans many matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of one candidate matter."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 12,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Globs for file names containing credit and facility."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 16,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two content-mode greps for covenant-lite and term-loan phrases, showing matching lines."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches reading emails and memos from five matters picked from the grep lines, including one matter it later named."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 30,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Content grep for springing and maintenance-covenant phrases."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 32,
+     "end": 33,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Content grep inside one more matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three facilities as covenant-lite."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → List files in candidate matters → Search file names for request keywords → Search file contents for request keywords → Screen candidate matters by reading documents → Search file contents for request keywords → Search within a candidate matter's files → Write the response → Finish the run",
+   "failure_point": "Greps showed both qualifying matters; it read only one, never opened the other, and added two facilities from other matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 20,
+    "end": 29,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its content greps listed lines from both matters it needed, but the emails and memos it chose to read came from other matters plus only one of the two, and it never opened the other."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "Counted two facilities known only from term-sheet and correspondence reads as covenant-lite alongside the one qualifying matter it had read."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Shell find (empty) plus whole-store glob."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, an agreement and spreadsheets of the matter at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 12,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide script printing credit-facility snippets for every matching agreement; about 3.6M chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of four credit documents and a diligence report from three matters."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script pulling financial-covenant and springing passages from three named credit agreements."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of three more credit agreements, a commitment letter and a transaction memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [
+      "run ended: context overflow"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five executed facilities plus one pipeline facility as covenant-lite; the run stops for a full context right after the write, without calling finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response",
+   "failure_point": "Found and read both qualifying facilities but counted four others as covenant-lite; the context filled right after the write.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 27,
+    "end": 28,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Having read the credit agreements of both qualifying matters, it also counted four other acquisition and refinancing term loans as covenant-lite from openings and snippets."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Three files-with-matches greps with single-extension globs; all return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos, lists and spreadsheets of the three matters at the top of the listing."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 18,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide zipfile scan for credit and covenant words; times out after about 593K chars."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 24,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads syndication and closing documents of one candidate matter from the scan output; two guessed paths do not exist."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 25,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of that matter."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 27,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads its credit agreement, a facilities summary, a compliance certificate, the closing binder index and a provisions memo."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one facility as covenant-lite, cited under the engagement number printed in its documents."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The one scan timed out before reaching the second qualifying matter; the answer names one facility, under an engagement number taken from its documents rather than its matter folder.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 17,
+    "end": 18,
+    "events": "",
+    "kind": "search-miss",
+    "why": "After its greps returned nothing, its only content search was a store-wide scan that timed out after reaching one of the two matters it needed; it did not narrow or rerun the scan."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "events": "",
+     "kind": "misstated-facts",
+     "why": "The documents it read carry an internal engagement number that differs from their folder's matter number, and the answer cites that engagement number instead of the folder number."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, each differently. T0's greps showed lines from both qualifying matters, but it read only one of them (surfaced, never opened) and added two facilities. T1's very large scan surfaced both and it read both, but it counted four other term loans as covenant-lite (over-inclusion) and hit the context limit right after writing. T2's greps used single-extension globs and its scan timed out after reaching one of the two (search miss); it also cited that matter under an engagement number printed in its documents."
+}

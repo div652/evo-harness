@@ -1,0 +1,243 @@
+{
+ "task": "047",
+ "context": "Request: which capital markets deals had an auditor comfort letter actually delivered, and what in the file shows it. Rubric: 12 qualifying matters (1002-00001, 1010-00002, 1014-00001, 1016-00003, 1017-00001, 1018-00001, 1021-00002, 1027-00001, 1033-00002, 1037-00001, 1039-00002, 1045-00001), a qualifying-matter and a proof-document criterion each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder, which fails because it is a directory."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 5,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads from the two matters at the top of the listing: a request letter, closing checklist, closing email, agreement and memo of one, closing papers and a filing letter of the other."
+    },
+    {
+     "stage": "Write the response",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one listing-top matter as the only deal that fits and sets the other aside."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 19,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the two matters at the top of a capped listing and named one of them.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 5,
+    "end": 16,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any keyword search, so none of the qualifying matters ever surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read on the store folder, which fails because it is a directory."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Two file-name globs for request words plus two content greps restricted to `*.docx`; both greps return nothing, the globs list request-related files across many matters (labelled by the globs, which produced every hit)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads a request letter, a review draft, a checklist and a closing email from two matters whose file names matched."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 16,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters picked from the file-name hits."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 24,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of letters, closing emails, memos and checklists of four candidates, then closing memos of two more."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 38,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the full closing checklist of one candidate it is adding."
+    },
+    {
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters with documented delivery and lists others with only requests, drafts or pre-closing memos as not shown."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 42,
+     "end": 43,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits one paragraph on the delivery evidence."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 44,
+     "end": 44,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Content greps returned nothing, so it worked from file-name hits: matters visible only by content never surfaced, two hit-list matters were skipped, and two opened matters were judged undelivered from requests, drafts or a pre-closing memo.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file names for request keywords",
+    "start": 5,
+    "end": 9,
+    "events": "[5]-[7]",
+    "kind": "search-miss",
+    "why": "Its only content greps used a `*.docx` glob and returned nothing; it worked from file-name hits, which cannot reach matters whose delivery shows only in checklists or closing memos, and never retried a content search."
+   },
+   "other_errors": [
+    {
+     "stage_no": 4,
+     "stage": "List files in candidate matters",
+     "start": 16,
+     "end": 23,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "why": "The file-name hits listed two more qualifying matters, but the seven matters it chose to list left them out and it never opened them."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Read only a request letter and a review draft of one qualifying matter and judged that no letter was delivered, without opening its closing records (evidence seen at [10]-[15])."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 40,
+     "end": 41,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Judged another qualifying matter undelivered from a closing memo written before closing, without opening its checklist (evidence seen at [32]-[37])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 5,
+     "tags": [
+      "listing covers few matters",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Three whole-store globs (all files, one file type that does not exist, one document type)."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 6,
+     "end": 17,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads: closing papers, memo and agreement of the listing-top matter, then its opinions and two documents of the other listing-top matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one listing-top matter as the deal that fits, with a note on the missing standalone letter."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 20,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Never searched; judged the whole store from the two matters at the top of a capped listing and named one of them.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Read documents picked from the file listing",
+    "start": 6,
+    "end": 17,
+    "events": "",
+    "kind": "partial-listing-as-corpus",
+    "why": "Chose what to read from the two matters at the top of a capped listing without any keyword search, so none of the qualifying matters ever surfaced."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed. T0 and T2 never searched and answered from the two matters at the top of the capped listing (partial-listing-as-corpus at the reading stage). T1 searched file names and opened four qualifying matters, which passed, but its content greps used a single-extension glob and returned nothing (search-miss at its first search stage); it also skipped two hit-list matters and judged two opened ones from requests, drafts or a pre-closing memo."
+}

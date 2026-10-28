@@ -1,0 +1,219 @@
+{
+ "task": "066",
+ "context": "Request: the most recent fund or co-investment vehicle the firm formed that had an LP advisory committee, with its formation/LPA documents. Rubric names 1027-00002 (Ridgeline-Clarion Co-Invest) with five proof documents, a precision criterion and two facts.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a content grep for request keywords."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 9,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three globs for request keywords in file names, alongside a listing of one candidate matter from the grep."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 10,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, charters and memos from three candidate matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 17,
+     "end": 33,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads the agreement of the matter it picked section by section, lists that matter, then reads its closing, side and subscription documents."
+    },
+    {
+     "stage": "Write the response",
+     "start": 34,
+     "end": 35,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the response naming one vehicle and comparing an older one."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 36,
+     "end": 36,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Whole-store glob plus a content grep for request keywords."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists the two matters the grep pointed at, plus a broad two-level glob that again shows only a few matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 9,
+     "end": 20,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads of agreements, charters, filings and a checklist from one matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 21,
+     "end": 22,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the response naming that matter as the most recent."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 23,
+     "end": 23,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Finish the run",
+   "failure_point": "The newer matter never surfaced; the agent reported the older matter it found first.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "The only keyword search was a content grep that did not reach the matter it needed; no file-name search followed, so it settled on the first grep candidate."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target missed",
+     "note": "Whole-store glob plus a content grep for request keywords."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 5,
+     "end": 9,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads four emails from the two matters the grep pointed at."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 10,
+     "end": 11,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists the files of one of them."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 12,
+     "end": 17,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads five agreements, filings and a checklist from that matter."
+    },
+    {
+     "stage": "Write the response",
+     "start": 18,
+     "end": 19,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the response naming that matter as the most recent."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 20,
+     "end": 21,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the top of the response."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 22,
+     "end": 22,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "The newer matter never surfaced; the agent reported the older matter it found first.",
+   "first_error": {
+    "stage_no": 1,
+    "stage": "Search file contents for request keywords",
+    "start": 2,
+    "end": 4,
+    "events": "",
+    "kind": "search-miss",
+    "why": "The only keyword search was a content grep that did not reach the matter it needed; no file-name search followed, so it settled on the first grep candidate."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three ran the same content grep, which pointed to an older candidate matter. T0 then globbed file names for request keywords, surfaced the newer vehicle's executed agreement and compared dates; T1 and T2 never searched file names, read only the older matter and reported it as the most recent (fail all 9 criteria)."
+}

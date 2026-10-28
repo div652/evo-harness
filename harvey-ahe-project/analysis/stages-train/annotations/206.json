@@ -1,0 +1,230 @@
+{
+ "task": "206",
+ "context": "Request: how many of the firm's patent-infringement cases are actively in litigation now, with a list. Rubric: 1013-00005 (Genome Dx) and 1014-00004 (Optiwave), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 4,
+     "tags": [
+      "listing covers few matters",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a read of the store folder (rejected as a directory)."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 5,
+     "end": 8,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two file-name globs for request words plus a .docx content grep that returns nothing (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 9,
+     "end": 20,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two batches of reads on guessed paths in two candidate matters; most paths do not exist and only two letters of one matter are read."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 21,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of four candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 38,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads status reports and pleadings of two candidates, then closing and dismissal documents of two others."
+    },
+    {
+     "stage": "Write the response",
+     "start": 39,
+     "end": 40,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes a count of two, with the two closed matters excluded."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 41,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob and a files-with-matches grep, then two content-mode greps for request and status words."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five emails (some at offsets) from four matters picked from the content-grep lines."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 14,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Content greps for party names and status words inside four candidate matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 26,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Two guessed paths to one email fail, a glob locates it, then it is read (labelled by the dominant intent)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a count of four: one matter it read status for and three other candidates judged active from emails and grep lines."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 29,
+     "end": 29,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "Search file contents for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Finish the run",
+   "failure_point": "One qualifying matter appeared in its first grep but was never opened; it also counted three other matters as active from emails and grep lines.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 8,
+    "end": 13,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its first grep listed both qualifying matters, but it chose what to read from content-grep lines and never opened one of them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Write the response",
+     "start": 27,
+     "end": 28,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "It counted three other matters as active from single emails and grep lines without checking their latest status documents."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 3,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob."
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 4,
+     "end": 6,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target missed",
+     "note": "Two content greps with a single-extension glob; both return nothing."
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 7,
+     "end": 16,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads memos and filings of the matter at the top of the listing, then engagement letters of four other listed matters."
+    },
+    {
+     "stage": "Write the response",
+     "start": 17,
+     "end": 18,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes a count of zero, naming one non-qualifying case."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 19,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file contents for request keywords → Read documents picked from the file listing → Write the response → Finish the run",
+   "failure_point": "Both greps returned nothing; it judged the store from the matters at the top of the listing and answered zero.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Search file contents for request keywords",
+    "start": 4,
+    "end": 6,
+    "events": "",
+    "kind": "search-miss",
+    "why": "Both greps used a single-extension glob and returned nothing; it neither retried with another pattern nor searched file names, and read only the matters at the top of the listing."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 followed an empty document grep with file-name globs that listed both qualifying matters, listed their files, and separated active from closed cases using status reports and closing documents. T1's first grep listed both, but it chose what to read from content-grep lines, never opened one of the two, and counted three other matters as active (surfaced, never opened; over-inclusion). T2's greps used a single-extension glob and returned nothing; it read the matters at the top of the listing and answered zero (search miss)."
+}

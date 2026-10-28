@@ -1,0 +1,244 @@
+{
+ "task": "132",
+ "context": "Request: M&A deals where the firm negotiated a fraud carve-out to the indemnity cap, to show how it was papered. Rubric: 27 qualifying matters (1001-00003, 1001-00004, 1001-00005, 1001-00007, 1003-00003, 1003-00004, 1004-00003, 1005-00006, 1006-00006/7/8, 1007-00006, 1008-00008, 1009-00003, 1011-00006, 1013-00006, 1015-00004, 1017-00006, 1018-00008, 1032-00005, 1037-00006, 1038-00008, 1038-00009, 1039-00004, 1041-00003, 1042-00004, 1046-00001) plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's transaction files are visible."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders (names saved to a file)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide scan with broad terms and no output cap; the result of about 54M chars fills the context."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "The run ended with a context overflow during its first scan; no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The scan printed every match of very broad terms across the store with no cap, and the result filled the context before any review.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's transaction files are visible."
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Saves the folder list and runs find | grep over file paths for agreement and transaction words (first 200 lines)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; scans are then run over saved file lists and matter batches, with a second timeout and paged results."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Paragraph co-occurrence scan over all matters in batches; the review notes a parsing bug."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 49,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Fixed co-occurrence scan, then a grep of its results for agreement-named files in transaction folders (first 120 lines)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 62,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of six executed agreements from six matters; a call to open the next stage is refused by the protocol."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Snippet scripts over agreement-named files of twenty-three named matters."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 69,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six redlines and memos and runs a section-extraction script over them."
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes eleven matters' agreements as precedents."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads, narrows the summary, labels one matter as draft-only and adds examples of unreviewed matters."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its scans surfaced most qualifying matters, but it read six agreements and snippet-scanned a 23-matter list, and the answer names 13 of the 27 qualifying matters.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 62,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its filtered scan results listed most required matters, but it chose six to read and then a twenty-three-matter list for snippet scripts, leaving out several required matters that it never opened.",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) Reviews said dozens of surfaced matters were unopened and, after writing, that unopened candidates were dropped without reason; the check stage only listed unreviewed examples."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "Several required matters were in its snippet-script list at [65]-[68], but the answer leaves them out without a stated reason.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(generic flag) Same write review on dropped candidates; the check stage added caveats, not matters."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 28,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; one candidate matter's transaction files are visible."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store. Lists all matter folder names and runs find | grep over file paths for request and agreement words (first 300 lines)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide scan with broad terms times out; its partial output of about 82M chars fills the context."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script",
+   "failure_point": "The run ended with a context overflow during its first scan; no response was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "",
+    "kind": "context-overflow",
+    "why": "The scan printed every match of very broad terms with no cap, and even the timed-out partial output filled the context before any review.",
+    "critic": "no-review"
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three failed. T0 and T2 ended in a context overflow on their first uncapped store-wide scan, before any review of that stage. T1 ran its scans in batches and surfaced most qualifying matters, but read only six agreements and snippet-scanned a twenty-three-matter list, so its answer named 13 of 27 (surfaced-not-opened at its first reading stage, plus opened matters left out at writing); reviews flagged unopened matters only generically."
+}

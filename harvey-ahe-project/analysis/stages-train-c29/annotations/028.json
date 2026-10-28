@@ -1,0 +1,323 @@
+{
+ "task": "028",
+ "context": "Request: which restructuring matters involved DIP financing in any capacity (debtor, DIP lender, or creditor responding to a DIP). Rubric: 1006-00002 (Crestline), 1020-00002 (Greenfield Ag), 1024-00001 (Driftwood / Cascabel), 1011-00002 (Meridian Consumer), 1044-00003 (Thalassa, standby DIP planning), plus a precision criterion. T0 also asserted 1007-00002 (Meridian Precision Components; the firm acted for a stalking-horse buyer in a DIP-funded sale).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts and lists all matter folder names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms (first attempt fails on a heredoc error), saved to a file, then a per-matter hit count and a second pass over core terms (about 138K characters)."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eighteen candidate matters into one inventory (output truncated)."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Three parallel batches reading engagement letters, filings and memos of the main candidates, then engagement letters of eight financing matters to rule them out."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 63,
+     "end": 70,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Snippet script over several numbered matter families and named sibling matters (first attempt fails on a heredoc error)."
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six matters, including one where the firm acted for a buyer in a sale funded by the requested type of financing."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks that cited paths exist and edits the scope wording."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 94,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "An edit sent with no stage open is rejected; reopens the stage, edits the headline to five in-court matters plus one standby matter and rechecks paths. The extra matter stays."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 95,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found all five qualifying matters but also counted a matter where the firm represented a buyer in a sale funded by the requested financing.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 71,
+    "end": 76,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "Evidence seen at [32]-[42] showed the firm acting for a stalking-horse buyer in that case, but the answer counts the matter as a DIP financing role alongside debtor, lender and creditor roles.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) the write review at [76] raised 'possible over-inclusion' about draft versus executed status, without naming this matter; the check stages kept it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 15,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and runs find | grep over file paths for request words in the same parallel call (labelled by the store-wide search)."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms times out with about 146K characters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 22,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidate matters, then one folder again with find."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter script matching file names against request words across all matters, plus a listing of one matter it then rules out."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 73,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Two batches of reads of engagement letters, financing documents, orders and objections of the five candidates and one rule-out; one guessed path fails and is recovered with find."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 74,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads openings of seven intercreditor agreements from other matters and one more document of a chosen matter, finding only boilerplate."
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with an actual facility of the requested type and one standby-planning matter, with roles and exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response; no change."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 99,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the capped listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts matter folders and prints the first and last 20 names."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for request terms times out; the review answers goal not reached."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Reopened: four parallel scripts each covering a quarter of the matter folders, printing per-matter hit counts."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 29,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two batches reading engagement letters, motions, orders and term sheets of the main candidates and several financing matters."
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 51,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Lists all files of ten candidate and sibling matters."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, memos and term sheets of those matters, with one snippet script over a term sheet."
+    },
+    {
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five matters with roles and a screened-out list."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 118,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Checks cited paths, runs a core-term scan over several matter-number families, fixes one cited path and reads one more term sheet (labelled by the check intent)."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 119,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs followed the same route: store listing, folder count, a store-wide extraction scan that surfaced all five qualifying matters, then listing and reading the main candidates' engagement letters and filings; T1 added a per-matter file-name triage and T2 a batched rescan. They split at what was read and counted: T0 also opened a matter where the firm acted for a buyer in a sale funded by the requested financing (its first reading stage) and counted it at the write stage (over-inclusion); T1 and T2 never opened that matter and limited the answer to the three roles the request names. The reviews did not differ in a way that mattered: every write-stage review raised generic over- and under-inclusion risks, and none named the extra matter in T0."
+}

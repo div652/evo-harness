@@ -1,0 +1,398 @@
+{
+ "task": "091",
+ "context": "Request: the firm's Labor & Employment matters where the non-compete ran 18 months or longer (for an enforceability memo). Rubric: 1017-00004 (Aurelius Media / Aldrich 18-month non-compete) and 1038-00006 (Cascade Retail employee departures, 18-month covenants), plus precision; transaction matters with executive employment agreements (1001-00004, 1008-00008, 1033-00005, 1037-00006), the Cascade/NovaMart drafts in 1038-00009 and the draft in 1022-00004 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (first 80 lines) and file counts by extension.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Python path regex over all files for employment and covenant words (plus generic words such as termination); 113 matters. The agent's summary lists about 19 strongest candidates. The review flags the noise and that practice area was never checked.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 28,
+     "tags": [
+      "timed out",
+      "script error",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction for covenant terms near durations times out; reruns by matter range after a script fix, then filters hits by file-name words and prints about 208K characters. The review flags the file-name filter and the hand-picked summary.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 36,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: compact rescan times out; reads the first 100 file headers of the partial range outputs.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads employment agreements, non-compete agreements and memos from about nine matters, several at offsets; one candidate in the agent's own shortlist is not opened. The review flags about 60 surfaced matters never opened (examples do not include it).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads drafts and agreements from three more matters to settle status and duration.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes executive employment agreements from transaction matters, drafts and a litigation memo as qualifying matters, with a near miss and transaction-only exclusions. The review asks to check executed status and folder numbers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 90,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response; a path-check script first fails on the file location, then reports all 16 cited paths exist.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: spot-check reads of cited agreements and memo; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: two more spot-check reads; no edits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A candidate its own path search and summary had listed was never opened; it cited a same-client memo from another matter instead and wrote transaction-side employment agreements as Labor & Employment matters.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 37,
+    "end": 65,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said about 60 surfaced matters were never opened; its examples did not include this one.",
+    "why": "A needed matter was in the agent's own candidate list after the path search ([13]) and in the scan output, but the screening reads went to a sibling matter of the same client and to transaction matters, and it was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Write and check reviews asked only about executed status, durations and folder numbers; practice area was raised once, at the path-search stage.",
+     "why": "The answer lists executive employment agreements from M&A and other transaction matters, and a sibling matter's drafts, as qualifying Labor & Employment matters (evidence seen at [39]-[73])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob with a top-level listing and file counts by extension.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Python path regex for employment and covenant words, plus globs for non-compete and restrict file names. The review flags missing candidates in the summary and no practice-area check.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 24,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: widened path regex grouped by matter (14 restrictive-covenant matters); a stage_start for the scan is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: second path regex for separation, executive-agreement and related names; 27 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 42,
+     "tags": [
+      "timed out",
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction times out, a scan over 17 named candidates also times out, then (after a script error) a file-name inventory of those 17 matters. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads non-compete agreements, employment agreements and memos chosen from its path searches across about ten matters, several at offsets, including the employee-departure memo of the client matter it later counts. The review flags no practice-area check.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying Labor & Employment matters (two with draft agreements) plus a transaction comparison set. The review flags the drafts and the comparison set.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: Write the response (attempt 2). Edits the headline to two operative and two draft matters under a 'core and draft' heading. The review flags that the draft matters remain in the main answer.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: Write the response (attempt 3). Edits headings so the two draft matters and the transaction set are 'not counted'.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 117,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, edits the closing recommendation, checks cited paths by script. The review flags the opposite risk: draft matters dropped from the count without re-reading.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted two draft-only matters as qualifying; after review it moved them under 'not counted' headings but the text still described them as qualifying Labor & Employment matters.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 79,
+    "end": 84,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The write reviews at [84] and [92] named the draft-only matters and the transaction set; the agent demoted them by headings, but wording that they qualify remained.",
+    "why": "The answer presents two matters with only draft employment agreements as qualifying, and later edits only relabelled their headings, so the response still asserts them as qualifying (evidence seen at [45]-[76])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with a two-level folder listing (200 lines) and file counts.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find | grep over paths printing matter numbers only, and a content grep that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: separate path patterns printing full paths (149 lines).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction times out; rerun over about 17 named candidate matters prints about 1.5M characters. The review reports goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: bounded scans over two matter-number ranges for covenant terms near 18-month-plus durations.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 72,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, memos, agreements and closing memos of about ten matters, including both matters it later counts; three engagement-letter scripts cross the scan hits with engagement letters to find practice areas. The review flags many unopened candidates.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four Labor & Employment matters (including two draft-only positions) plus one related workstream as qualifying. The review flags the drafts and the related workstream.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 117,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads, then edits the answer to count only the two matters with executed 18-month covenants, moving drafts, the workstream and a near miss to labelled non-counted sections; fixes paths and stale wording.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: fixes a duplicate heading and re-reads the response.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 126,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All runs surfaced both qualifying matters by path search. T0 never opened one of them: its screening reads went to a sibling matter of the same client and to transaction matters, and it wrote executive employment agreements from deals as Labor & Employment matters. T1 and T2 both read both matters and first wrote four matters as qualifying, counting draft-only agreements; the write reviews flagged the drafts in both. They split at the revise stage: T2 rewrote the bottom line, headings and scope sentences so only the two executed matters are qualifying (pass); T1 moved the drafts under 'not counted' headings but its text still called them qualifying, and its last review pushed the other way (not acted on) (fail). The reviews were similar; the depth of the edits differed."
+}

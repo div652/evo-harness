@@ -1,0 +1,560 @@
+{
+ "task": "149",
+ "context": "Request: which M&A deals included a working-capital adjustment, and pull the purchase agreements. Rubric: fifteen matters (1001-00003, 1001-00004, 1001-00007, 1006-00006, 1006-00007, 1006-00008, 1007-00006, 1008-00008, 1011-00006, 1013-00006, 1017-00006, 1037-00006, 1038-00008, 1038-00009, 1041-00003) with proof documents (1011-00006 is an asset purchase agreement v1; 1017-00006 a MIPA execution version), and a precision criterion; 1022-00006, 1023-00001 and 1041-00004 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 28,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 23,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for purchase-agreement and adjustment words; three file-name globs with a doubled root path return nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Wider path regex grouped per matter: 66 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 40,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scans time out three times; a scan of the later matter range prints about 118K chars.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 41,
+     "end": 52,
+     "tags": [
+      "tool error",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Matter-range scans filtered by file and folder names with head caps; a stage_start for reading is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 77,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the opening of about 19 purchase and merger agreements of candidate matters; one path does not exist.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 78,
+     "end": 84,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). A filtered listing of one matter and a snippet script for adjustment clauses over the chosen agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 85,
+     "end": 92,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing (attempt 3). Unfiltered listing of one matter; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 17 matters with agreement paths and mechanics, plus an adjacent real-estate deal and a draft-only matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 113,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths and edits the headline to 16 confirmed matters plus one draft.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks that the draft-only matter has no executed agreement and counts table rows.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened one needed matter and listed a matter outside the set as confirmed, with a draft-only merger as a precedent.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 53,
+    "end": 77,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "A needed matter (an asset purchase agreement in a consumer deal) surfaced in its path searches at [19]-[27], but the range scans' name filters did not carry it forward and the reads at [55]-[75] never opened it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The harness lists in the scan reviews at [40] and [52] named the matter among surfaced matters never opened; it was not opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer lists a matter outside the qualifying set (a capital-call matter's equity purchase agreement) as confirmed and keeps a draft-only merger as a precedent with the same mechanics (evidence seen at [65]-[75]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) Reviews at [77] and [113] said the draft-only merger might not be operative; the agent moved it to a separate draft row but kept it, and the other matter was not flagged."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 30,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints the folder count and every folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-phrase file-name loop, a path regex saved to a file, and a content grep over Word files that returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Prints the tail of the saved path hits and normalizes matter numbers.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 44,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; matter-range scans count hits in about 170 matters, then scans of agreement-named files print adjustment passages.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 50,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of seven high-hit matters the name filter had left out.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 66,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads purchase agreements of two of those matters and runs a clause check; a stage_start for a scan is refused because this stage is still open.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 67,
+     "end": 83,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Explicit-term scan of every Word file (42 matters), with listings and clause snippets for several more matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 18 matters with agreement paths and mechanics, including draft-only agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 100,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks cited paths and splits the headline into executed and draft-only agreements.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Script checks each listed agreement for working-capital terms.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 107,
+     "end": 116,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the adjustment section of one agreement, the header of a draft and a true-up memo.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 117,
+     "end": 126,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists one matter's transaction documents and reads its stock purchase agreement and escrow agreement.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 127,
+     "end": 135,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads that agreement's definitions and the draft's header again.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 136,
+     "end": 142,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the adjustment sections of two agreements at later offsets.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 143,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Edits one row with the figures read.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 149,
+     "end": 149,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Read a chosen matter's documents in depth → Check or revise the response → Finish the run",
+   "failure_point": "It found every needed matter but also listed three matters outside the set (a capital-call matter's agreement and two drafts) as qualifying.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 84,
+    "end": 89,
+    "events": "",
+    "kind": "over-inclusion",
+    "why": "The answer lists three matters outside the qualifying set (a capital-call matter's equity purchase agreement and two draft-only deals) among the qualifying deals; their agreements were seen only in scan snippets and headers at [69]-[81].",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [83] said the qualifying set was shaped by hand-picked matters and named two of the three as not confirmed; the write and check stages kept all three."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 27,
+   "n_criteria": 31,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing and file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Saves the folder list and prints the folder count, first and last names and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 22,
+     "tags": [
+      "mixed intents",
+      "no matches",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Per-pattern file-name loop cut at 80 lines each; content greps over Word files and emails return nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Uncapped path regex per matter (about 33K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Saves a candidate list to a file and prints only counts (67 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Broader second pass; prints only counts (52 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Expanded pass prints matter numbers and counts: 84 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 47,
+     "end": 62,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; four range scans fail on a path bug, then three run but the first range is skipped.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Rescans the skipped first range with narrower terms.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 69,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements and closing papers of about 15 candidates and runs clause-snippet scripts over them.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 101,
+     "end": 112,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Snippet scripts print operative clauses from the agreement-like files, plus three title-page reads.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 13 executed agreements and two draft-only agreements with the mechanism.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 136,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response, edits two clause descriptions and globs four cited paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "end": 144,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Checks every cited path and counts the rows.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 145,
+     "end": 145,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened one needed matter, excluded another as draft-only, and kept a draft-only merger outside the set as a precedent.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 69,
+    "end": 100,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "A needed matter (a membership-interest purchase agreement) surfaced in its path searches at [19]-[44], but its matter range was first skipped by the scans and the narrower rescan at [65] did not show it; the screening reads at [71]-[98] never opened it.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The rescan review at [68] said reading would cover only a hand-picked set of strongest candidates, without naming this matter; the harness lists named only another matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer lists a needed matter only as a draft-only agreement, excluded from the qualifying deals, although it read that agreement at [71]-[86] and found the mechanism.",
+     "critic": "review-endorsed",
+     "critic_note": "The screening review at [100] warned that this matter and another were drafts and risked including non-executed agreements; the agent then moved it to a draft-only list."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer presents a matter outside the qualifying set (a draft-only merger) as a precedent containing the mechanism.",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The same review at [100] named this matter as a draft; the agent separated it as draft-only but kept it in the answer."
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail, each on the precision criterion; T1 failed only there. All runs found most of the fifteen matters through path searches and scans of agreement files. They differ on the edges: T0 and T2 each left one needed matter unopened (its file name surfaced but scans and name filters did not carry it to the reads), T2 also excluded a needed draft agreement after a review warned about drafts, and all three listed matters outside the set (a draft-only merger in all, plus a capital-call matter's equity purchase agreement in T0 and T1 and another draft in T1). Reviews named the draft-only matter in T0 and T2 and the agents only moved it to a draft row."
+}

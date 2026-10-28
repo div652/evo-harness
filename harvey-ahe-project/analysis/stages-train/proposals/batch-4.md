@@ -1,0 +1,21 @@
+# Batch 4 proposals (tasks 047 048 052 053 057 058; all 18 runs failed)
+
+No new stages were needed: every tool call fit an existing stage.
+
+| Kind | Name | Definition | Example | Why no existing name fits |
+|---|---|---|---|---|
+| error kind | NEW: misread-matter | The agent read a needed matter's documents (or extracted its text) but drew a conclusion about it that differs from the expected one: judged it non-qualifying (e.g. "not delivered", "not closed") from requests, drafts or pre-closing papers, put it in another category, or misidentified the client or provision | 047_T1 [10]-[15]; 053_T1 [27]-[35]; 058_T1 [12]-[25]; 052_T2 [34]-[35] | surfaced-not-opened needs the matter never opened; over-inclusion is about asserting extra matters; hedged-answer is a qualified conclusion, not a negative or wrong one; missing-identifier is only the number left out. 8 uses in this batch |
+| tag | NEW: own line cap reached | A shell command's output was cut by a `head`/`sed -n` line limit the agent itself set, so later lines (usually higher-numbered matters) were never shown. Applied only where the output line count equals the cap | 053_T2 [5]-[6]; 052_T0 [23]-[24]; 057_T0 [5]-[8] | `listing covers few matters` is the glob tool's silent cap, not the agent's own limit; `timed out` is a different cause. Agent-observable because the agent wrote the cap |
+| tag | NEW: run ended: no finish call | The run stopped after a final text message without calling finish; the deliverable had already been written | 058_T0 [37]-[40] | The only `run ended:` tag is for context overflow. check.py also reports "no finish and no run-ended tag" for this run because the NEW tag does not start with `run ended` |
+| hindsight | NEW: answer misdescribes matter | The written answer names a rubric matter as qualifying but describes it wrongly (wrong client, wrong role or wrong provision), so its criterion fails | 058_T1 [32]-[33] | answer misses target / wrong matter / lacks matter number all assume the matter is absent or replaced; here it is present but misdescribed |
+
+## Issues
+
+- Mixed outcome answers: where an answer both omits rubric matters and asserts extra ones, the write stage got "answer over-inclusive" (batch-2 convention); where it names only non-rubric matters in place of the required one(s) it got "answer wrong matter" (048_T0, 048_T2, 052_T1). 058_T0 and 058_T2 also misdescribe a matter but keep "answer over-inclusive" because one value is allowed.
+- 058_T2: both errors (over-inclusion and misread-matter) sit in the same write stage; first_error was given to over-inclusion, the misread to other_errors. The misread matter was never opened, only seen in extraction-script snippets.
+- Parallel opener of one store-wide content grep plus several reads of listing-top matters (048_T1 [13]-[18], 053_T1 [5]-[9]): labelled "Search file contents for request keywords" with `mixed intents`, although reads are more numerous, because the grep set all later steps. A count-based rule would label these as reading stages.
+- 052_T0: the first error is a search-miss for one matter that only an engagement-letter scan could have reached, although most failed criteria come from a later surfaced-not-opened. "Earliest stage" can put a one-matter error ahead of the main one in census tasks; consider letting first_error point at the error behind most failed criteria.
+- Content greps from the grep tool hit mainly `.eml` files and returned nothing on `**/*.docx` globs in several runs (057_T1, 057_T2, 058_T1); together with the batch-2 note on non-recursive globs, many search-miss and file-name-first strategies follow from this.
+- 058_T2 [2]-[7]: a whole-store `find -ls` (1.76M characters, files and folders) was given "target in folder list only", by analogy with full folder-name listings.
+- 058_T0 [24]-[30]: globs of rubric matter folders that matched nothing were given hindsight "none" (nothing was listed), although the log marks the matters as appearing in the result.
+- Scratchpad clash: other batch agents share the same scratchpad, and an early command of mine ran another batch's `gen.py` by mistake (12:52:51 UTC). That rewrote annotations 181, 184, 185 and 190 from that batch's own data. Those batches should rerun their generators to be safe.

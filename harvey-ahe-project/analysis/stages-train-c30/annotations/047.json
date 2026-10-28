@@ -1,0 +1,495 @@
+{
+ "task": "047",
+ "context": "Request: which capital-markets deals had an auditor comfort letter actually delivered, and what in the file shows it (precedent for a comfort letter). Rubric: twelve matters 1002-00001, 1010-00002, 1014-00001, 1016-00003, 1017-00001, 1018-00001, 1021-00002, 1027-00001, 1033-00002, 1037-00001, 1039-00002, 1045-00001, a proof document for each (often a closing checklist .xlsx, closing memo or closing email), and a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with its file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 20,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for comfort-letter and offering words; a parallel content grep with a bare glob returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 28,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "After a heredoc error, the path search is saved to a file and grouped into narrow and broad hits per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A store-wide scan times out, and so do two halves of it.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 36,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Scan document text with an extraction script (end of the span). A snippet script over a hand-picked list of 15 candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 40,
+     "end": 46,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Content grep over all emails counted per matter, plus a count of offering-named Word files per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten candidate matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (middle of the span). Reads closing emails, comfort letters and closing memos of five candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 71,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (end of the span). Script over all emails for comfort-letter and delivery words together.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 75,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Reads comfort-letter emails from six candidates, one closing checklist and one deal memo.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters with delivery proof and lists request-only and pending matters as exclusions.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 111,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and two sources, checks cited paths and expands one citation.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Search within a candidate matter's files → Search file contents for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Five needed matters surfaced in its path search were never opened, and four opened ones were excluded as requests or pending.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Search within a candidate matter's files",
+    "start": 36,
+    "end": 39,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "The path searches at [18]-[26] showed comfort-letter or closing files in five needed matters, but the hand-picked list for the snippet script at [36] and every later listing and read left them out; they were never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The harness list in the reviews from [39] on named two of the five among surfaced matters never opened, and the [39] review called the 15-matter list hand-picked; no later stage opened them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer leaves out or excludes four needed matters whose files it had grepped at [36]-[37] or whose emails it read at [51]-[83], judging them as requests, drafts or pending from emails and snippets and never opening their closing memos or checklists.",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [74] said one of these matters rested on a single email; the next stage re-read only that email. The other exclusions were not flagged."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "File-name search for comfort-letter and offering words (456 hits); a parallel content grep with a bare glob returns nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Wider path regex grouped by matter: 34 matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Text scan of every file type in the 34 matters, then a narrower comfort-letter scan printing hits per matter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 38,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scans time out twice; a third call prints nothing.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Matter-range scans in parallel; only the last range finishes.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads checklists, comfort letters, emails and a prospectus from about ten candidates.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 78,
+     "end": 87,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads closing memos and emails of three matters it is counting.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four matters with proof documents and excludes request-only, draft and pending matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and edits one date note.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-opens the cited checklists and letters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 121,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Checks two checklist rows and cited paths; a path check first fails on the workspace path.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Four needed matters with comfort-letter hits in its own scan were never opened, and four others were excluded from snippets or checklist reads.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 77,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Its scan of the 34 path-search matters at [26]-[27] printed comfort-letter hits for four needed matters, but the reads at [52]-[75] covered about ten other candidates and those four were never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review at [77] said the reads covered a hand-picked set and the candidate set might be incomplete, without naming these matters; the next stage verified three matters already chosen."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer excludes four needed matters: two judged from scan snippets only (evidence seen at [27]) and two whose checklists or emails it read at [52]-[75] and called request-only or pending.",
+     "critic": "review-endorsed",
+     "critic_note": "The screening review at [77] told the agent to exclude one of these matters as pending or draft, and it did; the other three exclusions were not questioned."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 25,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Prints every file of every matter folder (about 545K chars).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders (attempt 2). Lists matter numbers whose folder or file names contain offering words, with the words matched.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; per-matter scans of twelve file-name candidates run in parallel.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A range scan fails on a heredoc error; a scan over a named list of candidate matters prints per-file hits.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 68,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads closing memos, emails, letters and checklists of nine candidates, with snippet scripts over a few of them.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing records of three matters it is counting.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 78,
+     "end": 87,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reconciles one matter's folder and deal name and reads its closing index and binder.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes seven matters with delivery proof and excludes request-only, draft and withdrawn matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs comfort-letter files in seven cited matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the cited closing, binder and receipt documents.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Five needed matters that its inventories and scan surfaced were never opened, and one read matter was excluded as request-only.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 68,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "Five needed matters surfaced in its inventories and its candidate scan at [33] (four with comfort-letter hits), but the reads at [38]-[66] covered nine other candidates and those five were never opened.",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The harness list in the scan review at [27] named all five among surfaced matters never opened; the screening stage read none of them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer excludes a needed matter as a request or planning precedent although it read that matter's closing memorandum and comfort-letter emails at [38]-[66].",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned this exclusion."
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail in the same way: every run surfaced all twelve matters early (path searches or inventories) but read only about ten hand-picked candidates, leaving four or five needed matters unopened (first error at the screening or snippet stage that chose what to open), and then excluded some opened ones as request-only or pending. Precision passed in all three. T2 opened and credited the most matters (seven) by reading closing memos and binders rather than emails; T0 read mostly emails and credited four. The harness lists of unopened matters named the missing matters in T0 and T2, and the agents still did not open them; in T1 the screening review even recommended excluding one needed matter as pending."
+}

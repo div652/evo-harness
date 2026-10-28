@@ -1,0 +1,506 @@
+{
+ "task": "230",
+ "context": "Request: the firm's real-estate matters with an assignment-consent requirement on the deal itself (lease, purchase agreement or property interest), with the executed documents. Rubric: seven matters (1017-00009, 1026-00004, 1027-00004, 1031-00004, 1036-00004, 1043-00002, 1043-00003), each with an executed document, plus a precision criterion; asset purchases that assign leases (e.g. 1006-00008, 1013-00006) and ground leases 1015-00003 and 1030-00002 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Whole-store glob plus a top-level entry list and file count. The review says not to pick matters from the cut listing."
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Lists all 266 matter folders with file counts."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "A brace glob returns nothing; a path regex with lease, purchase, consent, property and title words hits 214 matters (about 108K characters). The review flags the noise and a candidate pick with no stated basis."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Store-wide extraction script for assignment and consent wording times out; a rerun limited to five matter-number prefixes saves hits to a file and prints the first 260 lines. The review flags the partial coverage."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: a tighter scan with path filters and assignment-consent proximity over all matters; 123 hits. The summary names nine strongest matters. The review flags the hand-picked list and about 60 surfaced matters left aside."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads the opening of executed agreements, assignment instruments and consents from nine matters in two parallel batches. The review flags 50 surfaced matters never opened and that two asset-purchase matters are not shown to involve real property."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 58,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Snippet-extraction scripts over named agreements of the chosen matters for the operative clauses. The review repeats the unopened-matters flag."
+    },
+    {
+     "stage": "Write the response",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes nine matters as qualifying, with exclusions. The review asks to check that each consent clause is on the deal itself and to keep excluded matters that have their own executed agreement."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 74,
+     "end": 82,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads the response and checks cited paths (first script fails on the path)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 2: a script confirms each cited document has consent wording near assignment; no edits."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read nine hand-picked matters from a scan that had surfaced every needed one, so two needed matters were never opened; it also counted asset purchases and ground leases as qualifying and excluded one needed matter from scan snippets.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 57,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [57] named one of these matters among 50 surfaced but unopened ones; the second screening attempt still did not open it.",
+    "why": "Two needed matters were in the tight scan output at [32]-[33] (and the path search at [19]), but the agent read only the nine matters its summary had picked and never opened them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 68,
+     "end": 73,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [57] said two of the asset-purchase matters were not shown to involve real property.",
+     "why": "The answer counts five matters as qualifying (asset purchases carrying lease assignments, and ground leases) that do not meet the request (evidence seen at [38]-[55])."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 68,
+     "end": 73,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review asked to keep any excluded matter that has its own executed agreement.",
+     "why": "A needed matter that the scans surfaced and the agent's own summaries named as a candidate is excluded as an entity-level transfer, judged from scan snippets without opening its documents."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob plus a two-level folder listing and file-type counts."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Two path-regex scripts for lease, purchase, assignment, consent and property words, and a content grep with glob '*.docx' that returns nothing. The review flags the cut output and a candidate set fixed from it."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: a compact per-matter path inventory with broader document words. The review flags generic terms and a hand-picked set."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: path counts for consent, assignment, premises and landlord words; 96 matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 36,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Extraction script over files of the candidate pool whose names match a filename prefilter; prints about 111K characters of snippets, then a per-matter hit count. The review flags the filename prefilter and the noise."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Read documents picked from the file listing. Reads agreements, assignment forms, consents and memos from seven candidate matters. The review flags drafts and forms read and that only two matters show executed examples."
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 52,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Snippet-extraction script over named agreements of five chosen matters for the operative clauses, and a filtered listing of one matter. The review flags dozens of surfaced matters never opened."
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 60,
+     "end": 70,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "label_check": "none",
+     "note": "Reads the executed purchase agreement, closing assignment and lease audit of two sibling matters; a final script globs three more matters with a brace pattern and prints nothing (the protocol notes it looks like an in-matter search). The review flags the brace glob and the thin evidence."
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes five matters as qualifying, with exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 85,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads the response and checks cited paths (first script fails on the path)."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 2: re-reads the rest of the response (the read returns nothing) and checks matter identifiers."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its content scan only covered files picked by a filename prefilter, so one needed matter never surfaced; three surfaced needed matters were never opened, one it read was excluded, and two asset purchases were counted as qualifying.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 29,
+    "end": 36,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [36] said the filename prefilter could drop matters whose files are named differently.",
+    "why": "The content scan ran only over files whose names matched the earlier path-search words, and no search reached one needed matter whose executed purchase agreement is named differently; the agent did not rerun the scan without the prefilter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 37,
+     "end": 51,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [70] named the failed brace glob that left one of these matters unchecked; earlier reviews flagged surfaced matters never opened in general.",
+     "why": "Three needed matters were in the path searches and the per-matter scan count at [33]-[34], but the reads went to seven other candidates; a later brace glob meant to check one of them at [67] matched nothing and the matter was dropped."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "The in-depth review questioned the sibling matter's evidence, not this exclusion.",
+     "why": "A needed matter whose executed purchase agreement and closing assignment it read at [62]-[66] is excluded as an entity-level transfer."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "(specific flag) The screening review at [51] called the two asset-purchase matters the only solidly executed examples.",
+     "why": "The answer counts two asset purchases that assign leases as qualifying real-estate matters (evidence seen at [39]-[49])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "label_check": "none",
+     "note": "Whole-store glob plus a two-level folder listing and file-type counts."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Per-keyword find with a 120-line cap and a grouped path regex. The review flags the cap and non-real-estate hits."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 2: uncapped grouped path search with narrower document words; 96 matters."
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: path search for assignment, assumption, consent and landlord words; 96 more matters."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "label_check": "none",
+     "note": "Store-wide extraction script times out; prints its partial output file (about 111K characters), then a snippet script over a hand-picked list of matters. The review flags the partial coverage and asks whether one asset purchase is real estate."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Attempt 2: a batch scan by matter-number range returns no files, then a fixed rerun covers 997 files and writes hits to a file."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Reads executed agreements, assignment instruments and memos from eight matters, two snippet scripts over named agreements, and six more reads. The review flags about 60 surfaced matters never opened and that two matters need checking against the request."
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 70,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "label_check": "none",
+     "note": "Attempt 3: aggregates the saved scan hits per matter with path-word counts."
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 74,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "label_check": "ignored",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Reads ground leases, purchase agreements and a diligence memo from six matters, then a snippet script over them. The review flags the hand-picked read list."
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Writes eight matters as qualifying and lists near matches as exclusions. The review asks to re-read the exclusions."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 103,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Re-reads the response, checks cited paths (first script fails on the path), edits one clause description."
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 116,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "label_check": "none",
+     "note": "Attempt 2: spot-reads seven cited agreements; no change to the matter set."
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "label_check": "none",
+     "note": "Calls finish."
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One needed matter surfaced in every search but was never opened; two it read were excluded as unexecuted or memo-only, and asset purchases and ground leases were counted as qualifying.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 69,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The reviews at [69] and [84] flagged about 60 surfaced matters never opened and a hand-picked read list, without naming this matter.",
+    "why": "A needed matter was in the path searches from [12] and later in the per-matter aggregation, but the agent read a sibling matter of the same client instead and never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The write review asked to re-read the excluded near matches in case one was dropped on structure or timing.",
+     "why": "Two needed matters it read at [74]-[80] are listed only as exclusions: one because its purchase agreement file is not labelled executed, one judged from a diligence memo alone."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The scan review at [37] asked whether one asset purchase was real estate, and the review at [69] said two matters needed checking against the request.",
+     "why": "The answer counts four matters as qualifying (asset purchases with lease assignments and ground leases) that do not meet the request (evidence seen at [44]-[67] and [74]-[82])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the screening stage after their scans: each read a hand-picked subset of the surfaced candidates and never opened at least one needed matter (one in every run), and each answer counted lease-assigning asset purchases as qualifying. One run's first error is earlier: its content scan was limited by a filename prefilter, so one needed matter never surfaced. Reviews flagged unopened surfaced matters in every run; in one run the screening review called the asset purchases the solid examples."
+}

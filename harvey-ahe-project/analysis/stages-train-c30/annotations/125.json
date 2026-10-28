@@ -1,0 +1,583 @@
+{
+ "task": "125",
+ "context": "Request: matters where the firm is actually seeking compensatory damages in general commercial litigation (not IP, employment or antitrust), with the pleadings stating the damages. Rubric: 14 qualifying matters (1005-00005, 1006-00005, 1010-00005, 1012-00006, 1020-00005, 1021-00006, 1022-00005, 1023-00002, 1024-00003, 1033-00006, 1034-00003, 1035-00004, 1044-00006 Thalassa Shipping counterclaim, 1045-00004 Belmont Ridge Bank accelerated-balance demand), each with a named proof pleading (1012-00006: motion for default judgment), plus a precision criterion; 1019-00001 and 1032-00002 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 22,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob with a parallel listing of the first 80 folders and a file count.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts and counts of distinct subfolder names.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Two path scripts: one for pleading and dispute words (about 66K characters), one for specialty-practice words. The review flags generic words and path-only specialty tagging.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Extraction script over pleading-like paths for damages wording (406 hit files), then a snippet print for a hand-picked set (about 121K characters). The review flags dozens of hit matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: one bounded damages snippet per hit matter, filtered on pleading file names (about 38K characters). The review flags the file-name filter and unopened matters.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the opening of one pleading from each of 16 candidates, then later sections of six. The review flags the hand-picked set and that one counted pleading is a draft.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 76,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads filed versions or later sections of five chosen matters' pleadings to confirm filing status.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes a table of 13 qualifying matters with amounts and pleadings, and an exclusion list by practice area and by defended-only posture.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 91,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths (fails on the workspace path, passes on the output folder); no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response and four cited pleadings; no edit.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 102,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One surfaced matter was never opened; the answer excludes two others by practice-area or posture readings and counts two matters outside the request.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 66,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The scan reviews said dozens of hit matters were never opened, naming others but not this one.",
+    "why": "A matter whose verified complaint showed a damages demand in the scan snippets at [22]-[35] was left out of the 16 pleadings chosen for reading and never opened, so it is absent from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named the exclusion by industry.",
+     "why": "The answer excludes a matter as maritime litigation from scan snippets alone (evidence seen at [22]-[29]), treating that industry as a specialty area."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews only said not to add or remove matters without a clear reason.",
+     "why": "It read a matter's answer to counterclaims (evidence seen at [38]-[64]) and excluded it as defended-only, without the client's own demand in its memoranda."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The read review at [66] named one of them only because its counterclaim was a draft; the agent found a filed copy and kept it, and its fit to the request was never raised.",
+     "why": "The answer counts an arbitration counterclaim and an award-confirmation petition as qualifying matters that do not meet the request (evidence seen at [38]-[75])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the summary treats the few visible matters as the store. The review flags the cap.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Per-matter file counts with file names filtered by litigation words (about 64K characters).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; matter ranges are computed, a range-split scan prints about 54K characters, and two greps keep only files under pleading-type folders. The review flags the folder filter.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: unfiltered rerun times out after a partial prefix (about 52K characters). The review rates the goal not reached.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads one pleading each from eleven candidates, then six more (two reads of one matter's answer in parallel with other pleadings). The review flags dozens of surfaced matters never opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 72,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Five reads sent with no stage open are refused; reopens screening and reads the same five (one candidate's answer to counterclaims and four specialty pleadings).",
+     "label_check": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 73,
+     "end": 80,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists files of seven candidates; a write-stage start is refused while this stage is open. The review flags that the excluded candidate's listing showed unread memos.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eleven qualifying matters with amounts and pleadings; one entry pairs a matter number with another matter's parties. The agent's own summary notes a parallel-read label to check.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 145,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads three pleadings, moves one entry's content to a different matter number and calls the original matter a duplicate, removes two matters and an exclusion block, renumbers headings over many edits. The review flags the duplicate call and the removals.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 146,
+     "end": 176,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: reads later offsets of four pleadings (two empty), reinstates one removed matter and renumbers. The review flags that the moved entry's claim is not shown and the duplicate matter is unresolved.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 177,
+     "end": 177,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Three surfaced matters were never opened; the answer excludes two read matters, misidentifies one through parallel-read pairing, and counts two matters outside the request.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 34,
+    "end": 56,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The screening review said dozens of surfaced matters were never opened and some qualifying ones may be missing, naming other series.",
+    "why": "Three matters whose pleadings appeared in its own scan output at [21]-[25] were left out when it chose which pleadings to read, never opened, and are absent from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named this exclusion.",
+     "why": "The answer excludes a matter as employment litigation from its scan snippets (evidence seen at [21]-[31]), although its complaint is a commercial damages claim."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The listing review at [80] said the exclusion rested only on the answer to counterclaims while unread memos were listed.",
+     "why": "It read a matter's answer to counterclaims and listed its files (evidence seen at [65]-[76]) but excluded it as defended-only."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review and the check review at [145] named the mislabel and the duplicate call; the agent edited and re-read but never resolved the matter's identity.",
+     "why": "Parallel read results were paired with the wrong paths (evidence seen at [36]-[54]): the answer describes one matter with another matter's parties, and the check stage then calls it a duplicate of a third matter."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named this matter.",
+     "why": "The answer counts an arbitration counterclaim matter as qualifying although it does not meet the request (evidence seen at [36]-[46])."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 145,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The final review at [176] said that matter's claimed counterclaim was not shown; the agent finished.",
+     "why": "The check-stage edit at [94] adds a different matter number carrying the moved content as a qualifying matter."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 21,
+   "n_criteria": 29,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob with a parallel folder sample and file-type counts.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folders with file counts. The review notes the output was cut.",
+     "label_check": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: writes the folder inventory with subfolder names to a file and prints it in chunks.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 21,
+     "end": 29,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path script for pleading and damages words plus three file-name globs (one returns nothing). The review flags the narrow word list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: wider path pattern saved to a file (133 matters).",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 36,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opens a content-search stage and closes it at once without a call, stating the files need text extraction.",
+     "label_check": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scans time out and are rerun in matter ranges, writing hits to files and printing only counts. The review flags that email files were skipped.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 50,
+     "end": 57,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. A path script over all matters for pleading and damages words fails on a heredoc error; the rerun saves 747 paths and prints part.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 91,
+     "tags": [
+      "file not found",
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads eight pleadings (one guessed path fails), eight path globs that return nothing, a file listing of eight candidates, then seven more pleadings and two sections of one answer.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 92,
+     "end": 95,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents. Store-wide extraction over pleading-named files for damages wording; a heredoc error, then 168 hit lines saved and printed (about 33K characters).",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 96,
+     "end": 110,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight more candidates' pleadings and later sections of two. The review flags unopened surfaced matters and partial follow-up of the hit list.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 111,
+     "end": 123,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: prints the saved hit list, reads four pleadings and a later section of one. The review flags that only five documents were opened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 124,
+     "end": 131,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 3). An extraction call sent with no stage open is refused; after reopening, a script extracts damages passages from the 55 listed pleadings (about 53K characters). The review flags that the snippets may capture the opposing side's damages.",
+     "label_check": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 132,
+     "end": 137,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes twelve qualifying matters with amounts and pleadings, plus exclusions by practice area and posture.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 148,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check fails on the workspace path, one edit to the exclusion list, the path check passes on the output folder. The review says no pleading was reopened.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 149,
+     "end": 158,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: removes a draft citation and two exclusion identifiers, re-checks paths.",
+     "label_check": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 159,
+     "end": 159,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Search file contents for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "One matter's damages motion was listed but not read; the answer excludes three read matters by practice-area or posture readings and counts one matter outside the request.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 58,
+    "end": 91,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "No review named the proof document for that matter.",
+    "why": "Its own listing at [78]-[79] showed a matter's filed motion itemizing the damages, but it read only the original petition, so the answer cites the petition instead of that motion."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 132,
+     "end": 137,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named these exclusions.",
+     "why": "It read the pleadings of two matters (evidence seen at [60]-[68] and [80]-[87]) but excluded them as employment and maritime specialty litigation, though both are commercial damages claims."
+    },
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 132,
+     "end": 137,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews named this matter only among unopened or partly read matters, not the exclusion.",
+     "why": "It read a matter's answer to counterclaims (evidence seen at [96]-[104]) and excluded it as defended-only, without the client's own demand."
+    },
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 132,
+     "end": 137,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [131] said that matter's snippet quotes the opposing party's claim, so the extraction may capture defense-side damages; the agent kept it.",
+     "why": "The answer counts an arbitration counterclaim matter as qualifying although it does not meet the request (evidence seen at [96]-[104] and [128]-[129])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail, with 22, 16 and 21 of 29 criteria. All built a candidate set from path searches and extraction scans, read one or two pleadings per chosen matter, and wrote a long list with exclusions. They share three judgement errors at the write stage: a commercial claim by a former-employer company excluded as employment litigation (T1, T2; T0 never opened it), a shipping matter excluded as maritime specialty (T0, T2; T1 confused its identity through parallel-read pairing), and a bank's matter excluded as defended-only after reading only its answer to counterclaims; all three also count an arbitration counterclaim matter outside the set. First errors differ: T0 and T1 left surfaced matters unopened at the screening stage (one in T0, three in T1), T2 read the original petition but not the listed damages motion of one matter. Reviews flagged unopened surfaced matters only generically and named the defended-only exclusion once (T1), which the agent ignored."
+}
