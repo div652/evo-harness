@@ -111,6 +111,15 @@ class CampaignController:
             )
         )
         self.algorithm: EvolutionAlgorithm = load_algorithm(config)
+        if (
+            not self.splits[SplitName.VALIDATION].task_ids
+            and self.selection_policy == "validation"
+        ):
+            raise ConfigurationError(
+                "the validation split is empty, so the selection policy must be "
+                "'algorithm' (set selection.policy, or use an algorithm whose "
+                "default is 'algorithm')"
+            )
         self.kernel = EvolutionKernel(
             self,
             namespace=self.algorithm.identity().name,

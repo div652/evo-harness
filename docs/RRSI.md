@@ -45,6 +45,10 @@ calibrates the noise band delta. Then, for round t = 0..T-1
    - the admissible candidate with the highest S' becomes the incumbent;
      with none, the incumbent stays.
 
+RRSI needs no validation split: with selection policy `algorithm` the
+adapter may return an empty validation split, and the runner refuses an
+empty one only under `selection.policy: validation`.
+
 The outcome's pick is the final incumbent; its nominees are the incumbents
 along the accepted path. The default selection policy is `algorithm` (ship
 the pick, as the paper does); `selection.policy: validation` instead chooses

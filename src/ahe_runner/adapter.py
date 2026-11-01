@@ -115,13 +115,19 @@ class SplitDefinition(AdapterModel):
     @field_validator("task_ids")
     @classmethod
     def validate_task_ids(cls, values: list[str]) -> list[str]:
-        if not values:
-            raise ValueError("split task_ids must not be empty")
         if any(not value.strip() for value in values):
             raise ValueError("split task_ids must not contain empty values")
         if len(values) != len(set(values)):
             raise ValueError("split task_ids must be unique")
         return values
+
+    @model_validator(mode="after")
+    def require_tasks(self) -> SplitDefinition:
+        # Validation may be empty: a campaign whose selection policy is
+        # "algorithm" never evaluates it (the controller checks this).
+        if not self.task_ids and self.name is not SplitName.VALIDATION:
+            raise ValueError(f"split {self.name.value!r} task_ids must not be empty")
+        return self
 
 
 class MetricValue(AdapterModel):

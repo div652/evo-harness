@@ -828,3 +828,25 @@ def test_evaluated_session_usage_is_attributed_to_its_trial(
     assert report["mean_cost_per_trial"] == pytest.approx(
         (400 * 20 + 600 * 2 + 50 * 120) / 1e6
     )
+
+
+def test_validation_split_may_be_empty_only_without_validation_selection(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from ahe_runner.adapter import SplitDefinition
+    from ahe_runner.example import adapter as example_adapter
+
+    with pytest.raises(ValueError):
+        SplitDefinition(name=SplitName.TRAIN, identity="x", task_ids=[])
+    assert not SplitDefinition(
+        name=SplitName.VALIDATION, identity="x", task_ids=[]
+    ).task_ids
+    monkeypatch.setitem(example_adapter._TASKS, SplitName.VALIDATION, {})
+    status = CampaignController(
+        load_config(_rrsi_project(tmp_path / "rrsi", rounds=1))
+    ).run()
+    assert status["selection"]["selection_policy"] == "algorithm"
+    assert status["final_test"]["selected_checkpoint"] == "C1"
+    with pytest.raises(ConfigurationError, match="validation split is empty"):
+        CampaignController(load_config(make_example_project(tmp_path / "ahe")))

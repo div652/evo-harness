@@ -226,9 +226,12 @@ def _split_definition(
 ) -> SplitDefinition:
     if split is not None:
         try:
-            return controller.splits[SplitName(split)]
+            definition = controller.splits[SplitName(split)]
         except ValueError as exc:
             raise ConfigurationError(f"unknown split: {split!r}") from exc
+        if not definition.task_ids:
+            raise ConfigurationError(f"the {split} split has no tasks")
+        return definition
     assert tasks_file is not None
     tasks = _read_tasks(tasks_file)
     for definition in controller.splits.values():
