@@ -47,8 +47,8 @@ Stage 1 requires Python 3.12+. Stages 2 and 3 also require an OpenAI-compatible
 model endpoint.
 
 ```bash
-git clone https://github.com/div652/ahe-runner.git
-cd evoharness
+git clone https://github.com/div652/evo-harness.git
+cd evo-harness
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -e '.[web,dev]'
