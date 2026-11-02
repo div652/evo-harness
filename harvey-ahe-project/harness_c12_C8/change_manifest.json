@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C8",
+  "parent_checkpoint": "C7",
+  "objective": "Distinguish operative transaction or term status from the status of the available document so corpus answers exclude unsupported proposals without requiring an executed copy in every case.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/C8/tasks/task-fa8c13d66b97a037b818/result.json: population-scope-overinclusion",
+        "debugger/C8/tasks/task-caff6c437fe965eee7f9/result.json: issue-coverage-gap",
+        "debugger/C8/tasks/task-2bf28fdf8642baef8ca7/result.json: status-attribute-vs-population-gate"
+      ],
+      "failure_pattern": "The always-visible corpus protocol categorically demoted lifecycle status to a non-gating attribute, so proposed, abandoned, or never-applicable items entered affirmative populations even when the request presupposed an operative transaction or term.",
+      "mechanism": "Require lifecycle meaning to be inferred from the whole request and independently record substantive applicability and document-copy status, keeping proposal-only ambiguity outside affirmative counts.",
+      "rationale": "The earliest shared error occurs during request-gate construction before search, so the always-visible system workflow must remove the harmful universal rule.",
+      "predicted_fixes": [
+        "task-fa8c13d66b97a037b818",
+        "task-caff6c437fe965eee7f9",
+        "task-2bf28fdf8642baef8ca7"
+      ],
+      "risk_tasks": [
+        "task-166707d82e6d2edda9b3",
+        "task-87088cf9e1e4029a803b"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/corpus-reconciliation/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C8/tasks/task-511a0394c834498d7544/result.json: proposal-vs-operative-status-conflation",
+        "debugger/C8/tasks/task-2bf28fdf8642baef8ca7/result.json: status-attribute-vs-population-gate",
+        "attribution/C7/transition.json: chg-2b partially effective but status calibration remained incomplete"
+      ],
+      "failure_pattern": "Candidate ledgers and final audits conflated whether a transaction or term became operative with whether an executed or final document copy was available.",
+      "mechanism": "Add separate substantive-state and document-state fields, verb- and context-sensitive lifecycle tests, boundary handling for proposals, and a candidate-level precision audit requiring corroboration of operative facts.",
+      "rationale": "C7's detailed gate skill was partially effective and should be improved rather than discarded; the registered skill is the reusable surface for the candidate-level evidence protocol.",
+      "predicted_fixes": [
+        "task-511a0394c834498d7544",
+        "task-2bf28fdf8642baef8ca7",
+        "task-46621f8aae953f99ca36",
+        "task-8c6fce86382854e2c0a9"
+      ],
+      "risk_tasks": [
+        "task-166707d82e6d2edda9b3",
+        "task-0ea05f71d6338d94f6a6"
+      ]
+    }
+  ],
+  "validation": [
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

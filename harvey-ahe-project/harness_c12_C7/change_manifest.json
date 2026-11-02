@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C7",
+  "parent_checkpoint": "C6",
+  "objective": "Calibrate corpus eligibility gates to the request before search and independently construct prevalence denominators, replacing brittle self-reported discovery bookkeeping while retaining the deterministic finish interlock.",
+  "changes": [
+    {
+      "id": "chg-1a",
+      "type": "rollback",
+      "component": "system_prompt",
+      "paths": ["systemprompt.md"],
+      "evidence": [
+        "attribution/C6/transition.json: C6 prompt changes were MIXED while the primary metric declined",
+        "debugger/C7/tasks/task-ff7f82af23f4cce9562b/result.json: incomplete discovery logs falsely certified completeness"
+      ],
+      "failure_pattern": "C6 prompt bookkeeping remained self-reported and allowed surfaced candidates to disappear while the audit claimed completeness.",
+      "mechanism": "Restore the C5 prompt workflow before pivoting to semantic gate calibration while retaining the structured finish interlock.",
+      "rationale": "The mixed prompt edit did not mechanically guarantee lossless discovery and coincided with regression.",
+      "predicted_fixes": ["task-ff7f82af23f4cce9562b"],
+      "risk_tasks": ["task-504fb8e43eb51fbe12d4"]
+    },
+    {
+      "id": "chg-1b",
+      "type": "rollback",
+      "component": "skill",
+      "paths": ["skills/corpus-reconciliation/SKILL.md"],
+      "evidence": [
+        "attribution/C6/transition.json: C6 skill changes were MIXED while the primary metric declined",
+        "debugger/C7/tasks/task-ff7f82af23f4cce9562b/result.json: incomplete discovery logs falsely certified completeness"
+      ],
+      "failure_pattern": "The C6 append-only discovery-log procedure added brittle bookkeeping without ensuring complete source-to-register promotion.",
+      "mechanism": "Restore the C5 skill sections that predated the ineffective self-reported log and amendment protocol.",
+      "rationale": "Rollback is limited to the affected skill; the partially effective finish implementation remains intact.",
+      "predicted_fixes": ["task-ff7f82af23f4cce9562b"],
+      "risk_tasks": ["task-504fb8e43eb51fbe12d4"]
+    },
+    {
+      "id": "chg-2a",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": ["systemprompt.md"],
+      "evidence": [
+        "debugger/C7/summary.json: issue-coverage-gap recurred in 15 tasks with many population-boundary variants",
+        "debugger/C7/tasks/task-b44567a23050e8bcfc71/result.json: portfolio scope broadened despite contrary population evidence",
+        "debugger/C7/tasks/task-51b1b3e3c4b431d26b25/result.json: positive-hit discovery collapsed the denominator"
+      ],
+      "failure_pattern": "Agents made consequential errors while defining eligibility, changing scope without request support, or deriving prevalence populations from positive hits.",
+      "mechanism": "The always-visible workflow requires exact request support and units of analysis for exclusions, independent denominator construction, per-result gate matrices, and revalidation of late gate changes.",
+      "rationale": "The earliest recurrent error precedes search and drafting, so prompt routing must expose the state transition on every corpus task.",
+      "predicted_fixes": [
+        "task-b44567a23050e8bcfc71",
+        "task-51b1b3e3c4b431d26b25",
+        "task-302222372aea5392f3f0"
+      ],
+      "risk_tasks": ["task-54e842e2607806e33b8a"]
+    },
+    {
+      "id": "chg-2b",
+      "type": "improvement",
+      "component": "skill",
+      "paths": ["skills/corpus-reconciliation/SKILL.md"],
+      "evidence": [
+        "debugger/C7/summary.json: issue-coverage-gap recurred in 15 tasks with many qualifying-boundary variants",
+        "debugger/C7/tasks/task-6933fe602cc52a9c47ed/result.json: unsupported operative-status gate excluded a substantive match",
+        "debugger/C7/tasks/task-51b1b3e3c4b431d26b25/result.json: feature-hit discovery collapsed the denominator"
+      ],
+      "failure_pattern": "Eligibility was conflated with document status, proof availability, matter labels, or the wrong unit of analysis.",
+      "mechanism": "The detailed procedure adds an exclusionary-gate audit, separates eligibility from evidence attributes, tests units of analysis, and preserves negative denominator rows before feature classification.",
+      "rationale": "The registered skill is the appropriate reusable surface for the detailed legal-research procedure without overexpanding the base prompt.",
+      "predicted_fixes": [
+        "task-6933fe602cc52a9c47ed",
+        "task-51b1b3e3c4b431d26b25",
+        "task-7517a07bb138e03ffaef"
+      ],
+      "risk_tasks": ["task-86a1e0f3e0c310b02b30"]
+    }
+  ],
+  "validation": [
+    "NexAU guide static validation",
+    "candidate validation"
+  ]
+}

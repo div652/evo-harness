@@ -1,0 +1,150 @@
+# Campaign 23: a new 10-round evolution (prepared 2026-10-23), campaign 12
+# with these operator changes:
+#   * evaluated model gpt-5.6-luna at provider-default reasoning (the operator
+#     asked for gpt-5.4-mini, which neither the CAO gateway nor the VS Code
+#     host offers; gpt-5.6-luna is the small tier of the gpt-5.6 family);
+#   * 3 training trials per task (campaign 12: 2);
+#   * one judge, gpt-5.6-sol at high reasoning (campaign 12: claude-sonnet-5
+#     and gpt-5.5), through LAB's OpenAI judge path;
+#   * evidence-only extra trials: a training task with no all-passing trial
+#     among its 3 runs 2 more for the Debugger and Evolve (not in metrics);
+#   * objective all_pass: the primary metric is the mean all-pass rate, ties
+#     broken by the mean criterion pass rate (campaign 12: the reverse). The
+#     meta agents get matching prompts: meta_supplements_all_pass/ and
+#     benchmark_public_all_pass/ADAPTER.md (one judge, all-pass target).
+# Kept from campaign 12: the LAB-exact seed harness, the 80/20/20 split
+# stratified by 9b difficulty, 10 rounds, 2 validation and 3 test trials,
+# claude-sonnet-5 as LAB's filename helper, gpt-5.6-sol high for every meta
+# agent, debugger and Evolve budgets, and the meta-agent Docker shell.
+# Endpoint: the CAO gateway (Responses API, reasoning carried across turns)
+# for agent, judge, and meta agents; the helper (Claude) goes through chat
+# completions there. gpt-5.6-sol on the Responses API rejects temperature,
+# so the meta agents' campaign 12 temperatures are not sent.
+# CAO_API_KEY must hold the gateway key (/home/agarwaldi/cao/profile/.gateway-key).
+# Launch with scripts/run_c23.sh, in this worktree.
+schema_version: 1
+
+campaign:
+  name: harvey-lab-campaign-23-cao-luna-allpass-80-20-20
+  artifacts_dir: ./campaign-artifacts/harvey-lab-campaign-23-cao-luna-allpass-80-20-20
+  rounds: 10
+  root_seed: 42
+
+project:
+  harness_dir: ./harness_lab
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    # Campaign 12's split.
+    split_file: ./splits-firm-knowledge-80-20-20.json
+    apply_task_filter: false
+    objective: all_pass
+    judge_api: openai_responses
+    judges:
+      - model: gpt-5.6-sol
+        # LAB's judge output cap, as campaign 12.
+        max_tokens: 64000
+        reasoning_effort: high
+        temperature: null
+    # LAB's deliverable filename helper, as campaign 12.
+    helper:
+      model: claude-sonnet-5
+      max_tokens: 1024
+      temperature: 0.0
+    # CAO serves Claude only on chat completions and messages.
+    helper_api: chat
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    grading_parallel: 10
+    judge_max_concurrent_calls: 18
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    # As campaigns 20-22: an API rejection mid-run reruns the trial.
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+    - ./benchmark_adapter.py
+    - ./harvey_ahe
+    - ./splits-firm-knowledge-80-20-20.json
+    - ./pyproject.toml
+    - ./requirements.txt
+  meta_agent_source_roots:
+    - ./benchmark_public_all_pass
+
+models:
+  evaluated:
+    model: gpt-5.6-luna
+    max_tokens: 128000
+    reasoning_effort: provider-default
+    temperature: null
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+
+transport:
+  provider: gh_copilot_server
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  model_catalog: required
+  negative_control: required
+  max_concurrent_requests: 24
+  hung_call_retries: 2
+  transient_retries: 6
+  transient_max_wait_seconds: 120
+
+evaluation:
+  train_trials: 3
+  # A training task with 0/3 all-pass runs 2 more, evidence-only trials for
+  # the Debugger and Evolve; no metric counts them.
+  train_extra_trials: 2
+  validation_trials: 2
+  test_trials: 3
+  max_concurrency: 20
+
+debugger:
+  max_concurrency: 20
+  max_iterations: 25
+
+recovery:
+  maximum_stage_attempts: 10
+  archive_incomplete_attempts: true
+
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+      - https://github.com/nex-agi/NexAU
+      - https://python-docx.readthedocs.io/en/latest/
+      - https://openpyxl.readthedocs.io/en/stable/
+      - https://python-pptx.readthedocs.io/en/latest/
+  role_supplements:
+    source: ./meta_supplements_all_pass/source.md
+    web: ./meta_supplements_all_pass/web.md
+    debugger: ./meta_supplements_all_pass/debugger.md
+    evolve: ./meta_supplements_all_pass/evolve.md
+  # (This runner predates meta.deprecated_metric_terms; the supplements were
+  # checked by hand for campaign 12's metric and two-judge wording.)
+  max_concurrent_model_calls: 20
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  # Campaign 12's per-role settings without temperatures (see above).
+  roles:
+    debugger:
+      max_tokens: 20000
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2

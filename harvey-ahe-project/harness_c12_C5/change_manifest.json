@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C5",
+  "parent_checkpoint": "C4",
+  "objective": "Resolve corpus population boundaries from the request context instead of categorically treating role, practice, portfolio, or primary-matter language as mere repository provenance.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/C5/tasks/task-1c4948ddc4b99a06c51c/result.json: credentials-scope-role-gate",
+        "debugger/C5/tasks/task-c360ebf30e9c87f5ba4d/result.json: population-scope-overbreadth",
+        "debugger/C5/tasks/task-3ebd2e150a8679c5c5f3/result.json: scope-overexpansion-false-positive",
+        "debugger/C5/tasks/task-4044f32ef7be34fb3285/result.json: overbroad-scope-eligibility",
+        "attribution/C4/transition.json: the prior system-prompt edit was effective on its declared predictions but current traces show its categorical provenance rule overcorrected"
+      ],
+      "failure_pattern": "Before searching, agents repeatedly discarded requested credentials, practice, portfolio, role, and primary-matter boundaries, then exhaustively reconciled and ranked an overbroad universe containing incidental references.",
+      "mechanism": "The always-visible protocol now distinguishes search-locus wording from contextual population qualifiers, rejects incidental-reference promotion unless the requested relationship permits it, and requires a boundary-candidate sensitivity test before ranking.",
+      "rationale": "Population interpretation is the earliest shared error and controls every later search and disposition; improving the partially successful C4 gate protocol is more direct than adding another reviewer after the universe is already wrong.",
+      "predicted_fixes": [
+        "task-1c4948ddc4b99a06c51c",
+        "task-c360ebf30e9c87f5ba4d",
+        "task-3ebd2e150a8679c5c5f3",
+        "task-4044f32ef7be34fb3285",
+        "task-345d10101b8949920e28",
+        "task-da2c26d2394f4a2f93dc",
+        "task-97174ad5f910f2e9aebb"
+      ],
+      "risk_tasks": [
+        "task-9f916c5203104f471c1d",
+        "task-17d8fa6bea4b1b22a6f7"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/corpus-reconciliation/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C5/tasks/task-da2c26d2394f4a2f93dc/result.json: population-scope-overbreadth",
+        "debugger/C5/tasks/task-345d10101b8949920e28/result.json: qualifying-set-overbreadth",
+        "debugger/C5/tasks/task-2f9a66c6cefa5f0637ec/result.json: incomplete-document-reading",
+        "attribution/C4/transition.json: the prior reconciliation skill was partially effective at two of four predictions"
+      ],
+      "failure_pattern": "The reconciliation procedure reinforced the overbroad population and lacked an operational comparison of plausible scope readings using role and purpose evidence for candidates at the boundary.",
+      "mechanism": "The registered skill adds context-sensitive population classes, a dedicated population/role evidence field, a mandatory changed-candidate boundary test, and a final audit that verifies the selected interpretation against engagement evidence.",
+      "rationale": "The skill owns the detailed candidate-ledger procedure and can operationalize the system-level semantic rule while preserving the useful C4 unread-file, proof-sufficiency, and symmetric-disposition checks.",
+      "predicted_fixes": [
+        "task-da2c26d2394f4a2f93dc",
+        "task-345d10101b8949920e28",
+        "task-c360ebf30e9c87f5ba4d",
+        "task-3ebd2e150a8679c5c5f3",
+        "task-4044f32ef7be34fb3285"
+      ],
+      "risk_tasks": [
+        "task-9f916c5203104f471c1d",
+        "task-2f9a66c6cefa5f0637ec"
+      ]
+    }
+  ],
+  "validation": [
+    "candidate validation"
+  ]
+}

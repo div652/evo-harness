@@ -1,0 +1,39 @@
+type: tool
+name: glob
+description: >-
+  Find files or directories using deterministic path-sorted pagination. Defaults
+  to the documents directory and files only. Every result states the total,
+  returned range, and whether it is COMPLETE or TRUNCATED. If truncated, repeat
+  with the reported next offset and otherwise identical arguments; never treat
+  one page as a complete inventory. Use item_type=directories with a one-level
+  pattern such as 'matters/*' to inventory matter folders before deep reading.
+input_schema:
+  type: object
+  properties:
+    pattern:
+      type: string
+      description: Glob pattern relative to path, for example '**/*.docx' or 'matters/*'.
+    path:
+      type: string
+      description: Directory to search. Defaults to the documents directory.
+    offset:
+      type: integer
+      minimum: 0
+      default: 0
+      description: Zero-based result offset for pagination. Preserve all other arguments when advancing it.
+    limit:
+      type: integer
+      minimum: 1
+      maximum: 500
+      default: 100
+      description: Maximum paths to return on this page.
+    item_type:
+      type: string
+      enum: [files, directories, all]
+      default: files
+      description: Whether to return files, directories, or both. Use directories to enumerate matter folders.
+  required:
+  - pattern
+  additionalProperties: false
+disable_parallel: true
+binding: tools.glob:glob

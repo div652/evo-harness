@@ -1,0 +1,47 @@
+type: agent
+name: harvey_lab_agent
+description: >-
+  Harvey LAB legal-work agent. Reads the task documents in its sandbox and
+  produces the requested deliverables in the output directory.
+# LAB has no context cap of its own: it ends a run only when the provider
+# rejects an over-long prompt. Through Copilot, a prompt over the advertised
+# max_input_tokens (921793 for gpt-5.6-sol and gpt-5.4 on 2026-10-14) made of
+# many messages is not rejected but silently cut from the start (AHE-021), so
+# NexAU stops the run 10,000 tokens below it, counted with the real tokenizer
+# instead of NexAU's characters / 4 estimate (AHE-023). A provider rejection
+# still ends the run as a graded context overflow, as in LAB.
+max_context_tokens: 911793
+token_counter: harvey_ahe.token_count:count_prompt_tokens
+system_prompt: ./systemprompt.md
+system_prompt_type: file
+tool_call_mode: openai
+max_iterations: 200
+stop_tools:
+  - finish
+
+llm_config:
+  model: UNCONFIGURED
+  base_url: http://127.0.0.1:1/v1
+  api_key: local-placeholder
+  max_tokens: 64000
+  stream: false
+  api_type: openai_chat_completion
+
+tools:
+  - name: bash
+    yaml_path: ./tool_descriptions/bash.tool.yaml
+  - name: read
+    yaml_path: ./tool_descriptions/read.tool.yaml
+  - name: write
+    yaml_path: ./tool_descriptions/write.tool.yaml
+  - name: edit
+    yaml_path: ./tool_descriptions/edit.tool.yaml
+  - name: glob
+    yaml_path: ./tool_descriptions/glob.tool.yaml
+  - name: grep
+    yaml_path: ./tool_descriptions/grep.tool.yaml
+  - name: finish
+    yaml_path: ./tool_descriptions/finish.tool.yaml
+skills: []
+sub_agents: []
+middlewares: []

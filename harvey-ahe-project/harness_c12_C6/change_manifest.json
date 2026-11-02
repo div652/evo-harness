@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C6",
+  "parent_checkpoint": "C5",
+  "objective": "Make corpus completion auditable and block finishing while known decisive candidates, high-signal files, or answer-cardinality defects remain unresolved.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/finish.py",
+        "tool_descriptions/finish.tool.yaml"
+      ],
+      "evidence": [
+        "debugger/C6/tasks/task-7f8a382b84ae2d39e4df/result.json: incomplete-document-reading",
+        "debugger/C6/tasks/task-2c2cc10be13b797982b7/result.json: incomplete-document-reading",
+        "debugger/C6/tasks/task-d9dac0c4fc9b5be0efa4/result.json: singular-answer-comparator-leak",
+        "debugger/C6/tasks/task-c83ac1c0a137b342319a/result.json: post-completion-regression"
+      ],
+      "failure_pattern": "Agents finished corpus set and ranking work despite surfaced but unread decisive files, discovered candidates missing from the register, affirmative comparator leakage, or unchecked post-draft reversals.",
+      "mechanism": "The stop tool now requires a typed completion audit and rejects corpus completion when reported unresolved candidates or unread high-signal files are nonzero, answer cardinality does not match, late changes are unchecked, or listed outputs are absent.",
+      "rationale": "C5 prompt and skill rules still permitted the same failures, so moving the final invariant into the stop tool provides a stronger deterministic intervention while retaining a capped rejection path.",
+      "predicted_fixes": [
+        "task-7f8a382b84ae2d39e4df",
+        "task-2c2cc10be13b797982b7",
+        "task-d9dac0c4fc9b5be0efa4",
+        "task-dad48f44808e319e1a29",
+        "task-c83ac1c0a137b342319a"
+      ],
+      "risk_tasks": [
+        "task-bf4349a7679885aeed82",
+        "task-11203760bb9790eac77d"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/corpus-reconciliation/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C6/summary.json: incomplete-document-reading recurred in 11 tasks",
+        "debugger/C6/tasks/task-2c2cc10be13b797982b7/result.json: discovered executed-agreement matters were silently dropped before gate review",
+        "debugger/C6/tasks/task-7f8a382b84ae2d39e4df/result.json: a surfaced decisive closing memo remained unread before ranking",
+        "debugger/C6/tasks/task-d9dac0c4fc9b5be0efa4/result.json: internal comparators leaked into a singular deliverable"
+      ],
+      "failure_pattern": "The candidate ledger was manually assembled from selected results rather than reconciled losslessly to all high-signal discoveries, and internal ranking rows were later treated as publishable answers.",
+      "mechanism": "The skill adds an append-only discovery log, an explicit discovery-to-register set-difference invariant, zero-unresolved and zero-unread gates, precise singular-answer drafting rules, and an auditable amendment protocol for post-draft changes.",
+      "rationale": "The registered skill owns the detailed corpus procedure and can operationalize the finish fields while preserving C4-C5's supported population-boundary and evidence-sufficiency improvements.",
+      "predicted_fixes": [
+        "task-2c2cc10be13b797982b7",
+        "task-7f8a382b84ae2d39e4df",
+        "task-07ed28de338c0c0b9619",
+        "task-d9dac0c4fc9b5be0efa4",
+        "task-82b8ae14086dde2677f2"
+      ],
+      "risk_tasks": [
+        "task-110df351eeedf5850c08",
+        "task-7212e026b719e28f80dd"
+      ]
+    },
+    {
+      "id": "chg-3",
+      "type": "improvement",
+      "component": "system_prompt",
+      "paths": [
+        "systemprompt.md"
+      ],
+      "evidence": [
+        "debugger/C6/summary.json: issue-coverage-gap recurred in 18 tasks",
+        "debugger/C6/tasks/task-7f8a382b84ae2d39e4df/result.json: known unresolved matters did not prevent ranking",
+        "debugger/C6/tasks/task-c83ac1c0a137b342319a/result.json: correct completed work regressed after unnecessary continued research",
+        "attribution/C5/transition.json: C5 system-prompt and skill edits were mixed but improved the primary metric"
+      ],
+      "failure_pattern": "The always-visible workflow did not require incremental lossless promotion of discoveries or make zero decisive gaps and singular output cardinality explicit before drafting and finishing.",
+      "mechanism": "The protocol routes every high-signal hit through a discovery log and register, forbids drafting with decisive unresolved work, limits singular outputs to the requested winner, and requires truthful completion-audit fields after final source checks.",
+      "rationale": "The prompt supplies concise routing and state transitions on every applicable task; the skill provides detail and the finish tool enforces the terminal state.",
+      "predicted_fixes": [
+        "task-7f8a382b84ae2d39e4df",
+        "task-2c2cc10be13b797982b7",
+        "task-d9dac0c4fc9b5be0efa4",
+        "task-c83ac1c0a137b342319a"
+      ],
+      "risk_tasks": [
+        "task-bf4349a7679885aeed82",
+        "task-1d5d5bbdfda7cd8468bb"
+      ]
+    }
+  ],
+  "validation": [
+    "candidate validation"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "checkpoint": "C10",
+  "parent_checkpoint": "C9",
+  "objective": "Require source-backed semantic eligibility for corpus results and preserve every item tied at a requested ranking cutoff.",
+  "changes": [
+    {
+      "id": "chg-1",
+      "type": "improvement",
+      "component": "skill",
+      "paths": [
+        "skills/corpus-reconciliation/SKILL.md"
+      ],
+      "evidence": [
+        "debugger/C10/summary.json: issue-coverage-gap recurred in 19 tasks and incomplete-document-reading recurred in 12 tasks",
+        "debugger/C10/tasks/task-b344e8fa8eaab912cf3b/result.json: strong evidence of relevance substituted for the requested direct or responsive relationship",
+        "debugger/C10/tasks/task-9735028cf53a2980ffb9/result.json: a late exclusion-to-inclusion reversal contradicted the source-backed semantic gate",
+        "debugger/C10/tasks/task-217c3258a03b095322ef/result.json: exact-cardinality guidance deterministically truncated an equal cutoff tie"
+      ],
+      "failure_pattern": "Corpus runs often found and read relevant evidence but then admitted candidates that failed the requested category relationship, reversed dispositions without rechecking every gate, or forced a top-N tie into exactly N rows.",
+      "mechanism": "Classify candidate relationships as direct, responsive, peripheral, or uncertain; require an exact read source and pass/fail/uncertain state for every eligibility gate; adversarially recheck late reversals; and treat N as rank depth with every co-ranked cutoff item presented unless the user supplies a tie-break.",
+      "rationale": "The earliest shared failure occurs in semantic gate formulation and application after discovery, so the registered corpus procedure is the reusable surface that controls candidate classification without hard-coding legal categories.",
+      "predicted_fixes": [
+        "task-b344e8fa8eaab912cf3b",
+        "task-9735028cf53a2980ffb9",
+        "task-217c3258a03b095322ef",
+        "task-068c27e94574610e0b10",
+        "task-1f016b197aa249a3ff66"
+      ],
+      "risk_tasks": [
+        "task-d89c8a4666ff8974b50c",
+        "task-d60b6f3560fdd10be4bc"
+      ]
+    },
+    {
+      "id": "chg-2",
+      "type": "improvement",
+      "component": "tool_implementation",
+      "paths": [
+        "tools/finish.py",
+        "tool_descriptions/finish.tool.yaml"
+      ],
+      "evidence": [
+        "attribution/C9/transition.json: chg-3 was MIXED because artifact and count checks could still accept a semantically wrong self-audit",
+        "debugger/C10/tasks/task-9735028cf53a2980ffb9/result.json: final audit certified internal counts after an unsupported late inclusion",
+        "debugger/C10/tasks/task-217c3258a03b095322ef/result.json: finish audit reinforced a fabricated tie-break and incomplete principal result set"
+      ],
+      "failure_pattern": "The C9 finish interlock verified artifacts, zero counts, and self-reported cardinality but did not require per-gate semantic support or distinguish rank depth from row count at a cutoff tie.",
+      "mechanism": "Extend the structured completion audit with required semantic-gate and cutoff-tie states; reject corpus completion unless every inclusion has source-backed passes and reject unresolved ranking ties, while preserving capped rejections and existing artifact checks.",
+      "rationale": "C9's deterministic finish gate is the strongest existing completion control; improving its audit contract addresses the mixed result more reliably than another prompt reminder while leaving substantive eligibility decisions with the agent and sources.",
+      "predicted_fixes": [
+        "task-9735028cf53a2980ffb9",
+        "task-217c3258a03b095322ef"
+      ],
+      "risk_tasks": [
+        "task-d60b6f3560fdd10be4bc",
+        "task-d89c8a4666ff8974b50c"
+      ]
+    }
+  ],
+  "validation": [
+    "NexAU guide static validation",
+    "Python and YAML syntax checks",
+    "candidate validation"
+  ]
+}

@@ -1,0 +1,99 @@
+type: tool
+name: finish
+description: >-
+  Signal completion only after every requested output exists and the final audit
+  is complete. For repository-wide set, count, ranking, superlative, or proof-per-
+  result work, research_scope must be corpus; finish requires non-empty
+  /workspace/lead_union.txt and /workspace/review_state.md and rejects while any
+  plausible candidate is unresolved/undispositioned, any discovered high-signal
+  file that could change the answer remains unread, or the affirmative answer
+  cardinality does not match the request. Corpus work also requires a source-
+  backed pass for every eligibility gate of every inclusion; strong relevance or
+  proof quality cannot cure a failed category gate. For top-N rankings, N is rank
+  depth: present all items tied at the cutoff unless the user supplied a tie-break.
+  Before reporting zero, diff the deduplicated lead-union matters against the
+  register and disposition every difference. A disclosed limitation is not a
+  substitute for resolving a known plausible candidate. For narrow work use
+  research_scope narrow, zero counts, and not_applicable checks. Recheck all
+  source-based late changes before setting late_changes_verified true. Rejections
+  are capped, so treat an error as a work instruction rather than retrying.
+input_schema:
+  type: object
+  properties:
+    summary:
+      type: string
+      description: Brief summary of the completed work.
+    deliverables:
+      type: array
+      minItems: 1
+      items:
+        type: string
+      description: >-
+        Every deliverable produced, relative to the output directory (for
+        example, ['response.md', 'memo.docx']). Each listed file must exist.
+    completion_audit:
+      type: object
+      additionalProperties: false
+      properties:
+        research_scope:
+          type: string
+          enum: [narrow, corpus]
+          description: >-
+            Use corpus for repository-wide sets, counts, rankings, superlatives,
+            or one-proof-per-result work; otherwise use narrow.
+        unresolved_candidate_count:
+          type: integer
+          minimum: 0
+          description: >-
+            Number of plausible discovered candidates still unresolved or not
+            given an include/exclude disposition. Must be zero for corpus work.
+        unread_high_signal_file_count:
+          type: integer
+          minimum: 0
+          description: >-
+            Number of discovered files that could change a gate, rank, proof
+            choice, or material fact and have not been directly read. Must be
+            zero for corpus work.
+        answer_cardinality_check:
+          type: string
+          enum: [not_applicable, matches, mismatch]
+          description: >-
+            Whether principal answers match the requested set or rank depth.
+            Corpus work requires matches. For top N, all items tied at rank N
+            count as matching even when this produces more than N rows.
+        semantic_gate_check:
+          type: string
+          enum: [not_applicable, verified, mismatch]
+          description: >-
+            Verified means every corpus inclusion has an exact read source and
+            pass for every anchored eligibility gate, every exclusion has a
+            sourced failed gate, and relevance or proof strength was not used to
+            cure a failed or uncertain category gate. Use not_applicable only for
+            narrow work.
+        cutoff_tie_check:
+          type: string
+          enum: [not_applicable, no_cutoff_tie, all_tied_present, user_tiebreak_applied, mismatch]
+          description: >-
+            For top-N ranking work, report whether the cutoff is untied, all
+            co-ranked cutoff items are principal results, or an explicit user
+            tie-break was applied. Use not_applicable for non-ranking work.
+        late_changes_verified:
+          type: boolean
+          description: >-
+            True only after any post-draft disposition, winner, number, status,
+            relationship, or proof change was rechecked against every affected
+            gate and exact source; true also means no unchecked change exists.
+      required:
+        - research_scope
+        - unresolved_candidate_count
+        - unread_high_signal_file_count
+        - answer_cardinality_check
+        - semantic_gate_check
+        - cutoff_tie_check
+        - late_changes_verified
+  required:
+    - summary
+    - deliverables
+    - completion_audit
+disable_parallel: true
+binding: tools.finish:finish

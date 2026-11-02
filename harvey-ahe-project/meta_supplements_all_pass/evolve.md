@@ -1,0 +1,219 @@
+# Domain guidance: LAB legal-work tasks (evolution)
+
+You are improving a legal-work agent. It reads matter documents in a
+network-less sandbox and writes deliverable files to `/workspace/output`.
+One judge grades those files against a hidden rubric.
+
+**The optimization target is the mean all-pass rate**: the share of trials
+in which the judge passes **every** rubric criterion of the task. A trial
+that fails even one criterion counts as 0. The mean criterion pass rate (the
+share of criteria passed) is reported and breaks ties: between checkpoints
+with the same all-pass rate, and, in the per-task attribution, for a task
+whose all-pass rate did not change. Each training task runs three trials,
+so a task contributes 0, 1/3, 2/3 or 1. A task with no all-passing trial
+among its three gets two more, marked `evidence_only` in its evidence (its
+state then also gives `extra_trials_state`). They are not counted in any
+metric, but a passing one shows what a successful run of that task looked
+like.
+
+# Core Principles for This Benchmark
+
+## 1. Only complete passes count
+
+A trial scores only when nothing is missed, so passing more criteria helps
+the target only when it brings a trial to all-pass. Gains come from:
+
+- **near-misses**: trials that failed one or two criteria in otherwise
+  complete work. The specific gap (an omitted issue, a factual slip, a
+  missing section, an unfollowed instruction) is the whole difference
+  between 0 and 1;
+- **consistency**: tasks that all-pass in some trials but not others. Make
+  the successful behaviour happen every time;
+- **broad losses** (a missing or misformatted deliverable, an unread
+  document, an early finish, a turn or context limit), which make all-pass
+  impossible.
+
+Prefer changes that make every run reliably complete, correct, and checked
+against everything the instructions ask. More prose is not the goal.
+
+## 2. Evidence-driven, per failed criterion
+
+Before making any change, you must have:
+
+1. **Failure evidence:** which training task keys failed to all-pass, and
+   which kinds of criteria the judge failed (coverage, accuracy, format,
+   instruction following). Quote the debugger diagnoses or the judge
+   reasoning.
+2. **Root cause in the trace:** the earliest step where the run went wrong.
+   For example: a document never opened, a deliverable written as `.md`,
+   turns spent on a failing script.
+3. **Targeted fix:** a change at the component that controls that step.
+4. **Predicted impact:** which task keys should gain all-passing trials, and
+   which trace feature should change.
+
+## 3. Mechanisms over advice
+
+Enforcement strength, from strongest to weakest:
+
+1. tool implementation;
+2. middleware;
+3. tool description;
+4. skill;
+5. system prompt.
+
+If a failure recurs after a prompt rule, move the fix to a mechanism (for
+example, a stricter `finish` check or a middleware reminder) rather than
+rewording the rule.
+
+# Components in This Harness
+
+| Component | Files | Behaviour specific to this harness | Typical use here |
+|---|---|---|---|
+| System prompt | `systemprompt.md` | Rendered as a Jinja template: never write Jinja markup (two opening curly braces, or an opening curly brace followed by a percent or hash sign) | Work protocol: inventory → read → notes → draft → verify → finish |
+| Tool description | `tool_descriptions/*.tool.yaml` | Sent as an API tool schema (`openai` mode) | Path rules, output formats, pitfalls |
+| Tool implementation | `tools/*.py` | Runs on the host; reaches the sandbox only via `handle_for(agent_state)`; must catch every exception | Deliverable checks, paged reading, previewing the judges' view |
+| Middleware | `middleware/*.py` + `agent.yaml` `middlewares:` | Runs on the host; duck-typed hooks; can rewrite messages and tool results | Turn-budget reminders, compacting large tool results |
+| Skill | `skills/<name>/SKILL.md` + `agent.yaml` `skills:` | Text only; its folder is not visible in the sandbox | Reusable how-tos (for example, a `.docx` with tables) |
+| Workspace seed | `workspace_seed/**` | Copied into every trial's `/workspace` before the agent starts (`workspace_seed/skills/docx/scripts/x.py` becomes `/workspace/skills/docx/scripts/x.py`); runs only inside the sandbox through `bash` | Helper scripts that the prompt or a skill tells the agent to run |
+| Sub-agent | `sub_agents/<name>/agent.yaml` + `systemprompt.md` + `agent.yaml` `sub_agents:` | Shares the parent's sandbox; forced onto the evaluated model; `max_iterations` at most 200 | A bounded document reader or reviewer |
+| Long-term memory | `LongTermMEMORY.md` | Appended verbatim to the end of the evaluated agent's system prompt; an empty file adds nothing | Durable procedures written as instructions to the agent; never notes about the file itself, never task facts |
+| Short-term memory | `ShortTermMEMORY.md` | Runtime-owned | Do not modify |
+
+## Registering New Components
+
+**Creating a file is NOT enough. Register it in `agent.yaml`:**
+
+- **New tool:** a `.tool.yaml` (with `binding: tools.<module>:<function>`),
+  a `tools/<module>.py`, and a `tools:` entry with `name` and `yaml_path`.
+- **New middleware:** a `middleware/<module>.py` and a `middlewares:` entry
+  with `import: middleware.<module>:<Class>` and `params:`.
+- **New skill:** a `skills/<name>/SKILL.md` with `name` and `description`
+  frontmatter, and a `skills:` entry with the folder path.
+- **New sub-agent:** a `sub_agents/<name>/agent.yaml` and a `sub_agents:`
+  entry with `name` and `config_path`.
+
+The harness folder is on `sys.path`, so `binding: tools.finish:finish` loads
+`tools/finish.py`. Confirm exact formats in the framework skill before
+editing.
+
+# Protected Invariants (the adapter or manifest rejects violations)
+
+- **Fixed fields:** `finish` stays the stop tool. `stop_tools: [finish]`,
+  `max_iterations: 200`, `tool_call_mode`, and the `llm_config` model fields
+  are fixed. Sub-agents may not exceed 200 iterations.
+- **Sandbox access:** harness Python reaches the sandbox only through
+  `harvey_ahe.workspace.handle_for(agent_state)`, called on every tool call.
+  Never cache a handle or keep per-trial data in module globals: trials run
+  concurrently in one process.
+- **Banned imports and calls.** Harness Python may not import:
+  - `ahe_runner`, `benchmark_adapter`, or `lab_core`;
+  - any `harvey_ahe` module other than `harvey_ahe.workspace`;
+  - process, network, FFI, or dynamic-import modules;
+  - anything under `workspace_seed/` (no imports or `binding:` entries).
+
+  Python under `workspace_seed/` is exempt from these bans because it only
+  runs inside the sandbox.
+
+  It may not call `eval`, `exec`, `compile`, `__import__`, `os.system`,
+  `os.popen`, `os.fork*`, `os.exec*`, or `os.spawn*`.
+- **Module names:** top-level harness files and folders must not reuse the
+  name of a standard-library, protected, or installed module (for example
+  `docx.py` or `json/`).
+- **Identifiers:** no training task identifiers anywhere, and no grader
+  identifiers in `.py` or `.yaml` files.
+
+# Mechanics You Must Get Right
+
+- **New or changed tool.** The Python parameters, minus `agent_state`,
+  `global_storage`, and `sandbox`, must equal the schema `properties`.
+  Parameters without defaults must equal `required`. Catch every exception
+  and return error text; a raised exception ends the trial as `agent_error`.
+  Keep `disable_parallel: true` for tools that write to the sandbox.
+- **Shell.** Every `exec` is a fresh shell (default timeout 60 s, maximum
+  600). Multi-step work must be one command, or a script written to
+  `/workspace` first. There is no network, and nothing can be installed.
+- **Rejecting `finish`.** Return `{"status": "error", "error": "..."}`. Keep
+  a cap on rejections so a run cannot loop.
+- **Skills and scripts.** NexAU skill folders are not visible in the
+  sandbox. Put scripts the agent should run with `bash` under
+  `workspace_seed/`; they appear under `/workspace` in every trial and run
+  with the sandbox's own Python, pandoc, and LibreOffice.
+- **Middleware.** Keep any rewriting auditable, and never drop the
+  instruction or the deliverable requirements.
+- **What judges read.** Judges read extracted text:
+  - `.docx` through pandoc (the agent can run pandoc in the sandbox to
+    preview it);
+  - `.xlsx` through pandas, which reads only saved cell values, so
+    recalculate formulas with LibreOffice or write the values;
+  - `.pptx` through markitdown;
+  - `.pdf` through pdfplumber.
+
+  Images and layout are invisible to judges. A criterion whose judge input
+  exceeds 240,000 characters fails without a judge call.
+- **Documents.** Every trial gets the same shared document store under
+  `documents/`: about 9,300 files (mostly `.docx`, plus `.eml`, `.xlsx`
+  and `.pptx`) in 266 matter folders. Only a few files matter for a given
+  task. The agent has to find them, from folder and file names or by
+  searching, before reading them. Reading broadly uses up context.
+- **Context.** `read` returns whole documents. Several long documents can
+  exhaust `max_context_tokens` (911793, counted with the o200k_base
+  tokenizer). If you change that value, keep it at least 10,000 below the
+  evaluated model's advertised 922,000-token input limit.
+
+# Analysis Approach for This Benchmark
+
+Within the core evidence order:
+
+1. **Tabulate each training task key:** how many of its three trials
+   all-pass, and for each trial `termination_reason` and the judge's
+   `n_passed`/`n_criteria`.
+2. **Sort the failing trials.**
+   - Near-miss: one or two criteria failed in otherwise complete work.
+   - Inconsistent task: some trials all-pass, others do not.
+   - Broad loss: a missing deliverable, `agent_error`, or a turn or context
+     limit fails most criteria at once.
+
+   Broad losses block all-pass outright and are usually cheap to fix;
+   near-misses and inconsistent tasks are the closest to all-passing.
+3. **Check deliverables first.** Confirm in `output_files` that each one
+   exists, in the requested format and location, before reading the judge
+   reasoning.
+4. **Group the blocking criteria.** Group the criteria that stopped trials
+   from all-passing by class across tasks (an issue not covered, a factual
+   error, a missing section, an instruction not followed), and give the
+   most weight to classes that recur.
+5. **Verify every diagnosis in the raw trace.** Do not rely on summaries
+   alone.
+6. **Round 2 onward:** list which task keys gained and which lost
+   all-passing trials (and, for tasks whose all-pass rate did not change,
+   which moved on criterion pass rate). If losses outnumber gains, diagnose
+   them before adding anything new.
+
+# Intervention Families (options, not a required list)
+
+| Family | Evidence that calls for it | Usual component | Main risk |
+|---|---|---|---|
+| Deliverable contract: extract the requested files, formats, and sections; `finish` checks existence, extension, non-empty content; preview the judges' view | Missing or misformatted deliverables, early finish | `finish` tool + system prompt | Blocking legitimate finishes |
+| Document retrieval and coverage: locate the relevant matter and documents in the shared store first, read each relevant one completely (page long files), notes in a scratch file | Needed documents never found or never opened, coverage gaps | System prompt + `read` tool | Turn and context cost |
+| Context and turn budget: page or summarize large reads; remaining-turn reminders; write deliverables early | `context_overflow`, `max_turns_exceeded` | Middleware + `read` tool | Losing facts in summaries |
+| Review before finishing: re-check each deliverable against the checklist and sources; optional bounded reviewer sub-agent | Accuracy or instruction failures in otherwise complete work | System prompt, skill, or sub-agent | Cost; reviewer overwriting files |
+| Durable procedures in memory | The same how-to failure across tasks | `LongTermMEMORY.md` or skill | Prompt growth |
+
+# Regression Risks to State in the Change Manifest
+
+- Longer prompts consume context.
+- Aggressive compaction can lose facts needed later.
+- Stricter `finish` checks can block legitimate completions.
+- Sub-agents multiply cost and can overwrite each other's files in the
+  shared sandbox.
+- Any new tool error path can end a trial if it raises.
+
+# Safety Constraints for This Benchmark
+
+- Never copy training task identifiers, party names, figures, legal
+  conclusions, or criterion wording into the harness. Learn general classes
+  from judge reasoning; do not turn individual criteria into a checklist.
+- Never add text addressed to the judges, pad deliverables, or try to
+  influence grading in any way other than doing the work better.
+- Treat runtime-injected benchmark actions and all project supplements as
+  protected, unmodifiable campaign inputs.

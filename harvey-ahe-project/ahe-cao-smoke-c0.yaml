@@ -1,0 +1,111 @@
+# One-task end-to-end smoke run of the base harness (C0) through the local
+# CAO gateway (copilot-api 2.7.30 at 127.0.0.1:4141, 2026-10-22).
+# Same agent, harness and grading as campaign 19's C0 (TRAPI), with CAO's
+# model IDs and a transport for a local key-authenticated Responses endpoint.
+# CAO_API_KEY must hold the gateway key (/home/agarwaldi/cao/profile/.gateway-key).
+schema_version: 1
+campaign:
+  name: harvey-lab-cao-smoke-C0
+  artifacts_dir: ./campaign-artifacts/harvey-lab-cao-smoke-C0
+  rounds: 0
+  root_seed: 43
+project:
+  harness_dir: ./harness_lab
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    split_file: ./splits-firm-knowledge-cao-smoke1.json
+    apply_task_filter: false
+    judge_api: openai_responses
+    # Campaign 13b/19's grading: one judge, gpt-6.1-sol at reasoning high,
+    # and no filename helper.
+    judges:
+      - model: gpt-6.1-sol
+        max_tokens: 8192
+        reasoning_effort: high
+        temperature: null
+    helper: null
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    grading_parallel: 10
+    judge_max_concurrent_calls: 4
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+    - ./benchmark_adapter.py
+    - ./harvey_ahe
+    - ./splits-firm-knowledge-cao-smoke1.json
+    - ./pyproject.toml
+    - ./requirements.txt
+  meta_agent_source_roots:
+    - ./benchmark_public
+
+models:
+  evaluated:
+    model: gpt-5.6-sol
+    max_tokens: 32768
+    reasoning_effort: high
+    temperature: null
+  # Not used by a C0-only run.
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+
+transport:
+  provider: gh_copilot_server
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  # CAO lists its models and rejects an unknown one, so both checks run.
+  model_catalog: required
+  negative_control: required
+  max_concurrent_requests: 12
+  hung_call_retries: 2
+  transient_retries: 4
+  transient_max_wait_seconds: 120
+
+evaluation:
+  train_trials: 1
+  validation_trials: 1
+  test_trials: 1
+  max_concurrency: 1
+
+debugger:
+  max_concurrency: 4
+  max_iterations: 25
+
+recovery:
+  maximum_stage_attempts: 3
+  archive_incomplete_attempts: true
+
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+      - https://github.com/nex-agi/NexAU
+  role_supplements:
+    source: ./meta_supplements/source.md
+    web: ./meta_supplements/web.md
+    debugger: ./meta_supplements/debugger.md
+    evolve: ./meta_supplements/evolve.md
+  max_concurrent_model_calls: 4
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2
