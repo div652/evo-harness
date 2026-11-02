@@ -1,0 +1,597 @@
+{
+ "task": "046",
+ "context": "Request: Capital Markets deals whose proceeds were earmarked primarily for growth, with documents showing the earmark and the closing. Rubric: 1013-00002 (Genome Dx note purchase), 1033-00002 (Redstone Gaming), 1037-00001 (Solstice ADS IPO), 1039-00002 (Torchlight notes for mine expansion), a growth-earmark and a closing document for each, and a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts. The end review's label note names folder listing; a path search follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Per-matter path regex for offering, underwriting, prospectus and broad financing words (about 45K characters). The review flags noise; its label note names the text scan, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; a parallel range rerun saves noisy per-file hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 37,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Build ranked candidate table from saved scan. Checks the range outputs and writes a file-name candidate index with closing files per matter (about 20K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Build ranked candidate table from saved scan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Build ranked candidate table from saved scan (attempt 2). A ranking script over document text keeps matters with offering, growth and closing signals and prints snippets with no cap (about 1.5M characters). The review flags the flood and a hand-picked shortlist.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Build ranked candidate table from saved scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 77,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists offering and closing files of eleven candidates, reads use-of-proceeds, prospectus and closing documents of six, and extracts proceeds passages from three. The review (goal not reached) flags about 60 surfaced matters never opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 78,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Two store-wide scripts list 32 offering and closing candidates and search their offering text for proceeds uses. The end review's label note names the text scan; reads follow.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 86,
+     "end": 95,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Open unread Capital Markets matters. Reads offering, indenture and closing papers of two more candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Open unread Capital Markets matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two core precedents and one optional adjacent one, with exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response, relabels the adjacent precedent as not counted, checks 12 paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads the response opening and four core sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 128,
+     "end": 128,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A ranking filter dropped one needed offering; of the others, one was set aside unread as an IPO and one excluded as not shown closed.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 38,
+    "end": 43,
+    "events": "",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [43] said the agent named only a hand-picked subset of candidates; it did not name the dropped matter, and later reviews warned only of about 60 unopened matters.",
+    "why": "The file-name index at [35] listed a note offering with closing checklist and funds-flow files, but the ranking script that built the candidate list required offering-document signals in text and dropped it; it was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named the depositary-share offering; the reviews discussed other matters.",
+     "why": "The answer leaves out an underwritten offering whose files the agent listed at [46]-[47] (executed underwriting agreement, closing certificates); its scan summary had set it aside as an IPO without reading it."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 96,
+     "end": 101,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the closing reading of this matter.",
+     "why": "The answer lists a gaming offering as a near miss because its closing memorandum read at [48]-[65] looked pre-closing, though its prospectus supplement earmarks most proceeds for expansion."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a top-level file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Saves a per-matter inventory of 266 folders with file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 17,
+     "end": 23,
+     "tags": [
+      "output capped",
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Path loops for market, offering, proceeds and financing words, capped at 200 lines each, with a content grep (glob `*`) that returns nothing. The review flags the cap; its label note names a content search, but a text scan follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 42,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script times out; four parallel range runs, two of which time out with partial output; 1,798 hit paths grouped per matter. The review flags the two timed-out ranges as not rerun.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 43,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of nine hand-picked candidates; the review flags about 60 surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 49,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: writes file lists of 200 matters with offering or closing paths to a file; only the matter headers are shown.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "end": 107,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads prospectus, indenture, officers' certificate and closing documents of about eight candidates, extracts one supplement's proceeds section and lists three folders. The end review's label note names listing-picked reads; a text check follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 108,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Extracts proceeds and closing passages from one IPO matter's prospectus and checklist and adds it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 121,
+     "end": 126,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two precedents (an IPO and a notes offering) with exclusions, including the gaming offering as not shown closed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 127,
+     "end": 137,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Checks 25 paths (one script error on the response location) and softens the scope statement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 149,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-opens the closing and proceeds sources of the two included matters. The review questions the IPO's growth share; its label note names in-depth reads, which do not follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 150,
+     "end": 159,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "An edit made with no stage open is refused; attempt 3 reapplies two edits on the IPO's growth share.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 160,
+     "end": 160,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Built its candidate list from a text scan whose timed-out ranges held every qualifying offering, then excluded or never opened them and added a non-qualifying notes deal.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 24,
+    "end": 42,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [42] said the two timed-out ranges were partial and treated as complete without rerunning; the agent moved to listing hand-picked candidates.",
+    "why": "The two scan ranges that timed out held all four qualifying offerings, so the text scan returned none of them, and the agent built its candidates from it and from a capped path search."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "List files in candidate matters",
+     "start": 43,
+     "end": 48,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The review at [48] said about 60 surfaced matters were never listed, with examples that did not include these.",
+     "why": "Two qualifying offerings appeared in the path search at [20] (and a third only in the header list at [52]) but the agent listed and read other candidates and never opened them."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 121,
+     "end": 126,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named the gaming offering's exclusion.",
+     "why": "The answer excludes the gaming offering, whose prospectus supplement and closing memorandum it read at [78]-[81], as not shown to have closed."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 121,
+     "end": 126,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews questioned the IPO's growth share, not the notes offering that fails the request.",
+     "why": "The answer presents a notes offering for a committed acquisition as a growth-financing precedent (evidence seen at [93]-[106])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 13,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). File counts per matter folder. The end review's label note names folder listing; a text scan follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script with generic terms writes 705 lines, paged with sed. The review flags generic terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Targeted Capital Markets scan. A targeted extraction script times out twice, the second over a hand-picked candidate list; the review (goal not reached) flags both.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted Capital Markets scan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Batched Capital Markets extraction. Batched scan over matter ranges partly times out; heads of the batch outputs are shown.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched Capital Markets extraction"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 13 hand-picked candidates; the review flags about 60 surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 46,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List files in remaining surfaced matters. A per-matter filter of offering and closing file names over all folders and a path grep for offering and note-purchase words. The review flags the file-name-only filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in remaining surfaced matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 66,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads offering and closing papers of four candidates. The review (goal not reached) flags about 60 surfaced matters never opened; its label note names screening, but a snippet script follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 67,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over the proceeds and closing documents of about eight named candidates (about 124K characters); three closed offerings judged growth-oriented.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three closed precedents (an IPO, a notes offering, a convertible bridge) with exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Checks eight paths and edits one exclusion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-opens closing and proceeds sources of the three included matters. The end review's label note names in-depth reads, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 114,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "declared: Read a chosen matter's documents in depth. Exact-term verification script over every cited document; no edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 115,
+     "end": 115,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Left two surfaced qualifying offerings unopened, dropped a listed one, cited non-qualifying closing proof and added a bridge note.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 54,
+    "end": 66,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [66] said about 60 surfaced matters were never opened, with examples that did not include these two.",
+    "why": "A note offering and a depositary-share offering surfaced in the agent's own file-name filter at [49]-[51] with offering and closing files, but it read four other candidates and never opened them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Search within a candidate matter's files",
+     "start": 67,
+     "end": 74,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "critic": "not-flagged",
+     "critic_note": "No review named the notes offering's closing documents.",
+     "why": "For the included notes offering, the indenture and purchase agreement appeared in the agent's listing at [43], but its snippet script and answer used a post-closing letter and funds-flow memo instead."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review named the gaming offering.",
+     "why": "The gaming offering whose files the agent listed at [43] is left out of the answer with no stated reason."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews questioned the IPO's growth share, not the bridge note.",
+     "why": "The answer presents a convertible bridge note as a closed growth-financing offering (evidence seen at [69]-[70])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail with most qualifying offerings missing; each finds the notes offering for a mine expansion (T0, T2 include it) and the gaming offering's prospectus supplement (T0, T1 read it). They fail at different stages. T0: a ranking script over its saved scan dropped the note offering (agent-defined stage), the depositary-share offering was set aside unread as an IPO, and the gaming offering was excluded as not shown closed. T1: the two timed-out scan ranges held all four offerings; the review named that specifically and was ignored. T2: two offerings surfaced in its agent-defined file-name stage but screening read four others. Reviews mostly gave generic unopened-matter warnings and questioned an IPO's growth share; none named a missing or wrongly excluded offering. Label notes played no role."
+}

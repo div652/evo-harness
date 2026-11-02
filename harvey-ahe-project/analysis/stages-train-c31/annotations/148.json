@@ -1,0 +1,580 @@
+{
+ "task": "148",
+ "context": "Request: the most recent closed M&A deal with disclosure schedules to use as a template. The log header names no matters; the criteria require 1006-00008 (Crestline Packaging APA signed June 16, 2025, closed August 15, 2025) and its disclosure-schedules.docx, and nothing else as qualifying. Other closed deals with schedules (1006-00006 closed July 31, 2025; 1003-00003 July 22, 2025; 1038-00008 July 18, 2025; 1001-00007 April 2025) are older.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with file counts and subfolder names (about 47K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: Compact inventory of all 266 matters with closing and transaction-folder flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; a four-batch rerun prints about 1.44M chars of snippets.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 33,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks batch coverage (266 matters) and builds a candidate table from schedule and closing file names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 34,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads short openings of ten documents from six recent deal matters, including the lead deal's schedules and buyer certificate, then 120 lines of those schedules. The end-of-stage label note names listing-picked reads; the next reading stage is declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 63,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify remaining candidates and rank by closing date. Reads openings of a sibling asset purchase and two other matters (three guessed paths and a folder fail) and the lead deal's seller certificate.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify remaining candidates and rank by closing date"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Open schedules documents and list unverified folders. Lists two matters' folders and reads the schedules and certificates of the lead deal and its sibling.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Open schedules documents and list unverified folders"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 74,
+     "end": 82,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Confirm selected matter closing proof. A read refused because no stage was open, then the lead deal's executed agreement and buyer certificate.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Confirm selected matter closing proof"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 83,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Finalize evidence for selected template. Re-reads the lead deal's schedules and review letter and the sibling's schedules and certificate. The review asks to name both matters with their closing dates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize evidence for selected template"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Final closing-date confirmation. Re-reads the lead deal's buyer certificate for the closing date. The review asks to tie the recency claim to all closed matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final closing-date confirmation"
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the lead deal as the most recent closed deal, with a comparison table of three older closed deals with schedules as alternatives.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 113,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and three sources; a path check opens response.md from the working folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 123,
+     "tags": [
+      "timed out",
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: A script refused because no stage was open; a store-wide search for the response file times out; the path check succeeds.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 137,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: Four reads refused because no stage was open, then re-reads the response and the comparison deals' closing certificates. The end-of-stage label note names screening; the next screening work is declared as new stages.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 138,
+     "end": 146,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify top-ranked matter and coverage. Re-reads the lead deal's certificate and schedules and runs a store-wide file-name search for disclosure files in later-numbered matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify top-ranked matter and coverage"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 147,
+     "end": 158,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Resolve later-numbered M&A candidates. Reads schedules and closing papers of three later-numbered deal matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Resolve later-numbered M&A candidates"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 159,
+     "end": 174,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: Adds a draft-only exclusion, re-reads parts of the response and removes a duplicate heading.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 175,
+     "end": 184,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Date-ranking cross-check. Re-reads the closing certificates of the four ranked deals and part of the response.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Date-ranking cross-check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 185,
+     "end": 193,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final evidence and response review. Re-reads one comparison deal's closing papers, the lead schedules and the response.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final evidence and response review"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 194,
+     "end": 202,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify <matter> closing and execution. Re-reads the lead deal's certificates, agreement and schedules.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify 1006-00008 closing and execution"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 203,
+     "end": 208,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: Adds a caveat on the schedules' status. The stage-end note says the stage has been opened five times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 209,
+     "end": 214,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final response read. Re-reads the response opening.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final response read"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 215,
+     "end": 221,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final response tail read. Re-reads the rest of the response.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final response tail read"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 222,
+     "end": 222,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Search file names for request keywords → Screen candidate matters by reading documents → Check or revise the response → Finish the run",
+   "failure_point": "Besides the most recent deal, it offered three older closed deals with schedules as qualifying alternatives.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 98,
+    "end": 103,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "The reviews at [91] and [97] asked the agent to name the sibling deal with its closing date and to tie the recency claim to all closed deals; the answer then carried a comparison table of older closed deals, and later reviews said not to drop matters.",
+    "why": "The answer presents three older closed deals with disclosure schedules (read at [36]-[89]) as qualifying backup templates beside the most recent one."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Per-matter file counts with deal-related file names for every matter (about 95K chars). The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Store-wide file-name search for disclosure-schedule files; output cut.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 20,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements, closing emails, checklists and certificates of about twelve deal matters, including one closing-deliverables letter of the most recent deal.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of twelve candidates, including the most recent deal's schedules and closing certificates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 50,
+     "end": 61,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads an April 2025 deal's executed agreement, schedules, certificate and checklist. The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 62,
+     "end": 69,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: Reads more of that deal's schedules; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the April 2025 deal as the most recent closed deal and lists the most recent deal as unverified.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response, checks paths and fixes a name typo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 85,
+     "end": 85,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the most recent deal's closing certificate, called that deal unverified, and recommended an April 2025 deal.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 70,
+    "end": 75,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The reviews at [43] and [49] said the shortlist was hand-picked, and the write review at [75] asked to check the candidate list for any closed deal with a later date; the agent finished without opening the excluded deal's closing records.",
+    "why": "The answer sets aside the most recent deal as unverified although the agent had read its closing-deliverables letter at [31] and its own listing at [46]-[47] showed its schedules and closing certificates; it names an April 2025 deal instead."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script prints every schedule-word snippet with no cap and times out after about 3.3M chars. The review names the uncapped output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Compact chunked rerun with per-matter counts; 80-plus matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 13 candidates (about 64K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: Lists files of every phrase-hit matter (about 166K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads about 20 agreements, schedules, checklists and certificates of six deals, including the most recent deal's agreement, schedules and checklist; two guessed paths fail. The end-of-stage label note names listing-picked reads; the next reading stage is declared in depth.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 58,
+     "end": 69,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads a July 2025 deal's schedules and checklist (about 87K chars) and another deal's schedules and checklist. The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "File-name search for schedule files inside seven named matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 87,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: Reads schedules and closing papers of two more deals; a stage_start for writing is refused because this stage is still open. The end-of-stage label note names listing-picked reads; the next reading stage is declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide check for later closed deals. Store-wide script for schedule files and closing dates; it points to a sibling asset purchase as later.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Store-wide check for later closed deals"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 94,
+     "end": 102,
+     "tags": [
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "declared: new: Verify later-closing candidates. Reads the sibling deal's agreement, schedules, checklist and certificate and another deal's schedules and checklist; the run ends here.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify later-closing candidates"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents",
+   "failure_point": "The context filled before any response was written; no response file exists.",
+   "first_error": {
+    "stage_no": 2,
+    "stage": "Scan document text with an extraction script",
+    "start": 8,
+    "end": 13,
+    "events": "",
+    "kind": "context-overflow",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [13] named the uncapped 3.2M-character snippet output; the agent reran the scan compactly but kept making large listings and reads (166K, 87K) until the context filled.",
+    "why": "Its first scan printed about 3.3M characters of snippets with no cap; the context never recovered and the run ended at a later read batch without a response file."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail, each differently. T0 found the right deal and proved its closing date, but its answer also listed three slightly older closed deals as backup templates in a comparison table, after reviews asked it to name and date the comparison matters (over-inclusion, review-endorsed). T1 read only a closing letter of the right deal and listed its folder, never opened its closing certificate, and answered with an April 2025 deal while calling the right one unverified (under-inclusion). T2 read the right deal's agreement, schedules and checklist but ranked another deal first, and the run ended in a context overflow before any answer was written. That run had opened with a 3.3M-character scan output and kept making large reads. Reviews flagged hand-picked candidate sets everywhere. Agent-defined stages were frequent in T0 (eleven verification and final-read stages, all mapped to existing stages) and did not remove the comparison rows."
+}

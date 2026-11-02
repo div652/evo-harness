@@ -1,0 +1,591 @@
+{
+ "task": "066",
+ "context": "Request: the most recent fund or co-investment vehicle the firm formed that had an LPAC, with its formation/LPA documents. Rubric: 1027-00002 (Ridgeline-Clarion Co-Invest, Pellegrino; LPA effective January 30, 2026, LPAC under Section 9.1), with proof documents: execution LPA, key-terms-summary-issues-memo.docx, side letter, subscription agreement, closing checklist; plus precision and two facts. All three runs fail only the key-terms memo criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a script prints every file grouped by matter (about 544K characters). The end note says it looked like folder-listing work; no later stage lists folders.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for committee, partnership, co-invest, formation and related words over the whole store; the review flags broad terms and a cut list. Its end note says the calls looked like scan work, and the next stage was declared a scan.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a rerun saves 1,084 lines (head shown) and two file-name-filtered range scans print snippets.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Aggregates the saved scan per matter (about 52K characters). The review flags a hand-picked subset; its end note says the calls looked like figure calculation, and no later stage does that work.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads nine formation, partnership-agreement, charter and presentation documents from four candidates, including the execution-version agreement of the matter it later picked. The review flags dozens of surfaced matters unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 50,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over named agreements of the leading candidates (about 51K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 54,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the closing checklist, funds-flow memo, enforceability opinion and key-terms memo of the matter it settled on. The end note says the calls looked like listing reads; the next reads were declared as checks.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 61,
+     "end": 66,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Script over the highest-numbered matter series, text extracted only from files whose names match. The start note pointed to the scan stage. The review flags the file-name prefilter.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 67,
+     "end": 72,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in candidate matters. Lists the same matter series and runs an unfiltered text search over them; the review flags the hand-picked range.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes the matter with the newest executed partnership agreement as the answer, citing the agreement, side letter, subscription, closing checklist, funds-flow memo and opinion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Re-reads the response, checks cited paths and fixes the funds-flow sentence.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-reads the executed agreement at several offsets and two draft documents of a later matter. The end note says the calls looked like in-depth reading; no stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the chosen matter's key-terms memo but left it out of the documents the answer cites.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 73,
+    "end": 78,
+    "events": "",
+    "kind": "missing-detail",
+    "critic": "not-flagged",
+    "critic_note": "No review named the key-terms memo or asked for it to be cited; reviews checked dates, terms and recency.",
+    "why": "It opened the chosen matter's key-terms and issues memo (read at [54]) but the answer lists the partnership agreement, side letter, subscription, closing checklist and other closing papers without it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Matter folder names and file counts (266).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for committee, partnership, co-invest, formation, side-letter and subscription words; the review flags a cut list and four named matters. Its end note says the calls looked like scan work, and the next stage was declared a scan.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range script fails on an argument bug, then four parallel ranges finish (7,047 hits in 266 matters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate specific-term hits per matter. Per-matter counts of exact committee, partnership-agreement and co-invest terms from the saved hits; the review flags a seven-matter shortlist.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate specific-term hits per matter"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 38,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Complete <committee> candidate reconciliation. Lists the 13 matters with exact committee hits and their files from the saved hits.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete LPAC candidate reconciliation"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Complete <committee> candidate reconciliation. Reads 15 formation, agreement, charter, consent and memo documents from five candidates, including the key-terms memo of the matter it later picked.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete LPAC candidate reconciliation"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify <committee> text in remaining candidates. Reads one hit document from each of eight other matters with committee hits and the leading candidate's agreement again.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify LPAC text in remaining candidates"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 72,
+     "end": 83,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify <committee> text in remaining candidates. Snippet script over two agreements, full file listing of the leading matter, and reads of its opinion, closing checklist, side letter, subscription and funds-flow memo. The review flags the amended-and-restated formation date.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify LPAC text in remaining candidates"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Resolve formation date and recency. Snippet script over the leading matter's documents for formation and date terms (hits shown from its key-terms memo).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Resolve formation date and recency"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 90,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Direct evidence for recency conclusion. Re-reads the leading matter's agreement, checklist and subscription and the draft formation documents of two later-dated matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Direct evidence for recency conclusion"
+    },
+    {
+     "stage": "Write the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes the matter with the newest executed agreement as the answer, citing its agreement, side letter, subscription, closing checklist and other closing papers.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Re-reads the response, checks paths, two edits to the recency wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 130,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-reads the agreement, side letter and checklist. The end note says the calls looked like in-depth reading; the next re-reads kept the check label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 144,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 3: re-reads the response and the agreement's committee article. The end note says the calls looked like in-depth reading; the next reads were declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 145,
+     "end": 156,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "declared: new: Verify recency ranking. Reads dated agreements and drafts of six other candidates to confirm the ranking in the answer.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify recency ranking"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 157,
+     "end": 165,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "declared: new: Finalize recency proof. Re-reads the chosen agreement and checklist and a later matter's draft formation documents.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize recency proof"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 166,
+     "end": 166,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the chosen matter's key-terms memo but left it out of the documents the answer cites.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 102,
+    "end": 107,
+    "events": "",
+    "kind": "missing-detail",
+    "critic": "not-flagged",
+    "critic_note": "No review named the key-terms memo or asked for it to be cited; reviews checked dates, terms and recency.",
+    "why": "It opened the chosen matter's key-terms and issues memo (read at [42], listed at [74]-[75] and shown in snippets at [87]) but the answer lists the partnership agreement, side letter, subscription, closing checklist and other closing papers without it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Matter folder names with file counts. The start note pointed to folder listing; the end note said the same.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Store-wide extraction script times out; seven range runs finish, then committee-term greps over the saved output cut at 240 lines. The review flags the filtered candidate list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target missed",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Aggregates the saved scan per matter, filtered to committee and partnership lines; the review flags the filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of three candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: name-filtered listings of 14 more surfaced matters; the review flags a missed identifier and the filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: checks the missed identifier (not a folder) and lists five matters, cut at 240 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 4: counts and name-matched files for a hand-picked set; the review flags the set. Its end note says this looked like folder listing; no later stage lists folders.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Full-store <committee> text scan. Unfiltered store-wide scan for committee terms printing matter and path per hit (about 17K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Full-store LPAC text scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads formation, agreement, charter, checklist, intake and consent documents from five candidates. The start note pointed to screening.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 82,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over two agreements (about 97K characters), file listings of two matters, and reads of the chosen matter's closing checklist, opinion, funds-flow memo and key-terms memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 96,
+     "end": 103,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads an older matter's amendment and consent form and the chosen agreement's committee article. The end note says the calls looked like listing reads; the next stage was a new one.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 104,
+     "end": 109,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read <vehicle> <agreement> Article IX. Script extracting the committee article from the chosen execution-version agreement.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read Ridgeline-Clarion LPA Article IX"
+    },
+    {
+     "stage": "Write the response",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes the matter with the newest executed agreement as the answer, citing six documents without the key-terms memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Re-reads the response, the agreement and the checklist and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 125,
+     "end": 133,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-checks the committee article and two checklists. The end note says the calls looked like listing reads; no stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 134,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the chosen matter's key-terms memo but left it out of the documents the answer cites.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 110,
+    "end": 115,
+    "events": "",
+    "kind": "missing-detail",
+    "critic": "not-flagged",
+    "critic_note": "No review named the key-terms memo or asked for it to be cited; reviews checked dates, terms and recency.",
+    "why": "It opened the chosen matter's key-terms and issues memo (read at [88] after its full listing at [86]-[87]) but the answer lists the partnership agreement, side letter, subscription, closing checklist and other closing papers without it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail the same way, on the same criterion: every run found and chose the right matter, read its key-terms memo (T0 at [54], T1 at [42], T2 at [88]) and cited the executed agreement, side letter, subscription and closing checklist, but none listed the memo among the cited documents. The error sits at the write stage in all three, and no review named the memo. The runs differed only in route: T0 and T1 found the matter through path searches and a store-wide scan, while T2's first filtered scans missed it and only its agent-defined full-store scan surfaced it. T1 also ran agent-defined recency checks after writing."
+}

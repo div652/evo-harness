@@ -1,0 +1,617 @@
+{
+ "task": "184",
+ "context": "Request: stale-pipeline review as of August 6, 2026: commercial deals signed on or before May 8, 2026 that have not closed. Rubric: nine qualifying matters of mixed types (1004-00003, 1009-00006, 1013-00001, 1017-00001, 1019-00002, 1027-00002, 1029-00001, 1036-00005, 1038-00009) and a precision criterion. Runs also asserted 1041-00002 (term loan commitment) and 1015-00002 (PPA), which are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a capped two-level folder listing and file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a four-shard rerun prints per-matter hit files (about 284K chars). The review flags that no dates or candidates came out of it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 24,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Targeted date and closing-status extraction. A dated-snippet script times out; a fallback find lists transaction folders of hand-picked recent matters through a line cap.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted date and closing-status extraction"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-store signing/closing extraction. Batched scan of 8,670 files for 2026 signing and closing snippets (144 hit matters), then a grep of the output for 13 hand-picked matters. The review flags the hand-picked 13.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store signing/closing extraction"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 33,
+     "end": 42,
+     "tags": [
+      "script error",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Per-matter commercial triage. A heredoc error, then a path-keyword triage of the saved snippets (536 lines); a stage_start is refused because this stage is still open. The review flags five candidates hand-picked from it.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-matter commercial triage"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read signing and closing documents per matter. Reads 16 term sheets, commitment letters, agreements, checklists and status emails of five candidates, including a joint venture's executed operating agreement and closing certificate. The review flags non-binding papers treated as signed deals.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read signing and closing documents per matter"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Day counts from three signing dates to the review date.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three broad-reading flags and a strict conclusion naming a term-loan commitment as the only qualifying deal; the joint venture is excluded as closed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and edits it down to the one strict-reading deal; a path check prints nothing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 108,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads two excluded documents and re-runs the path check (first in the working folder).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 109,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It opened only five hand-picked candidates, wrote off the one qualifying matter it read as closed, and named a term-loan commitment as the only stale deal.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 43,
+    "end": 65,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews at [32] and [42] said the 13-matter grep and the five-candidate list were hand-picked from 144 hit matters; none named the qualifying matters, and the agent read only the five.",
+    "why": "Its scans at [14] and [28] showed all nine qualifying matters among the hit matters, but the agent read documents of only five hand-picked candidates, one of them qualifying, and never opened the other eight."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the joint venture's exclusion as closed.",
+     "why": "The answer excludes the joint-venture matter as already closed after the agent read its executed operating agreement and closing certificate at [45]-[59]."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews questioned non-binding papers, not whether the commitment letter matter belongs to the set.",
+     "why": "The answer names a term-loan commitment matter read at [45]-[51] as the only qualifying stale deal although it is outside the requested set."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scan and a range rerun both time out.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 29,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "A heredoc error, then a broad deal-word path regex saved to a file (2,232 lines); only the start is seen.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 37,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for request keywords (attempt 2). A heredoc error, then a per-matter summary of the saved path hits: 240 matters (about 76K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of the eight highest-numbered matters. The review flags a guessed number range that assumes recency by matter number.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: A file-name-prefiltered background scan times out; its partial outputs are concatenated (about 101K chars) and grepped for dates and pending words.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 79,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. A call refused because no stage was open, then reads a joint venture's agreement, folder listing and closing certificate, a bridge loan's agreement with a clause script, and three other candidates' documents.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 80,
+     "end": 89,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Filters the saved scan for 2025-2026 hits, then clause scripts over named agreements of several matters (about 360K chars). The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 90,
+     "end": 97,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Keyword-filtered listing of one merger matter and one email. The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 98,
+     "end": 105,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: Reads the two leading matters' closing checklists and the merger agreement. The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two stale deals (the bridge loan and the merger) with exclusions, the joint venture among them as completed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response, lists both lead matters' files and corrects a day count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 136,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 3). Reads the bridge loan's closing letter, certificate and funds-flow memo and the merger's funds-flow memo, and edits the status wording. The end-of-stage label note names the check stage; the next such stage is declared as an in-matter search.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "end": 148,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Keyword scripts inside the two lead matters and a certificate check, then two edits. The end-of-stage label note names the check stage, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 149,
+     "end": 154,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Final re-read of the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 155,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Tabulate candidate matters from saved results → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It looked only at the highest-numbered matters and a few scan hits, found one qualifying deal, and wrote off a second as completed.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "List files in candidate matters",
+    "start": 38,
+    "end": 43,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [43] said the eight listed matters came from a guessed number range that assumes recency by matter number; the agent ran another scan, but it was file-name-prefiltered and the agent still never opened most of the qualifying matters.",
+    "why": "Its per-matter path summary at [34]-[35] showed all nine qualifying matters, but it listed only the eight highest-numbered matters and later read just two qualifying matters, leaving seven never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the joint venture's exclusion.",
+     "why": "The answer excludes the joint-venture matter as completed after the agent read its agreement and closing certificate at [60]-[64]."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Prints every matter folder's file list (about 516K chars, cut). The end-of-stage label note names candidate-matter listing, and the next listing stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Compact index of all matters with file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Saves the index to a file and confirms 266 matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide and three-way range scans time out with empty outputs.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 47,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Background compressed-content scan over 249 matters (about 57K chars); a stage_start is refused because this stage is still open; the 17 missing matters are rescanned. The review flags seven hand-picked notable candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 48,
+     "end": 53,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in candidate matters. A store-wide file-name regex fails with a heredoc error. The end-of-stage label note names the scan stage; no further scan follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: Lists all files of five other surfaced matters; output cut.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 99,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (attempt 2). Reads about 30 agreements, trackers, checklists, letters and memos of nine candidates, including the acquisition with pending conditions and the joint venture's closing certificate and checklist; two guessed paths fail. The end-of-stage label note names in-depth reads, and the next reading stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: Name-filtered file lists of the same five matters. The end-of-stage label note names the document-type search; no such search follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 106,
+     "end": 117,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads closing and status documents of the five other matters. The end-of-stage label note names listing-picked reads; only post-write checks follow.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 118,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Day counts for two signing dates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the acquisition and a power purchase agreement matter as the two stale deals; the joint venture is excluded as closed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 143,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and sources (a path check and one source path fail) and fixes one citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 144,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads the power purchase agreement, checklists and parts of the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 156,
+     "end": 156,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read only a handful of hand-picked candidates, wrote off the joint venture as closed, and added a power purchase agreement deal outside the set.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 58,
+    "end": 99,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [47] said the seven notable candidates named from the scan looked hand-picked; no review named the qualifying matters left out.",
+    "why": "Its content scan at [39]-[45] showed all nine qualifying matters, but the reads at [58]-[90] covered nine hand-picked candidates of which only two qualify, so seven were never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the joint venture's exclusion.",
+     "why": "The answer excludes the joint-venture matter as closed after the agent read its agreement, closing certificate, checklist and letters at [58]-[90]."
+    },
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked to confirm execution of the listed deals, not whether the power purchase agreement matter belongs to the set.",
+     "why": "The answer flags a power purchase agreement matter read at [80]-[90] as a qualifying stale deal although it is outside the requested set."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail badly (0, 2 and 1 of 10), and they fail the same way. Each built a store-wide hit list whose output showed most of the nine qualifying matters. Each then picked a handful of candidates by recency guesses or hand-made shortlists and never opened most of those matters (surfaced-not-opened): at T0's first reading stage, at T1's listing of the eight highest-numbered matters, and at T2's screening reads. Every run also opened a joint-venture matter that qualifies and wrote it off as closed. T0 and T2 asserted a deal outside the set. Reviews flagged hand-picked shortlists in every run, named the guessed number range in T1, and said little about closing status. The agent-defined stages (T0's batched extraction, triage and per-matter reads) and the label notes did not widen the candidate set."
+}

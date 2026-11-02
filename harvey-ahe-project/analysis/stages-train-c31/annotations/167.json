@@ -1,0 +1,533 @@
+{
+ "task": "167",
+ "context": "Request: the firm's deals over $1B in guaranteed (base) consideration, excluding earnout/CVR value, governed by Delaware law. Rubric: 1001-00004 (Ardent/Luminex), 1003-00003 (VeloPay), 1038-00009 (Cascade Retail/NovaMart), 1041-00003 (Solara Digital/Cloudium) as qualifying, plus a precision criterion. 1018-00003 / 1025-00006 ($925M plus CVR) and 1036-00004 (New York law) are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file of every matter. Its label note (candidate-matter listing) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Counts matter folders and saves their IDs. Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan for amounts and governing law times out, and so do four parallel range scans; no report.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Background batched scan of all matters. Runs four background range scans, polls until done, and prints matters with value or law hits. The review flags crude value matching.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Background batched scan of all matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of 14 executed acquisition agreements from scan-hit matters. The review flags that amounts and governing law were not extracted for most.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 59,
+     "end": 88,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Targeted extraction of consideration and governing law. Snippet scripts for consideration and governing-law clauses over named agreements, a store-wide file-name find for agreement files, and reads of three agreements. The review flags cover-page-only reads.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted extraction of consideration and governing law"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 89,
+     "end": 99,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Targeted extraction of consideration and governing law (attempt 2). Reads four agreements in full, including a draft.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted extraction of consideration and governing law"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 100,
+     "end": 111,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify completeness and one deal's terms. Lists one near-miss matter, runs a strict store-wide value and law scan in the background and extracts one agreement.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify completeness and Cloudium terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 112,
+     "end": 119,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify completeness and one deal's terms (attempt 2). Proof script over agreement files picked by file name across the store, then one agreement read. The review flags the file-name filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify completeness and Cloudium terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 120,
+     "end": 139,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Final unfiltered deal verification. Unfiltered store-wide value scan over 8,055 documents, then listings, reads and snippets of one matter whose figure appears only in closing papers.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final unfiltered deal verification"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 140,
+     "end": 149,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Direct agreement verification. Reads the executed agreements of four chosen deals.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Direct agreement verification"
+    },
+    {
+     "stage": "Write the response",
+     "start": 150,
+     "end": 155,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five qualifying deals with base values, governing-law evidence and near-miss exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 156,
+     "end": 171,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and three agreements, a path check fails because the response is not at the path it used, fixes one cited file name.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 172,
+     "end": 177,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: confirms the deliverable, paths and row counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 178,
+     "end": 178,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file of every matter (about 94K characters). Its label note (folder listing) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan for amounts and governing law times out, a patched range rerun fails with an indentation error, and a parallel rerun times out; no candidate list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 24,
+     "end": 36,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Screen candidate matters by reading documents. Reads eight executed deal agreements chosen from the file inventory, with no scan result behind the choice; all are below the threshold. The review flags the hand-picked small deals.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 48,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target missed",
+     "note": "declared: Read a chosen matter's documents in depth. Store-wide extraction of value and law clauses limited to agreement-like file names (a heredoc error, then a rerun), a grep for billion-scale figures, and an unfiltered rerun that times out. The review flags the file-name filter and docx-only scope.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 49,
+     "end": 65,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads agreements of five matters picked from the inventory; two guessed paths fail, one matter is recovered by a listing and a clause snippet. The review names both failed reads and asks to open the other matter's agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes one qualifying deal with near-miss exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 87,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response and three agreements, checks paths (one guessed path fails), edits wording and a near-miss citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read documents picked from the file listing → Scan document text with an extraction script → Read documents picked from the file listing → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After its store-wide scans timed out it read agreements picked from the inventory and ran only a file-name-limited value scan, so two needed deals never surfaced, and a third was dropped after a guessed path failed.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 37,
+    "end": 48,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [48] said the scan was limited to agreement-like file names and docx files and the unfiltered rerun timed out; the agent moved to reading a few picked agreements without rerunning the scan.",
+    "why": "Its only completed value scan was limited to agreement-like file names and grepped for a few figure formats, and the unfiltered rerun timed out without retry, so two needed deals never appeared in any result."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Read documents picked from the file listing",
+     "start": 49,
+     "end": 65,
+     "events": "",
+     "kind": "mistyped-path",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [65] named the failed read of this matter and asked to open its executed agreement; the agent wrote the answer without it.",
+     "why": "It tried a guessed path for a needed deal's agreement, got file-not-found, recovered another matter by listing it but never retried this one, and the answer omits it."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 5,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 27,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan times out; a narrower scan runs in four parallel ranges, then a grep for billion-scale figures capped at 240 lines. The review flags the cap.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: complete sharded scan to a JSONL file (266 matters), then a follow-up filter to twelve named matters, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 36,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Compact per-matter table from all scan records.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify scan coverage and triage all matters. Filters the saved scan for transaction-value terms with billion-scale figures; nine matters to review.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify scan coverage and triage all matters"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists agreement files of the nine candidates; the review flags the hand-picked set.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: unfiltered file inventories of the nine candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements or proof documents of the nine candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 80,
+     "end": 87,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: List folders and read proof documents for all candidates. A listing loop over sibling matter series fails, then a file-name grep over those series.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List folders and read proof documents for all candidates"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 88,
+     "end": 102,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Read executed agreements for candidate deals. Reads agreements, closing checklists, funds flows and a filed notice of the chosen deals; one path fails.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read executed agreements for candidate deals"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 103,
+     "end": 112,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet extraction of governing-law and value clauses from the chosen agreements and two near-miss documents. Its label note (in-depth reads) had no later reads of that kind before writing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five qualifying deals with base values and exclusions by governing law, base value and contingent consideration.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 134,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and three sources, a path check fails because the response is not at the path it used and is rerun, fixes one cited path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 135,
+     "end": 141,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response and checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 147,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: inspects the deliverable file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 148,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0, T2 pass; T1 fails). All three runs had their first store-wide extraction scan time out. They split right there: T0 reran the scan as background range jobs and T2 as parallel shards with saved output, so both got complete value and governing-law hits, screened the billion-scale candidates and verified their executed agreements (T0 added an unfiltered rescan after its review flagged a file-name filter). T1 instead read agreements picked from its file inventory, then ran a value scan limited to agreement-like file names whose unfiltered rerun timed out; two needed deals never surfaced, and a third was dropped after a guessed path failed. T1's reviews named both the file-name filter and the failed path; the agent wrote one deal anyway. Reviews did not differ in kind between the runs; the passing runs acted on the scan-coverage flags. Agent-declared new stages (background scan, targeted extraction, completeness checks) mapped to scan, snippet and in-depth stages."
+}

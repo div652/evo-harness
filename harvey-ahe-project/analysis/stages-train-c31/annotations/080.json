@@ -1,0 +1,545 @@
+{
+ "task": "080",
+ "context": "Request: past patent infringement matters where the firm retained a technical expert, with the documents showing each retention, to build an expert roster. Rubric: 1007-00003 (Vantage Mobility, Dr. Yeoh, litigation-status-memo), 1014-00003 (Optiwave v. Lumos, Dr. Whitfield), 1014-00004 (Optiwave v. Lumicore, Dr. Ashford), 1037-00004 (Solstice Biomedical, Dr. Ostrowski), each with proof documents, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter file counts and every path (about 646K characters). Its label note names the folder-listing stage and the review suggests a folder-count step; the agent later declares that stage for a folder tally.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for infringement, expert, retention, report and disclosure words, grouped per matter (about 40K characters); the summary names four candidates. The review flags generic terms and dozens of surfaced matters; its label note names the extraction-scan stage, which the next stage declares.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out, a parallel rerun times out, partial range outputs are merged into per-matter counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: chunked co-occurrence scan printing every hit file per matter (about 137K characters); a defence matter shows eleven hit files including a status memo and an assessment. The summary keeps the same four candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: compact per-matter hit counts for a three-term co-occurrence. The review flags narrowing to four matters from scan output alone, with nothing opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 20 documents (complaints, retention agreements, engagement drafts, report drafts) from the four shortlisted matters only. The review flags about 60 surfaced matters unopened; its label note names the listing-picked reading stage, and the next stage reopens this one.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 70,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads prosecution engagement letters, a freedom-to-operate memo and a portfolio summary from four other matters as exclusions, plus review memos and a tutorial of the chosen matters. The review rates it not reached and suggests listing and reading the remaining matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 83,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Filtered file lists of 17 hand-picked matters, then reads four documents from three other matters and one chosen matter. The review flags the hand-picked set; its label note names the screening stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 94,
+     "end": 99,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Counts files in all 266 folders, then a store-wide path regex for infringement, claim-chart and expert-retention words; three matters kept.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 100,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "No tool calls between start and end; the review rates it not reached because nothing was read.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 104,
+     "end": 120,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: re-reads twelve retention agreements, reports and pleadings of the three chosen matters. The review flags a matter-number mismatch in one agreement and the unopened matters; its label note names the screening stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 121,
+     "end": 126,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters with technical, industry and damages experts and their documents, and a list of exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 127,
+     "end": 152,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response and three sources, checks 28-30 cited paths, edits counts, wording and citations.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 153,
+     "end": 166,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads nine cited sources of the three matters. The review again flags unopened matters; its label note names the screening stage, and the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 167,
+     "end": 167,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A needed matter surfaced in every scan with assessment and status-memo hits but was never opened, so the answer omits it and its proof document.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 69,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) From [43] on every review flagged that the shortlist came from scan output with dozens of surfaced matters never opened, and the harness's unopened-matter note listed this matter among about 60 (the review at [93] named its number series); the agent opened only other matters.",
+    "why": "A defence matter whose infringement assessment and status memo hit the co-occurrence scans at [35] and [41] was left out of the reading set, which went to four shortlisted matters only, and it was never opened."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: folder names and every file per matter (about 528K characters); its label note names the folder-listing stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for infringement, expert, retention, report and disclosure words grouped per matter; the summary keeps four candidates and dismisses a defence matter as having no retention file, which the review names specifically.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide co-occurrence script times out after printing about 212K characters of partial hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a narrower parallel scan times out; a background rerun writes nothing after about 80 seconds of polling and is killed (two calls carry a stage-check note). The review suggests a batched scan step, which the agent does not take.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 69,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 17 documents of five candidates, including the assessment and engagement letter of the defence matter the review had named; a guessed path there fails and the letter is found in a sibling matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of five candidates; the review suggests listing the remaining surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List files in remaining surfaced matters (the step the review suggested). Walks all matter folders and prints those whose file names hit both expert and infringement words (13 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in remaining surfaced matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 82,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads eight reports, memos and drafts of three chosen matters; its label note names the listing-picked reading stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with technical experts named and their retention documents, damages and industry experts labelled separately, and one draft-only near miss.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 114,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, a section script fails on a missing path and is rerun, checks 45 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the response and four sources including the defence matter's assessment; its label note names the listing-picked reading stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 125,
+     "end": 130,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Check or revise the response (attempt 3). Store-wide path search for infringement and expert words; four matters, not the defence matter. The review flags its inclusion as weak; the agent finishes without changing it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 131,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Search file names for request keywords → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 9,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts and every path (about 816K characters); its label note names the folder-listing stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for infringement, expert, retention, report and disclosure words grouped per matter (about 46K characters); the summary keeps four candidates and three possible defence matters. The review suggests a text-search step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Search document text for patent and expert terms (the step the review suggested). A store-wide extraction script times out, and so does a parallel rerun whose ranges never reach the script.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Search document text for patent and expert terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Sharded background text scan (the step the review suggested). Launches six background range shards and polls them; none finishes.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Sharded background text scan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Finish and verify shard scan (the step the review suggested). A 60-second wait times out; five shards still run.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finish and verify shard scan"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate shard hit index. Merges the partial shard outputs into per-matter hit counts (230 of 266 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate shard hit index"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Patent-specific term scan across all matters (the step the review suggested). Filters the saved shard hits to infringement terms (152 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Patent-specific term scan across all matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 22 documents from seven candidates, including the assessment and engagement letter of a defence matter and two sibling matters. The review flags the defence matter's missing retention paper and suggests screening the unopened matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of two candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 97,
+     "end": 106,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List files in remaining surfaced matters (the step the review suggested). After a heredoc error, a store-wide file-name index for expert and infringement words (38 matters, 286 paths).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in remaining surfaced matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes four matters with experts and their documents, and one draft-only near miss.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 134,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and three sources, checks 48 cited paths, edits four passages to soften execution wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 135,
+     "end": 147,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads eight sources of the counted matters and the near miss; its label note names the screening stage, and the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 148,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1, T2 pass; T0 fails). All three runs surfaced the defence matter in their first path search and kept the same four other candidates. They split at the first screening stage: T1 and T2 included the defence matter's assessment in their first batch of reads, while T0 read only its four-matter shortlist and never opened it. The reviews differed before that point: T1's path-search review named the defence matter as wrongly dismissed and T2's own summary listed it as a possible candidate, while T0's reviews only flagged dozens of unopened matters, with this one buried in the harness's long unopened-matter note. Label notes and new stages played no role in the split; T2's five declared new stages were all scan steps and a file-name index."
+}

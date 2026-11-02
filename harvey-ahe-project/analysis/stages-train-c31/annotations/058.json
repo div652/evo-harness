@@ -1,0 +1,356 @@
+{
+ "task": "058",
+ "context": "Request: which of the firm's fund and asset-management matters include a GP clawback, and pull the executed LPAs. Rubric: 1001-00002 (Ardent), 1003-00002 (Harrowgate), 1024-00002 (Driftwood, A&R LPA whole-fund clawback evidenced by an executed first amendment), 1026-00001 (Briarwood Family Office: an LP-side review of a third-party fund the client passed on), 1027-00002 (Pellegrino), a proof document for each, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a complete per-matter listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). One script prints every matter folder with its file count and the file names that contain request words; the end-of-stage label note names folder listing.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script printing up to three snippets per hit file for broad clawback and carried-interest terms with no output cap; it times out but returns about 149M characters and the run ends.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script",
+   "failure_point": "An uncapped store-wide snippet scan filled the context before any answer was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "[16]-[17]",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended on the scan's output before its stage_end review.",
+    "why": "The scan printed snippets for every hit file across the store with no cap; its partial output after the timeout filled the context and no deliverable was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks to confirm the listing is complete.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists top-level folders, all matter folder names and per-matter file counts; the end-of-stage label note also names folder listing.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script with broad request terms times out, and so does a range-split rerun.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: background shell scan for clawback terms writing hit counts to a file, polled three times while still running; the review flags that the summary rests on partial output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 3: confirms the background scan finished and counts file extensions; 24 hit files in 12 matters. The review flags the narrow term list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path grep for agreement-type, practice-area and request words; 176 files saved and printed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters picked from the path hits; the review flags about 60 surfaced matters left unlisted.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Broader store-wide path grep; 73 matters and 220 files, only matter numbers printed.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "One parallel batch of twelve reads: agreement amendments, draft and execution-version partnership agreements, a carry allocation agreement and two LP-side review memos across seven candidates. The review flags shallow reads and unopened surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files. Launches a store-wide background scan; a harness stage-check notice says the call does not match the open stage, and the agent closes the stage saying the work belongs under the scan stage. The end-of-stage label note names the scan stage, which the next stage declares.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 81,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: polls the stalled background scan, kills it, a shell rerun silently produces nothing, then a script over the 220 path-hit documents prints counts and snippets (about 86K characters); nine candidate matters with the term.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 101,
+     "end": 104,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (attempt 3). Lists the files of two newly surfaced candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 105,
+     "end": 113,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters (attempt 3, continued). Reads six documents: an execution-version co-invest agreement and side letter and a closing checklist of the two new candidates, plus a consent, a parallel-vehicle agreement and a draft amendment of earlier candidates. The review flags that six named matters were never listed; its label note names listing-read work.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 114,
+     "end": 121,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Two store-wide path greps for partnership-agreement names (24 and 9 files); the request uses the agreement word. The review flags missing name variants and suggests a new cross-check step, which the agent does not start.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 122,
+     "end": 135,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: snippet scripts over named agreements of four candidates for the clawback sections and execution status. The review flags noisy extraction and a conclusion drawn from a side letter not opened in this stage; its label note names the scan stage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 136,
+     "end": 141,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three matters with executed or final-form agreements as qualifying, other clawback matters as draft-only or review-only, and an executed-amendment matter in the excluded list because its full base agreement is absent. The review warns of overstating the set and asks to keep only matters whose executed agreement contains the term.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 153,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response; a path-check script fails on a mistyped folder and is rerun; edits the opening to two clean agreements plus a side-letter case. The review says to keep all three matters with caveats.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 154,
+     "end": 170,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads the response body and checks the parallel-vehicle agreement for signature blocks; edits its status to unverified execution. The review accepts the response and says not to reclassify any matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 171,
+     "end": 171,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read an execution-version amendment that keeps the base agreement's clawback but excluded that matter because the full base agreement was absent, and it described the LP-side review matter as the reviewed vehicle's own matter.",
+   "first_error": {
+    "stage_no": 16,
+    "stage": "Write the response",
+    "start": 136,
+    "end": 141,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "No review named the excluded matter; the write review pushed toward keeping only matters whose executed agreement contains the term, and the last review said not to reclassify any matters.",
+    "why": "It read the execution-version amendment at [60]-[72] stating the clawback provisions of the agreement it amends, but the answer lists that matter as excluded because the full base agreement is not in the file set."
+   },
+   "other_errors": [
+    {
+     "stage_no": 16,
+     "stage": "Write the response",
+     "start": 136,
+     "end": 141,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "not-flagged",
+     "critic_note": "No review mentioned how the LP-side review matter was described.",
+     "why": "It read two memos addressed to the family-office client at [60]-[72], but the answer heads that matter with the reviewed third-party vehicle's name and never names the client or its LP-side review."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks to re-list the store in smaller pieces.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: find prints every file of every matter (about 526K characters, mostly hidden). The review flags the cut output and five listed matters never opened; its label note names candidate-matter listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script over every document printing up to three snippets per hit file for clawback terms with no output cap; it returns about 69M characters and the run ends.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "An uncapped store-wide snippet scan filled the context before any answer was written.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "[16]-[17]",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended on the scan's output before its stage_end review; earlier reviews asked for a complete listing, not for capped output.",
+    "why": "The scan printed snippets for every hit document across the store with no cap; the output filled the context and no deliverable was written."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three fail. T0 and T2 failed the same way at the same point: after the opening listings, their first extraction script printed snippets for every hit file across the store with no cap (149M and 69M characters) and the run ended on context overflow before any review or answer. T1's first scan timed out with only an error line, so it survived, moved to background scans writing to files, path greps, screening reads and in-matter snippet scripts, and opened every qualifying matter; it failed at the write stage by excluding the matter whose only executed document is an amendment and by describing the LP-side review matter as the reviewed vehicle's own matter. Its reviews pushed toward a stricter executed-only set and told it not to reclassify matters, so they did not catch the exclusion. Label notes were ignored throughout; the one followed note came after a harness stage-check notice."
+}

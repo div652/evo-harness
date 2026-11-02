@@ -1,0 +1,636 @@
+{
+ "task": "238",
+ "context": "Request: which Tax matters include a tax indemnity in an executed agreement, with the documents. Rubric: 1001-00006 (Ardent; closing tax memorandum), 1015-00005 (standalone tax indemnity agreement), a proof document for each, and a precision criterion (Tax practice matters only).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob plus directory and file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Saves the full file list and the matter folder list to files. The end review's label note names folder listing; a path search follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Greps the saved file list for tax, indemnity, executed and agreement words (about 340K characters, cut in the log). The review flags that candidates came from the visible part.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broad path regex saved per matter (573 paths, 138 matters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; range reruns over Word files report 202 matters. The review calls the pattern a poor filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 43,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rescan with tighter tax-indemnity pattern across all file types. Tighter phrase scan (130 matters); a stage_start is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rescan with tighter tax-indemnity pattern across all file types"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 71,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads executed agreements and tax memos of about ten shortlisted matters, lists two folders and extracts clauses by script; nine matters confirmed.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify tax indemnity in executed agreements. Clause script over the executed agreements of about ten named matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify tax indemnity in executed agreements"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 78,
+     "end": 87,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Per-matter clause extraction. Capped clause extraction per shortlisted agreement and a count of other file types.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-matter clause extraction"
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nine matters with executed tax indemnities plus one borderline, and exclusions. The review asks to confirm each is a Tax practice matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Checks 49 cited paths, rewords the scope to matters with tax workstreams and edits exclusion paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-opens two executed agreements and re-checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Read a draft of the qualifying matter's tax provisions instead of its closing tax memorandum and excluded it, and counted other practice groups' deals as Tax matters.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 71,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "No review named the matter's closing tax memorandum or its exclusion.",
+    "why": "The agent listed the files of the matter with a tax receivable agreement at [60]-[62], including its closing tax memorandum, but read only its draft tax-indemnity provisions and never opened the memo."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned this exclusion.",
+     "why": "The answer lists the matter whose closing tax memorandum the agent never opened as an exclusion, judging it from draft tax-indemnity provisions only."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review at [93] asked to confirm every listed matter belongs to the Tax practice group; the agent only reworded the scope to matters with tax workstreams.",
+     "why": "The answer counts M&A and real estate deals whose executed agreements carry tax indemnities as Tax matters (evidence seen at [44]-[87])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Per-matter file counts and folder categories (cut in the log). The end review's label note names folder listing, and the next stage is declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Counts 266 folders and lists 27 matters with tax-named folders. The review says to treat them only as a start.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-term path search over all matters (tax in 82, indemnity in 36). The end review's label note names the text scan, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; range reruns save hits; a grep filters them to executed transaction paths. The review flags the filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan hits per matter. Checks the range outputs cover all prefixes: 148 matters hit.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 42,
+     "end": 47,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Aggregate scan hits per matter (attempt 2). Writes the 148 hit matters and the 27 tax-folder matters to candidate files.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the 27 tax-folder matters to a file and prints part of it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: file listing of the 148-matter union, count only.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in candidate matters (attempt 3). Confirms the union covers both candidate sets.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements of about eight matters and runs an inspection script over union files whose names look executed or tax-specific. The review names one matter's tax receivable agreement as left out by that name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 87,
+     "end": 112,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "A classification script over the union's agreements, paged in four parts, then clause scripts over named agreements of about ten matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eleven matters with executed tax indemnities, with exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and fixes financing-document paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 141,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: checks 15 paths and corrects the count to twelve.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 151,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A read with no stage open is refused; attempt 3 spot-checks two executed agreements.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 157,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: new: Reconcile response table to qualified set. Compares the table rows with the qualified set and extracts one clause.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Reconcile response table to qualified set"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 158,
+     "end": 158,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A file-name filter left the qualifying matter's closing tax memorandum unread, so the matter was excluded as draft-only; other groups' deals were counted as Tax matters.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 68,
+    "end": 86,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review at [86] said the name-keyword filter dropped this matter's tax receivable agreement, which appeared only in the file list; the agent did not open the matter's documents.",
+    "why": "The matter's closing tax memorandum was in the agent's tax-folder listing at [52]-[54], but its inspection script kept only files named as executed or tax-indemnity agreements and the memo was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the exclusion itself.",
+     "why": "The answer lists the matter whose closing tax memorandum the agent never opened as an exclusion, judging it from a draft tax-indemnity markup only."
+    },
+    {
+     "stage_no": 13,
+     "stage": "Write the response",
+     "start": 113,
+     "end": 118,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The reviews at [41] and [47] asked to identify each matter's practice group from metadata and noted other groups' matters; the agent counted transaction deals regardless.",
+     "why": "The answer counts twelve deals from several practice groups as Tax matters because their executed agreements carry tax indemnities (evidence seen at [68]-[112])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter file inventory with all file names. The end review's label note names folder listing, but the next inventory keeps the store-listing label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Compact per-matter counts and top-level folders. The review suggests a new step to identify the practice group from metadata; it is not taken.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan for tax indemnity phrases (558 hit files in 100 matters), then a filter to about 13 hand-picked matters, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: complete per-matter hit summary written and read back (limit 120 lines).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: counts the scanned folders and files to confirm coverage. The end review's label note names folder listing; an agent-defined stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Check unscanned file types. Counts files by extension and scans spreadsheet and slide text, then a tighter Word scan (138 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Check unscanned file types"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify executed agreements for tax indemnity. Reads twelve executed agreements (including one matter's tax receivable agreement) and runs clause scripts over named agreements. The review asks for explicit decisions on the tax receivable and protection agreements and the practice group of each matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify executed agreements for tax indemnity"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify executed agreements for tax indemnity (attempt 2). Clause script over hand-picked execution files; the tax receivable agreement is classed as benefit sharing and excluded.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify executed agreements for tax indemnity"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 87,
+     "end": 96,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify executed agreements for tax indemnity (attempt 3). Verification script over twelve agreements, patched with a fallback anchor. The review suggests a per-agreement clause read.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify executed agreements for tax indemnity"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Per-agreement tax clause read (the name the review suggested). Clause script over the twelve agreements.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-agreement tax clause read"
+    },
+    {
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes twelve matters with executed tax indemnities, with exclusions including the tax receivable agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Checks 48 links and fixes three paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: spot-checks revised sources. The end review's label note names listing-picked reads; finish follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 136,
+     "end": 136,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Judged the qualifying matter from its tax receivable agreement without opening its closing tax memorandum, and counted other groups' deals as Tax matters.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 52,
+    "end": 80,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "The review at [80] asked for an explicit decision on the tax receivable agreement, not for the matter's other documents; no review named the closing tax memorandum.",
+    "why": "The closing tax memorandum of the matter with a tax receivable agreement appeared in the agent's scan outputs and hit summaries at [25]-[49], but it read only the agreement itself and never opened the memo."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the exclusion.",
+     "why": "The answer lists the matter whose closing tax memorandum the agent never opened as an exclusion, judging it from its tax receivable agreement, classed as benefit sharing only."
+    },
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [19] suggested a step to identify the practice group from metadata and the review at [80] asked to confirm each matter is in the Tax group; the agent did neither.",
+     "why": "The answer counts twelve deals from several practice groups as Tax matters on their executed tax indemnities (evidence seen at [52]-[102])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail the same three criteria in the same way: each excludes the one Tax matter whose qualifying evidence sits in a closing tax memorandum (listed in every run but never opened; judged from a draft markup or its tax receivable agreement), and each answers with nine to twelve M&A and other deals whose executed agreements carry tax indemnities, reading the request's Tax matters as any matter with tax indemnity work. The first error is the read-selection stage in each run. Reviews named the practice-group question in all three (T2's even suggested an agent-defined stage for it, not taken) and in T1 named the file-name filter that skipped the matter; the agents moved on. The other qualifying matter (a standalone tax indemnity agreement) was found and cited in all runs."
+}

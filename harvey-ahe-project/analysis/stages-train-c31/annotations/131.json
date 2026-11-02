@@ -1,0 +1,526 @@
+{
+ "task": "131",
+ "context": "Request: the firm's most recent M&A matter where a MAC was actually invoked in a dispute (the other side in a live deal is trying to invoke one). Rubric: 1018-00008 (buyer terminated an SPA citing an MAE; seller disputed it), plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: walks the store and prints every file (about 809K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for MAC and MAE terms near termination and dispute words, then a grep of the saved output for a few matter series. The review suggests a tighter per-document scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 36,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Tighter per-document MAC dispute scan. The tighter scan times out, is run in the background and polled, then stopped; one matter's hit files are listed.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Tighter per-document MAC dispute scan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 37,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Complete MAC scan to completion. The same scan run to completion in the background, then hit counts per matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete MAC scan to completion"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 51,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify MAC scan coverage and later candidates. Checks that every folder was scanned and lists hit matters numbered after the lead candidate.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify MAC scan coverage and later candidates"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 57,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed purchase agreement, termination and deficiency notices, board memo, response and demand-letter memos and a draft counterclaim of the lead matter, plus one termination memo of another matter. The end label note names the listing-read stage; the next reads keep the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads the agreement's definitions further on.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the most recent invoked-MAC dispute, with near candidates excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 94,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, a path check fails on the response location then passes, one wording edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads short openings of four cited sources. The end label note names the listing-read stage; no further reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Tabulate candidate matters from saved results → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders with file counts and paths matching merger, termination, dispute and pleading words. The end label note names the folder-listing stage; no further listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide MAC scan times out; reruns by matter-number prefix, some timing out, print hits (about 36K characters for one prefix).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: a tighter scan; the review suggests a cleaned rescan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Cleaned dispute-signal rescan. Times out; partial output is inspected.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Cleaned dispute-signal rescan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-store MAC dispute scan. Batched scan over all matters (about 77K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store MAC dispute scan"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify MAC invocation candidates by reading documents. Lists termination and dispute files of eight candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify MAC invocation candidates by reading documents"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 76,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify MAC invocation candidates by reading documents. Reads seven documents of the lead matter and termination memos of five other candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify MAC invocation candidates by reading documents"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 77,
+     "end": 89,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Close verification gaps and compare recency. Reads eight documents of four remaining candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Close verification gaps and compare recency"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 90,
+     "end": 97,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify <matter> and MAC term coverage. MAC-term check over the excluded candidates and one strategy memo read.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify 1018-00009 and MAC term coverage"
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the most recent invoked-MAC dispute.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 116,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "A path check fails on the response location then passes; fixes one path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 139,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "answer passes",
+     "note": "declared: new: Verify facts against source documents. Re-reads four sources and edits the litigation-status wording; two greps of the response return nothing.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify facts against source documents"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 140,
+     "end": 151,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: marks the counterclaim as an unfiled draft.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 158,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: re-reads the recency paragraph and checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 159,
+     "end": 167,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Recency exclusion audit. Reads agreements and letters of three higher-numbered matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Recency exclusion audit"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 168,
+     "end": 180,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Folder-level MAC check of higher-numbered matters. Lists merger and termination files of higher-numbered matters, reads four documents and adds a sentence to the response.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Folder-level MAC check of higher-numbered matters"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 181,
+     "end": 186,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Higher-numbered content audit. MAC scan over every matter numbered above the lead matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Higher-numbered content audit"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 187,
+     "end": 196,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Open higher-numbered hit matters. Reads four documents of one hit matter and counts file types of higher-numbered matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Open higher-numbered hit matters"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 197,
+     "end": 197,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "File counts per matter folder, highest numbers first.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide MAC scan times out; chunked reruns time out after printing about 322K characters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower scan over chunks (about 95K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents. Globs all files of four candidates.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 35,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads four documents of the lead matter and two of another termination matter. The end label note names the candidate-listing stage; no further listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Store-wide scan for MAC terms near dispute words, highest-numbered matters first (about 66K characters).",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 57,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: invocation-phrase scan over matters numbered at or above the lead matter times out, then runs in four chunks; the harness notes the stage has been opened three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the most recent invoked-MAC dispute.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 64,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads four cited sources. The end label note names the listing-read stage; no further reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 80,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: store-wide scans for MAC and MAE terms near termination and dispute words (each timing out at first and rerun in the background, by prefix or in chunks), then reads of the lead matter's termination notice, deficiency notice, board memo and demand-letter analysis plus termination memos of a few other matters, and an answer naming the lead matter with near candidates excluded. The runs differ in effort, not in route: T1 declared many agent-defined stages at reviewers' suggestion and, after writing, audited higher-numbered matters for recency in four extra stages without changing the answer; all of these fit existing stages. Label notes were ignored where they applied."
+}

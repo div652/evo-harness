@@ -1,0 +1,561 @@
+{
+ "task": "053",
+ "context": "Request: all Capital Markets matters with a Rule 144A or Regulation S tranche, with offering documents and deal records showing structure and closing. Rubric: 1005-00002, 1014-00001, 1016-00003, 1021-00002, 1039-00002, 1045-00001 (closed) and 1020-00003 (executed-but-terminated, purchase-agreement-executed-2022-06-20.docx), each with proof documents (e.g. 1021-00002 form-of-global-note-144a/reg-s.docx and closing-index-and-signature-pages.docx); precision excludes 1024-00004 (CLO), 1009-00005, 1025-00007, 1044-00004, 1032-00003.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts the 266 matter folders and their files. The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; parallel range reruns report 66 hit matters (985 files), output cut.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 31,
+     "tags": [
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A heredoc error, then a path regex with broad request and offering words (1,851 lines, shown through caps) and a document-text pass over Word files (about 89K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Narrow path regex for offering-document names (34 matters) and an exact-term text scan that crashes partway. The end-of-stage label note names the scan stage, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Exact-term scan reruns time out; a parallel rerun covers only the later matter ranges.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 69,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads 15 offering memoranda, indentures and deal memos of six candidates, including drafts of a suspended deal. The review flags the hand-picked set and unresolved closing status.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten hand-picked candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 76,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads twelve offering, indenture and closing documents of seven candidates, including the add-on placement's closing checklist. The review asks to look in that checklist for closing evidence.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six closed matters, including a CLO note issue, and sets the add-on placement aside as not shown closed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 116,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and four closing records (20 lines of the add-on checklist), edits two closing descriptions; a path check opens response.md from the working folder first.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Resolves all 47 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the executed-but-terminated matter, skipped one matter's global-note forms, left the add-on placement out as not shown closed, and counted a CLO note issue.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 69,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews at [69] and [75] said the reads covered a hand-picked set and many surfaced matters were never listed, without naming the executed-but-terminated matter.",
+    "why": "The executed-but-terminated offering matter appeared in the agent's folder count, scans and offering-name path search ([11]-[35]), but it was left out of every read and listing, so the answer never mentions it or its executed purchase agreement."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 76,
+     "end": 92,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "critic": "not-flagged",
+     "critic_note": "No review named the global-note forms of the matter.",
+     "why": "The agent's listing at [72]-[73] showed the separate Rule 144A and Regulation S global-note forms of a dual-tranche matter, but the reads chose its closing memo and term sheet, so the answer names no global-note document."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [92] asked to look in the add-on placement's checklist for closing evidence; the check stage re-read 20 lines of it at [101] and kept the matter out.",
+     "why": "The answer excludes the add-on placement as not shown closed although its closing checklist and purchase agreement were read at [83] and [103]."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether the CLO deal belongs to the requested practice group.",
+     "why": "The answer asserts a CLO note issue read at [84]-[87] as a confirmed qualifying precedent although it is outside the requested set."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 18,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus file count and a capped two-level folder listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts 266 matter folders and looks for index files.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 24,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scan times out; parallel reruns with loose and stricter patterns print thousands of noisy lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Precise-pattern scan over all 266 matters (about 47K chars) and a grep of one slice of its output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 33,
+     "end": 40,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A heredoc error, then a path net for offering, indenture, global-note and purchase-agreement file names, intersected with the scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 41,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads about 30 offering memoranda, closing checklists, closing memos and status memos of eleven candidates, several re-read with smaller limits. The review flags that the add-on placement was classified as planned from its checklist and memo alone.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six completed offerings and five planned, terminated or suspended matters as precedents, the add-on placement among the planned ones.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 97,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check opens response.md from the working folder, then succeeds from the output folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 113,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: Five reads refused because no stage was open, then the same five sources re-read in 10-18 line slices; no edit. The end-of-stage label note names screening, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Screen candidate matters by reading documents. Cross-checks the saved scan and file-name outputs; malformed parsing gives an empty intersection. The end-of-stage label note names the figures stage; the run finishes next.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 120,
+     "end": 120,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → Screen candidate matters by reading documents → Write the response → Check or revise the response → Tabulate candidate matters from saved results → Finish the run",
+   "failure_point": "It counted a CLO note issue and three uncompleted deals as precedents, classified the add-on placement as not closed, and did not cite one matter's closing index.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 41,
+    "end": 82,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "No review named the matter's closing index.",
+    "why": "The scan output at [28] showed a dual-tranche matter's closing index and signature pages, but the reads at [53]-[79] chose its offering memorandum and post-closing memo, so the answer never names the closing index."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [82] said the add-on placement was classified as planned from its checklist and memo alone, with no closing record checked; the agent wrote it as planned.",
+     "why": "The answer classifies the add-on placement as planned or near-closing although its closing checklist and offering supplement were read at [43]-[51] and [70]-[75]."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether the CLO deal and the planned, terminated or suspended deals belong to the requested set.",
+     "why": "The answer presents a CLO note issue and three planned, terminated or suspended deals read at [53]-[69] as qualifying precedents."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 17,
+   "n_criteria": 21,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists all matter folder names with a count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; a fast rerun and an exact-term pass print thousands of loose hits; the pattern is tightened twice.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Union and qualifier scans time out, then run in 70-matter chunks: 262 union matters, 75 exact-hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 44,
+     "end": 51,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in candidate matters. Counts scan headers per chunk and prints a store-wide path listing filtered by offering words (3,113 paths); a stage_start is refused because this stage is still open.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: Deduplicates the exact-hit set (81 matters) and prints name-filtered file listings for each (about 38K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 118,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads about 40 offering memoranda, closing checklists, memos and letters of twelve candidates, re-reading several with smaller limits; for the terminated matter it reads the preliminary memorandum and a client letter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 119,
+     "end": 126,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Script over the text and paths of all 262 union-hit matters, then a filtered and capped view of its output.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 127,
+     "end": 139,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. A read refused because no stage was open, then 25-35 line openings of six public-offering documents. The end-of-stage label note names screening; only post-write checks follow.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 140,
+     "end": 145,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six completed offerings, including a CLO note issue, with the bank placement and the terminated matter in a not-completed table.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 146,
+     "end": 159,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths (first from the working folder) and fixes one path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 160,
+     "end": 172,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads eight closing or memo sources; no edit. The end-of-stage label note names screening; the run finishes next.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 173,
+     "end": 173,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It described the terminated matter only through its preliminary documents, left the bank placement out as pending, and counted a CLO note issue.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 60,
+    "end": 118,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "Reviews flagged unopened surfaced matters and re-read proof documents, not this document.",
+    "why": "The listing at [56]-[57] showed the terminated matter's executed purchase agreement, but the reads at [80] opened its preliminary offering memorandum and a client letter, so the answer describes only a preliminary agreement."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 140,
+     "end": 145,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) Check reviews at [145] and [159] asked to verify exclusion reasons against each matter's own documents; the agent kept the bank placement out.",
+     "why": "The answer sets the bank placement aside as having pending closing deliverables although its offering memorandum, summary memo and closing checklist were read at [71]-[83]."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 140,
+     "end": 145,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether the CLO deal belongs to the requested practice group.",
+     "why": "The answer asserts a CLO note issue read at [89]-[103] as a confirmed completed precedent although it is outside the requested set."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail, each on several criteria, and the errors differ in detail but share one stage. Every run built its candidate set from store-wide text scans (with timeouts and loose patterns flagged by the reviews) and read the same dozen offering matters. At the write stage, every run asserted matters outside the requested set as qualifying (a CLO note issue in all three, plus three planned or terminated deals in T1), and dropped one closed matter after reading its closing records (T0 and T1 the add-on placement, judged not shown closed; T2 the bank placement, judged pending). Earlier document-choice errors differ: T0 never opened the executed-but-terminated matter and skipped the listed global-note forms; T1 read other documents than the closing index its scan output showed; T2 read the terminated matter's preliminary documents instead of the executed purchase agreement shown in its listing. Reviews flagged hand-picked candidate sets in generic terms, named the add-on placement's closing status in T0 and T1 (not acted on), and never questioned whether the CLO deal belongs to the requested practice group. Label notes were mostly ignored; no agent-defined stages occurred."
+}

@@ -1,0 +1,593 @@
+{
+ "task": "104",
+ "context": "Request: the latest Labor & Employment matter where the firm agreed equity-vesting acceleration terms, plus the document setting them out. Rubric: 1017-00004 (executive dispute settled January 2024; executed settlement agreement aldrich-settlement-agreement-execution.docx, Section 3(a) RSU acceleration) as the only qualifying matter. Runs instead named 1010-00004 (withdrawn 2022 negotiation, drafts), 1010-00005 (2024 litigation over a separation agreement known from an affidavit) and 1037-00006 (2024 M&A matter with an executed employment agreement).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a top-level listing and file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts 266 matter folders; no index file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 34,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide and quarter-range scans time out with partial output files; greps and tails of the partial output; a late-range scan also times out. The review flags 73 of 266 matters covered and a numbering-based shortlist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 46,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Complete batched scan of all matters. Batched rescan of all 266 matters into 14 files, then filtered and capped greps of the combined output. The review flags the filtered view and no practice-group check.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete batched scan of all matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 47,
+     "end": 64,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify L&E candidates and dates. Lists four candidate folders, reads four employment, merger and retention documents and greps the saved scan for late-numbered matters; a stage_start is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify L&E candidates and dates"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 80,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify L&E candidates and dates (attempt 2). Reads two draft employment agreements of one matter and award drafts (at offsets) and a memo of the lead candidate, plus a plan form. The review flags that the lead candidate's documents are drafts.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify L&E candidates and dates"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the lead candidate's draft award agreements as the latest agreed-form precedent, with an execution caveat. The review flags the caveat.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and edits it to call the matter the latest draft precedent.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Lists the lead matter's folder and re-reads two clauses. The end-of-stage label note names listing-picked reads; the run finishes next.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the settlement matter that surfaced in its scan and offered draft award agreements from a withdrawn negotiation as the latest precedent.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 47,
+    "end": 64,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [46] said the candidate view came from filtered or truncated scan output and that a latest matter was named by numbering without a practice-group check; no review named the settlement matter.",
+    "why": "The settlement matter appeared in the batched scan's filtered output at [43]-[44], but the agent chose four other matters to list and read and never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [80] said the lead matter's award documents are drafts with blank grant dates and no executed version; the agent reworded the answer to a draft precedent but kept the matter.",
+     "why": "The answer presents draft award agreements from a withdrawn negotiation read at [67]-[78] as the latest precedent where acceleration terms were agreed."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Lists every matter folder and its files (about 534K chars). The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out after printing about 1.35M chars of hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Chunked rerun with acceleration-specific phrases and per-matter counts; the output is garbled and cut.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads three pleadings and memos of a litigation matter and four documents of the settlement matter, including its executed settlement agreement; lists the litigation matter's folder. The end-of-stage label note names listing-picked reads; the next reading stage keeps the screening label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 58,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Lists a withdrawn-negotiation matter and reads four of its documents, runs a store-wide snippet script, reads four documents of a terminated negotiation and an affidavit of the litigation matter. The review flags that the litigation matter's agreement was never opened. The end-of-stage label note names listing-picked reads; only post-write checks follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 59,
+     "end": 64,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the litigation matter as the latest agreed acceleration precedent, from an affidavit, with the settlement matter as the latest standalone executed fallback.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 65,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, checks paths and re-reads two sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 74,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads the affidavit and assessment memo of the litigation matter. The end-of-stage label note names listing-picked reads; only checks follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: Re-reads the response opening. The review suggests a recency cross-check step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 95,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Recency cross-check of surfaced L&E acceleration matters. Re-reads short openings of four candidates' documents to compare dates. The review flags that the litigation matter's acceleration rests on an affidavit in a litigation matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Recency cross-check of surfaced L&E acceleration matters"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It answered with a litigation matter known only from an affidavit and relegated the executed settlement agreement to a fallback.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 59,
+    "end": 64,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews at [58] and [95] said the litigation matter's acceleration rests on an affidavit, not the executed agreement, in a matter that is litigation; the agent re-read the affidavit and dates and kept it as the answer.",
+    "why": "The answer names a later litigation matter as the latest matter where the firm agreed acceleration terms, on the strength of an affidavit describing a separation agreement it never opened (evidence seen at [28]-[56]), and demotes the executed settlement it had read to a fallback."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts 9,288 files in 266 matter folders and prints their numbers. The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide and range scans time out with empty output files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Background scan with progress logging, polled with sleeps; every one of 266 matters hits the broad terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Filters the saved scan for files where employment words co-occur with acceleration words: 525 files in 114 matters (about 84K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 65,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Classify matters by practice group. Extraction script over administrative and engagement files for practice-group labels (about 70K chars), a heredoc error, then a filtered list read through a tail.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Classify matters by practice group"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Classify matters by practice group (attempt 2). Per-matter table of practice-group evidence from engagement files: 22 matters with dates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Classify matters by practice group"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of six hand-picked matters from the table. The review flags the hand-picked six.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 78,
+     "end": 90,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads term sheets, draft agreements, memos and intake forms of six candidates; all show terminated negotiations, drafts or other issues.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide path search for execution, employment-agreement, option and award file names (about 52K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 97,
+     "end": 102,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: Search within a candidate matter's files. A store-wide agreement-snippet script times out. The end-of-stage label note names the scan stage; the next stage keeps the in-matter label.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 103,
+     "end": 106,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: Snippet script over six named matters times out after printing one matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 107,
+     "end": 119,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Reads two draft employment agreements, board resolutions, a retention plan and a signing letter of one acquisition matter, with two in-document clause scripts. The end-of-stage label note names listing-picked reads; the write follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 120,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the acquisition matter's draft founder employment agreements as the latest precedent, with an execution caveat. The review flags the drafts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 150,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Reads an executed employment agreement and a certificate from another acquisition matter, runs clause scripts and rewrites the response around that matter; a path check opens response.md from the working folder first.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 151,
+     "end": 164,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: Reads the new lead matter's engagement letter (a guessed closing-memo path fails) and checks the signature page; edits. The review asks to confirm the practice group.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 165,
+     "end": 177,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: Lists the lead matter's closing folder, reads two closing documents and adds a citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 178,
+     "end": 191,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final file-path and wording consistency check. Greps and re-reads the delivered file and edits a heading.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final file-path and wording consistency check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 192,
+     "end": 198,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final file-path and wording consistency check (attempt 2). Confirms which response file is delivered and re-reads its opening.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final file-path and wording consistency check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 199,
+     "end": 204,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final file-path and wording consistency check (attempt 3). Re-reads the rest of the delivered file.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final file-path and wording consistency check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 205,
+     "end": 210,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final scope-fit sanity check. Re-reads the response opening.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final scope-fit sanity check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 211,
+     "end": 217,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final scope-fit sanity check (attempt 2). Re-reads one section and confirms the cited source exists.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final scope-fit sanity check"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 218,
+     "end": 218,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for a document type → Scan document text with an extraction script → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened the settlement matter listed in its own classification table, and ended by naming an M&A matter's executive employment agreement as the latest precedent.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "List files in candidate matters",
+    "start": 72,
+    "end": 77,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews at [71] and [77] said the classification was partial and the six listed matters were hand-picked from many surfaced ones; none named the settlement matter.",
+    "why": "The settlement matter appeared in the agent's own scan outputs and its practice-group table at [68]-[69], but the agent listed six other matters from that table and never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 14,
+     "stage": "Write the response",
+     "start": 120,
+     "end": 125,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) Reviews at [150], [164] and [177] asked to confirm the new lead matter's practice group and execution; the agent added a scope caveat calling it an M&A matter with an employment workstream and kept it.",
+     "why": "A rewrite during the check stage presents an M&A matter's executed executive employment agreement, read at [128]-[138], as the latest Labor & Employment acceleration precedent."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail by naming another matter as the latest. Two different routes led there. T0 and T2 never opened the settlement matter, although it surfaced in their store-wide scans. T0 then picked candidates by matter number and practice-area guesses; T2 picked six other matters from an engagement-letter classification table that listed it (surfaced-not-opened). Both then wrote draft or M&A employment agreements as the precedent. T1 read the matter's executed settlement agreement, but wrote a later litigation matter as the latest, on the strength of an affidavit describing a separation agreement it never opened, and kept the settlement only as a fallback. The reviews flagged hand-picked candidate sets in generic terms. In T1 and T2 they also named the weak basis of the final pick (an affidavit only; unclear practice group). The agents re-read or reworded but kept the matter. The agent-defined stages (batched scan, candidate verification, practice-group classification, recency cross-check, final consistency checks) did not change the outcome."
+}

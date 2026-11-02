@@ -1,0 +1,508 @@
+{
+ "task": "081",
+ "context": "Request: the firm's most recent filed willful-infringement case and its supporting document, to lead with for a client. Rubric: 1021-00004 (Verimark Hospitality trademark complaint filed July 22, 2025, Pleadings/complaint-trademark-infringement.docx) as the only answer; 1013-00005 (GenomeDx patent complaint, March 2025), 1014-00004 and others are earlier, and 1017-00003 (Aurelius, March 2026) is an unfiled draft.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for an untruncated matter list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with its file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: prints the total (266), the number range and the file-count range.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; five range-split scans with a loose pattern write 3,109 lines (260 shown, about 48K characters), and a grep of the output is capped at 120 lines. The review rates the goal not reached.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-phrase scan in five ranges confirmed to cover all 266 matters; 17 hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: proximity scan; 35 hit matters. The review flags a hand-picked shortlist of nine.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 49,
+     "tags": [
+      "script error",
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "A heredoc error, then full file listings of the 35 hit matters saved (1,594 lines, 320 shown).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two parallel batches: ten complaints, answers and a draft complaint, then eight status letters, emails and memos; the summary dates the lead matter's filing from its status letter and sets aside a later draft. The review flags unopened sibling matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Compares the matter sets of the two saved scans (union 35); the agent reports the goal not reached. The end-of-stage label note names Calculate figures for the answer; no later work of that kind followed.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Extract complaint dates per candidate (suggested by the review). Store-wide script over pleading- and status-named files printing dates and snippets (73 lines); the review flags the name filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Extract complaint dates per candidate"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Extract complaint dates per candidate (attempt 2). Name-independent proximity scan over all 266 matters with the first date per file (304 files, 35 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Extract complaint dates per candidate"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify complaints per matter (suggested by the review). Script over the pleading- and status-named files of the 35 hit matters printing filing dates and openings.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify complaints per matter"
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter's complaint as the most recent filed case, with its status letter, dated comparisons and the exclusion of a later unfiled draft.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 115,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response, the two cited documents and the openings of the draft and its status report; checks two paths. No edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Tabulate candidate matters from saved results → Scan document text with an extraction script → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for an untruncated matter list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folders and counts files per folder. The end-of-stage label note names List matter folders; no later folder listing followed.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with a loose pattern prints every hit file with snippets (about 1.23M characters, 165 matters); the summary names a patent matter as newest, pending document checks.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-phrase scan with per-matter dates (17 matters, about 33K characters); the lead matter's filing date is not yet established.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "One parallel batch of 15 reads: complaints, answers, a draft complaint and diligence memos from 15 candidates. The review flags the lead matter's missing filing date.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Filing-date snippet script over one candidate's files; finds its filing date in a related notice. The end-of-stage label note names Scan document text with an extraction script; the next snippet script ran under a new stage name.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 52,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the lead matter's complaint, status letter and motion memo. The end-of-stage label note names Read documents picked from the file listing; the next reads ran under a new stage name.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify recency across willful-infringement matters (suggested by the review). Date script over the pleading- and status-named files of the 17 hit matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify recency across willful-infringement matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 66,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify recency across willful-infringement matters (attempt 2). Reads a declaration, a status email and a memo of the runner-up matter and greps the declaration for its filing date.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify recency across willful-infringement matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify recency across willful-infringement matters (attempt 3). Re-reads the openings of the two finalists' complaints; the review says to stop re-verifying and write.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify recency across willful-infringement matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter's complaint as the most recent filed case, with filing evidence, dated comparisons, the runner-up as a patent-only alternative and the exclusion of an unfiled draft. The review questions whether the claim type is in scope.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs the files of six cited matters; no edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads five cited documents and the response; no edits. The review flags five surfaced matters never opened, and its label note names Screen candidate matters by reading documents, which the agent declared next.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 112,
+     "end": 121,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists the files of the five surfaced but unopened matters and reads the openings of five of their documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 122,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "declared: Screen candidate matters by reading documents (same attempt). Adds the completeness check to the response. The end-of-stage label note names Check or revise the response, which the agent declared next.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 132,
+     "end": 140,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify cited sources and recency claim (suggested by the review). Checks nine cited paths and re-reads the openings of three of the lead matter's documents.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify cited sources and recency claim"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 141,
+     "end": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify cited sources and recency claim (attempt 2). Snippet script over the lead matter's complaint and motion memo for willfulness and date lines.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify cited sources and recency claim"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 147,
+     "end": 147,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Screen candidate matters by reading documents → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob in parallel with a two-level folder listing capped at 120 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 14,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with a loose pattern prints per-file counts for every hit matter (about 363K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: phrase-near-filing-word scan saved to a file; 48 matters, 295 files. The review flags the filing-word filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 21,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads complaints and status documents of eight candidates and a draft complaint, then eight more status emails, cover sheets, summonses and complaints, and one email three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 48,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Date-snippet script over the pleading-named files of nine named candidates (about 41K characters) and a read of the lead matter's motion memo. The end-of-stage label note names Scan document text with an extraction script, which the agent declared next.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: store-wide scan over pleading- and status-named files for explicit filing dates (six rows). The review rates the goal not reached.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter's complaint as the most recent filed case, with its motion memo and status letter, dated comparisons and the exclusion of a later unfiled draft.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 68,
+     "end": 74,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks ten cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 75,
+     "end": 86,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the openings of seven cited documents; no edits. The end-of-stage label note names Screen candidate matters by reading documents; the run finishes next.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 87,
+     "end": 87,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: a matter-folder listing (T0, T1), store-wide extraction scans narrowed from a loose pattern (outputs of about 363K characters in T2 and 1.23M in T1) to exact request phrases, one or two parallel screening batches of complaints and status documents across the hit matters, a dated filing confirmation for the lead matter from its status letter or motion memo, and an answer that cites the lead matter's complaint, lists older filed cases and excludes a later unfiled draft. T0 added agent-declared store-wide date scans and a per-matter complaint check before writing; T1 checked the runner-up's filing date in an agent-declared recency stage and, after writing, screened the five surfaced matters a check review named, adding one sentence to the answer; T2 ran one more filename-prefiltered date scan. All agent-declared stages map onto existing scan, within-matter search, in-depth reading and check stages."
+}

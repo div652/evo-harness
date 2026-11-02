@@ -1,0 +1,531 @@
+{
+ "task": "057",
+ "context": "Request: fund formations in the firm's files that carry a key-person provision (precedent for negotiating one). Rubric: 1001-00002 (Ardent, key-person clause in amended governing documents), 1003-00002 (Harrowgate Fund V), 1024-00002 (Driftwood, key-person amendment/event) and 1027-00002 (Pellegrino / Ridgeline-Clarion co-invest), plus precision; 1041-00005, 1023-00001 and 1026-00001 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists all matter folder names and counts files. End label note: List matter folders; no later listing work.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide key-term extraction times out, a chunked rerun times out but its chunk files complete; the combined per-matter summary lists 140 matters with key-term hits. The review flags unconfirmed coverage and broad terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: chunk-coverage check, then an exact-term pass over the saved hit files (about 119K chars). The review suggests a per-matter roll-up step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 34,
+     "end": 41,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide file-name net for vehicle, partnership-agreement, subscription and offering-document words; 107 matters. A heredoc error first. End label note: Search file names for request keywords; no later file-name search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Saves file lists of the 107 matters to a scratch file and prints only header line numbers. The review flags unlisted surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 48,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Intersects the saved exact-term hits with the file-name candidate list and prints hit files per matter; only two of the listed matters with key-term hits are qualifying-looking.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 69,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Same declared span: reads nine agreements and memos from six candidates, then a snippet script (about 169K chars) and greps of saved listings. The review flags the hand-picked set. End label note: Screen candidate matters by reading documents; the run moves to writing.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 70,
+     "end": 75,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three primary precedents and a fourth from a review memo only. The review flags the memo-only fourth matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 76,
+     "end": 88,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths (a grep looks in the working folder and fails), softens the fourth matter's citations but keeps it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 89,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for a document type → List files in candidate matters → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Its key-term scan missed two qualifying matters, so they were never opened, and it added a matter on a review memo alone.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 25,
+    "events": "",
+    "kind": "search-miss",
+    "why": "The store-wide key-term scan returned no hits for two qualifying matters (their only later signal was a vehicle-file-name net), and every later step selected matters from that scan's hits.",
+    "critic": "not-flagged",
+    "critic_note": "Reviews flagged broad terms and unconfirmed chunk coverage, never that matters with vehicle documents lacked hits; later reviews named other unopened matters."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 70,
+     "end": 75,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer adds a matter as a further precedent on a review memo alone, with no governing document opened (evidence seen at [52]-[61]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The write review at [75] named the memo-only fourth precedent; the check stage softened its citations but kept it, and the next review asked to restore it if it qualified."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Per-matter and per-folder file counts (about 70K chars), then per-matter counts. End label note: List matter folders; no later listing work.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide key-term extraction times out twice; 60-matter batches run, one batch loop partly times out and is rerun; 1,235 hit files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 35,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks the saved batch outputs, then walks every matter's folder and ranks all matters by vehicle-folder and document-name indicators in their paths. End label note: Calculate figures for the answer; the next tallies were declared under new names.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide path regex for vehicle and key-person words; 86 matters. The review flags the path-only search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidates. The review flags dozens of unlisted surfaced matters and suggests a step for them.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 48,
+     "end": 53,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List files in remaining surfaced matters. Per-matter hit counts for all 217 hit matters from the saved scan output, with indicator file paths from a walk of each matter's folder.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in remaining surfaced matters"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List all key-person hit files. Writes every hit file per matter from the saved scan output to a scratch file and prints the first ten.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List all key-person hit files"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Ten reads of draft and executed partnership agreements, amendments and memos from nine candidates. The review calls one matter's document an amendment of an existing vehicle and other reads adjacent items. End label note: Read documents picked from the file listing; no later reads.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 75,
+     "end": 82,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script over eight named candidates, then a grep of its output that prints about 414K chars.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 83,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: bounded snippets from six named governing documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes three formation precedents and puts two matters with key-person amendment and event documents in a non-formation section. The review says the non-formation material pads the set.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: rewrites the response with one executed formation precedent, drafts as near misses and the two matters still as non-formation. The review flags the narrow reading of drafts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 103,
+     "end": 119,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response, a path check fails in the working folder and is rerun, three wording edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 120,
+     "end": 137,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: five edits that move the draft formation matters back into the count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 145,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: two edits separating the executed count from the draft tier.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 146,
+     "end": 146,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read a qualifying matter's amended governing documents and their key-person clause but classed the matter as an amendment of an existing vehicle, not a formation.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 91,
+    "end": 96,
+    "events": "",
+    "kind": "under-inclusion",
+    "why": "The answer places a matter whose amended governing documents carry a key-person clause in a non-formation section as existing-vehicle amendment work (evidence seen at [62]-[89]).",
+    "critic": "review-endorsed",
+    "critic_note": "(specific flag) The screening review at [74] described that matter's document as an amendment of an existing vehicle rather than formation proof, and the write review at [96] called the non-formation section padding; the agent kept the matter out of the formation set."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 5,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Per-matter file counts for every folder. End label note: List matter folders; no later listing work.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction times out, prefix runs time out or return zero hits from a broken filter, then ten-prefix parallel batches complete; a grep of all key-term lines prints about 131K chars.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Prefix coverage check and a ranking of 93 matters with both key-term and vehicle signals from the saved hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Filters the saved hits to the dual-signal matters, then walks each one's folder and prints its formation, offering and side-letter file paths; the summary names seven matters. End label note: Calculate figures for the answer; no later tally work.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Eleven reads of partnership agreements, offering papers, side letters and memos from seven candidates; a matter with key-person event and amendment hits is not among them.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 66,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over named governing documents of five candidates. The review flags that two matters were treated as non-formation without extraction. End label note: Scan document text with an extraction script; no later scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four precedents including a master-vehicle restructuring draft, with two key-person matters as near misses.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 97,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks source markers and paths (one script fails in the working folder, one cited path is missing and fixed). The review flags draft placeholders.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 113,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: edits to three draft formation precedents plus an executed co-invest one; the restructuring draft stays.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 114,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened one matter whose key-person documents its scan surfaced, excluded another as restructuring work, and counted a restructuring draft.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 65,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "why": "A matter whose key-person event and amendment documents hit in the scan and appeared among the dual-signal hit files at [47] was left out when choosing what to read and never opened.",
+    "critic": "not-flagged",
+    "critic_note": "Reviews at [49], [65] and [75] named other unopened matters and the hand-picked list in general terms, never this matter."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "events": "",
+     "kind": "under-inclusion",
+     "why": "The answer lists a matter whose second amended governing agreement it read as a near miss, calling it restructuring rather than formation (evidence seen at [52]-[62]).",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [75] named that matter as treated as non-formation without any extraction; the agent wrote it as a near miss."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "events": "",
+     "kind": "over-inclusion",
+     "why": "The answer counts a master-vehicle restructuring matter's draft agreement with placeholder terms as a formation precedent (evidence seen at [52]-[73]).",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The check review at [97] named the draft's placeholder threshold; the edits relabelled the set as drafts but kept the matter."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail on the two qualifying matters whose key-person language sits in amendment or event documents, but at different stages. T0's key-term scan showed no hits for them, so they were never opened (search-miss at the scan); T2's scan surfaced both, but it read only one and set it aside as restructuring and never opened the other (surfaced-not-opened at screening); T1 read both and wrote one as non-formation (under-inclusion at the write stage; the other passed as listed). Precision failed in T0 (a memo-only matter) and T2 (a restructuring draft). Reviews named the exclusion specifically only in T2 (ignored); in T1 a screening review itself called the matter an amendment of an existing vehicle. Agent-declared tally steps (T1) and label notes did not change which matters were read."
+}

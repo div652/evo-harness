@@ -1,0 +1,436 @@
+{
+ "task": "169",
+ "context": "Request: all New York-law credit facilities run out of the Banking & Finance practice as facility counsel, excluding warehouse/repo/securitization and real-estate-secured mortgage/construction financings. Rubric: nine qualifying matters (1005-00001, 1006-00001, 1010-00001, 1012-00001, 1019-00002, 1021-00001, 1038-00002, 1042-00001, 1043-00001) with proof documents, plus precision; 1019-00002, 1021-00001 and 1043-00001 are corporate facilities with some real-property collateral or construction use of proceeds.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 7,
+     "end": 12,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: walks every matter folder and prints all paths (about 813K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 32,
+     "tags": [
+      "timed out",
+      "script error",
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script and range reruns time out; a file-name pass keeps 279 financing-named files, and greps of their raw XML for the governing-law words return nothing. The review flags the name prefilter and the broken grep.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Nine globs and 32 reads of facility agreements, engagement letters and opinions from about eight candidates. The review flags unopened series and unconfirmed governing law for several included matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 83,
+     "end": 102,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: a glob for credit-agreement files and eleven more reads; two guessed paths fail. The review notes one matter was written off as a real-estate financing with no document opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes seven facilities, flags one matter as a judgement call because of a post-closing mortgage, and excludes several corporate facilities as real-estate secured.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 157,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path checks (first run in the working folder), twelve reads and ten edits: moves the judgement-call matter to exclusions and removes one facility for its governing law, leaving five.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 158,
+     "end": 159,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read the real-estate carve-out broadly and excluded five corporate facilities (one on a review's push), while counting one facility outside the set.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Write the response",
+    "start": 103,
+    "end": 108,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review at [103] said one of these matters was written off as a real-estate financing with no document opened; the agent wrote the exclusion without opening it.",
+    "why": "The answer excludes four corporate credit facilities as real-estate-secured financings because their collateral packages included mortgages or the proceeds funded construction, reading the carve-out broadly (evidence seen at [33]-[101])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 6,
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [83] said governing law was not confirmed for this matter among others; it stayed in the answer.",
+     "why": "The answer counts one revolving facility outside the set as a New York-law facility (evidence seen at [33]-[81])."
+    },
+    {
+     "stage_no": 7,
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 157,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "The write review at [109] told the agent to move this matter to exclusions if its mortgage was a core security element; the agent did, and the next review at [158] called that a possible over-removal.",
+     "why": "The edit moved a corporate mezzanine facility it had first counted into exclusions because its post-closing obligations included a second-lien mortgage."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 19,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a capped two-level folder listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Saves all matter folder names with file counts and prints them.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 43,
+     "tags": [
+      "tool error",
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A summary call refused because no stage was open, then a store-wide extraction script times out and is rerun in eleven parallel ranges; the merged output is aggregated per matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 53,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists the files of the 157 matters with both governing-law and facility tags to a file and prints the financing-named ones.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 54,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Store-wide file-name search for credit, loan and facility words and the excluded structure words, grouped by matter and paged in four reads.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 142,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads facility agreements, engagement letters, opinions and closing records of about 25 candidates, with governing-law snippet scripts and engagement-file listings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 143,
+     "end": 148,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes eleven facility matters with governing-law proof and categorized exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 149,
+     "end": 172,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Path checks (first run in the working folder), a source index edit and a note on a matter number printed inside documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 173,
+     "end": 188,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "An edit refused because no stage was open, then attempt 2 separates nine executed facilities from two draft ones.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 189,
+     "end": 190,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 16,
+   "n_criteria": 19,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus file and folder counts and a capped folder listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Saves and prints all 266 matter folder names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice; four range reruns write 152 candidate matters, of which the headers and first 220 lines are printed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Uncapped path search for credit, loan and facility words with exclusion flags (a heredoc error, then 87 matters saved).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 32 hand-picked matters to a file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: unions the text and path hits (168 matters) and writes a compact inventory for each.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 86,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 13 facility agreements and engagement letters and runs governing-law extraction scripts over named agreements of about 30 matters. The review says exclusions of several matters were asserted without reads.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 87,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Screen remaining unopened candidate matters. Script extracts title, governing-law clause and status from facility-named files of all 168 matters; two listings follow.",
+     "label_check": "none",
+     "agent_new": "Screen remaining unopened candidate matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes fifteen matter rows, including amendment-only matters and acquisition financings, and excludes two corporate facilities as real-estate secured.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 101,
+     "end": 111,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path checks (first run in the working folder) and expanded source paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 122,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads four cited agreements and adds a note on amendment matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded two corporate facilities under a broad reading of the real-estate carve-out and counted eight amendment and deal-financing matters.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 95,
+    "end": 100,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The screening review at [87] said the exclusions of these two matters were claimed with no read; the agent ran an extraction over all candidates and still excluded them.",
+    "why": "The answer excludes two corporate credit facilities as real-estate-secured or construction financings, reading the carve-out broadly, after its extraction script showed their executed agreements (evidence seen at [52]-[93])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 95,
+     "end": 100,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review at [101] asked the agent to reconsider whether the amendment-only matters qualify; it kept them with a note.",
+     "why": "The answer counts eight matters outside the set, including facility amendments filed as separate matters and acquisition-financing commitments in deal matters, as qualifying facilities."
+    }
+   ]
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 fail). All three runs scanned the store and screened the facility candidates, so every run opened all nine qualifying matters. They split at the write stage: T1 read the real-estate carve-out narrowly and counted corporate facilities with some real-property collateral or construction use, while T0 (four, later five) and T2 (two) excluded them; T0 and T2 also counted extra matters (one in T0, eight amendment and deal-financing matters in T2). The reviews differed: in T0 the write review told the agent to drop a facility with a post-closing mortgage, which it did; in T2 reviews questioned exclusions and amendment matters without changing them; T1's reviews pushed only on draft status. No label note or new stage played a role in the split."
+}

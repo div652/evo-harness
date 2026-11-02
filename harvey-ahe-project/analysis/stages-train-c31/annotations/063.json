@@ -1,0 +1,655 @@
+{
+ "task": "063",
+ "context": "Request: every fund the firm formed that carries both a key-person provision and a GP clawback, pulling the LPA and side documents (fund-terms playbook). Rubric: 1001-00002 (Ardent; carried-interest-allocation-agreement.docx and lpa-amendment-no-1.docx), 1003-00002 (Harrowgate Fund V; key-person and clawback documents, drafts accepted), 1024-00002 (Driftwood; executed First Amendment), 1027-00002 (Pellegrino / Ridgeline-Clarion co-invest; executed co-invest LPA), plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a complete, untruncated listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Walks the store to count matter folders and files and saves the path list; a parsing slip reports one matter and 9,288 files.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists the 266 matter folder names to a file; the review asks for a text scan of all of them. Label note after [13]: followed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan for both request terms times out; four range scans write hit files, 106 matters with both broad terms. The review flags unverified coverage and broad patterns.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 33,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks that the four range files exist and counts file types across the store; the review flags that spreadsheets and slides were not scanned and suggests a new step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Scan XLSX and PPTX text. Scans spreadsheet and slide files for both terms (four matters) and merges the candidate IDs into one 106-matter file.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Scan XLSX and PPTX text"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 40,
+     "end": 51,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Path regex for agreement, side-letter, subscription, formation and both request terms; two script errors, then 110 matters saved to a file and paged. The review says only six matters were named from a partly read report.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists every file of eight hand-picked matters; the review flags dozens of surfaced matters never listed and suggests listing the rest.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List files in all surfaced candidates. Lists all 106 scan matters (5,689 files) to a file with a per-matter name-hit summary (65 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in all surfaced candidates"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 64,
+     "end": 76,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of ten documents from seven candidates: partnership agreements and amendments, a side letter, a formation opinion and memos; of one kept matter only its amendment.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 77,
+     "end": 80,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents. A both-terms script over the 106 candidates crashes after four hits from one matter. The review flags the crash and unopened surfaced matters.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 81,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rerun the matter-wide scan for key-person and clawback terms. The fixed scan hits all 106 candidates; three filters over the saved output print term snippets for eight or nine hand-picked matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun the matter-wide scan for key-person and clawback terms"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 91,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Rerun the matter-wide scan for key-person and clawback terms. Snippet script over four named partnership agreements. The review flags the hand-picked keep-set, snippet-only judgements, and calls one carry snippet irrelevant.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun the matter-wide scan for key-person and clawback terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 95,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Per-document governing-term intersection scan. Both-terms-in-one-file test over name-filtered governing documents of the 106 candidates; 21 files in eight matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-document governing-term intersection scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 99,
+     "end": 111,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Per-document governing-term intersection scan. Reads six side letters, memos and closing memos from five candidates (one guessed path fails), a key-term snippet of one side letter and one matter's file list. Label note after [80]: ignored.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-document governing-term intersection scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 112,
+     "end": 120,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify all governing-document intersection matters. Reads a closing memo, a first-close checklist, a draft amendment and a framework memo of four candidates; the review says one exclusion rests on a peripheral paper.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify all governing-document intersection matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 121,
+     "end": 130,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Close remaining verification gaps. Re-reads partnership agreements, a side letter at an offset, a closing memo and a formation opinion of five matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Close remaining verification gaps"
+    },
+    {
+     "stage": "Write the response",
+     "start": 131,
+     "end": 136,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes four vehicles as qualifying with their governing documents, and the excluded candidates with reasons.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "end": 146,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails because it looks in the working folder, then finds all 41 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 147,
+     "end": 161,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-reads six governing documents, softens one draft description, rechecks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 162,
+     "end": 169,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads a formation opinion and key-term snippets of four included documents; the review suggests a claim table (not taken).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 170,
+     "end": 170,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It listed a kept vehicle's carry agreement and saw a clawback snippet from it, but never opened it and left it out of the cited documents.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 64,
+    "end": 76,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "review-endorsed",
+    "critic_note": "The review at [94] called this matter's carry-clawback snippet irrelevant and asked for a scan restricted to partnership agreements, side letters and amendments; the agent ran it at [97], whose name filter left the document out, and no later review named it.",
+    "why": "The carry agreement of a vehicle it kept was in its own file listing ([55]) and later in scan snippets ([88]), but when choosing that vehicle's documents to read it opened only the partnership-agreement amendment (and later the closing memo), so that proof document was never cited."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Prints every matter folder with its file count; the output is cut, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: the same inventory saved to a file with totals (266 matters, 9,288 files).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for agreement, side-letter, subscription words and both request terms; 229 paths in 98 matters, printed as counts. The review flags name-only matching.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; eight background bucket scans print one-term and both-term matters, then the both-term files of 12 matters. The review flags a 16 vs 12 mismatch and narrow patterns and suggests a new step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rescan with verified coverage. Looser rescan in eight buckets with file counts (all 9,288 files): 230 matters, 99 with both terms.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rescan with verified coverage"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Rescan with verified coverage. Name-filtered file listing of the 99 both-term matters; a stage_start for reading is refused because this stage is still open. The review says the carry and entity files of one matter may be entity papers and asks for each matter's partnership agreement or side letter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rescan with verified coverage"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the openings of eleven documents from seven candidates: partnership agreements and amendments, side letters, a formation certificate; of one kept matter only its amendment.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 62,
+     "end": 83,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script over name-filtered files of 13 named matters (about 103K chars), an extraction of six named documents saved and read (a read outside the workspace is refused, then copied in), snippet scripts on four named agreements and a name-filtered listing of four matters. The review flags oversized output and hand-picked matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes four vehicles as qualifying, with status caveats, documents and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 98,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails because it looks in the working folder, then finds all 22 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-reads five governing and formation documents and edits one vehicle's draft-versus-effective status three times; rechecks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 119,
+     "end": 119,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It saw a kept vehicle's carry agreement in its scan hits and listing but never opened it, so the answer cites the vehicle's other documents only.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 46,
+    "end": 61,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "review-endorsed",
+    "critic_note": "The review at [45] said the carry and entity files listed for this matter might be entity papers rather than partnership agreements and told the agent to open each matter's partnership agreement or side letter; it did, and no later review named the carry agreement.",
+    "why": "The carry agreement of a vehicle it kept appeared as a one-term hit in its scan output ([33]) and in its filtered listing ([41]), but of that vehicle's documents it opened only the partnership-agreement amendment, and its later snippet scripts used name filters that left the file out, so it was never cited."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files and matter folders and prints all 266 folder names.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Two store-wide scans time out; 32 background shards are polled with sleeps until done, then merged per-matter counts for matters with both terms (output cut). The review asks for the full both-term list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Saves the merged report and the 117 both-term matters to files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Confirms the saved report covers 266 matters and 9,288 files with no errors.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 61,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of the 117 candidates to a file (count only), then a name screen per matter (a heredoc error, then 101 lines). The review warns that its name filter may drop files such as one matter's carry agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 136,
+     "tags": [
+      "file not found",
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Fifteen reads with guessed paths fail twice; a grep of its saved listing gives real paths; reads partnership agreements, side letters, memos and amendments from nine candidates, a both-term file list from the saved scan (a heredoc error first) and deeper reads at offsets.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 137,
+     "end": 142,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Both-terms-in-one-file script over the 117 candidates in 16 background shards; 15 matters, 108 files.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 143,
+     "end": 146,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Key-term snippet scripts over four named partnership agreements and amendments.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 147,
+     "end": 163,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. Reads two closing checklists, a closing memo, a compliance memo, two carry-retention side letters, a memo and a subscription agreement of four candidates and one amendment snippet; a stage_start for writing is refused because this stage is still open. The review flags hand-picked reads and snippet sampling.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 164,
+     "end": 173,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify executed LPAs in surfaced matters. Reads a draft side letter, an offering memorandum, an operating agreement and two partnership agreements of five other candidates. Label note after [163]: ignored.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify executed LPAs in surfaced matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 174,
+     "end": 179,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two vehicles as qualifying and lists four others, two of them read in depth, as in formation, draft or lacking a shown term.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 180,
+     "end": 187,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks 12 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 188,
+     "end": 202,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads four sources of the two included vehicles and softens one vehicle's closing wording; the review says to keep the set unchanged.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 203,
+     "end": 210,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: confirms which file holds the delivered response and re-reads its opening; the review suggests an audit step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 211,
+     "end": 218,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Full-file citation and exclusion audit. Reads the whole response and checks cited paths and named exclusions.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Full-file citation and exclusion audit"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 219,
+     "end": 219,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Search within a candidate matter's files → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a kept vehicle's carry agreement despite a review warning, and it excluded two vehicles whose documents it had read as not formed or not shown to carry both terms.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 62,
+    "end": 136,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The listing review at [61] said its name filter put carry-allocation-type files of this matter at risk of being dropped; the agent read the matter's amendment, memos and carry-retention side letters but never that file.",
+    "why": "Its name screen of a kept vehicle's files ([59]) showed the carry agreement first, and the review then warned it could be dropped, but its reads of that vehicle went to the amendment, a presentation memo, the closing memo and carry-retention side letters, so the carry agreement was never cited."
+   },
+   "other_errors": [
+    {
+     "stage_no": 12,
+     "stage": "Write the response",
+     "start": 174,
+     "end": 179,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned excluding either vehicle; the reading review at [136] only asked for one vehicle's executed or closing documents before treating it as formed, and the check reviews told the agent to keep the set unchanged.",
+     "why": "It excluded two vehicles it had read: one as still in formation, from the draft marking on its partnership agreement and the open items in its first-close checklist although its side letters were dated at the first close, and one because its executed amendment was read as not showing the clawback (evidence seen at [98]-[159])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed, and all three in the same first way: each had a kept vehicle's carry agreement in its own output (T0 in a candidate listing and scan snippets, T1 in its scan hits and filtered listing, T2 in its name screen) but chose that vehicle's partnership-agreement amendment, memos and side letters to read, and later name or same-document filters dropped the file, so the proof document was never cited (first error at the first reading stage after it appeared). T0 and T1 otherwise wrote all four vehicles with their documents (10 of 11). T2 also excluded two vehicles it had read, one as still in formation and one as not showing the clawback (5 of 11). The reviews differed: T2's listing review named carry-type files of that matter as at risk and was ignored; in T0 and T1 the reviews pushed the other way (calling the carry snippet irrelevant, or the carry files entity papers, and asking for partnership agreements and side letters), and the agents followed. Agent-declared stages (six in T0, one in T1, two in T2) were scans, listings, verification reads and an audit that map onto existing stages; none played a role in the shared error."
+}

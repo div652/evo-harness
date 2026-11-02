@@ -1,0 +1,671 @@
+{
+ "task": "014",
+ "context": "Request: how many of the firm's credit facilities are covenant-lite in the market sense (institutional term loans with no always-on financial maintenance covenant), and which ones, for a lender update. Rubric: 1005-00001 (Nexford TLB) and 1021-00001 (Verimark TLB) qualify, plus a precision criterion. 1001-00007 (Ardent) and 1041-00003 (Cloudium), term loans with revolver-only springing covenants documented in the Financing folders of other deal matters, are outside the permitted set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for per-matter listings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: find over every matter folder prints all file paths (about 531K characters); the summary names financing-heavy matters. The end-of-stage label note names List files in candidate matters; the next listing stage was declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List files in the unlisted matters (suggested by the review). Lists all files of the five tail matters the review named as never listed.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in the unlisted matters"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List files in the unlisted matters (attempt 2). File-name grep and a text keyword scan over the same five matters; the review says their exclusion rests on keyword hits.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in the unlisted matters"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 38,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad loan and covenant terms times out; four range-split reruns print about 130K characters of per-matter hits. The review flags noise and a hand-picked shortlist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 39,
+     "end": 49,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Targeted store-wide scan with saved results. A narrower-term scan times out, then four range reruns save per-matter counts to files (137 hit matters); the review flags generic terms and partly visible output.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted store-wide scan with saved results"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Derive candidate set from saved scan (suggested by the review). Script over the saved scan files prints hit matters with financing-like file names; the summary names 13 candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Derive candidate set from saved scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 74,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify candidate coverage and proof documents (suggested by the review). A coverage check of the saved scan files against the folder list (137 of 266 matters) with agreement file names for 13 candidates, then one parallel batch of twelve reads of agreement openings and memos across eleven candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify candidate coverage and proof documents"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 75,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over the covenant sections of twelve named agreements (one result about 56K characters) and a re-read of one agreement's opening; the summary finds three facilities with only revolver-triggered tests. The review flags the hand-picked list; the end-of-stage label note names Read documents picked from the file listing, and the next reading was done under a new stage name.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 87,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide covenant scan of executed credit agreements (suggested by the review). Script over every file whose path looks like an executed loan agreement (23 files, 19 matters), printing covenant snippets.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Store-wide covenant scan of executed credit agreements"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "end": 98,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Store-wide covenant scan of executed credit agreements (same attempt). Snippet script over three newly surfaced agreements, then reads of a covenant memo and one agreement's opening; the summary adds a fourth facility.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Store-wide covenant scan of executed credit agreements"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 99,
+     "end": 109,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide covenant scan of executed credit agreements (attempt 2). An unfiltered phrase-count scan times out, then four range reruns save counts to files; the summary keeps four facilities.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Store-wide covenant scan of executed credit agreements"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify TLB matters via executed agreements (suggested by the review). Prints per-matter phrase counts from the saved files; no document is opened and the review rates the goal not reached.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify TLB matters via executed agreements"
+    },
+    {
+     "stage": "Write the response",
+     "start": 116,
+     "end": 121,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four facilities as qualifying, two of them term loans read in other deal matters' financing folders, with exclusions. The review asks for fact checks without adding or restoring matters on weak grounds.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 122,
+     "end": 147,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths and agreement terms, fixes two closing-document paths and the total amount; one path-check script fails on the response location.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 148,
+     "end": 154,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: extracts one agreement's covenant section and re-reads the response; the review says to finalize as written and keep all four facilities.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 155,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List files in candidate matters → Search within a candidate matter's files → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Tabulate candidate matters from saved results → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted two term loans documented in the financing folders of other deal matters as covenant-lite facilities of the credit book, alongside the two qualifying facilities.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 116,
+    "end": 121,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "The review at [86] sent the agent to a store-wide sweep of executed agreements, which added the fourth facility, and the last check review at [154] said to finalize keeping all four; no review asked whether the extra facilities belonged to the credit book.",
+    "why": "The answer lists four facilities as covenant-lite, two of them acquisition-financing term loans read in other deal matters' Financing folders, which the request's credit book did not cover (evidence seen at [60]-[96])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a matter-level listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with its file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the folder list to a file and prints the total (266) and counts by number prefix.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out, as does a four-range parallel rerun that still writes hit files; the agent prints their first 120 lines and greps them for agreement-like file names with head and tail caps. The review flags that most of the 1,938 hit lines were never seen.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Verify scan completeness and aggregate per-matter hits. Checks that the four hit files exist and aggregates strong-term lines per matter (57 matters, about 29K characters); the review flags a hand-picked shortlist of eight.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify scan completeness and aggregate per-matter hits"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 47,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "Script lists the agreement-like file names of every matter in the hit files (773 lines saved, 240 shown) and greps the saved list for some matter-number prefixes; the review flags empty listings left by the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Re-list unlisted and empty matter folders (suggested by the review). Counts files per hit matter (134 matters, none empty); no file names printed.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Re-list unlisted and empty matter folders"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List files in all surfaced matters (suggested by the review). Writes a full file listing of the 134 hit matters to a file and prints only its head and tail.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in all surfaced matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 74,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "One parallel batch of eight reads: agreements, commitment letters and a deal memo from four candidates. The review flags that the summary swaps amounts and borrowers between matters; the end-of-stage label note names Read documents picked from the file listing, and later reading was done under other names.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 75,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet and covenant-article scripts over seven named agreements (one output about 62K characters) and a read of one agreement's opening; the summary finds three facilities with only revolver-triggered tests. The end-of-stage label note names Scan document text with an extraction script; the next scan was declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 87,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify final covenant-lite count. Store-wide scan for four exact revolver-only and covenant-lite phrases, one line per hit file.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify final covenant-lite count"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "end": 99,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify final covenant-lite count (same attempt). Lists the files of one newly surfaced matter, reads its agreement opening and commitment letter and runs the snippet script on its agreement; the summary adds it as a fourth facility.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify final covenant-lite count"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Direct covenant-article verification. Snippet script over the covenant sections of the four chosen agreements.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Direct covenant-article verification"
+    },
+    {
+     "stage": "Write the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four facilities as qualifying, two of them term loans read in other deal matters' financing folders, with borrower names and amounts mismatched for two of them. The review asks for per-facility checks.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response and globs the cited folders; no edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 151,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads three agreement openings, prints two more and runs a store-wide party-name search, then edits the borrower names, amounts and total of two facilities and one exclusion. The review flags that the reassignment rests on openings only.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 161,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: extracts the openings and covenant sections of three agreements and fixes one section number; the review says to stop re-verifying and not to add or restore any matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 162,
+     "end": 171,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Final consistency read (suggested by the review). Recomputes the total and checks cited paths (a first script fails on the response location) and re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final consistency read"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 172,
+     "end": 172,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted two term loans documented in the financing folders of other deal matters as covenant-lite facilities of the credit book, alongside the two qualifying facilities.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 106,
+    "end": 111,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews checked amounts, borrower identities and covenant text; the check reviews at [161] and [171] said not to add, restore or change the set, and none asked whether the extra facilities belonged to the credit book.",
+    "why": "The answer lists four facilities as covenant-lite, two of them acquisition-financing term loans read in other deal matters' Financing folders, which the request's credit book did not cover (evidence seen at [64]-[103])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a per-matter listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files under the top folder, then lists all 266 matter folders with file counts. The end-of-stage label note names List matter folders; no later folder listing followed.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 41,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scripts time out twice; four range scans run in the background while the agent polls with sleeps (2,956 hit files, no matter list printed); an aggregation heredoc fails. The review flags generic terms and no per-matter list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 42,
+     "end": 53,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Aggregate scan hits per matter (suggested by the review). Aggregates the hit files (179 matters), launches exact-phrase range scans in the background; a sleep times out and a head of the partial outputs prints about 195K characters. The review rates the goal not reached.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan hits per matter (attempt 2). Waits for the exact-phrase scans and prints per-matter counts (65 matters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 60,
+     "end": 67,
+     "tags": [
+      "script error",
+      "output capped"
+     ],
+     "hindsight": "target opened",
+     "note": "A heredoc error, then the agreement-like file names of the 65 hit matters saved (490 lines, 320 shown); the review flags the name filter and line cap.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 68,
+     "end": 75,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: full file listing of the 65 matters written to a file, head and tail shown; a stage_start for screening is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 76,
+     "end": 98,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "One parallel batch of eight reads of agreement and term-sheet openings across eight candidates, then three covenant snippet scripts and two opening re-reads on two agreements; the summary names four facilities. The review flags about 60 surfaced matters never opened; the end-of-stage label note names Read documents picked from the file listing, and the next reads ran under a within-matter search label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 99,
+     "end": 113,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files. A script refused because no stage was open, then a per-matter table of hit documents and agreement-like file names for the 65 matters, then reads of six more candidates' agreement openings; the review rates the goal not reached. The end-of-stage label note names Screen candidate matters by reading documents; no screening followed before writing.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 114,
+     "end": 121,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: snippet script over the agreement files of 14 named matters (about 73K characters); a stage_start for writing is refused because this stage is still open. The end-of-stage label note names Scan document text with an extraction script; no later scan followed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 122,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four facilities as qualifying, two of them term loans read in other deal matters' financing folders, with exclusions. The review asks for fact checks and a scope that matches what was reviewed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 135,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and checks key terms in the four chosen agreements; a path-check script fails on the response location.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 141,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reruns the path check and checks terms in four agreements and a memo; no edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 142,
+     "end": 151,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Two calls refused because no stage was open, then attempt 3 repeats them: re-reads the response and prints two covenant passages; no edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 157,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Reconcile inclusion and exclusion tables (suggested by the review). Phrase counts in the four chosen agreements and one excluded matter's memo; no edits.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Reconcile inclusion and exclusion tables"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 158,
+     "end": 165,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Read covenant clauses for included facilities (suggested by the review). Prints the covenant clauses of the four chosen agreements and the excluded memo; no edits.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read covenant clauses for included facilities"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 166,
+     "end": 166,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted two term loans documented in the financing folders of other deal matters as covenant-lite facilities of the credit book, alongside the two qualifying facilities.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 122,
+    "end": 127,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews asked to confirm amounts, covenant text and exclusion reasons and, at [141] and [151], to change the counted set only if a matter's own documents contradicted it; none asked whether the extra facilities belonged to the credit book.",
+    "why": "The answer lists four facilities as covenant-lite, two of them acquisition-financing term loans read in other deal matters' Financing folders, which the request's credit book did not cover (evidence seen at [78]-[117])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs failed the same way, at the write stage: each found both qualifying facilities after store-wide extraction scans and reads of executed agreements, then wrote the same two further term loans, read in the Financing folders of other deal matters, as qualifying facilities (four in every answer). The routes differ only in where the extra facilities entered: T1 and T2 read both in their first screening batch; T0 read one there and added the other after a review-suggested store-wide sweep of executed agreements. T1 also paired borrowers and amounts with the other matters after a parallel read batch and fixed this in its check stages. No review questioned whether the extra facilities belonged to the credit book: the write and check reviews asked for fact and path checks and told the agent not to change the set, and in T0 the last review said to keep all four (review-endorsed; T1 and T2 not-flagged). The agent declared many new stages (scans and summaries of saved scan output, listings of surfaced matters, coverage checks, post-writing reconciliations); all map onto existing stages and none changed the set."
+}

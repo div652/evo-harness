@@ -1,0 +1,608 @@
+{
+ "task": "198",
+ "context": "Request: executed credit agreements from the firm's deals valued over $1 billion, as comparables. Rubric: 1003-00003 (Harrowgate PE / VeloPay), 1005-00001 (Nexford Industrial), 1041-00003 (Solara Digital / Cloudium), each with its executed credit agreement, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a full per-matter listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: script prints every file of every matter (about 627K characters, cut in view); the summary names about ten executed-agreement candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 3). Per-matter file counts with only financing-named files kept by a path regex. The review flags the name filter and truncation; its end label note named the scan stage, which the next stage declared (end note followed).",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 43,
+     "tags": [
+      "timed out",
+      "output capped",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out, range scans in parallel (two time out), a capped grep for large amounts and a snippet dump of about 577K characters; stage-check notices on two no-op calls. The review flags unverified coverage and the filtered candidate list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: compact one-line-per-matter scan (largest amount, execution flags) in twelve chunks, then a filter for amounts of at least one billion; 16 candidates named. The review flags the amount filter and unopened matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements and deal memos of three lead matters, then cover pages of nine more candidates' executed agreements and memos.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "end": 107,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads drafts, commitment papers and memos of eleven sibling and near candidates; one guessed path fails. The review flags thin grounds for two exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 108,
+     "end": 118,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify unresolved candidates. Lists one candidate folder and reads further into two excluded matters' agreements; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "agent_new": "Verify unresolved candidates",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 119,
+     "end": 126,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify unresolved candidates (attempt 2). Lists two candidate folders and greps one matter's agreement folder for commitment amounts (no matches on .docx).",
+     "label_check": "none",
+     "agent_new": "Verify unresolved candidates",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 127,
+     "end": 136,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify unresolved candidates (attempt 3). Re-reads two agreement openings and pages one folder listing; the review says to stop re-verifying and write.",
+     "label_check": "none",
+     "agent_new": "Verify unresolved candidates",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 137,
+     "end": 142,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three qualifying matters with executed agreement paths and deal values, plus an exclusions section.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 143,
+     "end": 158,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, lists the three matters' files, reads agreement openings and removes one secondary citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 159,
+     "end": 173,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the economic terms and deal-value memos of the three matters; edits one date claim.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 174,
+     "end": 179,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads the rest of the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 180,
+     "end": 194,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify exclusions against source. Re-reads cover pages of ten excluded candidates' agreements and memos; no edits.",
+     "label_check": "none",
+     "agent_new": "Verify exclusions against source",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 195,
+     "end": 203,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify exclusions against source (attempt 2). Reads deeper into four excluded candidates' agreements and memos.",
+     "label_check": "none",
+     "agent_new": "Verify exclusions against source",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 204,
+     "end": 204,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). One command lists all matter folder names and greps all file paths for credit, loan and financing words; the output is cut after about 60 matters, which the review flags. The end label note named the file-name search stage; the next stage kept the store-listing label for the same work.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Saves the folder list and the financing path list (509 paths) to files and prints only counts; the saved path list is never read.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out; six background range scans are cut by the timeout and their partial outputs combined; a file-name filter for executed agreement names gives 12 files. The review flags that range completion was never checked and the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 43,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: List files in all matters surfaced by the scan. Counts scan hits for 141 matters, lists their files filtered by financing words; one filter returns nothing.",
+     "label_check": "none",
+     "agent_new": "List files in all matters surfaced by the scan",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 51,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List files in all matters surfaced by the scan (attempt 2). An empty saved file, then a rebuilt full listing of the 141 matters printed at once and cut in view.",
+     "label_check": "none",
+     "agent_new": "List files in all matters surfaced by the scan",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List files in all matters surfaced by the scan (attempt 3). Per-matter classification of financing-named files saved to a file; the review flags the name filter.",
+     "label_check": "none",
+     "agent_new": "List files in all matters surfaced by the scan",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 58,
+     "end": 69,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Content-based credit agreement identification. Text scan of the 141 hit matters for agreement titles and execution markers times out; range outputs are combined and per-matter counts printed.",
+     "label_check": "none",
+     "agent_new": "Content-based credit agreement identification",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 70,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Content-based credit agreement identification. Reads 14 executed agreements and closing papers of eleven candidate matters in one batch; the review flags hand-picked reads and a misread facility amount.",
+     "label_check": "none",
+     "agent_new": "Content-based credit agreement identification",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 87,
+     "end": 123,
+     "tags": [
+      "file not found",
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify facility size and execution per candidate matter. Re-reads agreements and closing papers of eleven candidates, lists one lead matter's files, then filters saved scan hits for billion-level amounts (a heredoc error first). The review flags an unclassified candidate and the matter whitelist.",
+     "label_check": "none",
+     "agent_new": "Verify facility size and execution per candidate matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 124,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes two qualifying matters with their executed agreements and a list of exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 137,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response and softens the completeness statement to the reviewed matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify cited documents against response. Re-reads the cited agreements, closing papers and two exclusions.",
+     "label_check": "none",
+     "agent_new": "Verify cited documents against response",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 153,
+     "end": 164,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify cited documents against response (attempt 2). Extracts amount passages of cited agreements and fixes a swapped matter number in the exclusions.",
+     "label_check": "none",
+     "agent_new": "Verify cited documents against response",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 165,
+     "end": 174,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify cited documents against response (attempt 3). Re-reads three agreement openings.",
+     "label_check": "none",
+     "agent_new": "Verify cited documents against response",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 175,
+     "end": 180,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Confirm amounts and signatures for included matters. Extracts facility-amount and signature passages from two cited agreements.",
+     "label_check": "none",
+     "agent_new": "Confirm amounts and signatures for included matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 181,
+     "end": 181,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A timed-out store-wide scan silently skipped a block of matters; all later listing, scanning and reading worked from the partial hit set, so one qualifying deal never surfaced and the answer named two of three.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 20,
+    "end": 33,
+    "events": "[24]-[25]",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan-stage review at [33] said the timed-out range rerun was never checked for completion of every range; the agent did not check and built every later step from the 141 matters in the partial output.",
+    "why": "The background range scans were cut by the 60 s timeout before reaching a block of matters that held one qualifying deal, and the agent never checked range coverage or read its saved financing path list, so that matter never entered the candidate set."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 4,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: script prints every file of every matter (about 543K characters, cut in view). The end label note named the folder-listing stage, which the next stage declared.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Compact inventory of all 266 matters with file counts and top-level folders, saved to a file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range-split rerun writes four output files and prints one slice. The review asks to check that every range completed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks each range file's scanned-matter count (70, 70, 70, 56) and prints executed-agreement hits; a stage_start for screening is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Builds a compact hit-matter list (67 matters) from the scan outputs by a financing file-name regex; the review flags the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Reconcile hit pool. Compares matters in the raw scan outputs (194) with the filtered list (67) and saves the union.",
+     "label_check": "none",
+     "agent_new": "Reconcile hit pool",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Store-wide path regex for credit and loan agreement names; the request uses the credit-agreement word.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Cross-check file-name hits against full matter listing. Regex over the saved folder inventory for financing and lender folder words; adds seven matters.",
+     "label_check": "none",
+     "agent_new": "Cross-check file-name hits against full matter listing",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads executed agreements and deal memos of twelve candidates from the file-name search in one batch, then more agreements and closing papers of four.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three qualifying matters with executed agreement paths and deal values, plus an exclusions table.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 128,
+     "tags": [
+      "script error",
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; a path-check script fails on the response location, then finds one missing citation; one edit fails, two edits fix a path and a matter label.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 146,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the three included agreements and value sources and two exclusions; softens the completeness wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 147,
+     "end": 154,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: a check call refused because no stage was open, then re-reads the top of the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 155,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T0, T2 pass; T1 fails). All three runs listed the whole store, ran a store-wide extraction scan that timed out, and got a review flagging unverified coverage. They split at that scan stage: T0 reran the scan in twelve small chunks writing one line per matter, and T2 checked each range file's scanned-matter count against the 266-matter inventory, so both reached the three qualifying deals; T1 combined the partial outputs of six timed-out background ranges without checking them and drew every later step (three agent-defined listing stages, a second scan of only the 141 hit matters, two reading stages) from that set, which lacked one qualifying matter. The reviews did not differ: T1's scan review named the unchecked range coverage, and the agent moved on. Label notes and policy played no role; T1's agent-defined stages narrowed work to the partial hit set rather than widening it."
+}

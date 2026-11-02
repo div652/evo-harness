@@ -1,0 +1,520 @@
+{
+ "task": "199",
+ "context": "Request: the due-diligence memos from the firm's healthcare-services M&A deals (hospital systems, provider groups). Rubric: 1001-00003 (Ardent/Cardinal Peak, DD summary memorandum), 1001-00007 (MedVance, five diligence memos/reports), 1006-00008 (Lakewood, five diligence memos/summaries), plus a precision criterion limiting the set to those three; T0 also asserted 1001-00001 (Pinnacle Health Systems acquisition, antitrust/HSR workstream only).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 11,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a find listing cut at 200 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Saves the full file list to a file and prints the file and folder counts and every matter folder name.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Checks that the saved folder list holds 266 valid matter numbers; the review says to stop re-verifying, and the harness notes the stage was opened three times.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 30,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script for sector words times out; a four-range rerun records 1,950 hit lines, then a filter keeps only hits in diligence-named folders (130 lines). The review flags the folder filter and a hand-picked shortlist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 31,
+     "end": 36,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Coverage check and per-matter totals from the saved hits (202 of 266 matters, about 45K characters). The review flags the 64 no-hit matters as unchecked; its label note names the figure-calculation stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 37,
+     "end": 44,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "After a heredoc error, a name-filtered listing of the hit matters' deal and diligence files. The review flags the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 50,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves unfiltered file lists of all 202 hit matters to a file without printing them; its label note names the extraction-scan stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 51,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 19 deal agreements and diligence memos from about 13 candidates. The review flags about 60 surfaced matters unopened and names unopened siblings in two number series.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 78,
+     "end": 113,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists the files of 15 sibling matters and reads 24 documents, among them six competition-review workstream memos of a sibling matter about a provider-platform acquisition, plus more memos of the three lead matters. The review names that sibling as confirmed from competition-review memos, not a diligence memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four matters as qualifying, including the sibling confirmed from competition-review memos, with diligence memo paths and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 120,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks 30 cited paths and edits the closing-status wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 139,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads four agreements and two memos. The review again flags the competition-review-only sibling and a lead matter's packaging-company buyer; its label note names the screening stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 140,
+     "end": 151,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit refused because no stage was open, then attempt 3 edits both flagged entries to explain them and keeps both; the harness notes the stage was opened three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 152,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "After the review pushed it to open sibling matters, it read only competition-review memos of one sibling and still listed it as a qualifying deal, failing the precision criterion.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 114,
+    "end": 119,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The screening review at [113] said this matter was confirmed only from competition-review workstream memos and no diligence memo was opened; the agent wrote it in, and after the same flag at [139] only reworded its entry.",
+    "why": "The answer asserts a sibling matter as a qualifying healthcare-services deal on the strength of its antitrust-workstream memos, with no due-diligence memo seen (evidence seen at [98]-[111])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 12,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts and every file (about 543K characters); its label note names the folder-listing stage and the review suggests another listing attempt; that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out, a three-range rerun times out leaving partial files, and greps of those files are cut at 240 lines. The review rates it not reached and suggests a background rerun with a coverage check.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 49,
+     "tags": [
+      "script error",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rerun extraction scan in background with coverage check (the step the review suggested). Background range scans fail on an argument bug, are fixed and polled until all six report complete; the per-matter ranking is shown cut at 80 lines.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun extraction scan in background with coverage check"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 50,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: background scan with separate sector and deal-term counts per matter; the full list of matters with sector hits is printed. The review flags a six-matter shortlist that leaves out high-hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 62,
+     "end": 76,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads ten diligence memos and reports of eight candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of a typed list of candidates in five number series (about 67K characters). The review flags the typed list; its label note names the extraction-scan stage, and the agent next declares a reviewer-suggested new step for similar work.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 83,
+     "end": 90,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List files for remaining surfaced matters (the step the review suggested). After a heredoc error, writes the sector- and deal-word file names of every scan-hit matter to a file (1,746 lines) and shows part of it.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files for remaining surfaced matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 91,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the three executed agreements and three more diligence memos of the three chosen matters; its label note names the screening stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three matters with their diligence memo paths, deal context and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 118,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, checks 22 cited paths, edits the closing-status wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads three agreements, three memos and the response opening. The review flags the unexamined candidates; its label note names the screening stage, and the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 131,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Search file names for request keywords → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 12,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review flags the miscounted matters and the cut output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Folder count and names, then every file per matter (about 807K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for sector and diligence words over all matters; the output is cut in the log. Its label note names the extraction-scan stage, which the next stage declares; the review also suggests a store-wide text-scan step.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide script times out; six 50-matter batches report sector-and-deal hits, but their outputs overwrite each other. The review suggests merging the batches.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: reruns the batches with separate outputs and merges them (241 hit matters); after a heredoc error, prints per-matter sector-hit files and transaction paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Calculate figures for the answer. Ranks the merged scan hits by specific sector terms; its label note names the extraction-scan stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Saves the complete file lists of the 241 merged-hit matters and prints per-matter file counts; its label note names the folder-listing stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). File-name regex for diligence-memo words over the saved inventory of 241 matters; 80 matters (about 34K characters). The review flags the 161 matters dropped on file names; its label note names the figure-calculation stage, and that work does not recur.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 85,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 24 diligence memos and executed agreements of five candidates. The review flags about 60 unopened matters and suggests opening siblings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 86,
+     "end": 121,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Fifteen reads refused because no stage was open, then attempt 2 reissues them: one diligence memo from each of 15 other matters, all excluded. The review suggests screening the remaining unopened matters, which the agent does not do.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 122,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes three matters with their diligence memo paths, deal summaries, a comparison table and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 136,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; a path check fails on a missing path and is rerun on the output file (22 paths).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "end": 151,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: reads the response in chunks and six sources, and edits the completeness wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 152,
+     "end": 159,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "An edit refused because no stage was open, then attempt 3 adds a scope note on a lead matter's buyer from another industry; the harness notes the stage was opened three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 160,
+     "end": 167,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: re-reads three parts of the response; the harness notes four openings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 168,
+     "end": 168,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1, T2 pass; T0 fails). All three runs reached the same three lead matters through store-wide scans and first-round screening reads. They split at T0's second screening stage: following the review's push to open unopened siblings in two number series, T0 read only the competition-review workstream memos of one sibling and then wrote it in as a fourth qualifying matter; T1 listed that sibling's files but never read them, and T2 broadened screening to 15 other matters but not that one. The critic named the problem specifically in T0 twice (screening review and check review) and the agent only reworded the entry, so the review's recommendation to open siblings set up the error while its later flag went unheeded. Label notes and declared new stages played no role in the split."
+}

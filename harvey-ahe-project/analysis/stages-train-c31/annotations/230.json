@@ -1,0 +1,719 @@
+{
+ "task": "230",
+ "context": "Request: real estate matters with an assignment-consent requirement on the deal itself (lease, purchase agreement or property interest), with the executed documents. Rubric: seven qualifying matters (1017-00009, 1026-00004, 1027-00004, 1031-00004, 1036-00004, 1043-00002, 1043-00003), each with a named executed document, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: prints every file of every matter folder (about 543K characters). The end label note names the folder-listing stage, and the next stage is declared as such.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Writes a matter index with file counts to a file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide assignment-consent scan times out; a parallel rerun saves hits, a heredoc error, then a filter of likely real-estate candidates. The review suggests rerunning coverage and building the full pool.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Rerun coverage check and build the full candidate pool. A real-estate-term rescan times out.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun coverage check and build the full candidate pool"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 44,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-store real-estate assignment-consent scan. The rescan times out again; a folder check runs beside it.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store real-estate assignment-consent scan"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 45,
+     "end": 52,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-store real-estate assignment-consent scan (attempt 2). Prints the pooled hits per matter (about 53K characters); a stage_start is refused while this stage is open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store real-estate assignment-consent scan"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 53,
+     "end": 58,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Finalize real-estate candidate pool. Filters the pool by real-estate file and text words into a compact list.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize real-estate candidate pool"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 77,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the openings of fourteen executed leases, purchase agreements, easements and assignments across ten matters; a guessed path in one matter fails and is not retried. The review names that failed path and the unopened siblings; its label note names screening, and the next reads are declared as an in-matter search.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 78,
+     "end": 87,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over the assignment and consent clauses of the chosen agreements (about 58K and 78K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six clear precedents and one limited precedent, excluding a financing matter and a portfolio deal; the review asks whether the limited one is scope inflation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Checks cited paths and edits document lists and one clause description.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It lost one matter to a guessed path, excluded another without opening it, and misjudged three agreements it had read.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 59,
+    "end": 77,
+    "events": "[61]-[64]",
+    "kind": "mistyped-path",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [77] said the read of that matter used a guessed path and its folder was never listed; the agent moved to snippet scripts without it.",
+    "why": "The agent tried to open one pooled matter with a guessed document path copied from its sibling, got file-not-found and never returned to it, so that matter is absent from the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 77,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The review at [77] listed unopened pooled matters without naming this one.",
+     "why": "A financing matter in the pool at [48] and [56] was never opened, and the answer excludes it from snippets alone."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned these exclusions; the write review instead asked whether the limited precedent was scope inflation.",
+     "why": "The answer marks one read purchase agreement as only a limited precedent and excludes a portfolio acquisition as a lender consent, though both executed agreements were read (evidence seen at [61]-[83])."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 88,
+     "end": 93,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews pushed for coverage of unopened siblings; none questioned the two ground-lease matters.",
+     "why": "The answer counts two ground-lease matters outside the qualifying set as clear precedents (evidence seen at [61]-[84])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. The end label note names the folder-listing stage; no further listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide assignment and consent scan times out, as does a range rerun; partial outputs are inspected.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: eight background range scans; partial outputs (about 36K and 28K characters) show one matter of the later-needed set.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Attempt 3: polling for the background scans times out with two of eight ranges done; the agent stops and picks five candidates from partial output. The review asks to rerun the missing ranges.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of ten candidate matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists files of ten matters the harness reported as unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads purchase agreements, memos and checklists of five candidates (asset purchases, a loan, a hotel purchase agreement, a merger).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 69,
+     "end": 88,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads closing checklists, certificates, agreements and schedules of four chosen matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes one qualifying matter (an asset purchase with lease consents), an adjacent lease precedent and near-precedents including the hotel purchase.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 105,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "A path check fails on the response location then passes; retitles sections.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: checks paths and re-reads three sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: re-reads the response and edits one heading; the harness notes the stage has been opened three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 138,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 4: re-reads three sources and edits the near-precedent summary.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 139,
+     "end": 146,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 5: edits the bottom line and counts headings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 147,
+     "end": 147,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It stopped its store-wide scan with two of eight ranges done and built its answer from five candidates in that partial output.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 36,
+    "end": 43,
+    "events": "[38]-[41]",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [43] said only two of eight scan ranges had finished and asked to rerun the missing ranges before building the candidate list; the agent went straight to listing five candidates.",
+    "why": "Its background scans finished only two of eight ranges, and the agent built its candidate list from that partial output without rerunning, so six of the seven needed matters were never reached."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned this exclusion.",
+     "why": "The answer treats a hotel purchase whose executed agreement it read as a non-qualifying near-precedent (evidence seen at [58]-[86])."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 89,
+     "end": 94,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked only for path and wording checks; the write review gave stock warnings.",
+     "why": "The answer names an asset purchase with lease consents, outside the qualifying set, as the one qualifying matter (evidence seen at [58]-[86])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 15,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus directory and file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 9,
+     "end": 22,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide assignment-consent scan times out; batch scripts over four matter lists are patched and run. The review suggests aggregating hits per matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 32,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan hits per matter. A targeted batch scan times out; its batch outputs are merged and summarised per matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 33,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Identify real estate matters. Per-matter file-name hits for lease, landlord, tenant, property and purchase words, printed in two parts.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify real estate matters"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 43,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Identify real estate matters (attempt 2). A candidate list from strong deal file names or several property-word files.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify real estate matters"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify real estate matters (attempt 2). Assignment and consent snippets from the listed candidates' files.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify real estate matters"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 72,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Validate real estate candidate set. Store-wide content batch scan and an exact-clause scan, both timing out, with a script error in the summary.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Validate real estate candidate set"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 73,
+     "end": 84,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Complete exact candidate scan. Exact-clause batch scan times out; its outputs are compared with the file-name candidates (two more later-needed matters appear).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete exact candidate scan"
+    },
+    {
+     "stage": "Read documents picked from the file listing",
+     "start": 85,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "No work: the agent closes the stage at once, saying the label does not fit, and opens screening as the start note suggested.",
+     "label_check": "followed",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 89,
+     "end": 114,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 20 agreements, consents and memos from twelve candidates, mostly asset purchases and ground leases. The review flags dozens of surfaced matters never opened and unclassified ground leases.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 115,
+     "end": 162,
+     "tags": [
+      "script error",
+      "timed out",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Screen remaining candidates by folder listing and clause reading. Builds a property-file union listing, clause scripts that fail or time out, then reads guaranties, mortgage assignments, deeds, a joint-venture agreement and purchase agreements (two guessed paths fail) and lists one financing matter's files. The review flags off-deal and unexecuted documents.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Screen remaining candidates by folder listing and clause reading"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 163,
+     "end": 168,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify clause and execution per claimed matter. Per-matter clause and execution check over twelve claimed matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify clause and execution per claimed matter"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 169,
+     "end": 183,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read executed documents and extract clauses. Reads assignment, consent, lease and purchase documents of ten claimed matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read executed documents and extract clauses"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 184,
+     "end": 194,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify clause text and scope for strict matches. Reads four documents of three claimed matters; a stage_start for writing is refused while this stage is open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify clause text and scope for strict matches"
+    },
+    {
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes ten confirmed precedents (acquisitions with lease consents, ground leases, a financing matter, a lease, purchase agreements) and broader non-counted matches.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 201,
+     "end": 215,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A path check fails on the response location then passes; regroups matters into confirmed and qualified.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 216,
+     "end": 229,
+     "tags": [
+      "tool error",
+      "no matches"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: an edit refused because no stage was open, then edits moving two matters to a qualified group and a heading grep.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 230,
+     "end": 237,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: counts headings and checks the deliverable; the review suggests clause-level checks.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 238,
+     "end": 243,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: new: Clause-level verification of confirmed matters. Clause snippets from three cited documents.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Clause-level verification of confirmed matters"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 244,
+     "end": 244,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Search within a candidate matter's files → Scan document text with an extraction script → Read documents picked from the file listing → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It screened acquisitions and ground leases from its candidate lists but never opened two needed property matters, and counted many business acquisitions as property-deal precedents.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 89,
+    "end": 114,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The review at [114] said dozens of surfaced matters were never opened, without naming these two; the next screening stage listed them in a union file but still never opened them.",
+    "why": "Two needed matters were in its own candidate lists (one at [48] and [54], the other at [82]), but it read same-client siblings and acquisition matters instead and never opened them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 115,
+     "end": 162,
+     "events": "",
+     "kind": "listed-document-not-opened",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [162] said the financing matter's reads were a mortgage assignment and a missing path, not the deal-level consent clause; the agent kept citing the intercreditor document.",
+     "why": "For one financing matter it listed the folder at [155]-[156] but read mortgage assignments and an intercreditor agreement instead of the loan documents carrying the consent requirement."
+    },
+    {
+     "stage_no": 15,
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned this exclusion.",
+     "why": "The answer lists a portfolio acquisition whose executed purchase agreement it read at [144]-[154] only as a broader, non-counted match."
+    },
+    {
+     "stage_no": 15,
+     "stage": "Write the response",
+     "start": 195,
+     "end": 200,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [162] said several claimed matters were asset purchases or merger leases without a deal-level clause read; the agent kept them as confirmed.",
+     "why": "The answer asserts five matters outside the qualifying set, mostly business acquisitions with lease consents and ground leases, as confirmed precedents (evidence seen at [91]-[189])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail. Each scanned the store for assignment and consent terms with repeated timeouts, then screened candidates. T1 failed earliest: it abandoned its background scan with two of eight ranges done (flagged specifically) and built its answer from five candidates, passing 1 of 15. T0 and T2 (8 of 15) reached most needed matters but lost some at the screening choice: T0 tried one matter by a guessed path copied from a sibling and never retried (flagged specifically) and excluded a financing matter unopened; T2 left two needed matters from its own candidate lists unopened while reading acquisitions and ground leases. Both also judged read agreements inconsistently and counted business acquisitions or ground leases as precedents. Agent-defined stages (mostly reviewers' suggestions for rescans and verification) all fit existing stages; label notes were followed twice (T0 declared a folder listing after the end note; T2 closed an empty listing-read stage and opened screening) and otherwise ignored."
+}

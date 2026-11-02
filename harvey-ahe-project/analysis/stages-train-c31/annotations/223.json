@@ -1,0 +1,525 @@
+{
+ "task": "223",
+ "context": "Request: how often the firm's completed real-estate matters include an environmental indemnity in the executed documents, and which ones. Rubric: five qualifying matters (1017-00009, 1026-00004, 1031-00004, 1036-00004, 1043-00003), the frequency 5 of 9 (about 56%), and precision; financing matters such as 1005-00001, 1015-00003, 1021-00001, 1036-00005, 1043-00001 and 1043-00002 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Matter folder names and file counts. The start note pointed to folder listing; the end note said the same, and no later stage lists folders.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for indemnity and property words times out; a parallel rerun saves 7,581 hit lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: coverage check (266 matters), a strong-phrase rescan and path-word filters over its output after a heredoc error.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Build complete per-matter candidate table. Per-matter table of strong indemnity hits for 99 matters (about 118K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Build complete per-matter candidate table"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 40,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Enumerate real-estate matter population. Path regex for property, real-estate, land-acquisition, purchase-and-sale and mortgage words builds the population. The review says the regex also pulls in secured-lending matters and names one.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Enumerate real-estate matter population"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 18 leases, purchase agreements, mortgages, indemnity agreements and closing memos from 14 matters; the review says no population tally was done.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 71,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts for indemnity language over the candidates, then reads of 14 closing certificates, checklists and memos. The review flags exclusions made from trackers.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Calculate figures for the answer",
+     "start": 95,
+     "end": 100,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Computes 8 of 12 and 4 of 12.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 8 of 12 completed real-estate matters with a clause-level indemnity (4 of 12 stand-alone), with a matter table.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks 40 cited paths and fixes one.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 120,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: compares the response copies and re-reads a mortgage, a lease and a closing memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: greps the response for the counts and re-reads one indemnity agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 143,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: a script recounts the table rows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 144,
+     "end": 144,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search within a candidate matter's files → Calculate figures for the answer → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It built the population from path words, so secured financings with mortgages or indemnities were counted as completed real-estate matters and the frequency is wrong.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 101,
+    "end": 106,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [47] said the population regex pulls in secured-lending matters and named one of them; the agent kept them in the population.",
+    "why": "The answer counts secured financings and other non-property matters whose documents carry mortgages, ground leases or environmental indemnities as completed real-estate matters, so the set and the frequency are wrong (evidence seen at [50]-[92])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: find prints every file per matter (about 814K characters). The end note says it looked like candidate-matter listing; the next stage counted folders instead.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Matter count, file counts per matter and a path-based property candidate set. The start note pointed to folder listing; the end note said the same, and no later stage lists folders.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Full-text scan for environmental indemnity. A store-wide scan times out after printing about 335K characters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Full-text scan for environmental indemnity"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-text scan for environmental indemnity (rerun). Five parallel batches cover all 266 matters, results saved.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-text scan for environmental indemnity (rerun)"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 74,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Prints saved hits for kept matters, then reads 27 indemnity agreements, mortgages, leases and memos from ten matters and runs two snippet scripts; one guessed path fails. The start note pointed to screening.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 75,
+     "end": 90,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads nine closing and indemnity documents of the leading matters; a stage_start for writing is refused because this stage is still open. The end note says the calls looked like screening; the next reads were declared as an in-matter search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 91,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts inside two matters for indemnity sections.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 99,
+     "end": 104,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 12 of 15 on a property-centric population that includes real-estate-backed financings. The review says that population may include financing matters and inflate the rate.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 105,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads and edits the response (adds a 10-of-15 strict rate and a narrower variant) and checks 40 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 137,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: three table edits separating strict-text and closing-record positives.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 138,
+     "end": 147,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit refused because no stage was open, then attempt 3 makes 10 of 15 the primary rate.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 148,
+     "end": 155,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: full read and a caveat edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 156,
+     "end": 162,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: final read and path check.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 163,
+     "end": 163,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It answered on a property-centric population that counts secured financings as real-estate matters, so the frequency and the qualifying set are inflated.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 99,
+    "end": 104,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [104] said the property-centric population may bring in financing matters and inflate the count; the edits changed which rate leads but kept the population.",
+    "why": "The answer counts secured financings and other non-property matters whose documents carry mortgages, ground leases or environmental indemnities as completed real-estate matters, so the set and the frequency are wrong (evidence seen at [36]-[96])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 7,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. find prints every file per matter (about 814K characters). The end note says it looked like candidate-matter listing; no later stage lists candidate files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: new: Compact per-matter inventory. File counts, file types and top folders per matter (about 44K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Compact per-matter inventory"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rebuild complete candidate list from file. Saves the inventory and derives 42 matters with property words in their paths.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rebuild complete candidate list from file"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for environmental-indemnity phrases; 63 matters with hits saved.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Broader rescan and candidate reconciliation. A broader rescan times out, then four parallel ranges finish and are reconciled to 52 matters (about 50K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Broader rescan and candidate reconciliation"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads 12 indemnity agreements and transaction documents from five matters, then lists closing files of 13 candidates. The start note pointed to screening; the end note said the calls looked like listing reads, and the next reads kept the in-depth label.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 59,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads ten closing certificates, memos and agreements of the positive and comparator matters. The review says the denominator was fixed without a full tally.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 5 of 10 completed real-estate matters with an environmental indemnity.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 80,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks 16 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 100,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the five positive indemnity documents and three comparators. The end note says the calls looked like screening; no stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 101,
+     "end": 101,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted secured financings with environmental indemnities as completed real-estate matters, so the qualifying set and the frequency are wrong.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 74,
+    "end": 79,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews asked about the completeness of the denominator, not whether the positive matters were real-estate deals.",
+    "why": "The answer counts secured financings and other non-property matters whose documents carry mortgages, ground leases or environmental indemnities as completed real-estate matters, so the set and the frequency are wrong (evidence seen at [42]-[71])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail the same way, at the write stage: each run found and named all five qualifying matters, but counted secured financings and other non-property matters with mortgages, ground leases or indemnity agreements as completed real-estate matters, so the frequency (8/12, 10-12/15, 5/10) and the precision criterion fail. The population came from path words for property and mortgage terms (agent-defined in T0 and T2). Reviews named the problem specifically in T0 (at the population stage) and T1 (at the write stage); the agents kept the population, and T1 only changed which rate leads. T2's reviews asked about denominator completeness, not scope."
+}

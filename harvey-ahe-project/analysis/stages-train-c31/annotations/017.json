@@ -1,0 +1,497 @@
+{
+ "task": "017",
+ "context": "Request: across signed Banking & Finance deals, how often EBITDA add-backs were conceded in controlling-sponsor portfolio-company deals versus strategic-corporate deals, with buckets, deals and rates. Rubric: 6 of 8 sponsor deals (1005-00001, 1006-00001, 1012-00001, 1019-00002, 1042-00001, 1043-00001 with add-backs) and 3 of 4 corporate deals (1010-00001, 1021-00001, 1038-00002), plus a precision criterion (no other matter, e.g. 1003-00003, presented as qualifying).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 10,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a matter-level relisting.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: walks every matter folder and prints every file (about 716K characters). The end-of-stage label note names the folder-listing stage; no further listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for EBITDA and add-back terms times out, a range rerun saves hits for 133 matters, then a summary script keeps only matters with credit-agreement-like file names. The review flags this name filter and lists surfaced matters left out.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List folders of all hit matters. One script lists the execution and closing files of every scan-hit matter (name-filtered); the review flags the filter and verdicts from file names.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List folders of all hit matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 30,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the opening of the executed agreement and a deal memo for each of eleven candidate matters, then a definition-snippet script over their agreements. The review flags a insolvency-practice facility placed in the corporate bucket and thin control evidence.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 62,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Widen coverage and verify control and EBITDA definitions. Store-wide script listing executed credit and loan agreement files; 14 matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Widen coverage and verify control and EBITDA definitions"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 76,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Widen coverage and verify control and EBITDA definitions. Reads the agreements and memos of three newly listed matters (two of them acquisition financings) and greps their EBITDA definitions; all three are added. The review questions the control evidence of two of them and the name-filtered list.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Widen coverage and verify control and EBITDA definitions"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nine sponsor deals (eight with add-backs) and four corporate deals (three with add-backs), with exclusions listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 96,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check fails on the response location then passes, recomputes rates and softens one control description.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 105,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the response, checks each cited agreement for definition terms and removes one memo citation; counts unchanged.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 106,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It widened its set with a file-name sweep for executed credit agreements and counted the acquisition financings that sweep surfaced as sponsor deals with add-backs.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 77,
+    "end": 82,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews after the widening stage questioned the control evidence of the other two added matters and the name-filtered list, never the scope of the added acquisition financing; later reviews asked only for spot-checks of other matters.",
+    "why": "The answer adds an acquisition financing from another practice group's matter as a sponsor deal with add-backs (and a second one beside it), inflating the sponsor bucket to nine with eight add-backs, and describes an excluded insolvency-practice facility as having EBITDA adjustments (evidence seen at [64]-[74])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: prints every file of every matter folder (about 530K characters). The end-of-stage label note names the candidate-listing stage; no such listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide add-back scan times out twice; partial background outputs are read and a narrower scan prints hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Keeps scan-hit matters whose file names carry credit, loan or financing words. The review flags this follow-up name filter; its end label note names the figures stage, and the next name sweep is declared as a new stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of executed agreements and a few memos of ten candidates and runs definition-snippet scripts. The end-of-stage label note names the listing-read stage; the agent then takes the reviewer's suggested new step instead.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 51,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Complete screening of unopened candidate matters. Store-wide script listing credit, loan and facility agreement files per matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete screening of unopened candidate matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "end": 81,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Complete screening of unopened candidate matters. Reads agreements of seven further candidates (two acquisition financings among them) and runs EBITDA-definition snippet scripts; the summary drops a bridge loan that has no EBITDA definition from the set. The review flags that exclusion as biasing the denominator and the name-filtered list.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete screening of unopened candidate matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes ten sponsor deals (nine with add-backs) and three corporate deals (two with add-backs); the stock review warns about out-of-scope matters and too-narrow exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 114,
+     "tags": [
+      "script error",
+      "no matches"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check fails on the response location, removes or replaces missing citations; counts unchanged. The review calls the corporate bucket unverified.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 115,
+     "end": 115,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It dropped a signed corporate bridge loan from the denominator because its agreement had no EBITDA definition, counted two acquisition financings as sponsor deals with add-backs, and marked one corporate deal as having none.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 55,
+    "end": 81,
+    "events": "",
+    "kind": "incomplete-population",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [81] named the dropped bridge-loan matter and said excluding deals without an EBITDA definition may bias the denominators; the agent wrote the answer without it.",
+    "why": "The agent fixed the corporate set without a signed bridge loan whose agreement has no EBITDA definition, so the corporate rate is computed on three deals instead of four (evidence seen at [55]-[79])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Only the write review's stock warning list mentioned out-of-scope matters; no review named the two acquisition financings.",
+     "why": "The answer counts two acquisition financings from other practice groups' matters as sponsor deals with add-backs, giving ten sponsor deals with nine add-backs (evidence seen at [53]-[66])."
+    },
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(generic flag) The check review at [114] called the corporate bucket unverified and asked for spot-checks of borderline corporate matters without naming this one; the agent finished.",
+     "why": "The answer places a corporate deal whose executed agreement it opened and grepped among deals without negotiated add-backs (evidence seen at [34]-[48])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 12,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide add-back scan times out, as do range reruns.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: a narrower scan times out twice.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide find \\| grep for credit, financing, facility and loan words in file names; 96 matters. A harness stage check notes the call does not match the open scan stage; the review suggests a batched scan step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 43,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-text scan with cached extraction. Batched scans time out except one small range.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-text scan with cached extraction"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Background batched scan to full coverage. Background scan writes per-matter term counts for all 266 folders; the agent then keeps matters with at least one add-back hit and a file-name list of executed credit agreements and facilities. The review flags both filters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Background batched scan to full coverage"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the first 80 lines of fourteen candidate agreements. The end-of-stage label note names the listing-read stage; the agent takes the reviewer's suggested new step instead.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 87,
+     "end": 126,
+     "tags": [
+      "timed out",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Extract add-back clauses and control facts. A definition scan times out with partial output, guessed engagement-letter paths fail, then memos, letters and per-matter definition snippets are read for the chosen set. The review flags thin control evidence for one sponsor deal and the scope of an acquisition financing and a insolvency-practice facility.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Extract add-back clauses and control facts"
+    },
+    {
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes ten sponsor deals (nine with add-backs) and four corporate deals (all with add-backs).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 133,
+     "end": 160,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and two agreements, fixes a swapped heading pair (one edit fails) and a path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 161,
+     "end": 166,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: term-count script over cited documents; no edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 167,
+     "end": 167,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It filtered its full scan down to matters with literal add-back hits and credit-agreement file names, losing one corporate deal, then bucketed one sponsor deal as corporate and added out-of-scope facilities.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Scan document text with an extraction script",
+    "start": 44,
+    "end": 67,
+    "events": "[58]-[65]",
+    "kind": "over-narrow-filter",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [67] said the candidate set came from a file-name filter plus an add-back-count filter that dropped matters before reading; the agent read only the filtered set.",
+    "why": "The full scan covered every matter, but the agent kept only matters with a literal add-back hit and executed credit-agreement or facility file names, which dropped a corporate bridge-loan matter that never reached the answer."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "events": "",
+     "kind": "misstated-facts",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [126] said that matter was read only through its engagement letter with no control facts; the agent wrote without checking control.",
+     "why": "The answer puts a sponsor-controlled matter in the corporate bucket, though its control was never read (evidence seen at [91]-[94])."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The review at [126] questioned the acquisition document read for one matter and the scope of the insolvency-practice facility; the agent kept both.",
+     "why": "The answer counts an acquisition financing, a restructuring matter and a insolvency-practice facility as deals with add-backs (evidence seen at [70]-[123])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail with inflated sponsor counts; none reaches the eight-sponsor / four-corporate split. Each run listed the store, scanned text for add-back terms (with timeouts), then narrowed candidates through file-name filters for executed credit agreements, which the reviews flagged every time. The widening steps that the reviews pushed for (agent-declared stages in all three runs) brought in acquisition financings from other practice groups, which every run counted as sponsor deals with add-backs. T0 got both corporate figures and every named deal right and failed only on that inclusion. T1 additionally dropped a bridge loan without an EBITDA definition from the denominator (flagged specifically at that stage) and marked one corporate deal as having no add-backs. T2 lost a corporate deal to an add-back-count filter (flagged specifically) and bucketed a sponsor deal as corporate. Label notes were never followed; the agent took the reviewers' suggested new steps instead."
+}

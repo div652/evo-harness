@@ -1,0 +1,684 @@
+{
+ "task": "028",
+ "context": "Request: every restructuring matter that involved DIP financing in any capacity (debtor, DIP lender, creditor responding to a DIP), for a precedent bank. Rubric: 1006-00002, 1011-00002, 1020-00002, 1024-00001, 1044-00003 (a never-filed standby DIP package) plus a precision criterion; 1007-00002 (stalking-horse buyer in a seller's Chapter 11 sale with a DIP) is outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a capped directory listing and file count; the review is unavailable.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 16,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex with request words saved to a file (58 hits); two name globs return nothing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 17,
+     "end": 22,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for request keywords (attempt 2). Prints the saved hit list; ten matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 23,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: Broader path regex; 279 hits in 64 matters. The stage-end note says the stage has been opened three times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 46,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice, a path-index bug leaves empty outputs, then parallel range scans write 563 hit lines (about 63K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 47,
+     "end": 54,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). A heredoc error, then a per-matter summary of the saved scan output; no new store reads. The end-of-stage label note names the figures stage; the next pass over saved scan output is declared as a new screening stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 55,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads about 24 opening sections: motions, credit agreements, objections and engagement letters of the five lead matters and cover pages of a dozen other scan-hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 87,
+     "end": 98,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining <topic> hits. Prints saved scan hits for the non-selected matters and reads five intercreditor or amendment openings; one guessed path fails.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Screen remaining DIP hits"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 99,
+     "end": 112,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Open remaining <topic>-hit matters. Lists files of 14 remaining candidates and reads seven engagement or opening documents; three guessed paths fail. The review flags ten candidates excluded without a read.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Open remaining DIP-hit matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 113,
+     "end": 126,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Open remaining <topic>-hit matters (attempt 2). Reads 40-60 line openings of nine documents of the unresolved candidates. The review flags that cover pages cannot show involvement in the financing.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Open remaining DIP-hit matters"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 127,
+     "end": 132,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify unresolved <topic> terms. Context-extraction script inside each unresolved candidate's files; the summary singles out the stalking-horse buyer's matter as adjacent.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify unresolved DIP terms"
+    },
+    {
+     "stage": "Write the response",
+     "start": 133,
+     "end": 138,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five direct matters plus one adjacent matter (the stalking-horse buyer) as usable in a broad bank. The review asks whether the sixth matter is in scope.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 139,
+     "end": 153,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths (a grep runs in the working folder instead of the output folder) and edits one row.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 154,
+     "end": 163,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: Checks six cited paths, reads one order and softens a status; an over-long offset read returns nothing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 164,
+     "end": 169,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: Re-reads the whole response. The review suggests a row-by-row reconciliation step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 170,
+     "end": 182,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: new: Row-by-row source reconciliation. Re-reads the opening of six cited sources, including the adjacent matter's engagement letter, and edits one row; the adjacent matter stays.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Row-by-row source reconciliation"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 183,
+     "end": 188,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 4: One wording edit. The stage-end note says the stage has been opened four times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 189,
+     "end": 197,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: Re-reads the opening; a grep of the response returns nothing; one wording edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 198,
+     "end": 198,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Tabulate candidate matters from saved results → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It added a stalking-horse buyer's matter as an adjacent related matter beside the five qualifying matters.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 133,
+    "end": 138,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The write review at [138] said the sixth, adjacent-capacity matter may fall outside the requested scope; the check review at [182] asked to confirm its inclusion or exclusion, and the agent re-read its engagement letter at [172] but kept it as adjacent.",
+    "why": "The answer presents a stalking-horse buyer's matter, whose counsel only reviewed the seller's DIP orders, as an adjacent DIP matter usable in a broad precedent bank (evidence seen at [103]-[130])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 6,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Prints every matter's full file list (about 647K chars). The end-of-stage label note names the folder-listing stage, and the next folder count is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts 266 folders and 9,288 files and saves both inventories to scratch files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script crashes on an empty text value.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Fixed rerun: 144 hit matters, shown through a 260-line cap. The review flags loose terms and the cap.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Summarize full scan output compactly. Strict-phrase rescan of the whole store; times out, then reruns in four ranges with duplicated headers.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Summarize full scan output compactly"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify deduplicated <topic> scan. Reruns the four ranges into separate files and checks coverage: 9,288 files, 63 hit matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify deduplicated DIP scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 74,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 22 documents from nine matters, including motions, credit agreements, an objection and the standby motion and draft agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 75,
+     "end": 101,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining candidate matters. Prints saved hit files per remaining candidate and reads 20 openings from other scan-hit matters and siblings.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Screen remaining candidate matters"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 102,
+     "end": 111,
+     "tags": [
+      "tool error",
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Targeted <topic> term check on screened candidates. Term-search script inside all 63 candidate matters; it crashes on an empty value and the rerun prints 348 lines through a cap; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted DIP term check on screened candidates"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 112,
+     "end": 117,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify targeted scan classifications. Counts matter IDs in the saved targeted output (63). The review flags that no content was read.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify targeted scan classifications"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 118,
+     "end": 129,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Read targeted scan evidence. Reads the saved targeted output in two chunks after a sandbox refusal of the scratch path; both chunks are cut.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read targeted scan evidence"
+    },
+    {
+     "stage": "Write the response",
+     "start": 130,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five direct matters plus one adjacent stalking-horse matter. The review flags padding with an adjacent precedent.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 145,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check opens response.md from the working folder, then succeeds from the output folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 146,
+     "end": 168,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: Re-reads six cited sources and removes the adjacent matter's section. The review asks to separate the standby matter from the executed ones.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 169,
+     "end": 184,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: Moves the standby matter out of the count into a contingency-only section. The review warns that this removes a matter covered by the 'any capacity' request.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 185,
+     "end": 193,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Resolve <client> scope. Re-reads four documents of the standby matter to decide its treatment.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Resolve Thalassa scope"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 194,
+     "end": 203,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Attempt 4: An edit refused because no stage was open, then the heading edit keeps the standby matter as a separate finding.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 204,
+     "end": 204,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Tabulate candidate matters from saved results → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 6,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Prints every matter's full file list (about 545K chars). The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex with request words; ten matters. The end-of-stage label note names the scan stage; no further path search follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 28,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; prefix-split scans print hits for part of the store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Rescan over all folders in eight balanced chunks; about 52 hit matters, output cut.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 35,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 16 documents of the five lead matters, including the standby motion and draft agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Exact-phrase script over the scan-hit matters' files; output cut. The review flags dismissals without reads.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: Tight phrase scan over all matters; the review flags dismissals from printed lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads 35-45 line openings of 15 intercreditor and credit agreements of other scan-hit matters, plus two in-document scripts on one of them.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five qualifying matters, the standby matter caveated.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 120,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, checks paths (first from the working folder) and edits wording to keep the standby matter as one of the five.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads five cited sources. The review calls keeping the standby matter in the count a weak-grounds inclusion; the end-of-stage label note names screening; only post-write checks follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 148,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: Edits the headline to four matters and moves the standby matter to an uncounted planning-lead section. The review warns that this removes a matter covered by the 'any capacity' request.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 149,
+     "end": 168,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 4: Re-reads three documents of the standby matter and restores it as a fifth responsive matter. The review calls this the reinstatement of a demoted item and asks for four.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 169,
+     "end": 182,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 5: Edits the headline back to four and labels the standby matter a non-counted lead. The stage-end note says the stage has been opened five times.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 183,
+     "end": 191,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Attempt 6: A read refused because no stage was open, then a final read of the headline.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 192,
+     "end": 192,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted only the four executed or filed matters and labelled the standby-package matter a non-counted lead, after reviews called its inclusion weak.",
+   "first_error": {
+    "stage_no": 13,
+    "stage": "Check or revise the response",
+    "start": 131,
+    "end": 148,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "(specific flag) The check review at [130] called keeping the standby matter in the count a weak-grounds inclusion and asked to make its treatment explicit; the agent then moved it out of the count.",
+    "why": "An edit moves a matter where the firm drafted a standby DIP motion and credit agreement for the debtor out of the counted set into an uncounted planning lead, although the request covers DIP work in any capacity (evidence seen at [37]-[53] and [123]-[127])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 15,
+     "stage": "Check or revise the response",
+     "start": 169,
+     "end": 182,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "(specific flag) The review at [168] called the restoration a reinstatement of a demoted item and told the agent to restore the four-matter headline; it did.",
+     "why": "After restoring the standby matter as responsive, a further edit demotes it again to a non-counted lead, and this is the final text."
+    }
+   ]
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 fail). All three runs found and read the same five matters through path searches and store-wide text scans, then screened dozens of other scan hits from cover pages. They split at the write and check stages, over two borderline matters. T0 wrote a stalking-horse buyer's matter as an additional adjacent matter; the write review questioned it, and a later check re-read its engagement letter but kept it (over-inclusion). T1 wrote the same adjacent matter but removed it in its second check pass. Then, when it moved the standby-package matter out of the count, the review warned that this removed a qualifying matter, and T1 kept that matter as a separate finding. In T2 the reviews pushed the other way: the review at the second check called the standby matter a weak-grounds inclusion, so the agent moved it out; it restored the matter after re-reading; the next review called that a reinstatement and asked to restore the four-matter headline, which the agent did (under-inclusion, review-endorsed). The critic's reviews differed at the split, and in T2 they caused the failure. Label notes and agent-defined stages (extra screening and check stages) played no part in the split."
+}

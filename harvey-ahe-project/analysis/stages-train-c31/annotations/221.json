@@ -1,0 +1,353 @@
+{
+ "task": "221",
+ "context": "Request: pull the right-of-first-refusal clause from Aurelius Media's lease (does the lease give them a ROFR?). Rubric: matter 1017-00009, its executed Agreement of Lease as proof, and the finding that the lease grants a right of first offer, not a ROFR.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 14,
+     "tags": [
+      "mixed intents",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find \\| grep over file names for the client name, lease and first-refusal words, with a parallel content grep (glob `*`) that returns nothing. The review suggests a text search for the client name.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 20,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide text scan for the client name and first-refusal terms (about 675K characters). The review suggests a narrower per-matter scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: narrower scan with per-matter counts (about 46K characters); the review suggests reconciling the client's matters and listing their folders.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Reconcile <client> matters and list folders. Counts client-name and first-refusal hits per matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Reconcile Aurelius matters and list folders"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 31,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Reconcile <client> matters and list folders. Lists the files of the client's nine matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Reconcile Aurelius matters and list folders"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 35,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed lease, its first-offer exhibit, the lease review memo and a redline. The end label note names the listing-read stage; no further candidate reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 44,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Greps the chosen matter's files for first-refusal and first-offer terms and reads a title review memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that the executed lease grants a first-offer right, not a first-refusal right, quoting the clause.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 58,
+     "end": 64,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 65,
+     "end": 72,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads the lease, exhibit and title memo. The end label note names the in-depth stage; no further reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 73,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. The end label note names the folder-listing stage; no further listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 17,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide text scan printing every file that mentions the client name, first refusal or the word lease; it times out after printing about 4M characters and the run ends.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script",
+   "failure_point": "Its first text scan matched the generic word 'lease' across the store and printed every hit, and the run ended on context overflow before any response.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 17,
+    "events": "[16]-[17]",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the stage, before its stage_end review.",
+    "why": "A store-wide scan that printed every file containing the generic word 'lease' returned about 4M characters, filled the context and ended the run with no response."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: prints every file of every folder (about 716K characters). The end label note names the folder-listing stage; no further listing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path script for the client name, lease and first-refusal or first-offer words, grouped per matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for the client name and first-refusal terms (about 139K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: first-refusal and first-offer terms only, per matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: client-name counts per matter; the review suggests listing the client's matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List all <client> matter files. Lists the files of the client's nine matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List all Aurelius matter files"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 44,
+     "end": 54,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the executed lease, its first-offer exhibit, the lease review memo, a closing memo and the business-terms email. The end label note names the listing-read stage; no further candidate reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 55,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over the lease and exhibit for first-refusal and first-offer wording. The end label note names the in-depth stage; no further reads follow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that the lease grants a first-offer right, not a first-refusal right.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and three sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: extracts the clause article again and scopes the short answer to the reviewed executed lease.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 88,
+     "end": 88,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "T0 and T2 pass; T1 fails without a deliverable. All three listed the store and then ran a store-wide text scan. They split at that first scan: T1's pattern included the generic word 'lease' and printed every hit (about 4M characters), so the run ended on context overflow before any review; T0's first scan also printed a large output (about 675K characters) but survived, and T2 searched file names first and scanned with narrower terms. Both passing runs then listed the client's nine matters, read the executed lease and its first-offer exhibit, grepped for first-refusal wording and wrote that the lease grants a first-offer right only. Reviewers' suggested steps were taken as agent-defined stages that fit existing ones; label notes were ignored where they applied."
+}

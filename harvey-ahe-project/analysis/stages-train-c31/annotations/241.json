@@ -1,0 +1,787 @@
+{
+ "task": "241",
+ "context": "Request: the firm's standalone internal-investigation matters directed by the board or audit committee (to model governance of a new investigation). Rubric: 1016-00009 (Dunmore Energy), 1021-00008 (Verimark Hospitality), 1039-00005 (Torchlight Mining FCPA) as qualifying, plus precision; 1025-00010 (Quorum Insurance, audit-committee scoping engagement) and 1045-00007 (SEC-driven) count as outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 7,
+     "end": 12,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: recursive listing of every matter folder with all file paths (about 809K characters).",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Saves every matter folder with its file count to a file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 28,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; range reruns print about 743K characters, then a fast extraction writes per-matter hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 29,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan output into complete per-matter candidate list. Parses the saved scan per matter; 258 of 266 matters covered.",
+     "label_check": "none",
+     "agent_new": "Aggregate scan output into complete per-matter candidate list",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Close coverage gap and tier matters. Finds the eight unscanned matters and tiers all matters by investigation-type file and folder names.",
+     "label_check": "none",
+     "agent_new": "Close coverage gap and tier matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Close coverage gap and tier matters (attempt 2). Runs the extraction on the eight gap matters.",
+     "label_check": "none",
+     "agent_new": "Close coverage gap and tier matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 56,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List and screen eight gap matters. Lists all files of the eight gap matters and reads two of their documents.",
+     "label_check": "none",
+     "agent_new": "List and screen eight gap matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 57,
+     "end": 67,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining six gap matters. Reads one purpose document of each of six gap matters.",
+     "label_check": "none",
+     "agent_new": "Screen remaining six gap matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 75,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining six gap matters (attempt 2). Two reads and a filtered listing of the six.",
+     "label_check": "none",
+     "agent_new": "Screen remaining six gap matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 76,
+     "end": 85,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining six gap matters (attempt 3). Five more purpose reads.",
+     "label_check": "none",
+     "agent_new": "Screen remaining six gap matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 86,
+     "end": 129,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 34 engagement letters, investigation plans, reports and briefing memos of about twelve candidates, with a name-filtered listing of one; a guessed path fails. The review flags thin evidence for one exclusion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 130,
+     "end": 141,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Screen remaining surfaced matters. Lists 16 surfaced matters and reads five of their documents.",
+     "label_check": "none",
+     "agent_new": "Screen remaining surfaced matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 142,
+     "end": 158,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Screen remaining surfaced matters (attempt 2). Ten reads (engagement letters and governance documents) and listings of six matters.",
+     "label_check": "none",
+     "agent_new": "Screen remaining surfaced matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 159,
+     "end": 166,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Screen remaining surfaced matters (attempt 3). Three reads of a plan, a remediation resolution and an engagement letter.",
+     "label_check": "none",
+     "agent_new": "Screen remaining surfaced matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 167,
+     "end": 177,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify <…> mandate per matter. Lists two matters' folders and reads four governance documents; one matter is moved in, the other stays out.",
+     "label_check": "none",
+     "agent_new": "Verify Board/Audit Committee mandate per matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 178,
+     "end": 186,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify <…> mandate per matter (attempt 2). Re-reads the engagement letter and remediation resolution of the excluded matter.",
+     "label_check": "none",
+     "agent_new": "Verify Board/Audit Committee mandate per matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 187,
+     "end": 193,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify <…> mandate per matter (attempt 3). One read and a name-filtered listing of the excluded matter's folder. The review says the absence of a mandate rests on file names.",
+     "label_check": "none",
+     "agent_new": "Verify Board/Audit Committee mandate per matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 194,
+     "end": 201,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide scan for <…> direction. Direction-language scan across all matters; the first run times out.",
+     "label_check": "none",
+     "agent_new": "Store-wide scan for Board/Audit Committee direction",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 202,
+     "end": 214,
+     "tags": [
+      "mixed intents",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Enumerate <…> matters and verify mandate source. Store-wide folder and file-name pass for investigation-type folders (strict set of eleven) and four reads; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "agent_new": "Enumerate internal-investigation matters and verify mandate source",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 215,
+     "end": 231,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read mandate documents for each candidate <…> matter. Reads the mandate or engagement document of each of the eleven strict-set matters.",
+     "label_check": "none",
+     "agent_new": "Read mandate documents for each candidate investigation matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 232,
+     "end": 239,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Read mandate documents for each candidate <…> matter (attempt 2). Reads full mandate passages of three matters.",
+     "label_check": "none",
+     "agent_new": "Read mandate documents for each candidate investigation matter",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 240,
+     "end": 252,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify mandate language for remaining candidate matters. Reads eight mandate documents of cited and excluded matters.",
+     "label_check": "none",
+     "agent_new": "Verify mandate language for remaining candidate matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 253,
+     "end": 260,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify mandate language for remaining candidate matters (attempt 2). Reads two authorization documents.",
+     "label_check": "none",
+     "agent_new": "Verify mandate language for remaining candidate matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 261,
+     "end": 266,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five committee-directed matters, including a committee scoping engagement, and excludes a management-retained matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 267,
+     "end": 286,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path checks (first run in the working folder) and three status edits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 287,
+     "end": 297,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads six sources of included matters.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 298,
+     "end": 308,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads six more sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 309,
+     "end": 318,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit refused because no stage was open, then attempt 4 rewrites the opening count as four plus one scoping engagement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 319,
+     "end": 324,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 5: re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 325,
+     "end": 330,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 6: re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 331,
+     "end": 339,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Borderline matter <…> check. Re-reads four documents of two borderline included matters.",
+     "label_check": "none",
+     "agent_new": "Borderline matter criteria check",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 340,
+     "end": 345,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 7: edits one matter's evidence wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 346,
+     "end": 351,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 8: re-reads the edited row.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 352,
+     "end": 358,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 9: final re-read and path check.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 359,
+     "end": 360,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded a committee-overseen investigation because the engagement letter names the General Counsel, and counted a scoping-only engagement.",
+   "first_error": {
+    "stage_no": 25,
+    "stage": "Write the response",
+    "start": 261,
+    "end": 266,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews from [167] to [194] asked the agent to find the source of committee authority in this matter before excluding it; it re-read the engagement letter and resolution and kept the exclusion.",
+    "why": "It read this matter's investigation plan, final report, committee briefing memo, engagement letter and board resolution, but excluded it because the engagement letter names the General Counsel as client contact (evidence seen at [86]-[193])."
+   },
+   "other_errors": [
+    {
+     "stage_no": 25,
+     "stage": "Write the response",
+     "start": 261,
+     "end": 266,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked to confirm the borderline matters' direction and status, not whether a scoping-only engagement belongs in the set.",
+     "why": "The answer counts a committee scoping engagement with no substantive investigation as a qualifying matter (evidence seen at [109]-[260])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Per-matter file counts for every folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 38,
+     "tags": [
+      "timed out",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; background reruns are polled and killed; a call refused because no stage was open; a fast range scan prints per-matter counts (5,453 hit files).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 39,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for investigation and committee words; ten candidates named.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 45,
+     "end": 52,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: co-occurrence scan times out; the first 120 partial lines are printed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 53,
+     "end": 62,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Batched per-matter co-occurrence scan. Six range batches; one times out and most ranges stay empty.",
+     "label_check": "none",
+     "agent_new": "Batched per-matter co-occurrence scan",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 63,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 22 engagement letters, scope memos and reports of about ten candidates. The review flags draft-only support for one included matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 92,
+     "end": 99,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: List and tally unopened candidate matters. Name-filtered listings of six number series and one engagement-letter read.",
+     "label_check": "none",
+     "agent_new": "List and tally unopened candidate matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes four committee-directed matters, including a scoping engagement, with near misses excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 114,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Path check (first run in the working folder) and a re-read.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 143,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads nine sources and removes unverified citations; the set is unchanged.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 144,
+     "end": 145,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded a qualifying matter after reading its plan and report, and counted a scoping-only engagement.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 100,
+    "end": 105,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The tally review at [100] said this matter's management-directed classification was asserted without reads; the check stage re-read its work-plan memo and kept the exclusion.",
+    "why": "It read this matter's investigation plan and final report at [66]-[74] and excluded it as directed by the General Counsel."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 100,
+     "end": 105,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "A review noted the scoping engagement's 2026 date without questioning its inclusion.",
+     "why": "The answer counts a committee scoping engagement that had not begun substantive investigation as qualifying (evidence seen at [75]-[90])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 7,
+     "end": 12,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts and full file lists (about 545K characters).",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Compact folder inventory with counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 19,
+     "end": 26,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script and range rerun both time out.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 27,
+     "end": 32,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path search for investigation and committee words across all matters (about 22K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 33,
+     "end": 60,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 22 engagement letters, scope plans, interim and final reports and findings memos of about eleven candidates. The review questions one included matter's draft-only support.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 61,
+     "end": 81,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: six globs of sibling matters and nine reads, repairing one path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 82,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and plans of four lead and disputed matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three committee-directed matters, including a scoping engagement, and sets two investigations aside as combined or management-directed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Path check and two edits softening the completeness claim.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads four engagement documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It excluded two qualifying investigations after reading them (one after a review questioned its support) and counted a scoping-only engagement.",
+   "first_error": {
+    "stage_no": 9,
+    "stage": "Write the response",
+    "start": 91,
+    "end": 96,
+    "events": "",
+    "kind": "under-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "No review questioned this matter's exclusion.",
+    "why": "It read this matter's engagement letter and final report at [36]-[59] and excluded it as a combined government-defense and internal investigation."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "The screening review at [61] said this matter's committee direction rested on an engagement letter and a draft interim report; the answer then moved it out of the strict count.",
+     "why": "It read this matter's engagement letter and interim report to the audit committee at [36]-[59], yet treats it only as a conditional precedent outside the strict count."
+    },
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews asked only that the scoping engagement's status be stated plainly.",
+     "why": "The answer counts a committee scoping engagement that had not begun substantive investigation as qualifying (evidence seen at [49]-[59])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs failed the same way at the write stage. Every run reached and read the three needed matters, then excluded the same one because its engagement letter names the General Counsel as client contact (under-inclusion), and counted the same audit-committee scoping engagement (over-inclusion); T2 also set a second needed matter aside as a conditional precedent after a review questioned its draft-only support. Reviews in T0 repeatedly asked for the excluded matter's source of authority and the agent re-read it without changing the call. T0 declared seventeen new stages (gap screening, mandate verification, scans), all matching existing stages; none changed the outcome."
+}

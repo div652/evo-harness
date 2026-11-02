@@ -1,0 +1,515 @@
+{
+ "task": "061",
+ "context": "Request: has the firm ever set up a fund using an American, deal-by-deal waterfall (for advice to a new fund client). Rubric: one criterion, a negative answer that separates drafts, abandoned terms and a single-asset co-invest vehicle from an adopted precedent; no matter numbers named.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the full file list, counts files and folders and prints every path (about 793K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 3). Per-matter file counts and a path regex for request words, capped at 240 lines; six candidate matters. The review flags the cap and the missing text search; its label note names this stage.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Full-text scan for … terms. A store-wide extraction script times out; a rerun limited to eight path-hit matters reports 244 hit files. The review flags the hand-picked set and suggests a batched scan step.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Full-text scan for waterfall terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Batched full-store … scan (the step the review suggested). The first 70 matters finish; a loop over the remaining ranges times out after one batch.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store waterfall scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 64,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads the openings of six documents from six candidates (draft agreements and markups, structuring memos, a carry agreement), extracts distribution-clause snippets, lists one matter and reads an executed co-invest agreement at several offsets. The review flags nine surfaced matters never opened; its label note names the listing-picked reading stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 75,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reads one document from each of six matters the review named; the review flags three surfaced matters still unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of four matters the review named.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no adopted precedent was found, separating drafts and markups from executed documents. The review warns the negative answer may exclude qualifying matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 98,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails on a missing path and is rerun; spot-checks two sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: prints the response and extracts the distribution section of the executed co-invest agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 106,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a find listing cut at 200 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Saves the full file list to a file and prints the file and folder counts and every matter folder name.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 40,
+     "tags": [
+      "script error",
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "Extraction script fails twice and times out twice, then runs as four background range shards; per-matter hit counts and an exact-phrase grep cut at 200 lines. The review flags the capped view and about 60 surfaced matters never opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Exact-phrase hits per matter from the saved results; the review flags dropped variant wordings.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 52,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all files of eleven hand-picked candidates; the review suggests a step to list the remaining surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the full file lists of all 137 scan-hit matters to a file without printing them; its label note names the extraction-scan stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 59,
+     "end": 71,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Reads eight documents of four candidates (draft agreements, an offering memorandum, structuring and review memos, an executed co-invest agreement). The review rates the goal not reached (about 60 surfaced matters unopened, drafts only); its label note names the listing-picked reading stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Snippet script over the distribution sections of named agreements from four candidates (about 106K characters); its label note names the extraction-scan stage, which the next stage declares.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: capped term scan over the 1,192 files the first scan hit, then greps of its results.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Scan document text with an extraction script (attempt 3), split here. Reads an executed co-invest agreement and side letter of a newly surfaced matter and a negotiation tracker. The review flags the inherited candidate pool and suggests an inventory step; its label note names this stage.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no completed multi-asset vehicle used per-deal distributions, with the single-asset co-invest exception explained.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 108,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check fails on a missing path and is rerun on the output file; fixes one citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: confirms the delivered file and spot-checks two pivotal claims.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 1,
+   "n_criteria": 1,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: per-folder file counts and the full path list (about 794K characters); its label note names the folder-listing stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "none",
+     "note": "A broad-term extraction script times out; four parallel range scans print per-matter hit counts capped at 240-300 lines, one range times out. The review flags generic terms and the caps.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: specific-term scan over all matters; 29 hit matters (about 100K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists name-filtered files of the 29 hit matters from a typed list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 45,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: after a heredoc error, rebuilds the 29-matter list from the saved scan output; four matters show no matching file names. The review flags the name filter; its label note names the extraction-scan stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 71,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Reads 15 documents from nine candidates; a guessed file name fails and a glob finds the real one.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 72,
+     "end": 79,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Path search requiring a topic word and an execution-status word (six paths), then reads one executed amendment. The review rates the goal not reached: status-word filter, no search on the request's own words.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 80,
+     "end": 87,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Broad path and text search for … … matters (attempt 2). After a heredoc error, an uncapped path search (162 paths) reconciled with the 29-matter text-hit list. The review rates it not reached: path hits dismissed unopened.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Broad path and text search for fund waterfall matters (attempt 2)"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 88,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Read governing documents of … hit matters. Reads five documents from five matters (an amendment, a joint-venture agreement, a restated distribution schedule, two memos). The review suggests a clause-verification step.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Read governing documents of waterfall hit matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 98,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify … clauses in operative … documents (the step the review suggested). Reads five documents of matters already read, at later offsets.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify waterfall clauses in operative fund documents"
+    },
+    {
+     "stage": "Write the response",
+     "start": 108,
+     "end": 113,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes that no evidence was found of such a vehicle; the documented precedents use whole-life distributions, co-invest references are separated.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 114,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response; path checks fail on a missing path.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 133,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: finds the delivered file, checks 42 cited paths and spot-reads four sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 134,
+     "end": 143,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "A read refused because no stage was open, then attempt 3 re-reads three sources at offsets; its label note names the listing-picked reading stage, and the review suggests a targeted verification step, which the next stage declares instead.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 144,
+     "end": 149,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Targeted section verification (the step the review suggested). Keyword extraction in two cited agreements to locate their distribution sections.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Targeted section verification"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 150,
+     "end": 150,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: a store inventory, store-wide text-extraction scans (timeouts handled by narrowing or sharding), screening reads of the partnership agreements, structuring memos and markups of the matters the scans surfaced, then a negative answer that separates drafts, a replaced per-deal draft and a single-asset co-invest vehicle from an adopted precedent. Reviews in every run kept flagging dozens of surfaced matters never opened and drafts read instead of executed papers; the agents widened screening in response but none changed the conclusion. T2 declared four new stages (two the reviewer suggested), all of which fit existing stages."
+}

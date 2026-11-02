@@ -1,0 +1,496 @@
+{
+ "task": "072",
+ "context": "Request: how many Healthcare & Life Sciences matters involved informed consent or an IRB, listed (for a life-sciences pitch). Rubric: 1018-00004 (Penterra), 1029-00001 (Thornwick), 1037-00002 (Solstice) and a precision criterion; extra matters such as 1013-00004, 1018-00003, 1018-00005, 1018-00008 fail it.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus directory and file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Lists the top-level folder, counts 266 matter folders and prints the first 20 names. The end review's label note also names folder listing, and the next stage is declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 15,
+     "end": 20,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Per-matter file counts and extension tally, with the file lists of three sample matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 21,
+     "end": 26,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script for practice-group and consent terms saves hits to a file: 17 practice-hit matters, 22 consent-hit matters, 8 both. The review flags the intersection as dropping matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 27,
+     "end": 42,
+     "tags": [
+      "script error",
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Resolve practice group for all <topic>-hit matters. Scripts over the saved hit file and the engagement documents of the 31-matter union (one heredoc error, one empty grep of the saved file), then pages through the saved results.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Resolve practice group for all clinical-hit matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 43,
+     "end": 75,
+     "tags": [
+      "mixed intents",
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Per-matter <practice> and <topic> verification. A verification script over the 31 candidates, then reads of 21 engagement letters, memos and agreements across about ten candidates, plus an exact-term table script (one heredoc error). The summary counts five matters; the review flags that two of them show no consent or review-board passage in the reads.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-matter HLS and clinical verification"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Per-matter <practice> and <topic> verification (attempt 2). Reads four further documents of the two borderline matters at offsets; both kept. The review (goal not reached) again says their support is only asserted.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Per-matter HLS and clinical verification"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Complete per-matter verification table. Writes an audit table of the 31 candidates with five inclusions to a working file (not the deliverable).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete per-matter verification table"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 91,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Check or revise the response. No response exists yet; re-reads the audit file and the opening of four included matters' documents. The end review's label note names listing-picked reads; the next stage is a text check, not reads.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Extracts consent and review-board passages from four documents of the two borderline matters and a related folder. The end review's label note names the text scan; writing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 107,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five qualifying matters with documents, a numbering caveat and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 121,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: path-check script fails on the response location, then re-reads the response and checks 21 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 122,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Tabulate candidate matters from saved results → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Counted two practice-group matters whose documents only mention review-board approval in passing as qualifying, alongside the three with direct consent and review-board work.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 107,
+    "end": 112,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [75] said the two borderline matters' reads show no consent or review-board content and to include them only on a literal passage; the review at [84] repeated it. The agent re-read and extracted passages from both and kept them.",
+    "why": "The answer counts two matters as qualifying on a pediatric-study deferral memo and a coverage-evidence memo that only mention review-board approval in passing (evidence seen at [47]-[84], [103])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus directory and file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 15,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists the 266 matter folder names to a file and looks for index or metadata files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a parallel per-part rerun finds 625 hit files in 154 matters, saved to a file. The review flags the tight terms and file types.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 24,
+     "end": 31,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Filter scan hits by practice group. Per-matter summary of the saved hits (one heredoc error); the review flags noisy file-name flags and unscreened matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Filter scan hits by practice group"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 66,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Confirm practice group and screen <practice> matters. Lists the files of eight candidate matters, reads engagement letters and memos of about eight candidates, and greps the saved hits for several of them. The summary counts six; the review flags that three of them show no consent or review-board passage.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Confirm practice group and screen HLS matters"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 67,
+     "end": 82,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Complete <practice> roster and decisions. A store-wide script over engagement and opening documents for practice-group labels, greps of the saved summary, and three reads of one candidate. The review flags one inclusion and the hand-picked roster; that matter is then dropped.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete HLS roster and decisions"
+    },
+    {
+     "stage": "Write the response",
+     "start": 83,
+     "end": 88,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes six qualifying matters with documents and near-miss exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 97,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A path-check script fails on the response location, then re-reads the response and checks 24 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: reads one document per listed matter and edits the bottom line. The review asks for literal passages for three matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 113,
+     "end": 120,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A second stage_end with no stage open gets an empty result; then extracts consent and review-board passages from cited files of four listed matters and keeps all six. The review flags the hand-picked file list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 121,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Search within a candidate matter's files → Finish the run",
+   "failure_point": "Counted three related matters that only mention consent or review-board terms in representations or memos as qualifying.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 83,
+    "end": 88,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) The review at [66] named the three extra matters as lacking consent or review-board evidence; the agent built a roster in the next stage and later extracted passages, but kept all three.",
+    "why": "The answer counts three further matters (a merger diligence matter, a pediatric-study deferral matter and a terminated deal) as qualifying on representations, a deferral memo and a hold memo rather than direct consent or review-board work (evidence seen at [34]-[82])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists every matter folder with file counts. The end review's label note also names folder listing, and the next stage is declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Counts matter folders per prefix and looks for index files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 46,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out three times and fails once; eight parallel chunked scans finish, and a merge prints matters with practice-group hits (about 56K characters). The review flags that the merge hid consent-only matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 47,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Aggregates all chunk outputs and checks coverage (187 hit matters, 79 none). The end review's label note names figure calculation; screening follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 92,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters and work product of the three direct candidates and about twelve related matters (one guessed path fails), a path grep for consent and trial words, a store-wide folder-name script and a listing of sibling matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files. Exact-term scan across all matter chunks; the summary keeps three qualifying matters. The review (goal not reached) calls the three hand-picked and the exclusions unbacked; its label note names the text scan, but the next stage keeps the old label.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 99,
+     "end": 106,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Builds capped snippets for the 131 matters with exact hits and pages through them.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 107,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads one document each from six more matters; a stage_start for writing is refused because this stage is still open. The summary counts 16 matters; the review flags one-document reads and the snippet cap.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 118,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes 16 qualifying matters with documents and exclusions; the review flags one unverified citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 135,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "declared: Write the response (attempt 2). Checks 40 cited paths and fixes one, adds a status statement. The end review's label note names checking, and the next stage is declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 136,
+     "end": 143,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, counts rows and opens the corrected execution document.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 144,
+     "end": 149,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: counts consent and review-board terms in one cited agreement; no edit. The review endorses the answer.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 150,
+     "end": 150,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Grew the qualifying set from three to sixteen after a review called the three-matter set hand-picked, counting matters on single snippet-led reads.",
+   "first_error": {
+    "stage_no": 10,
+    "stage": "Write the response",
+    "start": 118,
+    "end": 123,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "(specific flag) The scan review at [98] called the three-matter set hand-picked and its exclusions unbacked and asked for snippets across all hit matters; the agent widened and the set grew to 16 on one-document reads.",
+    "why": "The answer counts 16 matters as qualifying, adding 13 whose documents use consent or review-board terms in diligence, disclosure or privacy contexts (evidence seen at [99]-[117]), after the agent's scan stage had kept only three."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the precision criterion the same way, at the write stage: each names all three needed matters but adds others (two in T0, three in T1, thirteen in T2) whose documents only mention consent or review-board terms in passing. Reviews in T0 and T1 named the extra matters specifically; the agents re-read or extracted passages and kept them. In T2 the scan stage had the exact three-matter set, and the review called it hand-picked; the agent widened and wrote sixteen. Agent-defined stages (T0, T1) carried the per-matter verification work but did not change the outcome; label notes were ignored or did not apply."
+}

@@ -1,0 +1,22 @@
+type: tool
+name: stage_end
+description: >-
+  Close the open stage. Call this alone in its own turn when you believe the
+  stage goal is reached, or when you cannot get further. An independent
+  reviewer then checks the stage's tool calls, and the result lists the
+  failures common at this stage. Read the review and decide whether to reopen
+  the stage (stage_start with the same stage) or move on.
+input_schema:
+  type: object
+  properties:
+    goal_reached:
+      type: boolean
+      description: Whether the stage goal was fully reached.
+    summary:
+      type: string
+      description: What you did and found in this stage (searches run and their outcome, candidates found, which were opened or excluded and why, open questions).
+  required:
+  - goal_reached
+  - summary
+disable_parallel: true
+binding: tools.stage:stage_end

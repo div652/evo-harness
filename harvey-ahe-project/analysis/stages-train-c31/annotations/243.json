@@ -1,0 +1,535 @@
+{
+ "task": "243",
+ "context": "Request: how many White Collar & Investigations matters (by practice attribution in the files) involved an issued litigation hold, and which. Rubric: 1016-00009, 1021-00008, 1032-00007 (Halcyon), 1034-00001, 1039-00005, 1044-00007, 1045-00007 (Belmont Ridge; attribution in other wording) and a precision criterion (1035-00005 fails it).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). File counts per matter folder. The end review's label note names folder listing; a text scan follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 29,
+     "tags": [
+      "timed out",
+      "script error",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Two store-wide extraction scripts time out; a path search for practice, investigation and hold words, then a scan of engagement and intake files only (one heredoc error) and a grep of its saved output: seven matters with the exact practice name.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 30,
+     "end": 55,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched full-store scan. Byte scan and per-prefix batch scans of all files for loose practice-name patterns (two time out); hits across about 14 matters, printed per batch. The review flags that only the practice pattern was scanned.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched full-store scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 56,
+     "end": 89,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Confirm attribution and holds per candidate matter. Lists the files of 14 hand-typed candidates, reads opening and hold documents of about ten, and runs attribution and hold snippet scripts over them (one prints about 164K characters). The review flags the 14-matter limit.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Confirm attribution and holds per candidate matter"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 90,
+     "end": 110,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Audit candidate universe and issuance proof. Tabulates the attribution line of each candidate by script and reads hold and preservation papers of the chosen matters; seven attributed, six with issued holds.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Audit candidate universe and issuance proof"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 111,
+     "end": 121,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Audit candidate universe and issuance proof (attempt 2). Reads hold reminders and memos of three chosen matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Audit candidate universe and issuance proof"
+    },
+    {
+     "stage": "Write the response",
+     "start": 122,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes six matters with issued holds, the attribution rule, dates, and a draft-only exclusion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 156,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Globs each cited hold folder (a harness stage-check warning), re-reads the response, replaces shorthand paths with full ones and checks 25 paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 157,
+     "end": 175,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-opens the six hold sources and fixes one citation.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 176,
+     "end": 181,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: confirms the delivered file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 182,
+     "end": 182,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Built its candidate list by hand from the batch scan and left out one scan-surfaced investigation matter.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 56,
+    "end": 89,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The review at [89] said the candidate set was limited to 14 matters from the broad scan and might miss others, without naming this matter; the agent kept the set.",
+    "why": "A practice-attributed investigation matter with an issued hold appeared in the agent's path search at [21] and its own batch scan at [51], but the 14 candidates it listed and read at [58] left it out, and it was never opened."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 8,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts matter folders and lists them with file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scripts for the exact practice name and hold words; one times out and one has a heredoc error; the saved hit list names ten matters. The review flags billing-partner hits and the exact-phrase pool.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: all-file-type scan times out partway; the review (goal not reached) flags the partial output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: the scan in four parallel batches over all folders: eleven matters with the exact name. The review flags the exact-phrase key.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of the eleven matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file contents for request keywords",
+     "start": 44,
+     "end": 47,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Opened and closed with no tool call; the review (goal not reached) says no search ran.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: broader batched scan for the short practice name and its acronym: 15 matters, four new, one of them a candidate that lacks the exact name.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 82,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads intake, engagement and conflict documents of the broad candidates (one guessed path fails) and lists two folders; excludes several on their recorded practice group.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 83,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing (attempt 2). Reads attribution documents of four more candidates; nine matters confirmed as attributed. The end review's label note names screening; in-depth reads follow.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 96,
+     "end": 113,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads hold and preservation notices of the nine attributed matters. The review flags two unresolved matters; its label note names screening, but a text check follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Extracts hold passages from all files of the two unresolved matters. The end review's label note names the text scan; writing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 120,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes seven matters with issued holds among nine attributed, with dates and sources.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 126,
+     "end": 134,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Checks cited paths (one script error on the response location).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 135,
+     "end": 151,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-opens the seven hold documents and the two excluded matters' files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 152,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Search file contents for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the inventory and lists 89 intake and opening file names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script prints per-file hits until it times out (about 1.7M characters); the review (goal not reached) flags coverage of only the first matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: compact store-wide scan with exact practice-name, hold and issuance counts per matter saved to a file; a grep of it returns nothing, then a head view: eleven exact-name matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 36,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Re-derives the eleven matters from the saved scan by awk. The review names exact-phrase matching as dropping matters attributed in other wording; its label note names figure calculation, which does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "declared: new: Verify scan coverage. Checks the inventory count against the saved scan and re-filters it; the review says coverage was not tested and suggests variant spellings of the practice name.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify scan coverage"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 84,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Confirm issued holds in candidate matters. Reads hold, engagement and intake documents of the eleven candidates (two guessed paths fail) and a hold-term snippet script; eight counted. The review flags one counted matter whose hold files failed to open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Confirm issued holds in candidate matters"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of three uncertain candidates; all three kept.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes an eight-matter count with a seven-matter strict alternative; the review calls this hedged.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 116,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Path check fails on the response location; edits the answer to seven, moving one matter to an edge case.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 122,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-checks 11 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: re-reads the response opening.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 129,
+     "end": 129,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Keyed practice attribution on the exact group name and missed a matter that uses other wording; also counted a matter without a hold document.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Scan document text with an extraction script",
+    "start": 26,
+    "end": 35,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The reviews at [41] and [47] said exact-phrase matching drops matters attributed in other wording and suggested searching variants; the agent's next stage named that goal but only read the eleven candidates.",
+    "why": "The completed scan keyed attribution on the exact practice-group name, which one investigation matter with an issued hold does not use (the scan shows it with zero name hits and twelve hold hits), and no variant search followed."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 91,
+     "end": 96,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The screening review at [84] said the matter was counted though its hold files failed to open and only an account-freeze letter was read; the agent listed its files and kept it.",
+     "why": "The answer counts a sentencing matter as having an issued hold on a third-party preservation email and an account-freeze letter (evidence seen at [63]-[89])."
+    }
+   ]
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 fail). The runs split at how the candidate pool was built from the store-wide scans. T1 ran an exact-name scan, then, after a stage with no calls drew a 'no search ran' review, a broader scan for the short name and acronym that added the matter attributed in other wording; it screened every candidate's attribution documents. T2 kept the exact-name pool although two reviews named the variant-wording gap (one suggested an agent-defined stage, which it opened but used only for reading), and it also counted a matter without a hold document after a specific flag. T0 used loose patterns that found the variant matter, but its agent-defined attribution stage worked from 14 hand-typed candidates that omitted one scan-surfaced matter; the review there warned only generically. Label notes played no role."
+}

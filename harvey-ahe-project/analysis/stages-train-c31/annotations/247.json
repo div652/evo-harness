@@ -1,0 +1,529 @@
+{
+ "task": "247",
+ "context": "Request: the most recent white collar matter where the client cooperated with the government, and the supporting document. Rubric: 1032-00007 (Halcyon Semiconductor) and its vsd-cover-letter-bis.docx (voluntary self-disclosure cover letter to BIS), plus a precision criterion. T0 named 1045-00007 (Belmont Ridge Bank SEC investigation); T2 named 1039-00005 (Torchlight Mining FCPA investigation).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file of every matter (about 544K characters). Its label note (folder listing) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan for government and cooperation words times out partway through the store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: two-chunk scan over the whole store with per-matter hit counts (about 84K characters); the summary names four latest-numbered candidates. The review flags a shortlist from a truncated view.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 38,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads assessment, submission and closing memos of the four candidates and two others.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 39,
+     "end": 50,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: filtered listings of five sibling matters of one client and reads of their opening documents. The review flags that the planned check of later matters was not done.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 59,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 3). Lists the leading matter's files and re-reads its submission and closing memos. The review suggests a recency-tally step; its label note (candidate listing) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 60,
+     "end": 63,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Tally matters and rank by recency (the step the review suggested). No tool call; the stage summary ranks the candidates already read.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Tally matters and rank by recency"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 64,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Tally matters and rank by recency (attempt 2). No tool call; the summary gives a final ranked list.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Tally matters and rank by recency"
+    },
+    {
+     "stage": "Write the response",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes an earlier-closed investigation of the leading candidate as the most recent cooperation matter, with a later remediation matter set aside.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 74,
+     "end": 85,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response, checks paths, a grep on the response returns nothing, edits two wording points.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 94,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: re-reads two closing memos; a count script fails because the response is not at the path it used.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 95,
+     "end": 101,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: counts key figures in the response. The review suggests a fact-diff step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Source-to-response fact diff (the step the review suggested). Re-reads three sources and the response and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Source-to-response fact diff"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Tabulate candidate matters from saved results → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Read the four latest-numbered candidates from its scan and never opened the matter the scan had listed, then named an earlier-closed investigation.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 26,
+    "end": 38,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The scan review at [25] said the four candidates were picked from a truncated view; it did not name the needed matter, and the agent read only those candidates and siblings.",
+    "why": "Its two-chunk scan at [23] listed the needed matter with cooperation hits, but it chose the four latest-numbered candidates to read and never opened it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a file count and the first 80 paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 16,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder (two scripts).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 17,
+     "end": 34,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan times out, is patched into three parallel ranges, then filtered by path and phrase greps capped at 240-260 lines. The review flags the follow-up filters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 35,
+     "end": 40,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Build full per-matter candidate pool. Parses the saved scan into per-matter indicator hits; the review flags a path-line-only filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Build full per-matter candidate pool"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 41,
+     "end": 46,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Lists all files of seven latest-numbered candidates; the review flags the recency-based pick.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 47,
+     "end": 52,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: List files in remaining surfaced matters. Lists six more surfaced matters, capped at 260 lines.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List files in remaining surfaced matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 53,
+     "end": 67,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read documents picked from the file listing. Reads memos, submissions and reports of three candidates. The review flags reading confined to three matters; its label note says screening, and the next screening reads were declared as screening.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Widen candidate coverage by store-wide search. Extracts dated key documents and agencies for every indicator matter from the scan; later-dated candidates appear.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Widen candidate coverage by store-wide search"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists all files of the three later-dated candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 80,
+     "end": 94,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads planning, findings, disclosure and settlement papers of the three later-dated candidates. Its label note says listing-picked reads; the next read went under a stage of its own naming.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 95,
+     "end": 102,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Widen candidate coverage and locate proof documents. Store-wide exact cooperation-language scan (854 hits), then a board update memo of the leading candidate.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Widen candidate coverage and locate proof documents"
+    },
+    {
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the leading candidate with its disclosure cover letter, board update and settlement draft, and the reasons other matters were set aside.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "end": 124,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads four cited documents. Its label note (screening reads) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 125,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists folder names with file counts. Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 25,
+     "tags": [
+      "timed out",
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Three store-wide extraction attempts time out; a fallback path search for investigation, cooperation and disclosure words, capped at 240 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 37,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Batched text scan per matter. No scan is run; reads six documents from four candidates picked from the path search. The review flags the hand-picked reads.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched text scan per matter"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 38,
+     "end": 51,
+     "tags": [
+      "mixed intents",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Cross-matter cooperation sweep. Path search for cooperation, disclosure and production words (last 120 lines shown), a listing of one matter and reads from four candidates. The review flags the cut-off lines.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Cross-matter cooperation sweep"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 61,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Complete cooperation comparison. Reads disclosure, production and cooperation documents of three earlier candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete cooperation comparison"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 62,
+     "end": 70,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Final cooperation verification. Re-reads the chosen matter's two government letters and a filtered listing and protocol of a later regulatory matter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final cooperation verification"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 71,
+     "end": 78,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify adjacent newer matter. Lists the later regulatory matter in full and reads its transmittal and progress report.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify adjacent newer matter"
+    },
+    {
+     "stage": "Write the response",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes an early-2025 investigation as the most recent cooperation matter, with a later regulatory matter as an adjacent comparator.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 85,
+     "end": 101,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and three sources, edits the recency sentence, a path check fails because the response is not at the path it used and is rerun.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 111,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "An edit refused because no stage was open, then attempt 2 makes it and confirms the deliverable.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search file names for request keywords → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Read candidates picked from path searches and never opened the matter those searches listed, then named an earlier investigation.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 26,
+    "end": 37,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The review at [37] said only six hand-picked documents were read with no scan behind them; the agent ran a path sweep and read more candidates but never opened the needed one.",
+    "why": "Its path searches at [23] and [41] listed the needed matter's disclosure files, but it read other candidates and never opened it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "Mixed (T1 passes; T0 and T2 fail). All three runs surfaced the needed matter in their scans or path searches, and every review at the reading stages flagged hand-picked candidate sets. They split at the choice of what to read. T1 acted on those flags with store-wide widening steps it declared as new stages (an indicator extraction over every scan matter, then an exact-language scan), which brought later-dated candidates forward; it listed and read the needed matter and cited its disclosure cover letter. T0 read the four latest-numbered candidates from its scan summary and their siblings, ranked them in a reviewer-suggested stage with no tool calls, and named an earlier-closed investigation. T2's scans timed out; it read candidates picked from path searches, widened only by another path sweep, and named an earlier investigation. The reviews did not differ in kind; only T1 widened beyond its existing candidate set."
+}

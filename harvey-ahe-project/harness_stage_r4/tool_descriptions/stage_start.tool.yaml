@@ -1,0 +1,45 @@
+type: tool
+name: stage_start
+description: >-
+  Declare the stage you are entering and its goal. Every other tool call must
+  happen inside an open stage. Call this alone in its own turn. To reopen a
+  stage after its review, call it again with the same stage and a sharper
+  goal. Use stage "new" with new_stage_name when none of the listed stages
+  describes what you are about to do.
+input_schema:
+  type: object
+  properties:
+    stage:
+      type: string
+      enum:
+      - List files in the document store
+      - List matter folders
+      - Search file contents for request keywords
+      - Scan document text with an extraction script
+      - Search file names for request keywords
+      - Search file names for a document type
+      - List files in candidate matters
+      - Read documents picked from the file listing
+      - Screen candidate matters by reading documents
+      - Read a chosen matter's documents in depth
+      - Search within a candidate matter's files
+      - Tabulate candidate matters from saved results
+      - Calculate figures for the answer
+      - Write the response
+      - Check or revise the response
+      - new
+      description: The stage you are entering.
+    goal:
+      type: string
+      description: What this stage must achieve, concretely enough that you can later say whether it was reached.
+    new_stage_name:
+      type: string
+      description: Only with stage "new"; a short descriptive name for the stage you are defining.
+    override_reason:
+      type: string
+      description: Only when moving on from a stage whose review says its flags must be resolved; explain, flag by flag, why each flag does not apply.
+  required:
+  - stage
+  - goal
+disable_parallel: true
+binding: tools.stage:stage_start

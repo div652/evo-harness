@@ -1,0 +1,581 @@
+{
+ "task": "137",
+ "context": "Request: M&A deals where the firm actually invoked or litigated specific performance, with the papers. Rubric: 1018-00008 (Penterra/Veridian: Veridian's October 2024 demand to compel closing), proof documents (the draft counterclaim, and matter-status-memo-deal-terminated.docx as corroboration of the threatened claim), plus precision. 1022-00002 (Northgate/Ridgeline APA, papers labelled internal matter 1018-00009, with a reservation of a specific-performance remedy) is outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan with broad remedy words (about 180K characters), then a precise rerun and background range jobs that time out; a harness stage-check warning on the background call. The review flags a shortlist from a capped view.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: exact-phrase scan over all 8,670 documents; 898 hit files listed uncapped (about 79K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan hits per matter. Groups the saved hit files by matter and flags dispute-path files. The review flags the narrow phrase list and a file-name dispute filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan hits per matter"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads risk memos, demand analysis, draft answer and counterclaim and the executed agreement of the lead matter plus papers of three other candidates. Its label note says in-depth reads; the next reads were declared in-depth.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 51,
+     "end": 63,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide <remedy> sweep. Store-wide scan with per-matter dispute counts, reads of four other candidates' memos and a file listing of the lead matter. The review suggests reading proof documents for sweep candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Store-wide specific performance sweep"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 64,
+     "end": 72,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the termination notice, board memo, agreement section and response analysis of the lead matter. Its label note (listing-picked reads) had no later reads of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 73,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Writes one qualifying matter with its demand, litigation papers and near-candidate exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 109,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses document",
+     "note": "Re-reads the response, a path check fails because the response is not at the path it used, fixes a duplicated exclusion block and mistyped near-candidate paths, re-checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer misses document",
+     "note": "Attempt 2: re-reads the full response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 116,
+     "end": 116,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Named the right matter and its litigation papers but never opened the status memo that its own listing of that matter showed.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 64,
+    "end": 72,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "No review named the status memo; the reviews asked for the agreement section, the demand analysis and wider coverage.",
+    "why": "The lead matter's status memo recording the threatened claim was in its scan hits ([27]) and in its own file listing of the matter at [60], but it read other papers of that matter and never opened or cited it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. Its label note (folder listing) was followed by another folder listing declared as a store listing.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Prints the count and all matter IDs.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 37,
+     "tags": [
+      "timed out",
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan times out twice; per-range compact scans filtered through grep and a 200-line cap. The review flags a range never scanned.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: scans the missing range.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 77,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the lead matter's risk memos, demand analysis, counterclaim and answer drafts and termination papers, lists its files, and reads memos and listings of two other candidates. The review flags a matter-number conflict on the second candidate.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet extraction over named documents of the two leading candidates. Its label note says scan work; the next stage was declared a scan.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: exact-phrase scan of the whole store with an enforcement-path filter on file names, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 90,
+     "end": 97,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. Store-wide inventory of exact-phrase hit files and claim contexts written to files; one call times out with a harness stage-check warning.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes two qualifying matters: the litigated dispute and a deal where counsel reserved the remedy in a letter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 112,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and the two executed agreements; a path check fails because the response is not at the path it used.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 122,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: checks cited paths and agreement sections, edits the filing-status wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: re-extracts amounts and dates from three documents. Its label note (scan work) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 138,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit refused because no stage was open, then attempt 4 makes the same edit and one more on the litigation-stage wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 139,
+     "end": 146,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 5: re-reads the response and fixes one overstatement; the review notes how often the stage was reopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 147,
+     "end": 152,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 6: greps the edited paragraph.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 153,
+     "end": 158,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 7: one wording edit on the draft counterclaim.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 159,
+     "end": 164,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 8: greps the paragraph again.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 165,
+     "end": 165,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never opened the status memo its own listing showed, and wrote a second deal where the remedy was only reserved as qualifying.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 77,
+    "events": "",
+    "kind": "listed-document-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "No review named the status memo; the reviews flagged wider coverage and the second candidate's matter number.",
+    "why": "The lead matter's status memo was in its scan output ([29], [41]) and in its own listing of the matter at [60], but it chose other papers of that matter to read and never opened or cited it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether the second deal qualified; check reviews repeatedly said not to change the qualifying set.",
+     "why": "A deal where counsel only reserved the specific-performance remedy in correspondence, with no demand or litigation, is written as a second qualifying matter (evidence seen at [61]-[81])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: the same inventory written to a file with file types per folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan times out twice, then runs in four parallel batches (4,997 lines); only a count and a cut summary are shown.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 30,
+     "end": 41,
+     "tags": [
+      "output capped",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for remedy, deal and litigation words saved to a file, a filtered grep capped at 300 lines, and a grep of the saved scan file. The review flags the cap; its label note says scan work, and the next scan work went under a candidate-listing label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 42,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight hand-picked candidates; the review flags about 60 surfaced matters unlisted.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 48,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 2). Parses the saved scan (one matter, a parsing artifact) and reruns an exact-phrase count over the store (184 matters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 58,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters (attempt 3). Checks the 184-matter list and writes a per-matter report of dispute and termination file names. The review flags a hand-picked shortlist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 82,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads risk memos, demand analysis, counterclaim draft and termination memo of the lead matter and memos of five other candidates. The review flags memo-only reads of the others.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 83,
+     "end": 98,
+     "tags": [
+      "huge output",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script over nine named candidates (about 114K characters), then reads of the second candidate's dispute letters, memos and agreement and of the lead matter's answer, status memo and complaint papers. The review flags the hand-picked list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 99,
+     "end": 104,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: store-wide scan for the remedy phrase combined with enforcement words, capped per matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 105,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes two qualifying matters: the litigated dispute and a deal where counsel reserved the remedy in letters, with near-miss exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 111,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and two sources, checks 16 paths, softens filing-status wording. The review flags the second matter's number mismatch.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 133,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "An edit refused because no stage was open, then attempt 2 relabels the second matter's heading with both numbers.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 134,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Wrote a second deal where the remedy was only reserved in letters as qualifying.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 105,
+    "end": 110,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "No review questioned whether the second deal qualified; the check review at [123] flagged only its matter-number mismatch.",
+    "why": "A deal where counsel reserved the specific-performance remedy in letters, without a demand or litigation, is written as a second qualifying matter (evidence seen at [89]-[97])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail, two ways. All three runs reached the lead matter through store-wide scans and read its demand analysis, risk memos and draft pleadings. T0 and T1 listed every file of that matter but never opened its status memo, which a proof criterion requires (first error at the reading stage that chose that matter's documents; no review named the memo). T2 read the memo during its snippet stage and passed that criterion, but it, like T1, wrote a second deal where counsel only reserved the remedy in letters as qualifying (precision fails); T0 kept that deal out. No review questioned the second deal; check reviews repeatedly said not to change the qualifying set. T1 reopened its check stage eight times, receiving the reopen-count notes, with wording edits only. Agent-declared new stages (scan aggregation, store-wide sweep) mapped to the scan stage."
+}

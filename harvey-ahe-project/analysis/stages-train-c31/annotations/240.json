@@ -1,0 +1,501 @@
+{
+ "task": "240",
+ "context": "Request: the firm's most recent Tax matter with a tax indemnity provision in an executed agreement, and the document evidencing it. Rubric: 1001-00006 (Ardent Capital Partners) and its closing-tax-memorandum.docx, plus precision (no other matter asserted as most recent). Runs named 1036-00005 (Harbor Point JV tax protection agreement, T0 and T2) and 1038-00009 (NovaMart SPA, T1 and T0's first draft).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists matter folder names and file counts. Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 22,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan for indemnity and tax-provision phrases times out twice; a parallel file-name scan for tax, indemnity and execution words (about 49K characters). The review flags the name-only fallback and a hand-picked list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 23,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: six parallel range scans (about 83K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 74,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads executed agreements and tax memos of seven candidates, then offset reads of one joint venture's tax protection agreement and one acquisition agreement; one path fails. The review and the harness list flag many surfaced matters unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 75,
+     "end": 80,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes an acquisition agreement of mid-2025 as the most recent qualifying precedent, with a later joint venture agreement set aside for blank signatures.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 81,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response, checks paths, softens the execution wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Verify execution evidence for top candidates. Re-reads both leading agreements at their signature pages and edits the response. The review flags blank signatures in both.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify execution evidence for top candidates"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 113,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Verify execution evidence for top candidates (attempt 2). A brace-pattern listing returns nothing; reads the joint venture's closing certificate and agreement.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify execution evidence for top candidates"
+    },
+    {
+     "stage": "Write the response",
+     "start": 114,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Verify execution evidence for top candidates (attempt 2, same span split). Rewrites the response naming the joint venture agreement as the precedent on its closing certificate, and re-reads it.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify execution evidence for top candidates"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 120,
+     "end": 127,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Finalize one deal's execution evidence. Lists that matter's files and edits the signature caveat.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize Harbor Point execution evidence"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 128,
+     "end": 133,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "declared: new: Finalize one deal's execution evidence (attempt 2). Lists its closing and tax folders.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize Harbor Point execution evidence"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 134,
+     "end": 134,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never opened the matter its own searches listed with tax documents, and named a later-dated joint venture agreement instead.",
+   "first_error": {
+    "stage_no": 5,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 74,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [22] listed the matter among the agent's own candidates, and the harness unopened-matter lists at [35] and [74] named it; the agent never opened it.",
+    "why": "Its file-name and range scans ([19], [31]) showed the needed matter with tax documents, but when choosing what to read it opened seven other candidates and never opened it, then named a later-dated matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Counts files per matter folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for tax, indemnity, execution and deal-agreement words, newest matters first (about 101K characters). The review flags a shortlist from partial output; its label note says scan work, and the next scan went under a label of its own naming.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Identify <practice area> matters and search text for <provision>. Store-wide extraction scan for indemnity phrases times out with partial coverage.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify Tax matters and search text for tax indemnity"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Complete batched scan and list <practice area> matters. Batched store-wide scan saved to a file (460 hits) and a folder count.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete batched scan and list Tax matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 32,
+     "end": 47,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Complete batched scan and list <practice area> matters (same span, split). Reads one joint venture's tax protection agreement at five offsets and its operating agreement; a stage_start is refused because the stage is still open. The review flags that only that matter was examined.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Complete batched scan and list Tax matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 71,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Verify candidate <practice area> matters. Reads and snippet scripts over agreements and a tax memo of three other candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify candidate Tax matters"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 72,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: new: Finalize ranking of executed <practice area> precedents. Re-reads the joint venture agreement's signature pages and one acquisition agreement's tax sections.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Finalize ranking of executed Tax precedents"
+    },
+    {
+     "stage": "Write the response",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes a mid-2025 acquisition agreement as the most recent executed precedent, with later candidates set aside.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 86,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response, checks paths and the agreement's signature blocks, edits the recency wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 96,
+     "end": 103,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "An edit refused because no stage was open, then attempt 2 restores scoped recency wording.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 110,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: re-reads the response and the agreement.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never opened the matter its path search listed, and named an acquisition agreement from another matter.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 32,
+    "end": 47,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(generic flag) The review at [47] said only one matter of the saved scan hits had been examined, naming other matters; the agent read three more candidates but never the needed one.",
+    "why": "Its path search at [17] listed the needed matter with tax documents, but when choosing what to read it opened one joint venture and then three other candidates, and never opened it."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder. Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for tax, indemnity, execution and deal words; a heredoc error, then 1,957 lines saved to a file.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts of tax and indemnity file names; the agent's summary names the matter it later never opened among its candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan times out, then a range rerun prints its hit file (about 404K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 41,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: an exhaustive exact-phrase pass times out with no output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 42,
+     "end": 59,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads one joint venture's tax protection agreement, joint venture agreement, tax memo, closing certificate and side letter, plus agreements of two other candidates; one path fails. Its label note says listing-picked reads; the next reads kept the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Extraction script over the joint venture agreement's execution and indemnity text.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the joint venture's early-2026 tax protection agreement as the most recent precedent, with a blank-signature caveat.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 2: re-reads the agreement and closing certificate.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Attempt 3: extracts the indemnity sections; the review suggests a store-wide recency cross-check, which is not run.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 93,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Never opened the matter its own search summary listed as a candidate, and named a later-dated joint venture agreement instead.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 42,
+    "end": 59,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The harness unopened-matter lists at [35] and [41] named the matter, and the agent's own summary at [26] listed it as a candidate; it never opened it.",
+    "why": "Its file-name searches ([25]) named the needed matter as a candidate with tax-indemnity files, but when choosing what to read it opened a joint venture and two other matters and never opened it."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way and at the same kind of stage: their file-name searches or scans listed the needed matter with tax-indemnity files (T2's own summary named it), but each run chose later-dated candidates to read (a joint venture's tax protection agreement and an acquisition agreement) and never opened it, then named one of those as the most recent precedent. In T0 and T2 the harness lists of surfaced-but-unopened matters named the needed matter before the reading stage; in T1 the review flagged only that a single candidate had been examined. T0 switched its answer between the two later candidates after a review flagged blank signatures in both, writing the second answer inside a stage it had declared for verification. Reviewer-suggested recency cross-checks (T2) were not run."
+}

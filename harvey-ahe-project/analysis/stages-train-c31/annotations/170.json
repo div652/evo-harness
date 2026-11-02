@@ -1,0 +1,521 @@
+{
+ "task": "170",
+ "context": "Request: the firm's M&A deals that never reached closing, including mergers that could not be cleared (lessons-learned review). Rubric: eight qualifying matters (1001-00005, 1002-00004, 1003-00001, 1011-00005, 1017-00007, 1018-00008, 1020-00006, 1032-00005) plus precision; 1023-00001, 1038-00001 and 1022-00002/1022-00006 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob in parallel with directory and file counts and a two-level folder listing capped at 40 lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists and saves all 266 matter folder names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 15,
+     "end": 24,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan with broad termination and regulatory words; the full run times out, a four-shard rerun gives hits in every matter. The review flags that the terms do not discriminate.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 40,
+     "tags": [
+      "script error",
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: rescan with a narrower failed-close phrase list; several syntax fixes and timeouts, then four shards give 125 matters. The review flags loose phrases.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 41,
+     "end": 52,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Path regex for termination, withdrawal and regulatory words (807 paths, 127 matters), then filtered to scan-hit matters with decisive file names (98 lines). The review flags the narrowing; its label note says scan work, with no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 53,
+     "end": 58,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of twelve hand-picked candidates; the review and harness list name surfaced matters left unlisted.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 59,
+     "end": 64,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: writes file inventories of all 125 scan-hit matters to a file; only a summary is shown.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 65,
+     "end": 96,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "A reconciliation script refused because no stage was open, then reads of status, termination and withdrawal papers of about ten candidates, a deal-file script over the 125 matters, and listings of two more.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 97,
+     "end": 111,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: filtered listings and status-memo reads of four more candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 112,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five non-closing deals with reasons and documents, including a dormant energy deal, plus exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 129,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Checks cited paths and adds a note on a matter-number mismatch.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 130,
+     "end": 137,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the response and two sources of the mismatched matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 138,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "A narrower phrase rescan never reached four needed matters, a file-name filter then dropped two more that the scan had found, and a dormant deal was added.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 25,
+    "end": 40,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "not-flagged",
+    "critic_note": "The review at [40] flagged the phrase list as too loose, not as missing matters; no review named the four matters.",
+    "why": "Its narrower failed-close phrase rescan returned 125 matters but none of four needed matters, whose only earlier appearance was a scan where every matter hit, and it ran no other content search for them."
+   },
+   "other_errors": [
+    {
+     "stage_no": 5,
+     "stage": "Search file names for request keywords",
+     "start": 41,
+     "end": 52,
+     "events": "",
+     "kind": "over-narrow-filter",
+     "critic": "flagged-fixed-partly",
+     "critic_note": "(specific flag) The review at [52] named the narrowing to decisive file names, and the harness unopened-matter lists from [24] named one of the two matters; the agent inventoried all 125 scan matters but still read a hand-picked set.",
+     "why": "Two needed matters were in its 125-matter phrase scan ([38]), but its decisive-file-name filter dropped them and it never opened them."
+    },
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 112,
+     "end": 117,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned the dormant energy deal.",
+     "why": "A dormant deal outside the set is written as a non-closing M&A transaction (evidence seen at [84]-[88])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 5,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints each matter folder with file count and subfolder names (about 49K characters). Its label note (folder listing) had no later work of that kind.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Path regex for deal, regulatory, termination and withdrawal words; output about 47K characters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: grouped path search saved to a file (88 matters, 429 paths).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 45,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan times out twice; six background range jobs are polled with waits; only the last range finishes (16 matters). Harness stage-check warnings on the background calls.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: polls the jobs once more and abandons the scan with five ranges still running. The review flags partial coverage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads termination memos, status memos and agreements of about eight candidates chosen from the path search, lists their files, and reads near-miss memos of five more.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 85,
+     "end": 97,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Lists status and closing files of seven more candidates and reads their checklists and status reports.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four executed deals that did not close, with exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 112,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response; a path check fails because the response is not at the path it used and is rerun.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 113,
+     "end": 125,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads the agreements and termination records of the four deals.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 126,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Abandoned its only content scan with most ranges unfinished, and never opened two needed matters its path search had shown.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Scan document text with an extraction script",
+    "start": 46,
+    "end": 51,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [51] said five of six scan ranges were still running and nothing was merged; the agent abandoned the scan.",
+    "why": "Two needed matters never appeared in its path searches, and it abandoned the only content scan with five of six ranges unfinished."
+   },
+   "other_errors": [
+    {
+     "stage_no": 7,
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 84,
+     "events": "",
+     "kind": "surfaced-not-opened",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The harness unopened-matter lists at [84] and [97] named one of the two matters; the agent listed seven other matters instead.",
+     "why": "Two needed matters were in its first path search ([17]), but when choosing what to read it opened other candidates and never opened them."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 4,
+   "n_criteria": 9,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: folder names plus every file path per matter (about 549K characters). Its label note (folder listing) had no later work of that kind.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target partly surfaced",
+     "note": "Path regex for deal, termination and regulatory words; output about 34K characters. The review flags the truncated view; its label note says scan work, and the next path search kept this label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: the same path search saved to a file (104 matters). Its label note says scan work; the next stage was declared a scan.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction scan for deal context plus outcome words times out, then runs in five ranges; 263 matters hit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks range coverage and prints snippets for six chosen candidates. The review flags the hand-picked six.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 75,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads outside-date, withdrawal, termination and status papers of six candidates and one draft deal, a regex over the saved scan for no-closing phrases (about 51K characters), and reads of two closed comparators; one path fails.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 86,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads the agreements and extension of two candidates and a merger agreement of a third; one path fails.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five executed deals that did not close plus one merger still blocked in regulatory litigation, listed separately. The review flags the sixth matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 101,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response; a path check fails because the response is not at the path it used and is rerun.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 112,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the decisive documents of the six matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 113,
+     "end": 113,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Read a hand-picked set of candidates and never opened three needed matters its own path search and no-closing regex showed, and added a merger still in litigation.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 40,
+    "end": 75,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The harness unopened-matter lists from [19] named one of the three matters, and the reviews at [39] and [75] flagged the hand-picked candidates; the agent never opened them.",
+    "why": "Three needed matters were in its path search ([17]) and in its own no-closing regex over the scan ([68]), but it read other candidates and comparators and never opened them; a fourth never appeared in a discriminating result."
+   },
+   "other_errors": [
+    {
+     "stage_no": 9,
+     "stage": "Write the response",
+     "start": 87,
+     "end": 92,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "flagged-ignored",
+     "critic_note": "(specific flag) The write review at [92] named the sixth, still-pending matter; the agent kept it.",
+     "why": "A merger still in regulatory litigation is included as an additional non-closing transaction (evidence seen at [49]-[55])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All fail; the runs found the same core matters (the outside-date lapse, the regulatory-filing withdrawal and, in T1 and T2, the terminated deal and a merger ended on regulatory grounds) and missed the same group of four. They failed at different stages. T0's first error is its narrower phrase rescan, which never returned four needed matters (no review named them), after which a decisive-file-name filter dropped two more (reviewed and partly acted on). T1 abandoned its only content scan with five of six ranges unfinished despite a specific review flag. T2 completed its scan, but chose a hand-picked set to read and never opened three matters its own path search and no-closing regex showed; harness unopened-matter lists named one of them from early on. T0 and T2 each added a matter outside the set (a dormant deal; a merger still in litigation, flagged by T2's write review). Label notes were followed once (T2 declared a scan after a path search) and otherwise had no effect."
+}

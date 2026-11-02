@@ -1,0 +1,652 @@
+{
+ "task": "068",
+ "context": "Request: an experience list of healthcare and life-sciences matters that turned on an FDA approval or clearance already granted, with supporting documents. Rubric: 1037-00003 (device launch and promotional compliance review resting on an existing 510(k) clearance) with its proof documents; precision allows only 1037-00003 and 1018-00005 as qualifying.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files and file types per matter folder.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction scan for approval terms times out twice.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide path regex for regulator, approval and submission words; about 43K characters of hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 28,
+     "end": 33,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of eight candidate matters; the review suggests listing the remaining surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists the five matters the harness reported as surfaced but unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 60,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads strategy, diligence and compliance memos from nine candidates. The review flags an exclusion of a device matter despite its post-market obligations memo and the loose reading of 'turned on'.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 61,
+     "end": 76,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters, a draft regulator response, closing memo, labeling draft and promotional review memo of the three matters it settled on; a stage_start is refused because this stage is still open. The review says the claim that each matter turned on the approval is thinly supported.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 77,
+     "end": 88,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 2: parallel extraction scans time out and a shell fallback fails (unzip missing).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 89,
+     "end": 98,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: background chunked scan; per-matter hit counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 99,
+     "end": 116,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: narrow approval-phrase scan in the background; 29 matters with hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 117,
+     "end": 118,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Filtered file listing of 22 hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 119,
+     "end": 126,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Scan document text with an extraction script (attempt 4). Reads four documents of other hit matters; one guessed path fails. The review flags most hit matters as never opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 127,
+     "end": 132,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three qualifying matters (two drug matters and the device compliance review) with near misses.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 133,
+     "end": 147,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and two sources, a path check fails on the response location then passes, edits citations and the bottom line. The review questions one included drug matter (not the inquiry matter).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 148,
+     "end": 148,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted a drug-promotion inquiry, which only presupposed an existing approval, as a matter that turned on that approval.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 127,
+    "end": 132,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The in-depth review at [76] said the claim that each of the three matters turned on a prior approval was thinly supported, naming the other two; no review named the inquiry matter.",
+    "why": "The answer lists a matter about a regulator's inquiry into promotion of an already approved drug as one that turned on that approval (evidence seen at [42]-[72]), beyond the qualifying set."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide regulator-term scan; the script is patched twice before it prints per-matter hit counts; follow-up narrower scans time out. The review suggests a batched phrase scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 34,
+     "end": 45,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide path regex for regulator and approval words (a heredoc error, then a saved list of 1,289 files) and greps of that list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 46,
+     "end": 53,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: tighter path regex; a heredoc error, then a short list of strong path hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 54,
+     "end": 70,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: parallel scan times out, then four range scans print hits with context (about 71K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 71,
+     "end": 78,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 3). Condenses the saved range outputs per matter. The end label note names the figures stage; the next scan keeps the scan label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 79,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 4: four range scans for granted-approval phrasing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of about 20 hit matters (about 40K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 96,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: writes file lists of every granted-phrase hit matter to a file and prints the start.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 102,
+     "end": 144,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads about 30 documents across 14 candidates (offerings, a device asset sale, patent and distribution litigation, the inquiry and strategy matters, the device compliance review); one guessed path fails. The review questions one strategy-memo matter and the unopened series.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 145,
+     "end": 166,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Seven reads are refused because no stage is open, then repeated: diligence and coverage memos of seven borderline candidates used to confirm exclusions; a stage_start for writing is refused while this stage is open.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 167,
+     "end": 172,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight qualifying matters, each with documents mentioning an existing approval. The review says the reading of 'already granted' may be narrow.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 173,
+     "end": 182,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths; two checks fail on the response location.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 183,
+     "end": 183,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It counted every matter whose documents mentioned an approved or cleared product as one that turned on that approval.",
+   "first_error": {
+    "stage_no": 13,
+    "stage": "Write the response",
+    "start": 167,
+    "end": 172,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "Reviews pressed for wider coverage and questioned only an allowed strategy-memo matter; the write review called the reading possibly narrow and gave only stock warnings.",
+    "why": "Besides the two allowed matters it lists six offerings, asset sales and litigations whose documents mention an existing approval as matters that turned on one (evidence seen at [104]-[160])."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus directory and file counts; the review suggests a matter-level inventory step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 9,
+     "end": 14,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Writes all matter folder names to a file and counts them.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 15,
+     "end": 21,
+     "tags": [
+      "no matches",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "find loops over regulator and approval path words, with a parallel content grep (glob `*`) that returns nothing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 22,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter path regex counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan times out; four parallel range scans write hit files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: file-type counts and a grep of approval phrasing over extracted text.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: slide-deck text extraction.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 50,
+     "end": 55,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Consolidate candidate pool. Merges text-hit and path-hit counts into one per-matter candidate file.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Consolidate candidate pool"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists files of every pooled candidate to a file and prints part.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: checks the listing covers all candidates and prints files with regulator or device words. The end label note names the figures stage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 80,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads seven documents of three candidates (a device submission matter, a diligence matter, a coverage matter). The end label note names the listing-read stage; the next reads are declared as an in-matter search.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 81,
+     "end": 86,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Approval-phrase scan over the pooled candidates times out. The end label note names the scan stage; the rerun keeps the in-matter label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 87,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: the phrase scan split into four parallel runs over the candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 91,
+     "end": 107,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Search within a candidate matter's files (attempt 2). Reads strategy memos, a diligence memo, an asset purchase agreement and its schedules, a stock purchase agreement and the promotional review memo, with one grep of the hit file. The end label note names the listing-read stage; the next reads are declared as in-depth reads.",
+     "label_check": "ignored",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 108,
+     "end": 115,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). A per-matter grouping of the phrase hits (refused once because no stage was open, then about 89K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 116,
+     "end": 128,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads one or two documents each of an offering, the inquiry matter, an IPO and a patent litigation, plus an investigation report. The review says the agent called all four central on single reads; its label note names the listing-read stage and the next reads keep the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 129,
+     "end": 138,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads an officer's certificate, a pleading and a settlement memo; a stage_start for writing is refused while this stage is open. The end label note names the listing-read stage; the last reads are declared as screening.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Write the response",
+     "start": 139,
+     "end": 144,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes eight qualifying matters under a broad 'material part of the regulatory advice' reading. The review calls that scope wording broad and asks to tighten it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 145,
+     "end": 160,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "A path check fails on the response location then passes; removes one citation and fixes formatting.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 161,
+     "end": 173,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads short openings of eight cited sources; no edits. The review calls one offering matter's evidence weak.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 174,
+     "end": 180,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 3: reads one memo each of two more candidates; both stay excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 181,
+     "end": 181,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Screen candidate matters by reading documents → Tabulate candidate matters from saved results → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Screen candidate matters by reading documents → Finish the run",
+   "failure_point": "It applied a broad reading of 'turned on' and counted matters whose documents only mentioned an approved product.",
+   "first_error": {
+    "stage_no": 18,
+    "stage": "Write the response",
+    "start": 139,
+    "end": 144,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The write review at [144] called the scope wording broad and asked to keep only matters that turned on a granted approval, and the check review at [173] called one offering matter's evidence weak; the agent kept all eight.",
+    "why": "Besides the two allowed matters it lists six offerings, asset sales, an inquiry and a litigation whose documents mention an existing approval as matters that turned on one (evidence seen at [91]-[134])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail only the precision criterion and pass the device compliance review with its proof documents. Every run listed the store, scanned text and paths for regulator and approval terms, listed and screened candidate matters, and wrote. They differ in how widely they read 'turned on': T0 read a small set in depth and added only one extra (the drug-promotion inquiry); T1 and T2 read about 30 documents across many candidates and listed eight matters, counting offerings, asset sales and litigations whose documents mention an approved product. Reviews did not explain the difference: T0's in-depth review called all three inclusions thin, T1's write review even called the reading possibly narrow, and only T2's write review asked to tighten a broad scope, which the agent ignored. Label notes were ignored where they applied."
+}

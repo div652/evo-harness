@@ -1,0 +1,465 @@
+{
+ "task": "151",
+ "context": "Request: the firm's most recent M&A deal with a working-capital adjustment, by executed APA signing date, as a starting point for SPA drafting. Rubric: 1006-00008 (Crestline Packaging / Lakewood APA dated June 16, 2025, Section 3.3) as the deal, its executed APA as proof document, and a precision criterion that only 1006-00008 be asserted as qualifying; earlier deals such as 1006-00006 (June 15, 2025), 1038-00008 (June 13, 2025), 1007-00006 and 1038-00009 are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: every file of every matter with per-matter counts (about 545K characters). The end note said these calls looked like folder listing.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; a matter count (with a harness stage-check notice) and a rerun limited to agreement-like file names print dated working-capital hits (about 72K characters). The review flags the file-name prefilter and 45 unopened surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 34,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: batched scan of all documents into result files, printed together (about 164K characters); the review flags the broad hits and asks for a narrowed list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 35,
+     "end": 42,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Build narrowed candidate list from saved scan output. Greps the saved scan output for executed-agreement file names, then a store-wide script over executed-agreement files prints dates and adjustment snippets; the review flags the file-name filters and unverified claims.",
+     "label_check": "none",
+     "agent_new": "Build narrowed candidate list from saved scan output",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 43,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the lead matter's executed agreement, its adjustment section and its adjustment escrow agreement, plus the openings of two other candidates' agreements dated just earlier.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 57,
+     "end": 62,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated deal as the answer, with a list of earlier executed agreements as the closest comparators with the adjustment. The review asks that every other matter with an adjustment be listed with its signing date.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 63,
+     "end": 71,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks cited paths, edits one citation. The review asks to confirm the comparators' dates and not to add or drop matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 72,
+     "end": 81,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Verify response against source documents. Re-reads the openings of the lead agreement and four comparator agreements.",
+     "label_check": "none",
+     "agent_new": "Verify response against source documents",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 82,
+     "end": 82,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It found and cited the latest-dated agreement correctly but listed earlier executed agreements as comparators with the requested adjustment, which the answer then asserts as qualifying deals.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 57,
+    "end": 62,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "The write review at [62] asked that every other matter with an adjustment be listed with its signing date, and the check review at [71] said not to add or drop matters; no review questioned listing the comparators.",
+    "why": "Besides the latest-dated deal, the answer lists four earlier executed agreements (dates seen in scans at [21]-[40] and reads at [51]-[54]) as comparators with the requested adjustment, although the request asks only for the most recent deal."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Every file of every matter with per-matter counts (about 555K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders (attempt 2). Per-matter file counts with file names matching purchase-agreement and adjustment words.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; a raw-text rerun lists agreement and adjustment hits per matter (about 36K characters). The review flags hand-picked candidates and no dates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a dated rerun crashes, a fixed rerun prints date lists per matter; the review flags truncated output and no signing dates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the openings of eight executed agreements from eight candidates for their dates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 60,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet script over four candidates' agreements for adjustment terms, a paragraph extraction of the lead agreement's adjustment section, a guessed memo path that fails and the lead matter's escrow agreement. The end note said these calls looked like in-depth reading.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 61,
+     "end": 68,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Bounded signing-date scan of all surfaced M&A matters. Store-wide script over executed-agreement files sorted by date with an adjustment flag; reads the one later-dated hit, a financing agreement.",
+     "label_check": "none",
+     "agent_new": "Bounded signing-date scan of all surfaced M&A matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 69,
+     "end": 76,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Broad content scan for dated M&A adjustments. Two unfiltered store-wide scans both time out.",
+     "label_check": "none",
+     "agent_new": "Broad content scan for dated M&A adjustments",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 77,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Chunked full-store content scan. Opened and closed with no tool call; the review notes that no scan ran.",
+     "label_check": "none",
+     "agent_new": "Chunked full-store content scan",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 81,
+     "end": 86,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated deal as the answer with a comparison table of earlier executed agreements marked as having the adjustment. The review asks that every other candidate be listed with its signing date.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 87,
+     "end": 93,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and runs a path check with no visible output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 94,
+     "end": 105,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: visible path check and short re-reads of the lead and three comparator agreement openings. The end note said these calls looked like screening; the review flags unopened matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 106,
+     "end": 111,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Read a chosen matter's documents in depth. Paragraph extraction of the lead agreement's adjustment section and escrow agreement to confirm the written figures; no edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 112,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It verified the latest-dated agreement but wrote a comparison table presenting earlier executed agreements as deals with the requested adjustment.",
+   "first_error": {
+    "stage_no": 11,
+    "stage": "Write the response",
+    "start": 81,
+    "end": 86,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "The write review at [86] asked that every other candidate be listed with its signing date and reason; the check reviews only asked to confirm the comparators' dates; none questioned presenting them as having the adjustment.",
+    "why": "The answer's comparison table marks several earlier executed agreements (openings read at [38]-[47], adjustment snippets at [51]-[52]) as having the requested adjustment, although the request asks only for the most recent deal."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Per-matter file counts with file names containing generic agreement-type words (about 79K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 24,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; range reruns print hits (about 77K and 39K characters), one times out, and a find for acquisition-agreement files. The review flags truncated output and a hand-picked list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 25,
+     "end": 43,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: four parallel range scans crash twice, then print per-matter flag counts; the review flags undiscriminating flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads the openings of ten candidate agreements from ten matters, one a draft.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 57,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the lead agreement's adjustment section, its escrow agreement and diligence memo, and an adjustment email of the runner-up. The review flags that the one-day-earlier runner-up was dropped without explanation and asks to state why each of two candidates is included or excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 66,
+     "end": 76,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Store-wide check for later or competing executed APAs. Store-wide script for agreements dated in the year with adjustment terms, then reads the adjustment sections of two runner-up agreements.",
+     "label_check": "none",
+     "agent_new": "Store-wide check for later or competing executed APAs",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 77,
+     "end": 82,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the latest-dated deal as the answer with a comparison table of two earlier executed agreements marked as having the adjustment. The review asks that each other candidate carry a date and reason.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks paths and the lead agreement's cover; no edit. The review says to keep the matter set.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-reads the adjustment section, the escrow agreement and the response; no edit. The review asks to confirm that the other candidates are listed with their dates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 99,
+     "end": 99,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for a document type → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It verified the latest-dated agreement but kept a comparison table presenting two earlier executed agreements as deals with the requested adjustment.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 77,
+    "end": 82,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "review-endorsed",
+    "critic_note": "The in-depth review at [65] asked it to state why the runner-up agreements are included or excluded, the write review at [82] asked for a date and reason per other candidate, and the check reviews at [90] and [98] said to keep the matter set; none questioned listing them as having the adjustment.",
+    "why": "The answer's comparison table presents two earlier executed agreements (adjustment sections read at [70]-[74]) as deals with the requested adjustment, although the request asks only for the most recent deal."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way at the write stage, as in the previous round. Each found the latest-dated agreement through file listings and extraction scans, read its executed agreement and adjustment section, and cited it correctly, but added a comparison list or table presenting earlier executed agreements as deals with the requested adjustment, which the precision criterion counts as extra qualifying matters. The reviews pushed toward the comparison rows in every run: write-stage reviews asked that every other candidate be listed with its signing date, and check-stage reviews said to keep the matter set. Agent-declared new stages (five, all relabelled as extraction scans, one as a check) were used for completeness sweeps for later-dated agreements and did not change the answer; one label note was followed (T1) and two ignored (T0, T2)."
+}

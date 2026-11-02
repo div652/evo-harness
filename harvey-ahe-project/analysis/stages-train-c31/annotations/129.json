@@ -1,0 +1,397 @@
+{
+ "task": "129",
+ "context": "Request: which Litigation (General) matters (not IP, employment or antitrust) involved a punitive or exemplary damages claim the firm actually pursued, prosecuting or defending, rather than boilerplate. Rubric: seven qualifying matters 1006-00005, 1021-00006, 1023-00002, 1024-00003, 1033-00006, 1034-00003, 1045-00004, plus a precision criterion. Documents in folder 1045-00004 carry the internal number 1022-00005.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 6,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the summary treats one litigation folder as the only litigation matter, and the review asks for a per-folder relisting.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a script prints every file grouped by matter (about 809K characters). The end note says this looked like folder-listing work, and the next listing was declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Compact list of matter numbers with file counts; the review asks how the store records practice groups.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; a range-split rerun saves 1,444 hit lines to a file and per-matter counts are printed. The review flags the tail cap, the hand-picked high-confidence list and no practice-group filter, and suggests a new step to restrict hits by practice group.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Restrict hits to Litigation (General) matters. A path-keyword filter over the saved hit file (about 28K characters) lists litigation-type files per matter; the summary names seven candidates. The review says the shortlist looks hand-picked and asks for a practice-group filter over the full hit list.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Restrict hits to Litigation (General) matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify practice group for all punitive-hit matters. Reads the engagement letters of the seven shortlisted matters; the review flags a matter-number mismatch inside one folder's letter and first-80-line reads.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify practice group for all punitive-hit matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 77,
+     "tags": [
+      "tool error",
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Verify practice group for all punitive-hit matters (attempt 2). Seven reads refused because no stage was open, then the same reads (opening memo, intake form, petitions, complaints, a motion to dismiss the punitive claim), greps of the saved hits for two matters and reads of four more pleadings and a summary-judgment memo; one intake path fails.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Verify practice group for all punitive-hit matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five qualifying matters, with the folder whose documents carry another matter number named by its folder, and lists exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 84,
+     "end": 92,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response; a path check fails on the file location, then confirms 37 cited paths exist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 93,
+     "end": 103,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: re-reads the opening sections of the five matters' pleadings and the opening memo; no change. The review flags the number mismatch; its end note says the calls looked like screening, and no stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 104,
+     "end": 104,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It shortlisted seven of the scan-hit matters, never opened two qualifying matters that its own filter output showed, and answered with five.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 47,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The reviews at [29] and [35] said the shortlist was hand-picked and asked for the full hit list to be filtered by practice group; the agent read only its seven shortlisted matters, and no review named the two left out.",
+    "why": "Two qualifying matters appeared in its scan and filter output at [27] and [33], but it chose to read only the seven matters of its shortlist and never opened either, so the answer omits both."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 1,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the summary names the one litigation folder seen.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a script prints every file grouped by matter (about 648K characters). The end note says this looked like folder-listing work; no later stage lists folders.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 24,
+     "tags": [
+      "timed out",
+      "huge output",
+      "run ended: context overflow"
+     ],
+     "hindsight": "context overflow",
+     "note": "Store-wide extraction script times out; four parallel range reruns each time out and each print over 1.1M characters of hits (the range arguments are ignored), and the run ends without a deliverable.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script",
+   "failure_point": "Its parallel scan reruns printed several million characters of hits and the context filled before any reading or writing.",
+   "first_error": {
+    "stage_no": 3,
+    "stage": "Scan document text with an extraction script",
+    "start": 14,
+    "end": 24,
+    "events": "[20]-[24]",
+    "kind": "context-overflow",
+    "critic": "no-review",
+    "critic_note": "The run ended inside the scan stage, before its stage_end review.",
+    "why": "Four parallel scan reruns each returned over a million characters of hit text, which filled the context before any answer was written."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 7,
+   "n_criteria": 8,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the review asks for a per-folder relisting.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Matter numbers with file counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out after printing about 465K characters of hits up to mid-store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 33,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Attempt 2: a background scan writing compact per-matter hits to a file, polled with tail and keyword filters while still running. The review flags that it never finished and that the filtered views show mostly boilerplate.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 34,
+     "end": 41,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: stops the still-running scan and summarises 184 matter entries. The review flags unconfirmed coverage and suggests a new step to identify the practice group's matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 42,
+     "end": 53,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify Litigation (General) matters. Seven engagement-letter reads with guessed wildcard paths; six fail and the one that opens shows a matter number different from its folder. The review flags the guessed paths.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify Litigation (General) matters"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 54,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 14 named candidate matters (about 42K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 58,
+     "end": 67,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the opening of seven engagement letters to judge the practice group; the review flags the hand-picked 14-matter set. The start note pointed to screening for this reading work, kept under the listing label.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 68,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads openings of petitions, complaints, mediation statements and motion analyses of three candidates; the review flags that only three matters were read.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 81,
+     "end": 90,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over seven named candidates (about 86K characters written, part shown), a closing-document scan and an empty grep over one folder. The end note says the calls looked like listing reads; the next reads were declared as in-depth reads.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 91,
+     "end": 101,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads engagement letters at offsets, two case-assessment memos, an opening memo and a motion of three candidates. The review flags the number mismatch between the folder and the matter number in its documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 102,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Writes seven qualifying matters, naming one by the number printed in its documents with the folder given as a storage note.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 116,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misdescribes matter",
+     "note": "Re-reads the response; a path check fails on the file location, then 50 cited paths exist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 122,
+     "tags": [],
+     "hindsight": "answer misdescribes matter",
+     "note": "Attempt 2: a script confirms the punitive-damages wording in each cited pleading or motion; no change. The end note says the calls looked like scan work; no stage follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 123,
+     "end": 123,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It named one qualifying matter by the number printed inside its documents rather than its folder number, so the answer asserts a matter outside the qualifying set.",
+   "first_error": {
+    "stage_no": 12,
+    "stage": "Write the response",
+    "start": 102,
+    "end": 107,
+    "events": "",
+    "kind": "misstated-facts",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [101] said the matter's documents carry a number different from its folder and that the agent had not resolved which number applies; it wrote the document number as the matter number with a storage note.",
+    "why": "The answer names one qualifying matter by the internal matter number printed in its opening memo and engagement letter (read at [44]-[53] and [93]-[99]) rather than by the folder that holds it, so it asserts a matter number outside the qualifying set."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All fail, in three different ways. T1 overflowed the context in its first scan stage (parallel reruns each printing over a million characters). T0 and T2 both completed scans that surfaced all seven matters and then picked a shortlist: T0 shortlisted seven matters (adding an eighth later) and never opened two qualifying ones (first error at screening; the reviews flagged a hand-picked shortlist only generically); T2 shortlisted and read all seven but wrote one by the number printed in its documents instead of its folder number (first error at writing; the review had named the mismatch specifically). The agent-defined practice-group stages (T0 restrict and verify, T2 identify) did not change which matters were opened."
+}

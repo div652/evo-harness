@@ -1,0 +1,409 @@
+{
+ "task": "162",
+ "context": "Request: the firm's first traditional, non-SPAC IPO, with offering documents and proof the deal closed. Rubric: 1037-00001 (Solstice Biomedical ADS IPO, closed March 2023), an offering document, a closing deliverable, and a precision criterion that fails when another matter (here 1010-00002, Arbor Health, closed Feb 2024) is called qualifying.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: script prints every matter's file list (about 545K characters). The end review's label note names folder listing, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Counts and lists matter folders, then a path regex for offering, registration, underwriting and closing words grouped per matter. The review flags the file-name-only screen; its label note names the text scan, which the next stage declares.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script writes 761 hit lines to a file; the printed part is cut at about 40K characters, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). A per-matter path regex for strong offering words over the saved list, not a text scan, as the review notes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads prospectus, underwriting, cross-receipt and closing papers of six candidates in two parallel batches, including the later closed offering and the earlier closed depositary-share offering. The review flags many unopened matters and that the later offering is only a comparison point.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the earliest closed offering with its executed offering documents and closing certificate and checklist; the later closed offering appears in the chronology as a later qualifying deal.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 60,
+     "end": 66,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks cited paths exist.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 67,
+     "end": 79,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-opens five cited and excluded sources and edits one paragraph on how first is defined.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 80,
+     "end": 80,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Search file names for request keywords → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Read the later closed offering as a comparison and wrote it into the chronology as a second qualifying traditional offering.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 54,
+    "end": 59,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "The write review asked only to check facts and to state each exclusion reason (naming the later offering's exclusion reason); no review named the later offering being presented as qualifying.",
+    "why": "The answer names the earliest closed offering correctly but also describes a later closed operating-company offering, read at [34]-[43], as a qualifying traditional offering in its chronology, so the answer asserts a second qualifying matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Prints every matter's file list (about 526K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-matter path regex for offering, registration, underwriting and closing words; the review flags no closing words and no text search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out after printing hits for the first matters; the review flags the timeout and noisy terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 26,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads twelve, then four, offering and closing documents of six candidates, mostly the later closed offering. The review flags that the earlier depositary-share matter was opened only at first lines.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 62,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads the earlier matter's executed underwriting, deposit and registration-rights agreements, closing checklist, officers' certificate and opinion, plus one draft of another candidate. The review flags no store-wide widening.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 63,
+     "end": 68,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the earlier closed depositary-share offering as first, with offering and closing documents, and calls the later closed offering a qualifying traditional offering that came after it.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 69,
+     "end": 78,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Checks cited paths, re-reads the response and edits the closing paragraph.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 79,
+     "end": 89,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-opens three closing sources and edits the conclusion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 3: reads the rest of the response; no edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 96,
+     "end": 96,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Wrote the later closed offering as a qualifying traditional offering that came after the first one.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Write the response",
+    "start": 63,
+    "end": 68,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "The write review asked to compare competing candidates by closing date and state exclusion reasons; no review named the later offering being called qualifying.",
+    "why": "The answer names the earliest closed offering correctly but also describes a later closed operating-company offering, read at [28]-[45], as a qualifying traditional offering in its chronology, so the answer asserts a second qualifying matter."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 3,
+   "n_criteria": 4,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Lists folder names and file counts. The end review's label note also names folder listing; the next stage is a path search.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex for offering, registration, underwriting and closing words grouped per matter; output cut (about 94K characters more), which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide extraction script times out; a range-argument script reports per-matter hit counts. The review flags unconfirmed range coverage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 28,
+     "end": 44,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads twelve offering and closing documents across six candidates, including the later closed offering and the earlier matter's engagement letter and counsel opinion.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 45,
+     "end": 48,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidate matters, including five that the review named as surfaced but unopened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 49,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads the earlier matter's executed underwriting agreement, officers' and secretary's certificates, closing checklist and an agency letter, plus a postponement email of another candidate. The review flags the hand-picked set; its label note names listing-picked reads, but writing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 58,
+     "end": 63,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes the earlier closed depositary-share offering as first with offering and closing papers; the later closed offering is described as a later qualifying traditional offering. The review flags no verification in the stage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 64,
+     "end": 70,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response and checks ten cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 71,
+     "end": 83,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Attempt 2: re-opens eight sources of the chosen and excluded matters; no edit. The review endorses the answer.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 84,
+     "end": 84,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Wrote the later closed offering as a later qualifying traditional offering.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Write the response",
+    "start": 58,
+    "end": 63,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "not-flagged",
+    "critic_note": "The write review asked to confirm the date ordering against every other candidate and to state exclusion reasons; the last review endorsed the answer. None named the later offering being called qualifying.",
+    "why": "The answer names the earliest closed offering correctly but also describes a later closed operating-company offering, read at [30]-[42], as a qualifying traditional offering in its chronology, so the answer asserts a second qualifying matter."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way at the write stage. Each found and read the earliest closed operating-company offering (executed underwriting, deposit and registration-rights agreements plus closing certificates and checklist) and the later closed offering, and wrote the earliest as first; each also described the later one as a qualifying traditional offering in its chronology, which the precision check counts as a second qualifying matter. The reviews never named this: they pushed for wider coverage and for exclusion reasons for every competitor, which kept the later offering in the answer as a compared, qualifying deal. No label note or agent-defined stage played a role."
+}

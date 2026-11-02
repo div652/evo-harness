@@ -1,0 +1,615 @@
+{
+ "task": "091",
+ "context": "Request: the firm's Labor & Employment matters where the non-compete ran 18 months or longer (for an enforceability memo). Rubric: 1017-00004 (Aurelius Media / Aldrich, executed 18-month non-compete later voided in settlement) and 1038-00006 (Cascade Retail v. Rathore, original 18-month covenants later reduced), plus precision; 1038-00009 (NovaMart acquisition diligence), 1022-00004, 1010-00004 and 1033-00005 (proposed or reduced terms, never executed) and transaction matters are outside the set.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for folder-level counts and a practice-group source.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints every matter folder with its file count and the store total.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide snippet scan for the request terms and practice-group words times out after printing about 452K chars of hits; the review flags partial coverage and suggests a new step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 28,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Batched L&E non-compete scan. Four parallel range scans keep matters with practice-group wording and long-duration covenant snippets. The review flags deal-document hits and no proposal-versus-executed split.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Batched L&E non-compete scan"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 29,
+     "end": 34,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify L&E matters and verify executed non-compete terms. A brace glob for six candidates returns nothing; a find lists their files.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify executed non-compete terms"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 35,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify L&E matters and verify executed non-compete terms. Reads engagement letters, case memos, a term sheet, a closing memo, an agreement draft and a settlement agreement from four candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify executed non-compete terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Identify L&E matters and verify executed non-compete terms. Store-wide script over engagement, intake and opening files for practice-group wording.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify executed non-compete terms"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 62,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify L&E matters and verify executed non-compete terms. Reads engagement letters, memos and an executed settlement of a newly surfaced candidate (two guessed paths fail, a find recovers them), then snippets from two settlement agreements. The review flags the narrow candidate scan and unread underlying agreements.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify executed non-compete terms"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 63,
+     "end": 70,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Broad sweep for long non-competes. A store-wide duration sweep times out (about 51K chars), with name-filtered finds in three named matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Broad sweep for long non-competes"
+    },
+    {
+     "stage": "Write the response",
+     "start": 71,
+     "end": 76,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes two matters with executed long terms as qualifying, one unexecuted negotiation as a near match, and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 77,
+     "end": 91,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and four sources; a path check fails because it looks in the working folder, then finds all 16 cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 103,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: prints the response tail and rechecks paths; the review suggests a reconciliation step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 104,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Claim-to-source reconciliation. Keyword-flag script over six cited documents; the review says the flags prove nothing.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Claim-to-source reconciliation"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 110,
+     "end": 121,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Claim-to-source reconciliation (attempt 2). Reads five cited sources and snippets from two of them.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Claim-to-source reconciliation"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 122,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final included-matter spot check. Re-reads the response opening and three sources; the review says neither included matter kept a long term after settlement.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final included-matter spot check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 144,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 4: edits the bottom line and both inclusion paragraphs to say no long term stayed in force after settlement, keeping both matters as the ones with executed long clauses.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 145,
+     "end": 150,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final settlement outcome check. Snippet script on two settlement agreements.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final settlement outcome check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 151,
+     "end": 156,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final settlement outcome check (attempt 2). A second snippet script hits a recital instead of the operative section, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final settlement outcome check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 157,
+     "end": 162,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Final settlement outcome check (attempt 3). Bounded extraction of the two operative settlement sections.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Final settlement outcome check"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 163,
+     "end": 163,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Scan document text with an extraction script → Screen candidate matters by reading documents → Scan document text with an extraction script → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 3,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Prints every matter folder with file count and first-level subfolders (about 40K chars).",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 23,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "A store-wide scan and a range rerun time out; a check of the output files finds one hit. The review suggests a background chunked scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 24,
+     "end": 37,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Background chunked text scan. 46 background prefix scans, polled to completion, then duration filters over the saved hits (about 104K and 348K chars). The review flags capped viewing and no practice-group filter.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Background chunked text scan"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 38,
+     "end": 47,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify L&E matters and verify non-compete terms. Globs all files of seven candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify non-compete terms"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 48,
+     "end": 75,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Identify L&E matters and verify non-compete terms. Reads 22 documents from seven candidates: agreement drafts, term sheets, memos, closing and dormancy memos, settlement agreements and exhibits (one guessed path fails). The review flags draft-only and terminated matters counted as qualifying.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Identify L&E matters and verify non-compete terms"
+    },
+    {
+     "stage": "Write the response",
+     "start": 76,
+     "end": 81,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes five matters with a long term at some point, two executed and three only proposed; the review flags the blended count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 82,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "declared: Write the response (attempt 2). Edits the bottom line to the two matters with executed long terms and moves the three proposal matters to an uncounted precedent section.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 111,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, fixes a heading, greps for leftover count wording and checks 17 cited paths. Label note after [97]: followed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 123,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads five sources and softens one settlement-outcome sentence.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 124,
+     "end": 131,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 3: snippet script on one executed settlement; restores the outcome sentence.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 132,
+     "end": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: re-reads the response opening.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 138,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 2,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: counts files and matter folders, saves the full path list and greps it for index, intake and practice-group names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: looks for files outside the matter folders; none.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 59,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide scans time out; a matter-path bug makes four shard runs report zero hits; four background shards run about five minutes under repeated polling with no output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 60,
+     "end": 63,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script. Kills the shards and runs a path grep for covenant and employment words capped at 200 lines. The review flags the dead scan and the capped name fallback.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 64,
+     "end": 71,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Uncapped path grep for covenant, employment and labor words; 39 matters (one command fails on a file name with a space).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: broadened path grep; 72 matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 78,
+     "end": 83,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: Search file names for request keywords (attempt 3). Merges the two matter lists (72) and prints the additions; the review suggests a full-text step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 84,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in candidate matters. Store-wide path grep for covenant and employment-agreement names (66 files). The review flags it as a name filter, not a listing.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 90,
+     "end": 95,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: lists all files of the 72 matters to a file (counts only).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 96,
+     "end": 129,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 16 covenant agreements and memos from 16 candidates, then 8 more and a longer read of one deal memo. The review flags hand-picked, mostly deal-side reads and a memo-only basis for one matter.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 130,
+     "end": 138,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads sections at offsets of four lead matters' memos and drafts. The review asks for the executed agreements of two matters. Label note after [129]: ignored.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 139,
+     "end": 146,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). A grep of its saved listing is refused because no stage is open, then a name-filtered find over three matters. The review flags the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 147,
+     "end": 152,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes three matters as qualifying, including a deal matter's existing executive covenants, plus an unexecuted negotiation matter beside them; the review flags the negotiation matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 153,
+     "end": 176,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check fails because it looks in the working folder, removes citations of unopened documents and edits two status sentences.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 177,
+     "end": 182,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: per-path existence check of eight citations.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 183,
+     "end": 183,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Search file names for request keywords → Tabulate candidate matters from saved results → Search file names for request keywords → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It read that one matter was an acquisition whose executive covenants appear only in a diligence memo, yet counted it as a qualifying employment matter, and kept an unexecuted negotiation beside the set.",
+   "first_error": {
+    "stage_no": 14,
+    "stage": "Write the response",
+    "start": 147,
+    "end": 152,
+    "events": "",
+    "kind": "over-inclusion",
+    "critic": "flagged-fixed-partly",
+    "critic_note": "(specific flag) Reviews at [129] and [138] said one counted matter rested only on a memo about existing covenants and asked for its executed agreements, and the write review at [152] said the unexecuted negotiation beside the set inflated it; the agent never opened those agreements, edited wording only, and kept both in the answer.",
+    "why": "The answer counts an acquisition matter whose long executive covenants it knew only from a diligence memo as a qualifying employment matter, and presents an unexecuted negotiation as an additional long-end matter beside the set (evidence seen at [98]-[136])."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs surfaced and read both qualifying matters through scans and path searches, and all read the negotiation matters whose long terms were never executed. They split at the write stage. T0 wrote only the two matters with executed long clauses and named the negotiation matter a near match (pass). T1 first wrote five matters 'at some point', and after the write review flagged the blended count it rewrote the answer to the two executed matters (pass). T2 counted a third matter, an acquisition whose executive covenants it knew from a diligence memo, and kept an unexecuted negotiation beside the set (fail). The critic's reviews differed in effect rather than in kind: T1's write review named the inflated count and was acted on fully; T2's reviews asked for the third matter's executed agreements and named the negotiation matter, but T2 only edited wording. T0's late spot-check review even argued that neither included matter kept a long term after settlement; T0 reworded the scope and kept both, which passed. No policy rule, label note or agent-declared stage played a role at the split; the agent-declared stages (scans, verification reads, reconciliation checks) map onto existing stages."
+}

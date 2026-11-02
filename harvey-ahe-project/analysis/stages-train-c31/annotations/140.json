@@ -1,0 +1,496 @@
+{
+ "task": "140",
+ "context": "Request: firm M&A matters in healthcare-services, biotech or pharma that used rep-and-warranty insurance, with policy documentation. Rubric: 1001-00003, 1001-00007, 1006-00008 (Crestline / Lakewood healthcare services), 1013-00006, 1018-00008 (Penterra, terminated but with a bound policy), a proof document for each, and a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 11,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files and lists the 266 matter folder names. The end review's label note names folder listing; a text scan follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 16,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out; range scripts time out or are rerun one range at a time, then a merge reports 6,447 hit files in 263 matters with about 40 strong ones (about 30K characters). A harness stage check is a warning only. The review flags narrowing to five matters by file name.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Intersect scan flags into candidate list. Intersects the saved scan flags with sector and deal indicators: 24 matters, most dismissed as generic. The review flags the strict filter and capped printout.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Intersect scan flags into candidate list"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Intersect scan flags into candidate list (attempt 2). Inclusive exact-language filter over the saved scan: 54 candidate matters with snippets (about 47K characters).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Intersect scan flags into candidate list"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 52,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads 32 policy, binder, coverage and diligence documents from about 20 candidates and lists the files of seven of them; six matters confirmed.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 94,
+     "end": 109,
+     "tags": [
+      "script error",
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Path regex for sector and insurance words (two script errors before it runs; 24 matters) and a look at saved scan hits for a few; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 110,
+     "end": 115,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes five precedents plus one limited-evidence healthcare lead, with policy documents and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 116,
+     "end": 144,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Path check (one script error on the response location), lists one matter's files to fix a citation, and edits the count, the lead's status and the terminated deal's bucket.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 145,
+     "end": 154,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: aligns the headline count with the buckets and re-checks paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 155,
+     "end": 155,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 9,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List files in the document store (attempt 2). Per-matter file counts with insurance, policy and warranty file names printed under each (about 44K characters). The end review's label note names folder listing, and the next stage is declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List matter folders. Saves a per-matter inventory with insurance file-name hit counts and prints the matters with hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 33,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "Store-wide extraction script times out three times (whole store, range version, rewritten version); a fallback path search for insurance and binder words lists the candidates. The review (goal not reached) flags that no text scan completed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 34,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 16 path-search candidates; the review flags 36 surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: compact insurance-word file listings of 36 more hand-typed matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 46,
+     "end": 73,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads policy memos, binders, agreements and diligence documents of about eight candidates and extracts snippets from three.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 74,
+     "end": 86,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads agreements, status and termination papers of the chosen matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 87,
+     "end": 99,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: further reads of four chosen matters (one guessed path fails); a stage_start for writing is refused because this stage is still open. The end review's label note names listing-picked reads, but the next reads keep the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 100,
+     "end": 108,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 3: lists one matter's files and re-reads three policy and binder documents. The end review's label note again names listing-picked reads; writing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 109,
+     "end": 114,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes five precedents (two healthcare-services, one diagnostics, one device, one terminated pharma deal). The review calls the set inflated.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 128,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Re-reads the response, separates strict in-scope matters from adjacent ones, checks 44 paths (one script error on the response location).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 136,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 2: edits the headline buckets.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 137,
+     "end": 143,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Attempt 3: reads the rest of the response and re-checks paths; no edit.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 144,
+     "end": 144,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Store-wide text scans all timed out; the agent continued from a file-name search that never showed one qualifying matter.",
+   "first_error": {
+    "stage_no": 4,
+    "stage": "Scan document text with an extraction script",
+    "start": 22,
+    "end": 33,
+    "events": "",
+    "kind": "search-miss",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The scan review at [33] said no store-wide text scan ever completed and the fallback was a file-name search; the agent moved on to listing file-name candidates.",
+    "why": "Every store-wide text scan timed out and the fallback path search for insurance words could not reach a healthcare-services acquisition whose policy evidence sits in agreements and closing papers, so it never surfaced."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 8,
+   "n_criteria": 11,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: script prints every file path in the store (about 716K characters). The end review's label note names folder listing, and the next stage is declared that way.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List matter folders. Per-matter counts plus a path regex for insurance and policy words (109 hits).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "output capped"
+     ],
+     "hindsight": "target partly surfaced",
+     "note": "declared: List matter folders (attempt 2). Saves a wider insurance path-hit list (380 hits) and shows the first 140 lines. The review flags the file-name prefilter and the cap.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script over Word and email files: per-matter counts for 1,389 lines (about 97K characters); only the start is visible, as the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "declared: new: Rerun insurance-specific scan. A tighter all-file-type scan times out with no output; the review (goal not reached) flags falling back to a shortlist.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun insurance-specific scan"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Rerun insurance-specific scan (attempt 2). Four parallel batch scans: 33 matters with both insurance-specific and sector text, each with hit files.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Rerun insurance-specific scan"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 44,
+     "end": 80,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads policy, binder, agreement and closing documents of about eight candidates from the 33-matter list. The review (goal not reached) flags one opened candidate left out of the summary.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 81,
+     "end": 91,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads the omitted candidate and one more. The review flags about 60 surfaced matters never opened; its label note names listing-picked reads, but writing follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 92,
+     "end": 97,
+     "tags": [],
+     "hindsight": "answer misses target",
+     "note": "Writes four completed matters and one terminated deal as responsive. The review says the terminated deal inflates the set.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 116,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer misses target",
+     "note": "Checks 25 paths (one script error on the response location), fixes one citation and moves the terminated deal to a separate non-counted reference.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 117,
+     "end": 117,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "Left a scan-surfaced healthcare-services acquisition unopened, and after a review demoted a terminated pharma deal with a bound policy out of the counted set.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 44,
+    "end": 80,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) The next screening review at [91] said about 60 surfaced matters were never opened, with examples that did not include this matter; nothing named it.",
+    "why": "The batch scan at [41] listed a healthcare-services acquisition with 14 insurance-specific hit files among 33 candidates, but the agent chose eight others to read and never opened it."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Check or revise the response",
+     "start": 98,
+     "end": 116,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "review-endorsed",
+     "critic_note": "(specific flag) The write review at [97] said the terminated deal's bound policy is not a completed matter and inflates the set; the agent moved it to a non-counted reference.",
+     "why": "The check stage moved a pharma acquisition with a bound policy out of the answer because the deal terminated before closing (evidence seen at [68]-[69])."
+    }
+   ]
+  }
+ ],
+ "divergence": "Mixed (T0 passes; T1 and T2 fail on the same healthcare-services acquisition, T2 also on a terminated pharma deal). The split is at the scan-to-candidate step. T0 completed a ranged store-wide scan and, after a review flagged its strict filter, rebuilt its own candidate list inclusively (agent-defined stage, attempt 2: 54 matters) and read about 20 candidates including that matter. T1's scans all timed out and it fell back on file names, which never showed the matter (the review named the incomplete scan; ignored). T2's agent-defined rescan did list the matter, but screening read eight others and no review named it. All three write reviews questioned the terminated deal; T2 demoted it to a non-counted reference and lost that criterion, T0 bucketed it separately but still described it as a precedent, and T1 kept it. Label notes played no role."
+}

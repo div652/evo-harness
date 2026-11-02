@@ -1,0 +1,542 @@
+{
+ "task": "032",
+ "context": "Request: which Bankruptcy & Restructuring matters produced a confirmed plan of reorganization that the firm drafted. Rubric: 1006-00002 (Crestline Packaging, Chapter 11 plan confirmed) as the qualifying matter, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with file counts; the output is cut.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Saves the folder list to a file and counts 266 folders and 9,288 files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "One find \\| grep over all paths with broad request words; 444 hits, per-matter counts cut. The review flags noise and no text search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 35,
+     "tags": [
+      "timed out",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out twice; falls back to per-word file-name counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Range scans run in the background write per-matter hit files; greps of the saved output for exact phrases (with line caps) and per-file hits for six matters. The review flags the caps and the hand-picked six.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 54,
+     "end": 61,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Consolidate full candidate pool from scan files. A heredoc error, then a per-matter table of the saved scan output (250 matters, output cut); no new store reads. The review flags that most of the table was never seen.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Consolidate full candidate pool from scan files"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 62,
+     "end": 71,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Consolidate full candidate pool from scan files (attempt 2). Filters the saved table to exact phrases (47 matters) and prints name-filtered file lists for them; a stage_start for reading is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Consolidate full candidate pool from scan files"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 72,
+     "end": 75,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: List and read <topic> matter files. Store-wide path search for the request's document names; ten hits in one matter, two elsewhere.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List and read bankruptcy matter files"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 76,
+     "end": 88,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List and read <topic> matter files. Reads the engagement letter, plan, confirmation order, effectiveness certificate and fee application of the lead matter and two memos of a contingency matter. The review flags that the filename sweep was treated as the whole store.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List and read bankruptcy matter files"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 89,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Enumerate and list all <topic> matters. Extraction script over engagement and matter-opening files of every matter; eight matters match.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Enumerate and list all bankruptcy matters"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 93,
+     "end": 102,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Enumerate and list all <topic> matters. Name-filtered file lists of the eight matters and engagement letters of five near candidates.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Enumerate and list all bankruptcy matters"
+    },
+    {
+     "stage": "Write the response",
+     "start": 103,
+     "end": 108,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the only qualifying matter with near candidates excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 109,
+     "end": 119,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, checks cited paths and softens two statements.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 120,
+     "end": 130,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads the plan, confirmation order, certificate and three exclusion documents; no edit. The end-of-stage label note names screening; the run finishes next. The review flags dozens of unopened surfaced matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 131,
+     "end": 131,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → Tabulate candidate matters from saved results → Search file names for request keywords → Read a chosen matter's documents in depth → Scan document text with an extraction script → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 2). Counts files per matter folder for all 266 folders. The end-of-stage label note names the folder-listing stage; no folder listing follows.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Path regex with broad request words over all files; output cut. The end-of-stage label note names the scan stage; no further path search follows.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script and a range-split rerun both time out.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 28,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Background scan of all 266 matters polled with sleeps; prints matching file lines (about 45K and 39K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: List folders of all <topic>-hit matters. Filters the saved scan output by strong file names (three matters) and prints their file lists. The review flags the file-name proxy.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "List folders of all bankruptcy-hit matters"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Enumerate all <topic> & Restructuring matters. Extraction script over engagement and intake files of every matter (about 279K chars).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Enumerate all Bankruptcy & Restructuring matters"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidates. The review flags about 60 surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 58,
+     "end": 70,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads six documents of the lead matter plus one engagement letter and one closing memo of two near candidates. The end-of-stage label note names listing-picked reads; the next reading stage keeps the in-depth label.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 71,
+     "end": 81,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth (attempt 2). Reads engagement letters of four near candidates and two papers of a fifth. The end-of-stage label note names screening; only post-write checks follow.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 82,
+     "end": 87,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the only qualifying matter with excluded near candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 88,
+     "end": 96,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response; a path check opens response.md from the working folder, then succeeds from the output folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 97,
+     "end": 107,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: Re-reads cited sources of the lead matter and three near candidates; no edit. The review flags unopened sibling matters; the end-of-stage label note names screening and the run finishes next.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 108,
+     "end": 108,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Scan document text with an extraction script → List files in candidate matters → Read a chosen matter's documents in depth → Screen candidate matters by reading documents → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 8,
+     "tags": [
+      "listing covers few matters",
+      "mixed intents"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a two-level folder listing and file count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 9,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Per-word find loops and a folder-type path grep, each with line caps. The review flags the caps and no text search.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: Uncapped path-hit list saved to a file (173 paths) with per-matter counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 45,
+     "tags": [
+      "huge output",
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script times out repeatedly, unzip fallbacks return nothing, then 46 parallel prefix scans print 3,281 lines (about 343K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 46,
+     "end": 51,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Strong-term per-matter scan. Rescans every matter for strong terms only; 71 matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Strong-term per-matter scan"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 52,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of six strong candidates. The review flags about 60 surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 58,
+     "end": 65,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 2: Per-matter file counts and name flags for all 71 strong-term matters; a stage_start for screening is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 66,
+     "end": 92,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads five documents of the lead matter and one or two documents of six near candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 93,
+     "end": 100,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Search file names for a document type. Uncapped store-wide path search for the request's document names (16 hits, three matters) and one read of an unrelated memo.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 101,
+     "end": 106,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the only qualifying matter with screened-out near candidates.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 107,
+     "end": 117,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "none",
+     "note": "Re-reads the response and two sources; a path check greps response.md in the working folder instead of the output folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 131,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: Checks cited paths in the output folder, re-reads four sources and edits one passage.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 132,
+     "end": 140,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: Re-reads the final response and three sources. The review suggests an exclusion spot-check step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 141,
+     "end": 152,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Exclusion spot-check. Re-reads one document of each of seven excluded matters.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Exclusion spot-check"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 153,
+     "end": 167,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "declared: new: <matter> full-folder verification. Lists one excluded matter's folder, reads four of its documents and edits its exclusion reason.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "1020-00002 full-folder verification"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 168,
+     "end": 168,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Search file names for request keywords → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: a matter-folder count, file-name searches and store-wide extraction scans (each first timing out, then completed in background or prefix batches) surface one matter with a full plan, confirmation-order and effectiveness file set; reads of its engagement letter, plan and confirmation order establish firm drafting and confirmation; engagement letters of five to seven near candidates are read to exclude them; the answer names the one matter with near candidates as non-qualifying. Reviews in every run kept flagging dozens of surfaced-but-unopened matters; the agents answered with new stages (re-tabulating scan output, engagement-letter scans, exclusion spot-checks) rather than opening them, without changing the answer."
+}

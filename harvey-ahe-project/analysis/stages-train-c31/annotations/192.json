@@ -1,0 +1,379 @@
+{
+ "task": "192",
+ "context": "Request: all the firm's merger agreements that use the phrase 'material adverse effect', pulling those documents (for an MAE language bank). Rubric: nine matters (1001-00004, 1001-00005, 1003-00003, 1003-00004, 1008-00008, 1018-00003, 1032-00005, 1041-00003, 1042-00004), each with its executed merger agreement file named, plus precision.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 10,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target in folder list only",
+     "note": "Whole-store glob plus a two-level folder listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List files in the document store (attempt 2). Saves the full file list, counts matters and files, and greps all paths for agreement-type request words (13 matters).",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide phrase scan: a script error, then a rerun saves per-file hits (1,284 files, 170 matters) and prints agreement-like hits. The review flags the unexplained narrowing to 13 matters and suggests classifying hits by content.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 31,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Classify all hit matters by document content. Scripts print the openings of agreement-like hit files from the saved scan; one errors.",
+     "label_check": "none",
+     "agent_new": "Classify all hit matters by document content",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Classify all hit matters by document content (attempt 2). Classifies all hit files by their opening text, lists four matters' files and reads 13 agreement openings.",
+     "label_check": "none",
+     "agent_new": "Classify all hit matters by document content",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 54,
+     "end": 59,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify final agreement set. Script checks phrase counts and headers of the 27 kept documents from the saved scan.",
+     "label_check": "none",
+     "agent_new": "Verify final agreement set",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 60,
+     "end": 65,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes 27 documents across 13 matters with counts, status and exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 66,
+     "end": 82,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Path check (first run looks in the working folder), re-read, three edits separating executed from draft documents.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 83,
+     "end": 92,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "answer passes",
+     "note": "An edit refused because no stage was open, then attempt 2 redoes it to reconcile the cited-path count.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 93,
+     "end": 94,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Screen candidate matters by reading documents → Tabulate candidate matters from saved results → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 10,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob plus a capped file listing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 15,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide phrase scan over word and email files (1,301 hit files, 170 matters) saved to a file, then a file-name filter of the hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 16,
+     "end": 21,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Aggregates the saved hits per matter (about 124K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 22,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Classify phrase-hit matters by agreement type. Lists agreement-like hit files from the saved scan and reads 16 agreement openings.",
+     "label_check": "none",
+     "agent_new": "Classify phrase-hit matters by agreement type",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 50,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of 14 candidate matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 51,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: List files in candidate matters. Reads the execution versions of seven kept matters to confirm titles and versions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: lists ten more surfaced matters and looks for one matter number printed inside a document.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 72,
+     "end": 77,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes 13 matters and 27 agreement versions with reasons and method.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 78,
+     "end": 88,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Path check (first run looks in the working folder) and a re-read.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 89,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads 14 cited agreements and recounts the cited paths against the scan.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 111,
+     "end": 112,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → List files in candidate matters → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 10,
+   "n_criteria": 10,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 6,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 7,
+     "end": 12,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: lists every file grouped by matter (about 720K characters); the review flags the cut output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 13,
+     "end": 18,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide phrase scan (1,284 files, 170 matters) filtered to agreement-type file names.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 19,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Script prints openings of agreement-like files, then 14 reads of agreements.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 40,
+     "end": 45,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 2). Script checks five flagged matters for agreement files and confirms the phrase in all 29 kept files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 46,
+     "end": 55,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: Screen candidate matters by reading documents (attempt 3). Lists all files of five flagged matters, plus three reads of one kept agreement and two draft purchase agreements.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 56,
+     "end": 61,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes 26 merger documents across 13 matters and a separate note on three purchase agreements.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 62,
+     "end": 67,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Re-reads the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 68,
+     "end": 73,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: path check and recount.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 74,
+     "end": 75,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: one store-wide phrase scan over document text saved per-file hits (about 1,300 files in 170 matters); the agent then classified agreement-like hits by their opening text or by reading them, kept 13 matters, and listed execution versions with drafts separated. T0 and T1 declared new classification stages that match screening; reviews pushed for content-based rather than file-name classification, which T0 applied. No run left a needed matter out."
+}

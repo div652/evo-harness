@@ -1,0 +1,564 @@
+{
+ "task": "195",
+ "context": "Request: all closed M&A deals whose executed agreements include indemnification sections (for an indemnification clause bank). Rubric: 15 qualifying matters, including 1015-00004 (Calloway-Briggs Renewables, contribution-agreement-execution.docx), 1039-00004 (Torchlight Mining, offer-to-purchase-agreement-execution.docx) and 1037-00006 (Solstice Biomedical, stock-purchase-agreement-execution.docx), plus a precision criterion (1003-00004, 1007-00006 and 1038-00008 asserted by some runs are outside the set).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Per-matter file counts for every folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: saves the inventory and prints per-prefix counts.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide scan for indemnification and closing terms, then a script limited to transaction-named folders and agreement-like file names lists candidates. The review flags the folder and name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Prints per-matter hit files for every matter with indemnification hits (about 140K characters); a stage_start for screening is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 48,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads executed agreements and closing papers of four candidates; one guessed path fails. The review flags about 62 surfaced matters unopened; its label note names the in-depth reading stage, which the agent declares for its next reads.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 49,
+     "end": 56,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Two snippet scripts: one over M&A candidates, one over a hand-picked set of about 25 matters with named agreement and closing files. The review flags the hand-picked set and lists unopened matters, naming several number series.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 57,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 16 closing certificates, checklists and memos of the selected matters. The review rates it not reached: no executed agreement or indemnification article opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 79,
+     "end": 93,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Lists all files of seven candidates and reads eight closing papers and emails. The review flags dates stated for matters not read.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nineteen closed deals with agreement and closing citations and indemnification mechanics, plus exclusions.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 100,
+     "end": 110,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, a path check fails then passes (69 paths), removes two unread citations.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 111,
+     "end": 114,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: no tool calls; the review rates it not reached and suggests a source-verification step, which the agent does not declare.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 115,
+     "end": 122,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: scripts check that cited agreements and closing records contain indemnification, execution and closing words. The review suggests a reconciliation step, which the agent does not declare.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 123,
+     "end": 135,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 4: re-reads twelve-line headers of eight certificates and agreements; its label note names the screening stage, and the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 136,
+     "end": 136,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Read a chosen matter's documents in depth → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It worked from a hand-picked candidate set that left out two needed matters whose executed agreements had surfaced, and added three matters outside the set.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Search within a candidate matter's files",
+    "start": 49,
+    "end": 56,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(specific flag) The review at [56] flagged the hand-picked set and named the unopened number series of one of these matters; the agent went on to read closing papers of its selected matters.",
+    "why": "A contribution-agreement matter and an offer-to-purchase matter, whose executed agreements appeared in the scan output at [25] and [31], were left out of the hand-picked candidate set the extraction scripts covered, and were never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 10,
+     "stage": "Write the response",
+     "start": 94,
+     "end": 99,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "Reviews questioned dates and closing proof in general, not whether these three matters belonged.",
+     "why": "The answer asserts three matters outside the set as closed deals with indemnification sections (evidence seen at [51]-[91])."
+    }
+   ]
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 14,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts and every file path (over 600K characters). Its label note names the folder-listing stage; the next stage reopens this one for that work.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "declared: List files in the document store (attempt 3). Saves and prints matter numbers with file counts.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 31,
+     "tags": [
+      "timed out",
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; eight range scans write JSON hits, and two candidate scripts (one fails) list matters with indemnification hits and agreement-like files.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 32,
+     "end": 39,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: range scans without the file-name filter; prints one line per matter for 245 matters (about 50K characters). The review flags the cut output and suggests a candidate-listing step, which the agent does not take.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 40,
+     "end": 79,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads 32 executed agreements and closing papers of about 20 candidates. The review flags dozens of unopened matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 80,
+     "end": 92,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Snippet scripts over 23 hand-picked matters' agreements and closing papers, plus a few reads; one guessed path fails. The review flags the hand-picked list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes nineteen closed deals with agreement and closing citations and indemnification structures.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 120,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, fixes two citation paths after path checks (one fails on a missing path), and verifies 55 paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 126,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: confirms the delivered file and its paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 127,
+     "end": 127,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a needed contribution-agreement matter that surfaced in its scans, and added three matters outside the set.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 40,
+    "end": 79,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews at [79] and [92] flagged dozens of surfaced matters never opened, without naming this one.",
+    "why": "A contribution-agreement matter whose executed agreement appeared in the listing at [11] and the scan output at [37] was left out of the screening reads and the 23-matter extraction list, and was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 8,
+     "stage": "Write the response",
+     "start": 93,
+     "end": 98,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether these matters belonged.",
+     "why": "The answer asserts three matters outside the set as closed deals with indemnification sections (evidence seen at [42]-[91])."
+    }
+   ]
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 13,
+   "n_criteria": 16,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Whole-store glob; the review suggests another listing step.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Per-matter file counts for every folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for a document type",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "File-name regex for merger, acquisition, purchase-agreement and closing words grouped per matter (about 129K characters). The review flags generic tokens; its label note names the request-keyword file-name stage, and the agent's later file-name check is declared under another stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 27,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide indemnification scan, then a main-agreement hit list limited by agreement-type file names. The review flags the name filter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 28,
+     "end": 35,
+     "tags": [
+      "tool error",
+      "mixed intents"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Per-matter hit counts with sample files and a file-type count; a stage_start for screening is refused because this stage is still open. Its label note names the figure-calculation stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 36,
+     "end": 90,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "target opened",
+     "note": "Reads 59 executed agreements, checklists and closing papers of about 25 candidates; one guessed path fails. The review flags 28 surfaced matters never opened.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 91,
+     "end": 124,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet scripts locating the indemnification article in 20 hand-picked agreements, plus single reads of five. The review flags the fixed list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 125,
+     "end": 135,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Attempt 2: reads four agreements and runs a file-name status check on the unopened matters; its label note names the listing-picked reading stage, and the next stage reopens this one.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 136,
+     "end": 148,
+     "tags": [
+      "file not found",
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "Attempt 3: prints indemnification headings of four agreements and reads primary files of six ambiguous matters; one guessed path fails. Its label note names the screening stage; the next reads are declared under the listing stage.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 149,
+     "end": 156,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists one matter's files and reads its opening memo.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 157,
+     "end": 162,
+     "tags": [],
+     "hindsight": "answer over-inclusive",
+     "note": "Writes sixteen closed deals with agreements, closing proof and indemnification structures, excluding a device stock purchase as unproven.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 163,
+     "end": 186,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer over-inclusive",
+     "note": "Re-reads the response, checks 29 paths after a failed first check, corrects one matter description.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 187,
+     "end": 194,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: scripts check agreements for indemnification text and closing paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 195,
+     "end": 200,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: checks three closing paths and spot-checks amounts; its label note names the extraction-scan stage and the review suggests a verification step; the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 201,
+     "end": 201,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Search file names for a document type → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → List files in candidate matters → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It never opened a needed contribution-agreement matter, excluded a read stock purchase as unproven, and added one matter outside the set.",
+   "first_error": {
+    "stage_no": 6,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 36,
+    "end": 90,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "flagged-ignored",
+    "critic_note": "(generic flag) Reviews from [90] on flagged 28 surfaced matters never opened, without naming this one; a later file-name status check did not reach it.",
+    "why": "A contribution-agreement matter whose executed agreement appeared in the file-name search at [17] and the scan at [31] was left out of the 59 screening reads and the 20-matter extraction list, and was never opened."
+   },
+   "other_errors": [
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 157,
+     "end": 162,
+     "events": "",
+     "kind": "under-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned this exclusion.",
+     "why": "The answer excludes a device stock purchase whose executed agreement and closing checklist it had read in screening, calling the agreement only executed-looking."
+    },
+    {
+     "stage_no": 11,
+     "stage": "Write the response",
+     "start": 157,
+     "end": 162,
+     "events": "",
+     "kind": "over-inclusion",
+     "critic": "not-flagged",
+     "critic_note": "No review questioned whether this matter belonged.",
+     "why": "The answer asserts one telematics matter outside the set as a closed deal with an indemnification section (evidence seen at [38]-[121])."
+    }
+   ]
+  }
+ ],
+ "divergence": "All three runs fail the same way at the same stage. Each scanned the store, surfaced every needed matter, and then built a hand-picked reading or extraction set around purchase and merger agreements; the matter whose executed agreement is a contribution agreement was never opened in any run, and T0 also skipped an offer-to-purchase matter. Each also asserted one to three matters outside the set (a telematics deal in all three), and T2 excluded a needed stock purchase it had read. Reviews flagged unopened matters and hand-picked lists in every run but named the missed matter's series only in T0; label notes (followed once in T0, otherwise ignored or not applicable) and reviewer-suggested steps played no role in the outcome."
+}

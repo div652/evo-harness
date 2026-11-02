@@ -1,0 +1,517 @@
+{
+ "task": "154",
+ "context": "Request: the firm's most recently closed M&A deal that included an earnout, with its agreement, as a drafting precedent. Rubric: 1009-00003 (Skybridge Fintech de-SPAC business combination, closed July 21, 2025; business-combination-agreement-execution.docx) plus a precision criterion; all three runs answered 1037-00006 (Solstice/Meridian stock purchase, closed October 31, 2024).",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: per-matter counts and every file (about 814K characters); its label note names the folder-listing stage, which the next stage declares.",
+     "label_check": "none",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Per-matter file counts for every folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: folder count and per-prefix ranges.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 37,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide earnout-term scan times out twice; background range scans write per-matter counts (72 matters). The review flags a hand-picked candidate list and suggests listing every hit matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 38,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Checks that the range outputs hold only their assigned matters; the summary ranks candidates by match count. Its label note names the figure-calculation stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 44,
+     "end": 49,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Keyword-filtered transaction, closing and diligence file lists for all 72 hit matters (about 93K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 50,
+     "end": 64,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Reads eight agreements, closing papers and memos of the four highest-numbered candidates; two guessed paths fail. The review flags dozens of unopened matters and calls the higher-numbered series newer.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 65,
+     "end": 79,
+     "tags": [
+      "tool error",
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "A read refused because no stage was open, then reads the closing statement, checklist and agreement sections of the chosen matter and two comparison candidates; three guessed paths fail. Its label note names the listing-picked reading stage, and that work does not recur.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Earnout-term extraction from the chosen matter's executed agreement (about 24K characters). The review suggests a confirmation step, which the agent does not take.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the chosen stock purchase as the latest closed earnout deal, with its agreement path and terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 98,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and checks cited paths.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 99,
+     "end": 109,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads closing papers of the chosen matter and two comparison candidates; the review suggests a store-wide earnout search. Its label note names the listing-picked reading stage, and the run finishes.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 110,
+     "end": 110,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It chose candidates by matter number, never opened the most recently closed earnout deal although the scans surfaced it, and answered with an earlier closing.",
+   "first_error": {
+    "stage_no": 8,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 50,
+    "end": 64,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "Reviews flagged unopened matters but treated higher matter numbers as newer (e.g. [64]); none named this matter.",
+    "why": "A de-SPAC matter with 662 earnout-term hits in the scan at [35] and its execution agreement in the listing at [47] was left out of the reads, which went to the highest-numbered candidates, so the most recent closing was never seen."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: List matter folders. Every file per matter (about 544K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Attempt 2: per-matter file counts and first subfolder names (about 28K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 25,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Store-wide earnout-term scan printing every hit (about 204K characters). The review flags a loose term that floods the output.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 26,
+     "end": 31,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan results into full candidate pool. Re-reads the saved scan with strict terms and prints per-matter examples (shown in part).",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan results into full candidate pool"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 32,
+     "end": 37,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Aggregate scan results into full candidate pool (attempt 2). Saves a 159-matter pool with the highest matter number noted.",
+     "label_check": "none",
+     "label_check_end": "none",
+     "agent_new": "Aggregate scan results into full candidate pool"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 38,
+     "end": 59,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "declared: Read a chosen matter's documents in depth. Reads agreements, closing papers and memos of the five highest-numbered earnout candidates (16 reads). The review lists unopened higher-numbered matters by number; its label note names the screening stage, which the next stage declares.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 60,
+     "end": 73,
+     "tags": [
+      "file not found"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Following the review, reads one document from each of nine later-numbered matters; two guessed paths fail. None is an earnout deal.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 74,
+     "end": 79,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Earnout-term extraction from the chosen matter's agreement and escrow agreement (about 28K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 80,
+     "end": 85,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: short excerpt of the chosen agreement's earnout section.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the chosen stock purchase as the latest closed earnout deal, with its agreement path and terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 111,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response, a path check fails then finds one missing cited file, fixes its name and two wording passages.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 112,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: reads two closing papers of the chosen matter.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 119,
+     "end": 124,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 3: re-reads part of the response.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 125,
+     "end": 125,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Screen candidate matters by reading documents → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It ranked candidates by matter number, followed a review toward later-numbered matters, never opened the most recently closed earnout deal and answered with an earlier closing.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Screen candidate matters by reading documents",
+    "start": 38,
+    "end": 59,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "review-endorsed",
+    "critic_note": "The review at [59] named only later-numbered unopened matters; the agent followed it by screening nine later-numbered matters, and this lower-numbered matter was never named or opened.",
+    "why": "A de-SPAC matter surfaced in the scans at [23]-[35] with earnout hits, but the reads went to the highest-numbered candidates and then to later-numbered matters, so the most recent closing was never seen."
+   },
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": false,
+   "n_passed": 0,
+   "n_criteria": 3,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in the document store",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "huge output"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: folder names and every file per matter (about 528K characters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 14,
+     "end": 24,
+     "tags": [
+      "no matches"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Six globs for earnout, contingent-value and execution-agreement file names; one returns nothing.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search file names for request keywords",
+     "start": 25,
+     "end": 30,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: path inventory script; eleven earnout-named paths across the store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 31,
+     "end": 56,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "A store-wide scan times out; range scans first return nothing because of a matter-number bug, then partly time out; per-matter hits are printed for eight named candidates (two calls carry a stage-check note).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 57,
+     "end": 76,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: background full scan polled until it finishes (266 matters).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 77,
+     "end": 91,
+     "tags": [],
+     "hindsight": "decoy opened",
+     "note": "Reads the highest-numbered candidate's executed agreement at four offsets, its closing email, memo and checklist; its label note names the listing-picked reading stage, and the next stage reopens this one.",
+     "label_check": "none",
+     "label_check_end": "ignored"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 92,
+     "end": 111,
+     "tags": [
+      "file not found",
+      "tool error"
+     ],
+     "hindsight": "decoy opened",
+     "note": "Attempt 2: reads the chosen stock purchase's agreement, memos and correspondence; two guessed paths fail and a glob lists the folder; a stage_start for writing is refused because this stage is still open.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 112,
+     "end": 117,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Writes the chosen stock purchase as the latest closed earnout deal, with its agreement path and terms.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 118,
+     "end": 128,
+     "tags": [],
+     "hindsight": "answer wrong matter",
+     "note": "Re-reads the response and confirms cited paths by glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: spot-reads the two compared agreements and closing papers.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 138,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Search file names for request keywords → Scan document text with an extraction script → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "It printed the de-SPAC matter's earnout hits among its candidates but read only two other matters and answered with an earlier closing.",
+   "first_error": {
+    "stage_no": 7,
+    "stage": "Read a chosen matter's documents in depth",
+    "start": 77,
+    "end": 91,
+    "events": "",
+    "kind": "surfaced-not-opened",
+    "critic": "not-flagged",
+    "critic_note": "Reviews asked for closing-date comparisons across earnout deals but never named this matter.",
+    "why": "A de-SPAC matter that the agent's own candidate printout at [53]-[54] showed with earnout hits was left out of the reads, which went to two other matters, so the most recent closing was never seen."
+   },
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs fail the same way and give the same wrong answer, an earlier-closed device stock purchase. Each surfaced the de-SPAC matter (in scan hits, file-name searches or its own candidate printout) but chose what to read by matter number, treating the highest numbers as the latest deals, and never opened it. The error sits at the first reading stage in every run. Reviews reinforced the number heuristic: T0's review called the higher-numbered series newer, and T1 followed a review listing only later-numbered matters into a second screening; no review named the needed matter. Label notes and T1's declared new stages (scan aggregation) played no role."
+}

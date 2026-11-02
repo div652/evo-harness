@@ -1,0 +1,539 @@
+{
+ "task": "056",
+ "context": "Request: the matter with the firm's most recent FERC work, to lead a pitch. Rubric: 1016-00005 (Ridgeline FERC rate/interconnection proceeding, draft supplemental filing package dated February 2025) as the answer, plus a precision criterion.",
+ "runs": [
+  {
+   "trial": 0,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob; the review asks for a full matter list.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 8,
+     "end": 13,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: List files in the document store (attempt 2). Counts files under the top folder only. The start note had named List matter folders; the end-of-stage label note named it again and the next stage was declared that way.",
+     "label_check": "ignored",
+     "label_check_end": "followed"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 14,
+     "end": 19,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Lists all 266 matter folders with file counts to a file and prints a summary.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 20,
+     "end": 29,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Store-wide extraction script with broad energy terms (about 57K chars), then tail-filtered greps of the saved hits; the review flags the tail filters and noise.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 30,
+     "end": 35,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: Scan document text with an extraction script (attempt 2). Re-parses the saved scan for exact-term hits per matter; eight matters, three judged substantive from snippets, which the review flags.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 36,
+     "end": 43,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify scan coverage and list FERC-hit matters. Checks the saved scan against the folder list (177 of 266 matters present), then re-walks all files and counts exact-term hits: 13 matters.",
+     "label_check": "none",
+     "agent_new": "Verify scan coverage and list FERC-hit matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 44,
+     "end": 53,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Verify scan coverage and list FERC-hit matters (attempt 2). Full exact-term extraction rerun over all 266 matters (13 hit matters) and a grep of hit lines for nine of them; a stage_start for screening is refused because this stage is still open.",
+     "label_check": "none",
+     "agent_new": "Verify scan coverage and list FERC-hit matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 78,
+     "tags": [
+      "mixed intents"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Read all FERC-hit matters and compare recency. One parallel batch of 13 reads across eleven hit matters, then five more reads of the lead matter's status report, transmittal, tariff draft and filings plus one consent agreement of another candidate.",
+     "label_check": "none",
+     "agent_new": "Read all FERC-hit matters and compare recency",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 79,
+     "end": 89,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read all FERC-hit matters and compare recency (attempt 2). Reads documents of four more hit matters and two letters of the lead matter; the review flags exclusions made on partial reads.",
+     "label_check": "none",
+     "agent_new": "Read all FERC-hit matters and compare recency",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 90,
+     "end": 96,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Read all FERC-hit matters and compare recency (attempt 3). Re-reads the lead matter's transmittal letter and runs a date script over its files.",
+     "label_check": "none",
+     "agent_new": "Read all FERC-hit matters and compare recency",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Tabulate candidate matters from saved results",
+     "start": 97,
+     "end": 102,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Cross-matter recency table (suggested by the review). Writes and prints a hand-made table of the latest dated document and status for each of the 13 hit matters; no store access.",
+     "label_check": "none",
+     "agent_new": "Cross-matter recency table",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 103,
+     "end": 110,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Cross-matter recency table (attempt 2). Re-reads the lead matter's transmittal and the two later-dated documents of other candidates to confirm they are not dedicated proceeding work.",
+     "label_check": "none",
+     "agent_new": "Cross-matter recency table",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 111,
+     "end": 116,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the freshest dedicated work, with a draft caveat and later-dated non-dedicated matters as runners-up.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 117,
+     "end": 130,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, a path check fails on a missing path and is rerun (all 18 cited paths exist), adds source paths for the runners-up.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 131,
+     "end": 138,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Attempt 2: re-reads the response and two runner-up sources. The end-of-stage label note names Read documents picked from the file listing; no further work of that kind followed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 139,
+     "end": 144,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3 (after writing): store-wide exact-term scan printing the latest dated hit per matter; 13 matters, the lead matter unchanged.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 145,
+     "end": 145,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → List matter folders → Scan document text with an extraction script → Tabulate candidate matters from saved results → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Tabulate candidate matters from saved results → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Scan document text with an extraction script → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 1,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 13,
+     "tags": [
+      "timed out",
+      "huge output"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script with broad energy terms times out after printing about 567K chars of hits.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 14,
+     "end": 21,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 2: a heredoc error, then a narrow exact-term scan over all 266 matters; 13 hit matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 22,
+     "end": 31,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: wider regulatory-term scan times out, then three range scans list per-matter hit counts; the review flags unverified coverage of the ranges.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 32,
+     "end": 46,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Folder coverage and date inventory. Reads engagement letters, opening and closing memos and status reports of four hit matters, and a snippet script on two documents of one of them.",
+     "label_check": "none",
+     "agent_new": "Folder coverage and date inventory",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 47,
+     "end": 57,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Folder coverage and date inventory (same attempt). Lists the lead matter's files and reads six of its documents (strategy memo, tariff draft, motion, transmittal, interconnection draft, settlement memo); the review says no folder enumeration was done.",
+     "label_check": "none",
+     "agent_new": "Folder coverage and date inventory",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 58,
+     "end": 65,
+     "tags": [],
+     "hindsight": "target surfaced",
+     "note": "declared: new: Folder coverage and date inventory (attempt 2). Enumerates all 266 folders with an exact-term scan (13 hit matters), then a date script over the 13; the review flags future contract dates in it.",
+     "label_check": "none",
+     "agent_new": "Folder coverage and date inventory",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 66,
+     "end": 71,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: new: Compare latest FERC work dates across hit matters. Header-date script over the 13 named hit matters.",
+     "label_check": "none",
+     "agent_new": "Compare latest FERC work dates across hit matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 72,
+     "end": 85,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "target opened",
+     "note": "declared: new: Compare latest FERC work dates across hit matters (attempt 2). Four reads refused because no stage was open, then repeated after the stage_start: two supplemental-testimony drafts of the lead matter and two later-dated documents of other candidates.",
+     "label_check": "none",
+     "agent_new": "Compare latest FERC work dates across hit matters",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 86,
+     "end": 91,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the freshest dedicated work, with the filing-status caveat and excluded matters with reasons.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 92,
+     "end": 107,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response, lists files of four cited matters, adds a caveat about a later-dated diligence memo; the review warns against restoring matters on weak grounds.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 108,
+     "end": 120,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Attempt 2: re-reads three sources and part of the response, retitles the later-dated matter as excluded.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 121,
+     "end": 128,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "none",
+     "note": "Attempt 3: cat of the response fails on a missing path, then succeeds from the output folder.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 129,
+     "end": 136,
+     "tags": [],
+     "hindsight": "none",
+     "note": "declared: new: Confirm deliverable location (suggested by the review). Checks the deliverable exists and greps it for the caveat and exclusion headings.",
+     "label_check": "none",
+     "agent_new": "Confirm deliverable location",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 137,
+     "end": 137,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Scan document text with an extraction script → Search within a candidate matter's files → Read a chosen matter's documents in depth → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  },
+  {
+   "trial": 2,
+   "all_pass": true,
+   "n_passed": 2,
+   "n_criteria": 2,
+   "stages": [
+    {
+     "stage": "List files in the document store",
+     "start": 2,
+     "end": 7,
+     "tags": [
+      "listing covers few matters"
+     ],
+     "hindsight": "none",
+     "note": "Whole-store glob.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 8,
+     "end": 19,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "none",
+     "note": "Store-wide extraction script times out; reruns over the five matters seen in the listing find only generic-word hits. The review flags treating five matters as the whole store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List matter folders",
+     "start": 20,
+     "end": 25,
+     "tags": [],
+     "hindsight": "target in folder list only",
+     "note": "Lists every matter folder with file counts by extension.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 26,
+     "end": 39,
+     "tags": [
+      "timed out"
+     ],
+     "hindsight": "target missed",
+     "note": "Attempt 2: store-wide and background range scans time out; greps over the partial result files (about 73K chars) leave one older matter as the only substantial hit. The review flags unreconciled shard totals.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Scan document text with an extraction script",
+     "start": 40,
+     "end": 47,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "target surfaced",
+     "note": "Attempt 3: a range scan fails because its script file was not written; a rewritten exact-term range scan lists hit matters per range.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "List files in candidate matters",
+     "start": 48,
+     "end": 53,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Lists all files of ten hit matters; the review flags many surfaced matters never listed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Screen candidate matters by reading documents",
+     "start": 54,
+     "end": 66,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "declared: Read documents picked from the file listing. Reads engagement letters, closing and opening memos, a status report and an application of three hit matters.",
+     "label_check": "ignored",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Read a chosen matter's documents in depth",
+     "start": 67,
+     "end": 78,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Reads strategy, transmittal, lender-status and settlement documents of the lead matter and one memo of another candidate, then a later section of the transmittal; the review flags no comparison reads of other matters.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Search within a candidate matter's files",
+     "start": 79,
+     "end": 84,
+     "tags": [],
+     "hindsight": "target opened",
+     "note": "Snippet script over the lead matter's files for filing and date words (about 27K chars).",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Write the response",
+     "start": 85,
+     "end": 90,
+     "tags": [],
+     "hindsight": "answer passes",
+     "note": "Writes the lead matter as the freshest substantive work with comparators, exclusions and a draft caveat; the review flags reliance on a draft transmittal.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 91,
+     "end": 101,
+     "tags": [
+      "script error"
+     ],
+     "hindsight": "answer passes",
+     "note": "Re-reads the response; a path check fails on a missing path and is rerun (15 cited paths exist); scopes the lead sentence to the store.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Check or revise the response",
+     "start": 102,
+     "end": 117,
+     "tags": [
+      "tool error"
+     ],
+     "hindsight": "none",
+     "note": "Five reads refused because no stage was open, then attempt 2 repeats them: the transmittal, tariff draft, two comparator documents and the response head. The end-of-stage label note names Read documents picked from the file listing; no further work of that kind followed.",
+     "label_check": "none",
+     "label_check_end": "none"
+    },
+    {
+     "stage": "Finish the run",
+     "start": 118,
+     "end": 118,
+     "tags": [],
+     "hindsight": "none",
+     "note": "Calls finish.",
+     "label_check": "none",
+     "label_check_end": "none"
+    }
+   ],
+   "sequence": "List files in the document store → Scan document text with an extraction script → List matter folders → Scan document text with an extraction script → List files in candidate matters → Screen candidate matters by reading documents → Read a chosen matter's documents in depth → Search within a candidate matter's files → Write the response → Check or revise the response → Finish the run",
+   "failure_point": "",
+   "first_error": null,
+   "other_errors": []
+  }
+ ],
+ "divergence": "All three runs pass with the same procedure: after a whole-store glob, store-wide extraction scans (several timing out) settle on an exact-term scan that surfaces 13 hit matters including the dedicated proceeding matter; reads of its status reports, tariff drafts and the dated transmittal letter, plus comparison reads of the later-dated but non-dedicated hit matters, establish it as the freshest; the answer leads with it, caveats the draft-labelled filing package and lists the later-dated matters as excluded. T2 briefly concluded from tail-filtered range greps that only an older matter was substantial, then a rewritten exact-term range scan restored the full hit set before any reading. The agent declared its own stages often in T0 (coverage check, reading all hit matters, recency table) and T1 (folder coverage, date comparison, deliverable check); all but the recency table map onto existing scan, screening, depth and check stages. Label notes: one start note ignored and the matching end note followed (T0 folder count), one start note ignored (T2 screening under a listing-read label), two end notes on post-writing source re-reads had no later work to apply to."
+}
