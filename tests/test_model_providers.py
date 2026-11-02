@@ -11,10 +11,10 @@ import httpx
 import pytest
 from openai import APIStatusError, RateLimitError
 
-from ahe_runner.config import ModelSettings, TransportSettings
-from ahe_runner.errors import IntegrityError, ProviderBlockedError
-from ahe_runner.meta import endpoint
-from ahe_runner.meta.endpoint import (
+from evoharness.config import ModelSettings, TransportSettings
+from evoharness.errors import IntegrityError, ProviderBlockedError
+from evoharness.meta import endpoint
+from evoharness.meta.endpoint import (
     TokenWindow,
     build_openai_client,
     is_provider_blocked_failure,
@@ -24,8 +24,8 @@ from ahe_runner.meta.endpoint import (
     token_provider,
     transient_retry_delay,
 )
-from ahe_runner.meta.model_client import RecordedExactModelClient, wire_input_items
-from ahe_runner.meta.preflight import run_model_preflight
+from evoharness.meta.model_client import RecordedExactModelClient, wire_input_items
+from evoharness.meta.preflight import run_model_preflight
 
 
 @pytest.fixture(autouse=True)
@@ -391,7 +391,7 @@ def test_client_id_header_is_stable_per_session(tmp_path: Path) -> None:
         settings=_settings(),
         log_dir=tmp_path / "other",
     )
-    assert header.startswith("ahe-runner-")
+    assert header.startswith("evoharness-")
     assert again._base.default_headers["X-Workload-ID"] == header  # type: ignore[attr-defined]
     assert other._base.default_headers["X-Workload-ID"] != header  # type: ignore[attr-defined]
 
@@ -436,7 +436,7 @@ def test_preflight_negative_control_recognises_gateway_rejections(
         raise error
 
     monkeypatch.setattr(
-        "ahe_runner.meta.preflight.OpenAI",
+        "evoharness.meta.preflight.OpenAI",
         lambda **_kwargs: _FakeResponsesBase(callback),
     )
     transport = _transport(
@@ -484,12 +484,12 @@ def test_evaluated_agent_runs_through_the_responses_api(
 ) -> None:
     from openai import OpenAI
 
-    import ahe_runner.meta.model_client as model_client_module
-    import ahe_runner.runtime as runtime_module
-    from ahe_runner.adapter import BenchmarkInterface
-    from ahe_runner.config import load_config
-    from ahe_runner.harness import load_harness_manifest
-    from ahe_runner.runtime import (
+    import evoharness.meta.model_client as model_client_module
+    import evoharness.runtime as runtime_module
+    from evoharness.adapter import BenchmarkInterface
+    from evoharness.config import load_config
+    from evoharness.harness import load_harness_manifest
+    from evoharness.runtime import (
         AgentInput,
         AgentInputMessage,
         AgentSessionRequest,

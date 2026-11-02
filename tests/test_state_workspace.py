@@ -6,16 +6,16 @@ from pathlib import Path
 
 import pytest
 
-from ahe_runner.errors import (
+from evoharness.errors import (
     ConfigurationError,
     InfrastructureError,
     IntegrityError,
     StageBlockedError,
     StageInterruptedError,
 )
-from ahe_runner.io import atomic_write_json, read_json
-from ahe_runner.state import StageResult, StageStore
-from ahe_runner.workspace import git_output, prepare_evolve_workspace
+from evoharness.io import atomic_write_json, read_json
+from evoharness.state import StageResult, StageStore
+from evoharness.workspace import git_output, prepare_evolve_workspace
 
 
 def test_stage_store_preserves_attempts_and_verifies_cached_outputs(

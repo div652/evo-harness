@@ -16,21 +16,21 @@ from openai import OpenAI
 from openai.types.chat import ChatCompletion
 from pydantic import ValidationError
 
-import ahe_runner.meta.preflight as preflight_module
-import ahe_runner.runtime as runtime_module
-from ahe_runner.adapter import (
+import evoharness.meta.preflight as preflight_module
+import evoharness.runtime as runtime_module
+from evoharness.adapter import (
     BenchmarkInterface,
     BenchmarkToolSpec,
     EvaluationRequest,
     SplitDefinition,
     SplitName,
 )
-from ahe_runner.config import load_config
-from ahe_runner.errors import InfrastructureError, IntegrityError
-from ahe_runner.evaluation import evaluation_request_sha256
-from ahe_runner.harness import load_harness_manifest
-from ahe_runner.io import read_json, sha256_file
-from ahe_runner.runtime import (
+from evoharness.config import load_config
+from evoharness.errors import InfrastructureError, IntegrityError
+from evoharness.evaluation import evaluation_request_sha256
+from evoharness.harness import load_harness_manifest
+from evoharness.io import read_json, sha256_file
+from evoharness.runtime import (
     AgentInput,
     AgentInputMessage,
     AgentSessionRequest,
@@ -92,7 +92,10 @@ class _PreflightEndpoint:
         assert request.url.path.endswith("/chat/completions")
         payload = json.loads(request.content)
         model = payload["model"]
-        if model.startswith("ahe-negative-control-") and not self.accept_nonexistent:
+        if (
+            model.startswith("evoharness-negative-control-")
+            and not self.accept_nonexistent
+        ):
             return httpx.Response(
                 404,
                 json={
@@ -642,7 +645,7 @@ def test_evaluated_preflight_is_lazy_and_shared_by_sessions(
     assert positive["max_tokens"] == 64
     assert positive["reasoning"] == {"effort": "high"}
     assert positive["stream"] is False
-    assert negative["model"].startswith("ahe-negative-control-")
+    assert negative["model"].startswith("evoharness-negative-control-")
     assert len(FakeRecordedClient.instances) == 2
     manifests = [
         read_json(artifact_root / session_id / "runtime_manifest.json")
@@ -828,7 +831,7 @@ def test_new_evaluation_attempt_preserves_failed_preflight_and_request_identity(
     runtime_factory: Callable[[], EvaluatedAgentRuntime],
     preflight_endpoint: _PreflightEndpoint,
 ) -> None:
-    config = load_config(tmp_path / "project" / "ahe.yaml")
+    config = load_config(tmp_path / "project" / "evoharness.yaml")
     request = EvaluationRequest(
         checkpoint="C0",
         harness_dir=config.harness_dir,

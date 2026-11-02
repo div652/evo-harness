@@ -39,7 +39,7 @@ An algorithm never sees the validation or test split. The kernel exposes the
 training split only.
 
 ```text
-ahe run
+evoharness run
  ├─ prepare: freeze C0, campaign identity                    (runner)
  ├─ evolve: algorithm.evolve(kernel) -> outcome              (algorithm)
  │    builds checkpoints C1, C2, ... through kernel services
@@ -83,7 +83,7 @@ The algorithm's name, version, settings, code and resource hashes, and role
 supplements enter the campaign identity when the algorithm is not the
 default AHE. Changing any of them requires a new campaign directory.
 
-`ahe validate` and `ahe conformance` report the algorithm, its resolved
+`evoharness validate` and `evoharness conformance` report the algorithm, its resolved
 settings, the selection policy, and any problems the algorithm finds with the
 campaign (for example, RRSI without pricing).
 
@@ -127,12 +127,12 @@ input on current frontier models, and cache reads about a tenth of input.
 
 ## Writing an algorithm
 
-An algorithm is a subclass of `ahe_runner.algorithms.EvolutionAlgorithm`:
+An algorithm is a subclass of `evoharness.algorithms.EvolutionAlgorithm`:
 
 ```python
 from pydantic import BaseModel
 
-from ahe_runner.algorithms import (
+from evoharness.algorithms import (
     AlgorithmIdentity,
     EvolutionAlgorithm,
     EvolutionKernel,
@@ -185,7 +185,7 @@ is imported from the project root, like the adapter.
 
 ### Determinism and resume
 
-`evolve` runs again from the start on every `ahe run` or `ahe resume`.
+`evolve` runs again from the start on every `evoharness run` or `evoharness resume`.
 Completed stages return their recorded data, so a correct algorithm:
 
 - decides only from stage data and kernel results, never from the clock,

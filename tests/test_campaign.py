@@ -6,20 +6,20 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ahe_runner.adapter import EvaluationResult
-from ahe_runner.cli import main as cli_main
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.errors import (
+from evoharness.adapter import EvaluationResult
+from evoharness.cli import main as cli_main
+from evoharness.config import load_config
+from evoharness.controller import CampaignController
+from evoharness.errors import (
     ConfigurationError,
     InfrastructureError,
     IntegrityError,
     StageBlockedError,
     StageInterruptedError,
 )
-from ahe_runner.io import atomic_write_json, read_json, sha256_json, tree_hashes
-from ahe_runner.meta.scripted import ScriptedMetaBackend
-from ahe_runner.workspace import git_output
+from evoharness.io import atomic_write_json, read_json, sha256_json, tree_hashes
+from evoharness.meta.scripted import ScriptedMetaBackend
+from evoharness.workspace import git_output
 
 from .conftest import make_example_project
 
@@ -32,7 +32,9 @@ def test_full_deterministic_campaign_and_idempotent_resume(tmp_path: Path) -> No
     assert validation["harness"]["valid"] is True
     assert validation["adapter_api_generation"] == "v2"
     assert validation["benchmark_interface"]["tool_delivery"] == "none"
-    assert controller.conformance()["harness_abi"]["abi_version"] == ("ahe.harness/v2")
+    assert controller.conformance()["harness_abi"]["abi_version"] == (
+        "evoharness.harness/v2"
+    )
 
     status = controller.run()
     assert status["checkpoints"] == ["C0", "C1", "C2"]
@@ -273,7 +275,7 @@ def test_extend_rounds_continues_the_same_campaign(tmp_path: Path) -> None:
     assert "evolution.close" not in {path.parent.name for path in stages_before}
 
     _set_campaign(config_path, rounds=3)
-    with pytest.raises(IntegrityError, match="ahe extend-rounds"):
+    with pytest.raises(IntegrityError, match="evoharness extend-rounds"):
         CampaignController(load_config(config_path)).resume()
 
     dry_run = _extend(config_path)
@@ -685,7 +687,7 @@ def test_execution_settings_change_on_resume_with_an_audit_record(
 def test_identity_excludes_execution_settings_and_later_defaults(
     tmp_path: Path,
 ) -> None:
-    from ahe_runner.config import (
+    from evoharness.config import (
         EXECUTION_SETTING_PATHS,
         LATER_RESULT_DEFAULTS,
         identity_document,

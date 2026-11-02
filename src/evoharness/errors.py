@@ -1,0 +1,65 @@
+"""Domain-specific errors used by the runner."""
+
+from __future__ import annotations
+
+from typing import Any
+
+
+class EvoHarnessError(RuntimeError):
+    """Base error for operator-visible runner failures."""
+
+
+class ConfigurationError(EvoHarnessError):
+    """Configuration or plugin identity is invalid."""
+
+
+class IntegrityError(EvoHarnessError):
+    """A persisted artifact does not match its recorded identity."""
+
+
+class InfrastructureError(EvoHarnessError):
+    """External infrastructure failed before producing a valid outcome."""
+
+
+# Kept in messages so a block stays recognisable after wrapping, after a stage
+# records it, and across process boundaries.
+PROVIDER_BLOCKED_MARKER = "model provider blocked this client"
+
+
+class ProviderBlockedError(InfrastructureError):
+    """The provider blocked this client; send it no further requests."""
+
+
+class CandidateValidationError(EvoHarnessError):
+    """An evolved harness failed deterministic validation."""
+
+    def __init__(self, report: dict[str, Any]) -> None:
+        self.report = report
+        errors = report.get("errors") or ["candidate validation failed"]
+        super().__init__("\n".join(str(error) for error in errors))
+
+    def __reduce__(
+        self,
+    ) -> tuple[type[CandidateValidationError], tuple[dict[str, Any]]]:
+        return type(self), (self.report,)
+
+
+class StageInterruptedError(EvoHarnessError):
+    """A resumable stage attempt failed and was durably preserved."""
+
+    def __init__(self, stage_name: str, attempt: int, message: str) -> None:
+        self.stage_name = stage_name
+        self.attempt = attempt
+        super().__init__(message)
+
+
+class StageBlockedError(EvoHarnessError):
+    """A stage cannot continue without operator intervention."""
+
+    def __init__(self, stage_name: str, message: str) -> None:
+        self.stage_name = stage_name
+        super().__init__(message)
+
+
+# The name before the project was renamed from ahe-runner (0.10.0).
+AHERunnerError = EvoHarnessError

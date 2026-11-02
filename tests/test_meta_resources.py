@@ -10,17 +10,17 @@ import pytest
 import yaml
 from nexau.archs.main_sub.execution.hooks import AfterToolHookInput
 
-import ahe_runner.meta.nexau_backend as backend_module
-from ahe_runner.algorithms.ahe import meta_stage_inputs
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.errors import ConfigurationError, InfrastructureError, IntegrityError
-from ahe_runner.evidence import EvidenceTask
-from ahe_runner.io import atomic_write_json, sha256_file
-from ahe_runner.meta import guarded_tools, tools
-from ahe_runner.meta.base import MetaBackend
-from ahe_runner.meta.middleware import DebuggerAccessRecorderMiddleware
-from ahe_runner.meta.nexau_backend import NexAUMetaBackend
+import evoharness.meta.nexau_backend as backend_module
+from evoharness.algorithms.ahe import meta_stage_inputs
+from evoharness.config import load_config
+from evoharness.controller import CampaignController
+from evoharness.errors import ConfigurationError, InfrastructureError, IntegrityError
+from evoharness.evidence import EvidenceTask
+from evoharness.io import atomic_write_json, sha256_file
+from evoharness.meta import guarded_tools, tools
+from evoharness.meta.base import MetaBackend
+from evoharness.meta.middleware import DebuggerAccessRecorderMiddleware
+from evoharness.meta.nexau_backend import NexAUMetaBackend
 
 from .conftest import make_example_project
 from .meta_fakes import FakeAgentState
@@ -79,7 +79,7 @@ def test_tool_descriptors_match_injected_agent_state_bindings() -> None:
     root = (
         Path(__file__).resolve().parents[1]
         / "src"
-        / "ahe_runner"
+        / "evoharness"
         / "meta"
         / "tool_descriptions"
     )
@@ -99,7 +99,7 @@ def test_tool_descriptors_match_injected_agent_state_bindings() -> None:
 
 def test_prompts_are_substantive_and_require_native_explore_skills() -> None:
     prompt_root = (
-        Path(__file__).resolve().parents[1] / "src" / "ahe_runner" / "meta" / "prompts"
+        Path(__file__).resolve().parents[1] / "src" / "evoharness" / "meta" / "prompts"
     )
     prompts = {
         path.name: path.read_text(encoding="utf-8") for path in prompt_root.glob("*.md")
@@ -199,20 +199,20 @@ def test_generated_production_agent_config_loads_with_native_skill(
     assert loaded.skills[0].name == "smoke"
     assert loaded.retry_attempts == 1
     bindings = {tool.name: _binding(tool) for tool in loaded.tools}
-    assert bindings["read_file"] == "ahe_runner.meta.guarded_tools:read_file"
+    assert bindings["read_file"] == "evoharness.meta.guarded_tools:read_file"
     assert bindings["run_shell_command"] == (
-        "ahe_runner.meta.guarded_tools:run_shell_command"
+        "evoharness.meta.guarded_tools:run_shell_command"
     )
-    assert bindings["complete_task"] == "ahe_runner.meta.tools:complete_task"
+    assert bindings["complete_task"] == "evoharness.meta.tools:complete_task"
     runtime_files = [
         path.read_text(encoding="utf-8", errors="replace")
         for path in (tmp_path / "runtime").rglob("*")
         if path.is_file()
     ]
     assert all(secret not in text for text in runtime_files)
-    assert "AHE_RUNTIME_INJECTED" in (tmp_path / "runtime" / "agent.yaml").read_text(
-        encoding="utf-8"
-    )
+    assert "EVOHARNESS_RUNTIME_INJECTED" in (
+        tmp_path / "runtime" / "agent.yaml"
+    ).read_text(encoding="utf-8")
 
 
 def test_meta_agent_skill_copies_stay_in_private_runtime_sandbox(
@@ -349,8 +349,8 @@ def test_run_agent_wires_the_original_middleware_and_roots(
     tool_outputs = runtime_dir / "tool_outputs"
     assert tool_outputs.is_dir()
     assert seen["middlewares"] == [
-        "AheLongToolOutputMiddleware",
-        "AheContextCompactionMiddleware",
+        "MetaLongToolOutputMiddleware",
+        "MetaContextCompactionMiddleware",
     ]
     agent_yaml = yaml.safe_load((runtime_dir / "agent.yaml").read_text("utf-8"))
     assert agent_yaml["token_counter"] == "benchmark_tokens:count_prompt_tokens"
@@ -405,8 +405,8 @@ def test_run_agent_wires_the_original_middleware_and_roots(
     )
     assert seen["middlewares"] == [
         "DebuggerAccessRecorderMiddleware",
-        "AheLongToolOutputMiddleware",
-        "AheContextCompactionMiddleware",
+        "MetaLongToolOutputMiddleware",
+        "MetaContextCompactionMiddleware",
     ]
     context = seen["context"]
     assert isinstance(context, dict)

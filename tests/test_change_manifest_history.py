@@ -4,11 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from ahe_runner.adapter import TransitionSummary
-from ahe_runner.change_manifest import load_change_manifest
-from ahe_runner.errors import IntegrityError
-from ahe_runner.history import write_transition
-from ahe_runner.io import atomic_write_json, read_json
+from evoharness.adapter import TransitionSummary
+from evoharness.change_manifest import load_change_manifest
+from evoharness.errors import IntegrityError
+from evoharness.history import write_transition
+from evoharness.io import atomic_write_json, read_json
 
 
 def _manifest() -> dict:

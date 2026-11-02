@@ -1,12 +1,12 @@
 # Benchmark Adapter Guide
 
-The adapter is the protected typed boundary between generic AHE lifecycle logic
+The adapter is the protected typed boundary between the generic evolution lifecycle
 and a native benchmark.
 
 ## Minimal V2 class
 
 ```python
-from ahe_runner.adapter import (
+from evoharness.adapter import (
     AdapterIdentity,
     BenchmarkAdapterV2,
     BenchmarkInterface,
@@ -25,7 +25,7 @@ from ahe_runner.adapter import (
     ValidationResult,
     VerificationRequest,
 )
-from ahe_runner.runtime import (
+from evoharness.runtime import (
     AgentInput,
     AgentInputMessage,
     AgentSessionRequest,
@@ -65,8 +65,8 @@ class MyAdapter(BenchmarkAdapterV2):
     def meta_prompt_context(self) -> MetaPromptContext: ...
 ```
 
-Use `src/ahe_runner/example/adapter.py` for the offline lifecycle fixture and
-`src/ahe_runner/example/runtime_adapter.py` for a real evaluated-session and
+Use `src/evoharness/example/adapter.py` for the offline lifecycle fixture and
+`src/evoharness/example/runtime_adapter.py` for a real evaluated-session and
 protected-action reference. The latter is walked through in
 `RUNTIME_BACKED_EXAMPLE.md`.
 
@@ -112,9 +112,9 @@ to meta-agents.
 
 ## Adapter packaging and dependencies
 
-The adapter runs in the same Python environment as `ahe-runner`. Prefer a
+The adapter runs in the same Python environment as `evoharness`. Prefer a
 plain project module plus `adapter_dependency_paths`; an adapter package should
-not redeclare `ahe-runner` or an unconstrained `nexau` dependency, because a
+not redeclare `evoharness` or an unconstrained `nexau` dependency, because a
 resolver can otherwise replace the runner's tested framework version.
 
 The current runner pins:
@@ -314,7 +314,7 @@ For an adapter that needs one fresh Python process per trial, keep grading and
 target in a child:
 
 ```python
-from ahe_runner import EvaluatedAgentRuntime, run_evaluated_trial_in_child
+from evoharness import EvaluatedAgentRuntime, run_evaluated_trial_in_child
 
 
 def run_trial_in_child(payload, runtime: EvaluatedAgentRuntime):
@@ -385,8 +385,8 @@ the campaign's credentials, wire API, request slots, token admission control,
 retries, and provider-block handling, and records every call:
 
 ```python
-from ahe_runner.config import ModelSettings
-from ahe_runner.model_requests import RecordedExactModelClient
+from evoharness.config import ModelSettings
+from evoharness.model_requests import RecordedExactModelClient
 
 judge = RecordedExactModelClient(
     transport=request.transport,
@@ -406,7 +406,7 @@ which covers `token_command` authentication. To join the endpoint-wide
 request budget, wrap its calls:
 
 ```python
-from ahe_runner.model_requests import model_request_slot
+from evoharness.model_requests import model_request_slot
 
 with model_request_slot(request.transport) as timing:
     response = judge_client.chat.completions.create(...)
@@ -634,7 +634,7 @@ Classify it as a benchmark-native graded termination when the benchmark does
 the same:
 
 ```python
-from ahe_runner.model_requests import context_overflow_message
+from evoharness.model_requests import context_overflow_message
 
 try:
     output = session.run(agent_input)
@@ -657,8 +657,8 @@ such as a content filter or a malformed request (HTTP 400 or 422). Apply the
 campaign's `request.provider_rejection_policy` instead of choosing per run:
 
 ```python
-from ahe_runner.errors import InfrastructureError
-from ahe_runner.model_requests import provider_rejection_message
+from evoharness.errors import InfrastructureError
+from evoharness.model_requests import provider_rejection_message
 
 rejection = provider_rejection_message(exc)
 if rejection is not None:
@@ -679,7 +679,7 @@ healthy, retry a unit that failed on infrastructure a bounded number of times
 inside the same attempt, with back-off, and keep every failed unit attempt.
 End the attempt only when failures persist. Abnormal child-process
 termination must still end the attempt. For the remaining stops, operators
-can use `ahe supervise`.
+can use `evoharness supervise`.
 
 Do not raise it for:
 

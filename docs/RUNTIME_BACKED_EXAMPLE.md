@@ -4,8 +4,8 @@ The generated project contains two intentionally separate configurations:
 
 | Configuration | Purpose | Evaluated-model calls |
 |---|---|---:|
-| `ahe.yaml` | Offline controller/lifecycle rehearsal with phrase scoring and the scripted meta backend | 0 |
-| `ahe.runtime.yaml` | Genuine NexAU evaluated-agent sessions plus model-backed meta-agents | Yes |
+| `evoharness.yaml` | Offline controller/lifecycle rehearsal with phrase scoring and the scripted meta backend | 0 |
+| `evoharness.runtime.yaml` | Genuine NexAU evaluated-agent sessions plus model-backed meta-agents | Yes |
 
 Changing only the offline file's meta backend is not a valid live campaign.
 The benchmark adapter must call the supplied `EvaluatedAgentRuntime`.
@@ -48,10 +48,10 @@ pip install -e '.[web,dev]'
 Create a project:
 
 ```bash
-ahe init-project ./my-ahe-project
+evoharness init-project ./my-project
 ```
 
-Edit `my-ahe-project/ahe.runtime.yaml`:
+Edit `my-project/evoharness.runtime.yaml`:
 
 1. set `transport.base_url` and, if needed, `transport.api_key_env`;
 2. replace both exact model IDs;
@@ -68,9 +68,9 @@ Edit `my-ahe-project/ahe.runtime.yaml`:
 Then run:
 
 ```bash
-ahe conformance --config ./my-ahe-project/ahe.runtime.yaml
-ahe validate --config ./my-ahe-project/ahe.runtime.yaml
-ahe run --config ./my-ahe-project/ahe.runtime.yaml
+evoharness conformance --config ./my-project/evoharness.runtime.yaml
+evoharness validate --config ./my-project/evoharness.runtime.yaml
+evoharness run --config ./my-project/evoharness.runtime.yaml
 ```
 
 The adapter uses only the public `BenchmarkAdapterV2`,

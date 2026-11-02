@@ -9,31 +9,31 @@ import httpx
 import pytest
 import yaml
 
-from ahe_runner.adapter import (
+from evoharness.adapter import (
     EvaluationResult,
     EvaluationTrialFact,
     MetricSummary,
     MetricValue,
     SplitName,
 )
-from ahe_runner.algorithms.rrsi import submission
-from ahe_runner.algorithms.rrsi.components import normalize_tag, novelty
-from ahe_runner.algorithms.rrsi.history import History, exploration, stall_flag
-from ahe_runner.algorithms.rrsi.objective import (
+from evoharness.algorithms.rrsi import submission
+from evoharness.algorithms.rrsi.components import normalize_tag, novelty
+from evoharness.algorithms.rrsi.history import History, exploration, stall_flag
+from evoharness.algorithms.rrsi.objective import (
     calibrate_bootstrap,
     calibrate_repeats,
     check_metric,
     weighted_score,
 )
-from ahe_runner.algorithms.rrsi.schedule import edit_budget
-from ahe_runner.algorithms.rrsi.selection import Candidate, Weights, select_round
-from ahe_runner.algorithms.rrsi.settings import RrsiSettings
-from ahe_runner.cli import main as cli_main
-from ahe_runner.config import ModelPricing, load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.cost import call_cost, call_usage, evaluation_cost
-from ahe_runner.errors import ConfigurationError, IntegrityError
-from ahe_runner.io import atomic_write_json, read_json
+from evoharness.algorithms.rrsi.schedule import edit_budget
+from evoharness.algorithms.rrsi.selection import Candidate, Weights, select_round
+from evoharness.algorithms.rrsi.settings import RrsiSettings
+from evoharness.cli import main as cli_main
+from evoharness.config import ModelPricing, load_config
+from evoharness.controller import CampaignController
+from evoharness.cost import call_cost, call_usage, evaluation_cost
+from evoharness.errors import ConfigurationError, IntegrityError
+from evoharness.io import atomic_write_json, read_json
 
 from .conftest import make_example_project
 
@@ -363,8 +363,8 @@ def test_priced_cost_uses_categories_tiers_and_completed_attempts(
 def _submission_context(tmp_path: Path) -> tuple[dict[str, Any], Path]:
     import subprocess
 
-    from ahe_runner.harness import load_harness_manifest, validate_harness
-    from ahe_runner.workspace import prepare_evolve_workspace
+    from evoharness.harness import load_harness_manifest, validate_harness
+    from evoharness.workspace import prepare_evolve_workspace
 
     config_path = make_example_project(tmp_path)
     config = load_config(config_path)
@@ -621,10 +621,10 @@ def test_nexau_backend_runs_an_rrsi_role_with_its_tools(
 ) -> None:
     from openai import OpenAI
 
-    import ahe_runner.meta.model_client as model_client_module
-    from ahe_runner.algorithms.rrsi import PROMPTS, _tool
-    from ahe_runner.meta import RoleSpec
-    from ahe_runner.meta.nexau_backend import NexAUMetaBackend
+    import evoharness.meta.model_client as model_client_module
+    from evoharness.algorithms.rrsi import PROMPTS, _tool
+    from evoharness.meta import RoleSpec
+    from evoharness.meta.nexau_backend import NexAUMetaBackend
 
     config_path = make_example_project(tmp_path)
     value = yaml.safe_load(config_path.read_text(encoding="utf-8"))
@@ -720,11 +720,11 @@ def test_evaluated_session_usage_is_attributed_to_its_trial(
 ) -> None:
     from openai import OpenAI
 
-    import ahe_runner.meta.model_client as model_client_module
-    import ahe_runner.runtime as runtime_module
-    from ahe_runner.adapter import BenchmarkInterface
-    from ahe_runner.harness import load_harness_manifest
-    from ahe_runner.runtime import (
+    import evoharness.meta.model_client as model_client_module
+    import evoharness.runtime as runtime_module
+    from evoharness.adapter import BenchmarkInterface
+    from evoharness.harness import load_harness_manifest
+    from evoharness.runtime import (
         AgentInput,
         AgentInputMessage,
         AgentSessionRequest,
@@ -834,8 +834,8 @@ def test_validation_split_may_be_empty_only_without_validation_selection(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from ahe_runner.adapter import SplitDefinition
-    from ahe_runner.example import adapter as example_adapter
+    from evoharness.adapter import SplitDefinition
+    from evoharness.example import adapter as example_adapter
 
     with pytest.raises(ValueError):
         SplitDefinition(name=SplitName.TRAIN, identity="x", task_ids=[])

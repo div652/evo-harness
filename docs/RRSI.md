@@ -112,7 +112,7 @@ algorithm:
 
 The trial count k is `evaluation.train_trials`. RRSI requires
 `models.evaluated.pricing` unless `cost: disabled`, and `train_trials >= 2`
-for the bootstrap noise band. `ahe extend-rounds` is refused: the budget
+for the bootstrap noise band. `evoharness extend-rounds` is refused: the budget
 schedule depends on T, so changing T would change completed rounds.
 
 ## Choosing the hyperparameters
@@ -220,4 +220,4 @@ campaign-artifacts/<campaign>/
 | w_s, w_c, w_n are fixed numbers per instance | w_s and w_n are derived from delta and two allowances (the paper's values at the paper's delta) | w_s means nothing without delta |
 | w, n_prune fixed | default to the paper's values at T = 20, scaled with T | short pilots |
 | Domain guards (non-compensatory checks, engineering instance) | not implemented | the workspace instance has none |
-| `readjudicate` and `reevaluate` commands | `ahe retry-stage` reopens an infrastructure-blocked stage; re-adjudication with a new delta needs a new campaign | stage identity |
+| `readjudicate` and `reevaluate` commands | `evoharness retry-stage` reopens an infrastructure-blocked stage; re-adjudication with a new delta needs a new campaign | stage identity |

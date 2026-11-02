@@ -1,6 +1,6 @@
 # Future Features
 
-These ideas are intentionally outside the AHE Runner V2 contract.
+These ideas are intentionally outside the evoharness V2 contract.
 
 ## Partial-episode checkpointing
 

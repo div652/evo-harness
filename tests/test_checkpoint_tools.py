@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ahe_runner.io import atomic_write_json, sha256_json, tree_hashes
-from ahe_runner.meta import tools
+from evoharness.io import atomic_write_json, sha256_json, tree_hashes
+from evoharness.meta import tools
 
 
 class _Storage:

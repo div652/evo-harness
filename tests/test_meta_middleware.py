@@ -11,14 +11,14 @@ from nexau.archs.main_sub.execution.hooks import AfterToolHookInput, MiddlewareM
 from nexau.archs.sandbox.local_sandbox import LocalSandbox
 from nexau.archs.tool.builtin.file_tools.read_file import MAX_LINE_LENGTH
 
-import ahe_runner.meta.middleware as middleware_module
-from ahe_runner.meta import guarded_tools
-from ahe_runner.meta.middleware import (
-    AheContextCompactionMiddleware,
-    AheLongToolOutputMiddleware,
+import evoharness.meta.middleware as middleware_module
+from evoharness.meta import guarded_tools
+from evoharness.meta.middleware import (
     DebuggerAccessRecorderMiddleware,
+    MetaContextCompactionMiddleware,
+    MetaLongToolOutputMiddleware,
 )
-from ahe_runner.meta.tools import _debugger_accesses
+from evoharness.meta.tools import _debugger_accesses
 
 from .meta_fakes import FakeAgentState
 
@@ -41,7 +41,7 @@ def _hook(
     )
 
 
-def _long_output(tmp_path: Path, **overrides: Any) -> AheLongToolOutputMiddleware:
+def _long_output(tmp_path: Path, **overrides: Any) -> MetaLongToolOutputMiddleware:
     params: dict[str, Any] = {
         "max_output_chars": 10_000,
         "head_lines": 50,
@@ -52,7 +52,7 @@ def _long_output(tmp_path: Path, **overrides: Any) -> AheLongToolOutputMiddlewar
         "bypass_tool_names": ["run_shell_command", "LoadSkill", "complete_task"],
     }
     params.update(overrides)
-    return AheLongToolOutputMiddleware(**params)
+    return MetaLongToolOutputMiddleware(**params)
 
 
 def _debugger_state(tmp_path: Path) -> FakeAgentState:
@@ -106,10 +106,10 @@ def test_long_output_leaves_short_and_bypassed_results_alone(tmp_path: Path) -> 
 
 def test_long_output_falls_back_to_json_for_other_shapes() -> None:
     assert (
-        AheLongToolOutputMiddleware._serialize({"items": [1, 2]})
+        MetaLongToolOutputMiddleware._serialize({"items": [1, 2]})
         == '{\n  "items": [\n    1,\n    2\n  ]\n}'
     )
-    assert AheLongToolOutputMiddleware._serialize({"result": "plain"}) == "plain"
+    assert MetaLongToolOutputMiddleware._serialize({"result": "plain"}) == "plain"
 
 
 def test_emergency_summary_keeps_campaign_model_settings(monkeypatch) -> None:
@@ -125,7 +125,7 @@ def test_emergency_summary_keeps_campaign_model_settings(monkeypatch) -> None:
             return SimpleNamespace(content="  summary text  ")
 
     monkeypatch.setattr(middleware_module, "LLMCaller", FakeCaller)
-    middleware = AheContextCompactionMiddleware(
+    middleware = MetaContextCompactionMiddleware(
         max_context_tokens=220_000,
         auto_compact=True,
         threshold=0.75,

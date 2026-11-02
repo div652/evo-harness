@@ -8,9 +8,9 @@ from types import SimpleNamespace
 import pytest
 import yaml
 
-from ahe_runner.errors import CandidateValidationError, ConfigurationError
-from ahe_runner.harness import load_harness_manifest, validate_harness
-from ahe_runner.harness_imports import HarnessImportScope
+from evoharness.errors import CandidateValidationError, ConfigurationError
+from evoharness.harness import load_harness_manifest, validate_harness
+from evoharness.harness_imports import HarnessImportScope
 
 from .conftest import make_example_project
 
@@ -30,7 +30,7 @@ def test_harness_validation_rejects_symlinks_and_task_memorization(
         project_root=project,
     )
     assert report["valid"] is True
-    assert report["conformance"]["abi_version"] == "ahe.harness/v2"
+    assert report["conformance"]["abi_version"] == "evoharness.harness/v2"
     assert report["conformance"]["context_accounting"] == {
         "max_context_tokens": 200000,
         "token_counter": None,

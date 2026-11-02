@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from ahe_runner.errors import IntegrityError
-from ahe_runner.evaluation_store import EvaluationStore
-from ahe_runner.io import atomic_write_json
+from evoharness.errors import IntegrityError
+from evoharness.evaluation_store import EvaluationStore
+from evoharness.io import atomic_write_json
 
 
 def test_valid_zero_completion_is_not_retried_and_attempts_are_absolute(

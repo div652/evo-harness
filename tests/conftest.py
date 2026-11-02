@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from ahe_runner.cli import init_project
+from evoharness.cli import init_project
 
 
 def make_example_project(
@@ -14,7 +14,7 @@ def make_example_project(
 ) -> Path:
     project = root / "project"
     init_project(project)
-    config_path = project / "ahe.yaml"
+    config_path = project / "evoharness.yaml"
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     config["campaign"]["rounds"] = rounds
     config_path.write_text(

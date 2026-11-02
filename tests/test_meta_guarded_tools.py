@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from ahe_runner.meta import guarded_tools as g
-from ahe_runner.meta.guarded_tools import MetaRoot, PathDenied
+from evoharness.meta import guarded_tools as g
+from evoharness.meta.guarded_tools import MetaRoot, PathDenied
 
 from .meta_fakes import FakeAgentState
 

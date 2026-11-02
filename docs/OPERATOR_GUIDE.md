@@ -1,6 +1,6 @@
 # Operator Guide
 
-This is the shortest complete procedure for running AHE on your own NexAU
+This is the shortest complete procedure for evolving your own NexAU
 harness.
 
 ## 1. Install the runner
@@ -25,14 +25,14 @@ The `web` extra is required by the production Web Explore Agent.
 ## 2. Create the operator project
 
 ```bash
-ahe init-project /path/to/my-ahe-project
+evoharness init-project /path/to/my-project
 ```
 
 The project must have this boundary:
 
 ```text
-my-ahe-project/
-├── ahe.yaml
+my-project/
+├── evoharness.yaml
 ├── harness_manifest.yaml
 ├── benchmark_adapter.py
 ├── harness/
@@ -56,7 +56,7 @@ it:
 - hidden task state;
 - expected answers and scoring logic;
 - model-server credentials;
-- the AHE controller;
+- the campaign controller and the evolution algorithms;
 - environment or simulator implementations.
 
 This separation is the protected benchmark boundary.
@@ -82,7 +82,7 @@ V2 projects declare:
 
 ```yaml
 schema_version: 2
-abi_version: ahe.harness/v2
+abi_version: evoharness.harness/v2
 
 attachments:
   long_term_memory: system_prompt_suffix
@@ -222,7 +222,7 @@ held-out task content and private verifier implementation outside those roots.
 
 ## 6. Configure the campaign
 
-Important settings in `ahe.yaml`:
+Important settings in `evoharness.yaml`:
 
 ```yaml
 campaign:
@@ -293,7 +293,7 @@ also receives the configured seed URLs before broader research.
 `transport.max_concurrent_requests` is the runner-wide queue for recorded
 model calls to that endpoint, including children created through the public
 evaluated-trial process helper. Adapter-owned provider calls participate only
-when wrapped with `ahe_runner.model_requests.model_request_slot`; see the
+when wrapped with `evoharness.model_requests.model_request_slot`; see the
 adapter guide.
 
 `evaluation.max_concurrency` is only the maximum parallelism passed to the
@@ -306,7 +306,7 @@ before selecting the adapter's worker model.
 timed out before any response. It defaults to `0` and is capped at `5`. The
 runner resends the identical request only for timeout-class hangs, preserves
 each failed attempt in the model-call folder, and reports aggregate resend
-counts through `ahe status`. Overload, validation, context-length, and other
+counts through `evoharness status`. Overload, validation, context-length, and other
 errors are not resent.
 
 The `meta` context fields describe the unit used by the meta-agent
@@ -364,7 +364,7 @@ models:
 `meta.role_supplements` and `meta.explore` configure AHE's roles;
 `algorithm.role_supplements` configures the selected algorithm's roles. The
 NexAU meta backend still requires `meta.explore` with the web extra.
-`ahe validate` reports the algorithm's resolved settings, its selection
+`evoharness validate` reports the algorithm's resolved settings, its selection
 policy, and any problems it finds with the campaign.
 
 Pricing never reaches the provider. Use your provider's published prices per
@@ -426,7 +426,7 @@ one.
 
 The runtime always applies the configured wire API. If the harness manifest
 protects `llm_config.api_type`, keep it consistent (`openai_responses` for the
-Responses API, `openai_chat_completion` otherwise); `ahe validate` warns when
+Responses API, `openai_chat_completion` otherwise); `evoharness validate` warns when
 they differ.
 
 Authentication is either a static key from `api_key_env`, or
@@ -470,7 +470,7 @@ transport:
   provider blocked this client. Every process on the host stops sending to
   that endpoint for `provider_block_seconds`. Later calls fail without being
   sent (`"sent": false`), and the stage ends as infrastructure. Do not
-  relaunch immediately; `ahe supervise` stops on a block.
+  relaunch immediately; `evoharness supervise` stops on a block.
 - **Admission control.** With `token_budget_per_minute`, every process on the
   host shares a per-model 60-second token window. A request is sent only when
   its estimate (request characters ÷ `token_budget_chars_per_token` plus the
@@ -482,11 +482,11 @@ transport:
   and keep the estimate conservative (3 characters per token rarely
   undercounts).
 
-Endpoint state shared by processes lives under `$AHE_RUNNER_STATE_DIR`, or
-`<tmp>/ahe-runner-<uid>` when it is unset. The model preflight uses the same
+Endpoint state shared by processes lives under `$EVOHARNESS_STATE_DIR`, or
+`<tmp>/evoharness-<uid>` when it is unset. The model preflight uses the same
 retries, window, and block handling as recorded calls.
 
-`ahe status` reports `transient_attempt_count`, `rate_limited_attempt_count`,
+`evoharness status` reports `transient_attempt_count`, `rate_limited_attempt_count`,
 and `provider_blocked_calls` next to the hung-call counts.
 
 Each evaluation stage records its route fingerprint in `stage.json`, and
@@ -535,8 +535,8 @@ can be audited later; those counts are not substitutes for model tokens.
 ## 7. Validate before spending model calls
 
 ```bash
-ahe conformance --config /path/to/my-ahe-project/ahe.yaml
-ahe validate --config /path/to/my-ahe-project/ahe.yaml
+evoharness conformance --config /path/to/my-project/evoharness.yaml
+evoharness validate --config /path/to/my-project/evoharness.yaml
 ```
 
 `conformance` reports the adapter API generation, frozen benchmark interface,
@@ -545,7 +545,7 @@ returns the full resolved project and split report.
 
 ### Route A: offline lifecycle rehearsal
 
-For a server-free lifecycle rehearsal, use the generated `ahe.yaml` unchanged:
+For a server-free lifecycle rehearsal, use the generated `evoharness.yaml` unchanged:
 
 ```yaml
 meta:
@@ -555,7 +555,7 @@ meta:
 Run the deterministic example first:
 
 ```bash
-ahe run --config /path/to/my-ahe-project/ahe.yaml
+evoharness run --config /path/to/my-project/evoharness.yaml
 ```
 
 This phrase-scoring fixture does not call the evaluated agent. Its purpose is
@@ -567,9 +567,9 @@ idempotent resume.
 Use the separate generated configuration:
 
 ```bash
-ahe conformance --config /path/to/my-ahe-project/ahe.runtime.yaml
-ahe validate --config /path/to/my-ahe-project/ahe.runtime.yaml
-ahe run --config /path/to/my-ahe-project/ahe.runtime.yaml
+evoharness conformance --config /path/to/my-project/evoharness.runtime.yaml
+evoharness validate --config /path/to/my-project/evoharness.runtime.yaml
+evoharness run --config /path/to/my-project/evoharness.runtime.yaml
 ```
 
 Before running, replace the exact endpoint/model placeholders and configure
@@ -610,27 +610,27 @@ experiment, and fix it before spending model calls when it is not.
 Full campaign:
 
 ```bash
-ahe run --config /path/to/my-ahe-project/ahe.yaml
+evoharness run --config /path/to/my-project/evoharness.yaml
 ```
 
 Equivalent explicit script:
 
 ```bash
-python /path/to/ahe-runner/run_ahe.py run \
-  --config /path/to/my-ahe-project/ahe.yaml
+python /path/to/evoharness/run_evoharness.py run \
+  --config /path/to/my-project/evoharness.yaml
 ```
 
 Status:
 
 ```bash
-ahe status --config /path/to/my-ahe-project/ahe.yaml
+evoharness status --config /path/to/my-project/evoharness.yaml
 ```
 
 After a timeout, model-server restart, network failure, or adapter-classified
 infrastructure failure:
 
 ```bash
-ahe resume --config /path/to/my-ahe-project/ahe.yaml
+evoharness resume --config /path/to/my-project/evoharness.yaml
 ```
 
 Resume verifies and skips completed stages. Evaluation resumes only incomplete
@@ -642,7 +642,7 @@ before a resume; the change is recorded in `campaign_amendments.json`.
 For unattended campaigns, let the runner resume for you:
 
 ```bash
-ahe supervise --config /path/to/my-ahe-project/ahe.yaml \
+evoharness supervise --config /path/to/my-project/evoharness.yaml \
   --max-consecutive-failures 5 \
   --initial-backoff-seconds 60 --max-backoff-seconds 1800
 ```
@@ -657,7 +657,7 @@ stage. It stops, and reports why, on:
 - `--max-consecutive-failures` stops in a row without progress.
 
 Every launch and decision is appended to `reports/supervisor.jsonl`.
-Combine it with `AHE_PRE_STAGE_COMMAND` to restart unhealthy local services.
+Combine it with `EVOHARNESS_PRE_STAGE_COMMAND` to restart unhealthy local services.
 
 If you drive the runner from your own Python script instead, put the code
 that creates `CampaignController` under `if __name__ == "__main__":`.
@@ -672,10 +672,10 @@ If a stage is `blocked`, first fix the external cause, then explicitly
 authorize another attempt:
 
 ```bash
-ahe retry-stage --config /path/to/my-ahe-project/ahe.yaml \
+evoharness retry-stage --config /path/to/my-project/evoharness.yaml \
   --stage round.2.evolve \
   --reason "Corrected the adapter-side parser"
-ahe resume --config /path/to/my-ahe-project/ahe.yaml
+evoharness resume --config /path/to/my-project/evoharness.yaml
 ```
 
 The reason and prior error remain in `stage.json` under `manual_retries`; no
@@ -695,17 +695,17 @@ a failing stage cannot be retried until it happens to pass.
 ### Check external services before each stage
 
 A long campaign may depend on services that degrade over hours, such as a
-local model server. Set `AHE_PRE_STAGE_COMMAND` to run a health check or
+local model server. Set `EVOHARNESS_PRE_STAGE_COMMAND` to run a health check or
 restart before every new stage attempt:
 
 ```bash
-export AHE_PRE_STAGE_COMMAND="/path/to/check_model_server.sh"
-export AHE_PRE_STAGE_TIMEOUT_SECONDS=1200   # optional; default 1200
-ahe resume --config /path/to/my-ahe-project/ahe.yaml
+export EVOHARNESS_PRE_STAGE_COMMAND="/path/to/check_model_server.sh"
+export EVOHARNESS_PRE_STAGE_TIMEOUT_SECONDS=1200   # optional; default 1200
+evoharness resume --config /path/to/my-project/evoharness.yaml
 ```
 
 The command is split with shell quoting rules and run without a shell, with
-`AHE_STAGE_NAME` and `AHE_CAMPAIGN_DIR` set. Its output goes to stderr. It
+`EVOHARNESS_STAGE_NAME` and `EVOHARNESS_CAMPAIGN_DIR` set. Its output goes to stderr. It
 does not run for completed stages. A nonzero exit or timeout stops the runner
 with an infrastructure error *before* the attempt is recorded, so no attempt
 is used; fix the service and resume. Each attempt records the command in
@@ -720,10 +720,10 @@ configured `campaign.rounds`, raise the value in the configuration file, then
 record the change:
 
 ```bash
-# edit ahe.yaml: campaign.rounds: 5 -> 10
-ahe extend-rounds --config ahe.yaml --reason "Continue from C5"          # dry run
-ahe extend-rounds --config ahe.yaml --reason "Continue from C5" --apply
-ahe resume --config ahe.yaml
+# edit evoharness.yaml: campaign.rounds: 5 -> 10
+evoharness extend-rounds --config evoharness.yaml --reason "Continue from C5"          # dry run
+evoharness extend-rounds --config evoharness.yaml --reason "Continue from C5" --apply
+evoharness resume --config evoharness.yaml
 ```
 
 The command refuses any other protected-input change, including the runner
@@ -753,10 +753,10 @@ extended after it closed.
 ## 9. Optional phase control
 
 ```bash
-ahe run-round --config ahe.yaml --round 3
-ahe close-evolution --config ahe.yaml
-ahe run-validation --config ahe.yaml
-ahe run-final-test --config ahe.yaml
+evoharness run-round --config evoharness.yaml --round 3
+evoharness close-evolution --config evoharness.yaml
+evoharness run-validation --config evoharness.yaml
+evoharness run-final-test --config evoharness.yaml
 ```
 
 Validation evaluates every checkpoint, then the adapter selects one through
@@ -767,14 +767,14 @@ checkpoint only. Test results never trigger further evolution.
 
 To measure a harness without evolving it (a baseline on all tasks, a selected
 checkpoint on held-out tasks, more trials, or another route), use
-`ahe evaluate` with the campaign configuration:
+`evoharness evaluate` with the campaign configuration:
 
 ```bash
 # A campaign checkpoint on the test split
-ahe evaluate --config ahe.yaml --output ./evals/c5-test --checkpoint C5 --split test
+evoharness evaluate --config evoharness.yaml --output ./evals/c5-test --checkpoint C5 --split test
 
 # Any conformant harness folder on chosen tasks, with more trials and a seed
-ahe evaluate --config ahe.yaml --output ./evals/new-harness \
+evoharness evaluate --config evoharness.yaml --output ./evals/new-harness \
   --harness ./candidate-harness --tasks ./tasks.json \
   --trials 5 --seed 7 --label candidate
 ```
@@ -790,8 +790,8 @@ it; a different command for the same folder is refused.
 Compare two evaluations task by task:
 
 ```bash
-ahe compare --baseline ./evals/c0-test --candidate ./evals/c5-test
-ahe compare --baseline campaign-artifacts/<campaign>/evaluations/C0-final-test \
+evoharness compare --baseline ./evals/c0-test --candidate ./evals/c5-test
+evoharness compare --baseline campaign-artifacts/<campaign>/evaluations/C0-final-test \
   --candidate ./evals/c5-test
 ```
 
@@ -816,7 +816,7 @@ certain each decision is:
 
 With small validation sets the top validation score is partly luck. When
 several candidates are indistinguishable from the selected one, report that,
-and confirm the choice with `ahe evaluate` on more tasks or trials before
+and confirm the choice with `evoharness evaluate` on more tasks or trials before
 claiming an improvement. Report the interval with every final-test delta.
 
 ## 10. Read the outputs
@@ -836,7 +836,7 @@ campaign-artifacts/<campaign>/
 ├── history/
 ├── attribution/
 ├── stages/
-├── reports/supervisor.jsonl   # only under ahe supervise
+├── reports/supervisor.jsonl   # only under evoharness supervise
 ├── selection/selection.json
 ├── superseded/closure-NN/     # only after a reopened closure
 └── final/

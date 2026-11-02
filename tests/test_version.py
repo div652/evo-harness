@@ -4,10 +4,10 @@ import importlib.metadata
 import tomllib
 from pathlib import Path
 
-from ahe_runner import __version__
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.io import read_json
+from evoharness import __version__
+from evoharness.config import load_config
+from evoharness.controller import CampaignController
+from evoharness.io import read_json
 
 from .conftest import make_example_project
 
@@ -20,7 +20,7 @@ def test_release_version_matches_metadata_and_fresh_campaign(
         (repository / "pyproject.toml").read_text(encoding="utf-8")
     )["project"]["version"]
 
-    assert importlib.metadata.version("ahe-runner") == declared
+    assert importlib.metadata.version("evoharness") == declared
     assert __version__ == declared
 
     config_path = make_example_project(tmp_path, rounds=0)
