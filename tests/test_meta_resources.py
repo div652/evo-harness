@@ -11,6 +11,7 @@ import yaml
 from nexau.archs.main_sub.execution.hooks import AfterToolHookInput
 
 import ahe_runner.meta.nexau_backend as backend_module
+from ahe_runner.algorithms.ahe import meta_stage_inputs
 from ahe_runner.config import load_config
 from ahe_runner.controller import CampaignController
 from ahe_runner.errors import ConfigurationError, InfrastructureError, IntegrityError
@@ -155,7 +156,7 @@ def test_generated_production_agent_config_loads_with_native_skill(
             self.config = config
             assert config.llm_config.api_key == secret
             assert config.system_prompt_type == "string"
-            assert config.system_prompt == ""
+            assert config.system_prompt == backend_module.META_PROMPT_HEAD
             assert "{{ benchmark_metric }}" in config.system_prompt_suffix
             self.full_trace = []
             self.global_storage = SimpleNamespace(get=lambda _key: None)
@@ -512,17 +513,17 @@ def test_stage_inputs_change_only_when_roles_or_shell_are_set(
     monkeypatch,
 ) -> None:
     plain = _nexau_controller(tmp_path / "plain", monkeypatch)
-    assert plain._meta_stage_inputs("debugger") == {}
+    assert meta_stage_inputs(plain, "debugger") == {}
     configured = _nexau_controller(
         tmp_path / "configured",
         monkeypatch,
         roles={"evolve": {"temperature": 0.7}},
         shell={"backend": "docker", "image": "ahe-meta-shell:test"},
     )
-    inputs = configured._meta_stage_inputs("evolve")
+    inputs = meta_stage_inputs(configured, "evolve")
     assert inputs["meta_role_overrides"] == {"temperature": 0.7}
     assert inputs["meta_shell"]["image"] == "ahe-meta-shell:test"
-    assert "meta_role_overrides" not in configured._meta_stage_inputs("debugger")
+    assert "meta_role_overrides" not in meta_stage_inputs(configured, "debugger")
 
 
 def test_meta_agents_mount_only_declared_public_adapter_roots(

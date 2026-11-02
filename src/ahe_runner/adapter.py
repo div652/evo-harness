@@ -115,13 +115,19 @@ class SplitDefinition(AdapterModel):
     @field_validator("task_ids")
     @classmethod
     def validate_task_ids(cls, values: list[str]) -> list[str]:
-        if not values:
-            raise ValueError("split task_ids must not be empty")
         if any(not value.strip() for value in values):
             raise ValueError("split task_ids must not contain empty values")
         if len(values) != len(set(values)):
             raise ValueError("split task_ids must be unique")
         return values
+
+    @model_validator(mode="after")
+    def require_tasks(self) -> SplitDefinition:
+        # Validation may be empty: a campaign whose selection policy is
+        # "algorithm" never evaluates it (the controller checks this).
+        if not self.task_ids and self.name is not SplitName.VALIDATION:
+            raise ValueError(f"split {self.name.value!r} task_ids must not be empty")
+        return self
 
 
 class MetricValue(AdapterModel):
@@ -155,6 +161,9 @@ class EvaluationTrialFact(AdapterModel):
     score: float | None = None
     termination_reason: str
     diagnostic_class: Literal["passing", "failing", "other"]
+    # Weight of this trial's score in a pooled metric (for example, the number
+    # of rubric criteria it was graded on). None: weight 1.
+    weight: float | None = None
 
     @field_validator("unit_id", "outcome", "termination_reason")
     @classmethod
@@ -169,6 +178,13 @@ class EvaluationTrialFact(AdapterModel):
     def require_finite_trial_score(cls, value: float | None) -> float | None:
         if value is not None and not math.isfinite(value):
             raise ValueError("evaluation trial fact score must be finite")
+        return value
+
+    @field_validator("weight")
+    @classmethod
+    def require_positive_weight(cls, value: float | None) -> float | None:
+        if value is not None and (not math.isfinite(value) or value <= 0):
+            raise ValueError("evaluation trial fact weight must be finite and positive")
         return value
 
 

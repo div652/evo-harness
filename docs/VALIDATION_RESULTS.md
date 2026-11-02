@@ -1,5 +1,23 @@
 # Validation Results
 
+## 0.9.0: evolution-algorithm plugins and RRSI
+
+Validated on 2026-10-26/27 at branch `algorithm-plugins`, commit `1c99ffb`:
+
+```text
+Complete suite: 191 passed (176 earlier tests unchanged, 15 RRSI and cost tests)
+ruff check / ruff format --check: clean
+```
+
+The earlier tests pass with AHE running as the default algorithm plugin, so the
+AHE lifecycle and stage names are unchanged. A test sends a real NexAU role run
+to a mocked Responses endpoint and checks that the protected role prompt is in
+the request; it caught that 0.4.0-0.8.0 sent NexAU's default prompt instead.
+
+RRSI was also run end to end against a live benchmark and model gateway,
+including interrupted-evaluation resume; that run is recorded with its
+benchmark integration, outside this repository.
+
 ## NexAU source moved to a mirror
 
 Validated on 2026-10-26. The upstream `nex-agi` GitHub organization became
