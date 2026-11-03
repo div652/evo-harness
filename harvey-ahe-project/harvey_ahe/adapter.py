@@ -37,7 +37,7 @@ from lab_core.sandbox.sandbox import PodmanError, Sandbox
 from openai import APIStatusError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from ahe_runner.adapter import (
+from evoharness.adapter import (
     AdapterIdentity,
     BenchmarkAdapterV2,
     BenchmarkInterface,
@@ -57,9 +57,9 @@ from ahe_runner.adapter import (
     ValidationResult,
     VerificationRequest,
 )
-from ahe_runner.child_process import run_in_child
-from ahe_runner.config import ModelSettings
-from ahe_runner.errors import (
+from evoharness.child_process import run_in_child
+from evoharness.config import ModelSettings
+from evoharness.errors import (
     PROVIDER_BLOCKED_MARKER,
     CandidateValidationError,
     ConfigurationError,
@@ -67,9 +67,9 @@ from ahe_runner.errors import (
     IntegrityError,
     ProviderBlockedError,
 )
-from ahe_runner.evaluation import evaluation_request_sha256
-from ahe_runner.evaluation_store import EvaluationStore, EvaluationUnit
-from ahe_runner.io import (
+from evoharness.evaluation import evaluation_request_sha256
+from evoharness.evaluation_store import EvaluationStore, EvaluationUnit
+from evoharness.io import (
     atomic_write_json,
     atomic_write_text,
     read_json,
@@ -77,14 +77,14 @@ from ahe_runner.io import (
     tree_hashes,
     tree_sha256,
 )
-from ahe_runner.meta.model_client import (
+from evoharness.meta.model_client import (
     _adopt_shared_request_slots as adopt_shared_request_slots,
 )
-from ahe_runner.meta.model_client import (
+from evoharness.meta.model_client import (
     _shared_request_slots as shared_request_slots,
 )
-from ahe_runner.meta.model_client import is_infrastructure_exception
-from ahe_runner.runtime import (
+from evoharness.meta.model_client import is_infrastructure_exception
+from evoharness.runtime import (
     AgentInput,
     AgentInputMessage,
     AgentOutput,

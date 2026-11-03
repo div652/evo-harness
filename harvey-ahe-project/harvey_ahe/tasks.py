@@ -17,9 +17,9 @@ from typing import Any
 
 from lab_core.evaluation.run_eval import validate_task_config
 
-from ahe_runner.adapter import SplitName
-from ahe_runner.errors import ConfigurationError, IntegrityError
-from ahe_runner.io import sha256_file, tree_sha256
+from evoharness.adapter import SplitName
+from evoharness.errors import ConfigurationError, IntegrityError
+from evoharness.io import sha256_file, tree_sha256
 
 SPLIT_SCHEMA_VERSION = 1
 _SEGMENT = re.compile(r"^[a-z0-9][a-z0-9._-]*$")

@@ -17,6 +17,8 @@ supplements, the splits, the campaign configurations, and the launchers.
 | `ahe-rrsi-pilot.yaml`, `ahe-rrsi-fk-80-40.yaml` | Pilot and firm-knowledge campaign configurations (gpt-5.6-luna agent, one gpt-5.6-sol judge, gpt-5.6-sol meta agents, CAO gateway). |
 | `scripts/run_rrsi_pilot.sh`, `scripts/run_rrsi_fk.sh` | Launchers (run, then resume after interruptions). They expect the project at `~/rrsi-pilot/harvey-ahe-project`. |
 | `scripts/rrsi_rounds_report.py` | Writes a round-by-round markdown report (scores, all-pass, cost, edits, critic verdicts, decisions) from a campaign's records: `python3 scripts/rrsi_rounds_report.py CAMPAIGN_DIR OUT.md`. |
+| `rrsi-fk-80-40-summaries.yaml`, `scripts/run_rrsi_fk2.sh` | The firm-knowledge campaign restarted with agent reasoning summaries (evoharness 0.10.1, runner tag `rrsi-fk2-runner`). |
+| `scripts/rrsi_report_loop.sh`, `scripts/rrsi_report_loop2.sh` | Refresh the round report every 10 minutes while a campaign runs. |
 
 The other files are the `harveybench-cao` project as of `158d762`.
 
@@ -51,8 +53,19 @@ trials of the same task often disagree, so both accepted gains are inside it.
 With 80 tasks and 3 trials, the firm-knowledge campaign below measured
 delta = 0.048.
 
-### Firm-knowledge campaign (80 train / 40 test)
+### Firm-knowledge campaign (80 train / 40 test): invalid, stopped
 
 Launched 2026-11-02 02:02 IST: `ahe-rrsi-fk-80-40.yaml`, 20 rounds, 2
-variants, 3 training trials, 3 test trials. Calibrated noise band delta =
-0.048. In progress at the time of writing.
+variants, 3 training trials, 3 test trials; noise band delta = 0.048. Stopped
+by the operator during round 8 (2026-11-03) when it was found that the runner
+sent the gpt-5.6-luna agent no `reasoning` parameter at its provider-default
+effort: the agent's reasoning items had empty summaries, so the analyst,
+digesters, and proposers never saw the agent's reasoning. Rounds 0 and 1 had
+accepted C1 (S 0.333 -> 0.611) and C3 (0.639); rounds 2 to 7 accepted
+nothing. Its results are not used.
+
+### Firm-knowledge campaign with reasoning summaries
+
+`rrsi-fk-80-40-summaries.yaml` repeats the campaign on evoharness 0.10.1
+(tag `rrsi-fk2-runner`), which requests `reasoning: {summary: auto}` on every
+Responses call. Prepared 2026-11-03; not yet launched.

@@ -14,7 +14,7 @@ from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from ahe_runner.io import atomic_write_text, sha256_file
+from evoharness.io import atomic_write_text, sha256_file
 
 WRAP_COLUMNS = 1000
 _CONTINUATION = "↪ "

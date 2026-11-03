@@ -18,7 +18,14 @@ import yaml
 # active (AHE-003). Listed explicitly so the guard does not depend on install
 # layout or meta-path finders.
 PROTECTED_MODULE_NAMES = frozenset(
-    {"ahe_runner", "benchmark_adapter", "harvey_ahe", "lab_core", "nexau"}
+    {
+        "ahe_runner",
+        "benchmark_adapter",
+        "evoharness",
+        "harvey_ahe",
+        "lab_core",
+        "nexau",
+    }
 )
 # Harness code runs on the host, beside protected code, because AHE V2 has no
 # benchmark-environment seam (AHE-005). These bans keep evolved tools on the
@@ -29,6 +36,7 @@ BANNED_IMPORT_ROOTS = frozenset(
         "ahe_runner",
         "aiohttp",
         "benchmark_adapter",
+        "evoharness",
         "builtins",
         "ctypes",
         "ftplib",

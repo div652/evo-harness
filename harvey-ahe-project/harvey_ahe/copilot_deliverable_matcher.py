@@ -16,15 +16,15 @@ from typing import Any, Literal
 from jsonschema import Draft202012Validator, ValidationError
 from lab_core.harness.adapters.copilot import resolve_copilot_base_url
 
-from ahe_runner.config import ModelSettings, TransportSettings
-from ahe_runner.errors import ConfigurationError, InfrastructureError, IntegrityError
-from ahe_runner.io import atomic_write_json, sha256_file
-from ahe_runner.meta.endpoint import responses_reasoning
-from ahe_runner.meta.model_client import (
+from evoharness.config import ModelSettings, TransportSettings
+from evoharness.errors import ConfigurationError, InfrastructureError, IntegrityError
+from evoharness.io import atomic_write_json, sha256_file
+from evoharness.meta.endpoint import responses_reasoning
+from evoharness.meta.model_client import (
     RecordedExactModelClient,
     completion_text,
 )
-from ahe_runner.meta.preflight import run_model_preflight
+from evoharness.meta.preflight import run_model_preflight
 
 
 class DisabledDeliverableMatcher:

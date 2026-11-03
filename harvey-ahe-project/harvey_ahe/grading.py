@@ -34,18 +34,18 @@ from lab_core.evaluation.run_eval import (
 from lab_core.evaluation.scoring import score_rubric
 from lab_core.harness.adapters.copilot import resolve_copilot_base_url
 
-from ahe_runner.config import ModelSettings, TransportSettings
-from ahe_runner.errors import (
+from evoharness.config import ModelSettings, TransportSettings
+from evoharness.errors import (
     PROVIDER_BLOCKED_MARKER,
     ConfigurationError,
     InfrastructureError,
     IntegrityError,
     ProviderBlockedError,
 )
-from ahe_runner.io import atomic_write_json
-from ahe_runner.meta.endpoint import responses_reasoning
-from ahe_runner.meta.model_client import RecordedExactModelClient
-from ahe_runner.meta.preflight import run_model_preflight
+from evoharness.io import atomic_write_json
+from evoharness.meta.endpoint import responses_reasoning
+from evoharness.meta.model_client import RecordedExactModelClient
+from evoharness.meta.preflight import run_model_preflight
 
 from .copilot_deliverable_matcher import (
     CopilotDeliverableMatcher,

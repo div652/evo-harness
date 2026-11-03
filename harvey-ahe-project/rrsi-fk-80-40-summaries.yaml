@@ -1,0 +1,144 @@
+# RRSI on Harvey LAB firm-knowledge, restarted with agent reasoning summaries
+# (prepared 2026-11-03). The first run (rrsi-fk-cao-luna-80-40, stopped in
+# round 8) sent the gpt-5.6-luna agent no `reasoning` parameter at its
+# provider-default effort, so its reasoning items had empty summaries and the
+# analyst, digesters, and proposers never saw the agent's reasoning. evoharness
+# 0.10.1 requests `reasoning: {summary: auto}` on every Responses call
+# (models.<role>.reasoning_summary, default auto); nothing else changes:
+# campaign 23's models and route (gpt-5.6-luna agent at provider-default
+# effort, one gpt-5.6-sol high judge, gpt-5.6-sol high meta agents, CAO), RRSI
+# with the paper's workspace settings (20 rounds, 2 variants) and 3 training
+# trials, criterion objective. Train: campaign 23's 80 tasks. Test: 40 tasks
+# no AHE campaign selected on (all inside campaign 34's 70), 3 trials. No
+# validation split.
+schema_version: 1
+campaign:
+  name: rrsi-fk-cao-luna-80-40-summaries
+  artifacts_dir: ./campaign-artifacts/rrsi-fk-cao-luna-80-40-summaries
+  rounds: 20
+  root_seed: 42
+project:
+  harness_dir: ./harness_lab
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    split_file: ./splits-firm-knowledge-rrsi-80-0-40.json
+    apply_task_filter: false
+    objective: criterion_pass
+    judge_api: openai_responses
+    judges:
+    - model: gpt-5.6-sol
+      max_tokens: 64000
+      reasoning_effort: high
+      temperature: null
+    helper:
+      model: claude-sonnet-5
+      max_tokens: 1024
+      temperature: 0.0
+    helper_api: chat
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    grading_parallel: 10
+    judge_max_concurrent_calls: 18
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+  - ./benchmark_adapter.py
+  - ./harvey_ahe
+  - ./splits-firm-knowledge-rrsi-80-0-40.json
+  - ./pyproject.toml
+  - ./requirements.txt
+  meta_agent_source_roots:
+  - ./benchmark_public
+models:
+  evaluated:
+    model: gpt-5.6-luna
+    max_tokens: 128000
+    reasoning_effort: provider-default
+    temperature: null
+    pricing:
+      currency: copilot-catalog-units
+      input_per_million: 20
+      cached_input_per_million: 2
+      cache_write_per_million: 25
+      output_per_million: 120
+      long_context:
+        above_prompt_tokens: 200000
+        input_per_million: 40
+        cached_input_per_million: 4
+        cache_write_per_million: 50
+        output_per_million: 180
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+transport:
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  model_catalog: required
+  negative_control: required
+  max_concurrent_requests: 24
+  hung_call_retries: 2
+  transient_retries: 6
+  transient_max_wait_seconds: 120
+  model_rejection_phrases:
+  - the requested model is not supported
+  - This model does not support the responses endpoint
+evaluation:
+  train_trials: 3
+  validation_trials: 1
+  test_trials: 3
+  max_concurrency: 20
+debugger:
+  max_concurrency: 4
+  max_iterations: 25
+recovery:
+  maximum_stage_attempts: 10
+  archive_incomplete_attempts: true
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+    - https://github.com/nex-agi/NexAU
+    - https://python-docx.readthedocs.io/en/latest/
+    - https://openpyxl.readthedocs.io/en/stable/
+    - https://python-pptx.readthedocs.io/en/latest/
+  role_supplements:
+    source: ./meta_supplements/source.md
+    web: ./meta_supplements/web.md
+    debugger: ./meta_supplements/debugger.md
+    evolve: ./meta_supplements/evolve.md
+  max_concurrent_model_calls: 12
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  roles:
+    debugger:
+      max_tokens: 20000
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2
+algorithm:
+  name: rrsi
+  settings:
+    objective:
+      check_metric: pooled_criterion_pass_rate
+  role_supplements:
+    analyst: ./rrsi_supplements_fk/analyst.md
+    digester: ./rrsi_supplements_fk/digester.md
+    proposer: ./rrsi_supplements_fk/proposer.md
+    critic: ./rrsi_supplements_fk/critic.md
