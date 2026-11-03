@@ -8,18 +8,18 @@ import httpx
 import pytest
 from openai import APIStatusError
 
-from ahe_runner.cli import main as cli_main
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController, _refuse_reentered_main
-from ahe_runner.errors import (
+from evoharness.cli import main as cli_main
+from evoharness.config import load_config
+from evoharness.controller import CampaignController, _refuse_reentered_main
+from evoharness.errors import (
     PROVIDER_BLOCKED_MARKER,
     ConfigurationError,
     IntegrityError,
 )
-from ahe_runner.fixed_evaluation import compare_evaluations, evaluate_fixed
-from ahe_runner.io import read_json
-from ahe_runner.model_requests import provider_rejection_message
-from ahe_runner.supervisor import supervise
+from evoharness.fixed_evaluation import compare_evaluations, evaluate_fixed
+from evoharness.io import read_json
+from evoharness.model_requests import provider_rejection_message
+from evoharness.supervisor import supervise
 
 from .conftest import make_example_project
 
@@ -55,7 +55,7 @@ def test_supervisor_resumes_infrastructure_stops_only(tmp_path: Path) -> None:
     assert report["launches"] == 3
     assert commands[0][1:] == [
         "-m",
-        "ahe_runner",
+        "evoharness",
         "run",
         "--config",
         str(config_path.resolve()),
@@ -104,7 +104,7 @@ def test_supervisor_resumes_infrastructure_stops_only(tmp_path: Path) -> None:
 def test_reentered_operator_script_fails_clearly(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import ahe_runner.controller as controller_module
+    import evoharness.controller as controller_module
 
     monkeypatch.setattr(
         controller_module.multiprocessing, "parent_process", lambda: object()
@@ -262,7 +262,7 @@ def test_selection_and_final_reports_carry_uncertainty_and_route(
 def test_supervisor_launch_survives_large_output() -> None:
     import sys
 
-    from ahe_runner.supervisor import _launch
+    from evoharness.supervisor import _launch
 
     script = (
         "import sys; sys.stderr.write('progress\\n' * 20000); "

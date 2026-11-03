@@ -1,6 +1,6 @@
-# AHE Runner
+# evoharness
 
-`ahe-runner` evolves file-backed NexAU agents. You provide:
+`evoharness` evolves file-backed NexAU agents. You provide:
 
 1. a **base harness** containing the behavior that may evolve;
 2. a **benchmark adapter** providing tasks, tools, rewards, traces, and splits;
@@ -19,14 +19,23 @@ Two algorithms are built in, and others can be plugged in
 | `ahe` (default) | Agentic Harness Engineering: Explore, per-task Debugger, one global Evolve update per round; selection on validation data |
 | `rrsi` | Regularized Recursive Self-Improvement (arXiv:2609.24972): analyst and digesters, proposer variants under an annealed edit budget, a leakage critic, noise-adjusted and cost-aware acceptance ([RRSI.md](docs/RRSI.md)) |
 
+### Renamed from ahe-runner
+
+Before 0.10.0 this project was `ahe-runner`, named after its first and then
+only algorithm. AHE is now one built-in algorithm. The old names keep
+working, with deprecation notices: `import ahe_runner`, the `ahe` command,
+`ahe.yaml` file names (any name works with `--config`), the `AHE_*`
+environment variables, `AHERunnerError`, and `abi_version: ahe.harness/v2` in
+harness manifests.
+
 ## Start with three stages
 
 Verify one boundary at a time:
 
 | Stage | Configuration | What it proves | Model calls |
 |---|---|---|---:|
-| 1. Offline rehearsal | `ahe.yaml` | Installation, checkpoints, evidence, selection, export, and resume | No |
-| 2. Live rehearsal | `ahe.runtime.yaml` | Model connectivity, real NexAU sessions, structured tools, and AHE agents | Yes |
+| 1. Offline rehearsal | `evoharness.yaml` | Installation, checkpoints, evidence, selection, export, and resume | No |
+| 2. Live rehearsal | `evoharness.runtime.yaml` | Model connectivity, real NexAU sessions, structured tools, and AHE agents | Yes |
 | 3. Research campaign | Your configuration | Your harness and benchmark work end to end | Yes |
 
 The generated project is a complete sample. Run Stages 1 and 2 before
@@ -38,14 +47,14 @@ Stage 1 requires Python 3.12+. Stages 2 and 3 also require an OpenAI-compatible
 model endpoint.
 
 ```bash
-git clone https://github.com/div652/ahe-runner.git
-cd ahe-runner
+git clone https://github.com/div652/evo-harness.git
+cd evo-harness
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -e '.[web,dev]'
 ```
 
-This installs the CLI as `.venv/bin/ahe`.
+This installs the CLI as `.venv/bin/evoharness` (`.venv/bin/ahe` remains as a deprecated alias).
 
 If `venv` reports missing `ensurepip` on Debian or Ubuntu:
 
@@ -71,13 +80,13 @@ An operator project is one evolution experiment. Generate it in an empty
 directory:
 
 ```bash
-ahe init-project ./my-ahe-project
+evoharness init-project ./my-project
 ```
 
 ```text
-my-ahe-project/
-├── ahe.yaml
-├── ahe.runtime.yaml
+my-project/
+├── evoharness.yaml
+├── evoharness.runtime.yaml
 ├── benchmark_adapter.py
 ├── runtime_benchmark_adapter.py
 ├── harness_manifest.yaml
@@ -91,8 +100,8 @@ my-ahe-project/
 |---|---|
 | `harness/` | Sample NexAU harness and the files AHE may improve |
 | `harness_manifest.yaml` | Declares evolvable files and protected fields |
-| `benchmark_adapter.py` | Offline toy adapter used by `ahe.yaml` |
-| `runtime_benchmark_adapter.py` | Live toy adapter used by `ahe.runtime.yaml` |
+| `benchmark_adapter.py` | Offline toy adapter used by `evoharness.yaml` |
+| `runtime_benchmark_adapter.py` | Live toy adapter used by `evoharness.runtime.yaml` |
 | `benchmark_public/` | Benchmark information meta-agents may read |
 | `*_meta_supplements/` | Benchmark-specific guidance for AHE roles |
 
@@ -109,14 +118,14 @@ Both checks are local and make no model calls:
   hashes, and harness report.
 
 ```bash
-ahe conformance --config ./my-ahe-project/ahe.yaml
-ahe validate --config ./my-ahe-project/ahe.yaml
+evoharness conformance --config ./my-project/evoharness.yaml
+evoharness validate --config ./my-project/evoharness.yaml
 ```
 
 If they pass, run the deterministic sample:
 
 ```bash
-ahe run --config ./my-ahe-project/ahe.yaml
+evoharness run --config ./my-project/evoharness.yaml
 ```
 
 This uses a scripted meta backend and phrase-scoring adapter. It does not run
@@ -128,7 +137,7 @@ See [Harness ABI V2](docs/HARNESS_ABI.md) and
 
 ## 3. Stage 2: live toy campaign
 
-`ahe.runtime.yaml` runs real NexAU sessions and model-backed AHE agents on two
+`evoharness.runtime.yaml` runs real NexAU sessions and model-backed AHE agents on two
 tiny tasks:
 
 1. return one exact uppercase answer;
@@ -139,7 +148,7 @@ protected from the evolvable harness. The sample runs one evolution round.
 
 ### Configure the model connection
 
-Edit `my-ahe-project/ahe.runtime.yaml`:
+Edit `my-project/evoharness.runtime.yaml`:
 
 ```yaml
 models:
@@ -184,9 +193,9 @@ the full sample is in
 After configuring the endpoint and models:
 
 ```bash
-ahe conformance --config ./my-ahe-project/ahe.runtime.yaml
-ahe validate --config ./my-ahe-project/ahe.runtime.yaml
-ahe run --config ./my-ahe-project/ahe.runtime.yaml
+evoharness conformance --config ./my-project/evoharness.runtime.yaml
+evoharness validate --config ./my-project/evoharness.runtime.yaml
+evoharness run --config ./my-project/evoharness.runtime.yaml
 ```
 
 The first two commands remain local. `run` performs live model preflights,
@@ -211,7 +220,7 @@ After both samples succeed:
    [Benchmark Adapter Guide](docs/ADAPTER_GUIDE.md).
 4. Keep hidden tasks, verifier logic, expected answers, simulator state,
    credentials, and official action execution outside `harness/`.
-5. Copy `ahe.runtime.yaml` to `ahe.research.yaml`, then configure the adapter,
+5. Copy `evoharness.runtime.yaml` to `evoharness.research.yaml`, then configure the adapter,
    public source roots, role supplements, research seeds, models, trials,
    concurrency, and `campaign.rounds`.
 6. Use a fresh campaign name and artifacts directory when result-affecting
@@ -220,7 +229,7 @@ After both samples succeed:
 
 Keep adapter dependencies in the same environment as the runner, but do not
 make an adapter package install a second or unconstrained copy of
-`ahe-runner`/NexAU. The exact compatibility rules are in the adapter guide.
+`evoharness`/NexAU. The exact compatibility rules are in the adapter guide.
 
 Before the first research spend:
 
@@ -257,9 +266,9 @@ benchmark tools  -> intercepted and executed by the protected adapter
 Check the integration locally, then run it:
 
 ```bash
-ahe conformance --config /path/to/your-project/ahe.research.yaml
-ahe validate --config /path/to/your-project/ahe.research.yaml
-ahe run --config /path/to/your-project/ahe.research.yaml
+evoharness conformance --config /path/to/your-project/evoharness.research.yaml
+evoharness validate --config /path/to/your-project/evoharness.research.yaml
+evoharness run --config /path/to/your-project/evoharness.research.yaml
 ```
 
 Follow the [complete Operator Guide](docs/OPERATOR_GUIDE.md) for this stage.
@@ -268,36 +277,36 @@ Follow the [complete Operator Guide](docs/OPERATOR_GUIDE.md) for this stage.
 
 ```bash
 # Read state without continuing execution
-ahe status --config /path/to/your-project/ahe.research.yaml
+evoharness status --config /path/to/your-project/evoharness.research.yaml
 
 # Continue an interrupted campaign
-ahe resume --config /path/to/your-project/ahe.research.yaml
+evoharness resume --config /path/to/your-project/evoharness.research.yaml
 
 # Reopen a blocked stage after fixing its external cause
-ahe retry-stage --config /path/to/your-project/ahe.research.yaml \
+evoharness retry-stage --config /path/to/your-project/evoharness.research.yaml \
   --stage round.2.evolve \
   --reason "Corrected the adapter-side parser"
-ahe resume --config /path/to/your-project/ahe.research.yaml
+evoharness resume --config /path/to/your-project/evoharness.research.yaml
 
 # After raising campaign.rounds in the config: add rounds (dry run first)
-ahe extend-rounds --config /path/to/your-project/ahe.research.yaml \
+evoharness extend-rounds --config /path/to/your-project/evoharness.research.yaml \
   --reason "Continue evolution" --apply
 ```
 
 `retry-stage` also reopens a stage whose attempts were all used up by
 infrastructure failures, such as a long model-server outage. Set
-`AHE_PRE_STAGE_COMMAND` to run a health check before each stage attempt.
+`EVOHARNESS_PRE_STAGE_COMMAND` to run a health check before each stage attempt.
 `extend-rounds --reopen-closed-evolution` continues a campaign that has
 already closed and archives the superseded selection and test results.
 
 ```bash
 # Resume automatically after infrastructure stops
-ahe supervise --config /path/to/your-project/ahe.research.yaml
+evoharness supervise --config /path/to/your-project/evoharness.research.yaml
 
 # Evaluate a fixed harness or checkpoint, and compare two evaluations
-ahe evaluate --config /path/to/your-project/ahe.research.yaml \
+evoharness evaluate --config /path/to/your-project/evoharness.research.yaml \
   --output ./evals/c5-test --checkpoint C5 --split test
-ahe compare --baseline ./evals/c0-test --candidate ./evals/c5-test
+evoharness compare --baseline ./evals/c0-test --candidate ./evals/c5-test
 ```
 
 Execution settings such as concurrency, retries, and pacing may change

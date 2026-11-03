@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from ahe_runner.adapter import MetricSummary, MetricValue, TaskState
-from ahe_runner.statistics import paired_task_comparison, selection_uncertainty
+from evoharness.adapter import MetricSummary, MetricValue, TaskState
+from evoharness.statistics import paired_task_comparison, selection_uncertainty
 
 
 def _summary(scores: dict[str, float], trials: int = 3) -> MetricSummary:

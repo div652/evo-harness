@@ -1,5 +1,38 @@
 # Validation Results
 
+## 0.10.1: reasoning summaries at provider-default effort
+
+Through 0.10.0, a model on the Responses API whose `reasoning_effort` was
+`provider-default` was sent no `reasoning` parameter, so reasoning models
+returned reasoning items with empty summaries and evaluated-agent traces
+carried none of the agent's reasoning. Requests now always include a
+summary (`models.<role>.reasoning_summary`, default `auto`; `null` disables
+it). Tests check the request a real NexAU session sends at both an explicit
+and the provider-default effort, the recorded client, the route fingerprint
+(which now includes the summary setting), and the opt-out.
+
+## 0.10.0: renamed from ahe-runner to evoharness
+
+Validated on 2026-11-02:
+
+```text
+Complete suite: 194 passed (192 earlier tests, 2 rename-compatibility tests)
+ruff check / ruff format --check: clean
+```
+
+The distribution, package, command, template file names, environment
+variables, harness ABI identifier, and generic code names use `evoharness`.
+AHE keeps its name as the default algorithm (`algorithm.name: ahe`) with its
+prompts, methods reference, and recommendation IDs. The compatibility tests
+check that `import ahe_runner` and `from ahe_runner.X import Y` return the
+same modules and objects as `evoharness`, that `AHERunnerError`, the
+`AheLongToolOutputMiddleware` name, `AHE_*` environment variables, and
+`abi_version: ahe.harness/v2` are still accepted, and that the deprecated
+`ahe` command validates a project whose configuration is named `ahe.yaml`.
+The wheel `evoharness-0.10.0-py3-none-any.whl` contains both packages and
+the `evoharness` and `ahe` commands. Earlier records in this file keep the
+names in use when they were written.
+
 ## 0.9.0: evolution-algorithm plugins and RRSI
 
 Validated on 2026-10-26/27 at branch `algorithm-plugins`, commit `1c99ffb`:

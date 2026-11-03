@@ -1,20 +1,20 @@
-# AHE Runner V2 Design
+# evoharness V2 Design
 
 ## Status
 
 Approved for implementation on 2026-10-11.
 
-This document defines the V2 boundary between the protected AHE runner, the
+This document defines the V2 boundary between the protected evoharness, the
 evolvable NexAU harness, and a benchmark adapter. It is the implementation
-contract introduced by `ahe-runner 0.2.x`. The schema-hardening follow-up is
-released as `ahe-runner 0.3.x`.
+contract introduced by `evoharness 0.2.x`. The schema-hardening follow-up is
+released as `evoharness 0.3.x`.
 
 ## Operator promise
 
 An operator supplies:
 
 ```text
-ahe.yaml
+evoharness.yaml
 harness_manifest.yaml
 benchmark_adapter.py
 harness/
@@ -33,7 +33,7 @@ Benchmark integrations do not construct a separate agent loop.
 
 ## Three ownership domains
 
-### AHE runner
+### evoharness
 
 The installed runner owns:
 
@@ -243,7 +243,7 @@ its own evolvable editing/search tools.
 
 ```yaml
 schema_version: 2
-abi_version: ahe.harness/v2
+abi_version: evoharness.harness/v2
 
 attachments:
   long_term_memory: system_prompt_suffix
@@ -313,7 +313,7 @@ V2 does not attempt to judge the semantic quality of the supplied seed.
 
 ## Conformance
 
-`ahe conformance` performs objective, non-live checks:
+`evoharness conformance` performs objective, non-live checks:
 
 - project and split validation;
 - harness ABI validation;

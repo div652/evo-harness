@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from ahe_runner.adapter import EvidenceBundle, SplitName, VerificationRequest
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.errors import IntegrityError
-from ahe_runner.evaluation import verify_evaluation_output
-from ahe_runner.evidence import verify_evidence_bundle
-from ahe_runner.io import atomic_write_json, read_json, sha256_file
+from evoharness.adapter import EvidenceBundle, SplitName, VerificationRequest
+from evoharness.config import load_config
+from evoharness.controller import CampaignController
+from evoharness.errors import IntegrityError
+from evoharness.evaluation import verify_evaluation_output
+from evoharness.evidence import verify_evidence_bundle
+from evoharness.io import atomic_write_json, read_json, sha256_file
 
 from .conftest import make_example_project
 

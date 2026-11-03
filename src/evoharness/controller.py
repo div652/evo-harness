@@ -1,0 +1,1464 @@
+"""Idempotent campaign controller: baseline, algorithm, selection, final test."""
+
+from __future__ import annotations
+
+import importlib.metadata
+import inspect
+import multiprocessing
+import os
+import platform
+import shutil
+import stat
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from . import __version__
+from .adapter import (
+    BenchmarkAdapter,
+    BenchmarkAdapterBase,
+    BenchmarkAdapterV2,
+    CandidateValidationRequest,
+    EvaluationRequest,
+    EvaluationResult,
+    EvidenceRequest,
+    SplitName,
+    VerificationRequest,
+    adapter_api_generation,
+    benchmark_interface_for,
+)
+from .algorithms import (
+    EvolutionAlgorithm,
+    EvolutionKernel,
+    EvolutionOutcome,
+    algorithm_source,
+    load_algorithm,
+)
+from .algorithms import ahe as ahe_algorithm
+from .config import (
+    ResolvedConfig,
+    execution_settings,
+    model_identity,
+    transport_identity,
+)
+from .environment import env_value
+from .errors import CandidateValidationError, ConfigurationError, IntegrityError
+from .evaluation import verify_evaluation_output
+from .evidence import verify_evidence_bundle
+from .harness import HarnessManifest, load_harness_manifest, validate_harness
+from .io import (
+    atomic_write_json,
+    read_json,
+    sha256_file,
+    sha256_json,
+    tree_hashes,
+    verify_path_fingerprint,
+)
+from .loading import load_adapter
+from .meta import MetaBackendContext, create_meta_backend
+from .meta.endpoint import nexau_api_type, route_fingerprint
+from .meta.model_client import summarize_model_call_retries
+from .runtime import EvaluatedAgentRuntime
+from .state import StageContext, StageResult, StageStore
+from .statistics import paired_task_comparison, selection_uncertainty
+from .workspace import (
+    freeze_checkpoint,
+    git_output,
+    initialize_baseline_checkpoint,
+    verify_checkpoint,
+)
+
+CLOSING_STAGES = ("evolution.close", "selection", "final.complete")
+_CLOSING_OUTPUT_ROOTS = frozenset({"selection", "final"})
+_EXTENDABLE_IDENTITY_FIELDS = frozenset({"config.document.campaign.rounds"})
+_MANIFEST_RECORD_FIELDS = frozenset(
+    {"created_at", "identity_sha256", "execution_settings"}
+)
+PRE_STAGE_COMMAND_ENV = "EVOHARNESS_PRE_STAGE_COMMAND"
+PRE_STAGE_TIMEOUT_ENV = "EVOHARNESS_PRE_STAGE_TIMEOUT_SECONDS"
+
+
+class CampaignController:
+    def __init__(self, config: ResolvedConfig) -> None:
+        _refuse_reentered_main()
+        self.config = config
+        self.adapter: BenchmarkAdapterBase = load_adapter(config)
+        self.benchmark_interface = benchmark_interface_for(self.adapter)
+        self.prompt_context = self.adapter.meta_prompt_context()
+        self.harness_manifest: HarnessManifest = load_harness_manifest(
+            config.harness_manifest_path
+        )
+        self.splits = {
+            name: self.adapter.split(name)
+            for name in (SplitName.TRAIN, SplitName.VALIDATION, SplitName.TEST)
+        }
+        self._validate_split_separation()
+        self.stage_store = StageStore(
+            campaign_dir=config.campaign_dir,
+            maximum_attempts=config.document.recovery.maximum_stage_attempts,
+            pre_stage_command=env_value(PRE_STAGE_COMMAND_ENV) or None,
+            pre_stage_timeout_seconds=_pre_stage_timeout(),
+        )
+        self.method_reference = (
+            Path(__file__).resolve().parent / "resources" / "AHE_METHODS_REFERENCE.md"
+        )
+        self.meta = create_meta_backend(
+            MetaBackendContext(
+                config=config,
+                prompt_context=self.prompt_context,
+                benchmark_interface=self.benchmark_interface,
+                harness_manifest=self.harness_manifest,
+                method_reference=self.method_reference,
+            )
+        )
+        self.algorithm: EvolutionAlgorithm = load_algorithm(config)
+        if (
+            not self.splits[SplitName.VALIDATION].task_ids
+            and self.selection_policy == "validation"
+        ):
+            raise ConfigurationError(
+                "the validation split is empty, so the selection policy must be "
+                "'algorithm' (set selection.policy, or use an algorithm whose "
+                "default is 'algorithm')"
+            )
+        self.kernel = EvolutionKernel(
+            self,
+            namespace=self.algorithm.identity().name,
+        )
+
+    @property
+    def selection_policy(self) -> str:
+        return (
+            self.config.document.selection.policy
+            or self.algorithm.default_selection_policy
+        )
+
+    def _is_ahe(self) -> bool:
+        return isinstance(self.algorithm, ahe_algorithm.AheAlgorithm)
+
+    def validate_project(self) -> dict[str, Any]:
+        report = validate_harness(
+            self.config.harness_dir,
+            self.harness_manifest,
+            project_root=self.config.project_root,
+            run_nexau_smoke=True,
+        )
+        return {
+            "config": self.config.immutable_snapshot(),
+            "adapter": self.adapter.identity().model_dump(mode="json"),
+            "adapter_api_generation": adapter_api_generation(self.adapter),
+            "benchmark_interface": self.benchmark_interface.model_dump(mode="json"),
+            "splits": {
+                name.value: {
+                    "identity": split.identity,
+                    "task_count": len(split.task_ids),
+                    "task_ids_sha256": sha256_json(split.task_ids),
+                }
+                for name, split in self.splits.items()
+            },
+            "harness": report,
+            "algorithm": {
+                **self.algorithm.identity().model_dump(mode="json"),
+                "settings": self.algorithm.settings.model_dump(mode="json"),
+                "selection_policy": self.selection_policy,
+                "problems": self.algorithm.check(self.kernel),
+            },
+            "warnings": [*self._metric_guidance_warnings(), *self._route_warnings()],
+        }
+
+    def conformance(self) -> dict[str, Any]:
+        validation = self.validate_project()
+        return {
+            "adapter": validation["adapter"],
+            "adapter_api_generation": validation["adapter_api_generation"],
+            "benchmark_interface": validation["benchmark_interface"],
+            "harness_abi": validation["harness"]["conformance"],
+            "nexau_smoke": validation["harness"]["nexau_smoke"],
+            "algorithm": validation["algorithm"],
+            "warnings": validation["warnings"],
+            "valid": validation["harness"]["valid"]
+            and not validation["algorithm"]["problems"],
+        }
+
+    def run(self) -> dict[str, Any]:
+        self.prepare()
+        self.close_evolution()
+        self.run_validation()
+        self.run_final_test()
+        return self.status()
+
+    def evolve(self) -> EvolutionOutcome:
+        """Run or resume the configured algorithm's search."""
+
+        self.prepare()
+        problems = self.algorithm.check(self.kernel)
+        if problems:
+            raise ConfigurationError(
+                f"algorithm {self.algorithm.identity().name!r} cannot run this "
+                "campaign: " + "; ".join(problems)
+            )
+        outcome = self.algorithm.evolve(self.kernel)
+        for label in {outcome.pick, *outcome.nominees}:
+            verify_checkpoint(self._checkpoint_dir(int(label[1:])))
+        return outcome
+
+    def resume(self) -> dict[str, Any]:
+        if not self._campaign_manifest_path().is_file():
+            raise ConfigurationError("campaign does not exist; use run first")
+        return self.run()
+
+    def prepare(self) -> dict[str, Any]:
+        self.config.campaign_dir.mkdir(parents=True, exist_ok=True)
+        for name in (
+            "checkpoints",
+            "workspaces",
+            "evaluations",
+            "evidence",
+            "debugger",
+            "evolve",
+            "explore_skills",
+            "history",
+            "attribution",
+            "selection",
+            "final",
+            "reports",
+        ):
+            (self.config.campaign_dir / name).mkdir(parents=True, exist_ok=True)
+        campaign_manifest = self._ensure_campaign_manifest()
+        result = self.stage_store.run(
+            name="baseline.freeze",
+            semantic_inputs={
+                "campaign_identity": campaign_manifest["identity_sha256"],
+                "base_harness_sha256": campaign_manifest["base_harness_sha256"],
+            },
+            retryable=False,
+            action=self._freeze_baseline,
+        )
+        self._write_state()
+        return result.data
+
+    def run_round(self, index: int) -> dict[str, Any]:
+        """Run one AHE round (``evoharness run-round``); AHE campaigns only."""
+
+        if not self._is_ahe():
+            raise ConfigurationError(
+                "run-round is an AHE command; this campaign uses algorithm "
+                f"{self.algorithm.identity().name!r}"
+            )
+        return ahe_algorithm.run_round(self, index)
+
+    def close_evolution(self) -> dict[str, Any]:
+        outcome = self.evolve()
+        rounds = self.config.document.campaign.rounds
+        if self._is_ahe():
+            semantic_inputs: dict[str, Any] = {
+                "final_checkpoint": f"C{rounds}",
+                "rounds": rounds,
+            }
+        else:
+            semantic_inputs = {
+                "algorithm": self.algorithm.identity().model_dump(mode="json"),
+                "outcome": outcome.model_dump(mode="json"),
+                "rounds": rounds,
+            }
+        result = self.stage_store.run(
+            name="evolution.close",
+            semantic_inputs=semantic_inputs,
+            retryable=False,
+            action=lambda context: self._close_evolution_action(
+                context, rounds, outcome
+            ),
+        )
+        self._write_state()
+        return result.data
+
+    def _closed_outcome(self, closed: dict[str, Any]) -> EvolutionOutcome:
+        if "outcome" in closed:
+            return EvolutionOutcome.model_validate(closed["outcome"])
+        # Campaigns closed before algorithm plugins: AHE's chain.
+        rounds = int(str(closed["final_training_checkpoint"]).removeprefix("C"))
+        return EvolutionOutcome(
+            pick=f"C{rounds}",
+            nominees=[f"C{index}" for index in range(rounds + 1)],
+            summary="AHE chain",
+        )
+
+    def run_validation(self) -> dict[str, Any]:
+        outcome = self._closed_outcome(self.close_evolution())
+        if self.selection_policy == "algorithm":
+            result = self.stage_store.run(
+                name="selection",
+                semantic_inputs={
+                    "policy": "algorithm",
+                    "outcome": outcome.model_dump(mode="json"),
+                },
+                retryable=False,
+                action=lambda context: self._algorithm_selection_action(
+                    context, outcome
+                ),
+            )
+            self._write_state()
+            return result.data
+        labels = sorted(
+            {"C0", *outcome.nominees},
+            key=lambda label: int(label.removeprefix("C")),
+        )
+        summaries: dict[str, EvaluationResult] = {}
+        for label in labels:
+            summaries[label] = self._ensure_evaluation(
+                int(label.removeprefix("C")),
+                SplitName.VALIDATION,
+            )
+        semantic_inputs: dict[str, Any] = {
+            "validation_evaluations": {
+                key: value.evaluation_id for key, value in summaries.items()
+            },
+            "adapter": self.adapter.identity().model_dump(mode="json"),
+        }
+        if not self._is_ahe():
+            semantic_inputs["policy"] = "validation"
+        result = self.stage_store.run(
+            name="selection",
+            semantic_inputs=semantic_inputs,
+            retryable=False,
+            action=lambda context: self._selection_action(context, summaries, outcome),
+        )
+        self._write_state()
+        return result.data
+
+    def run_final_test(self) -> dict[str, Any]:
+        selection = self.run_validation()
+        selected = str(selection["selected_checkpoint"])
+        selected_index = int(selected.removeprefix("C"))
+        results = {
+            f"C{index}": self._ensure_evaluation(index, SplitName.TEST)
+            for index in sorted({0, selected_index})
+        }
+        result = self.stage_store.run(
+            name="final.complete",
+            semantic_inputs={
+                "selected_checkpoint": selected,
+                "test_evaluations": {
+                    key: value.evaluation_id for key, value in results.items()
+                },
+            },
+            retryable=False,
+            action=lambda context: self._final_action(
+                context,
+                selected=selected,
+                results=results,
+            ),
+        )
+        self._write_state()
+        return result.data
+
+    def status(self) -> dict[str, Any]:
+        stages = self.stage_store.status()
+        checkpoints = sorted(
+            path.name
+            for path in (self.config.campaign_dir / "checkpoints").glob("C*")
+            if (path / "checkpoint.json").is_file()
+        )
+        completed = [row["name"] for row in stages if row["status"] == "completed"]
+        blocked = [row for row in stages if row["status"] == "blocked"]
+        interrupted = [row for row in stages if row["status"] == "interrupted"]
+        selection_path = self.config.campaign_dir / "selection" / "selection.json"
+        final_path = self.config.campaign_dir / "final" / "final_test.json"
+        payload = {
+            "schema_version": 1,
+            "campaign": self.config.document.campaign.name,
+            "campaign_dir": str(self.config.campaign_dir),
+            "checkpoints": checkpoints,
+            "completed_stage_count": len(completed),
+            "blocked_stages": [
+                {"name": row["name"], "last_error": row.get("last_error")}
+                for row in blocked
+            ],
+            "interrupted_stages": [
+                {"name": row["name"], "last_error": row.get("last_error")}
+                for row in interrupted
+            ],
+            "algorithm": self.algorithm.identity().name,
+            "selection_policy": self.selection_policy,
+            "campaign_amendments": self._amendment_summary(),
+            "model_call_retries": summarize_model_call_retries(
+                self.config.campaign_dir,
+                configured_retries=(self.config.document.transport.hung_call_retries),
+                configured_transient_retries=(
+                    self.config.document.transport.transient_retries
+                ),
+            ),
+            "selection": read_json(selection_path)
+            if selection_path.is_file()
+            else None,
+            "final_test": read_json(final_path) if final_path.is_file() else None,
+            "stages": stages,
+        }
+        atomic_write_json(self.config.campaign_dir / "campaign_state.json", payload)
+        return payload
+
+    def retry_stage(self, *, name: str, reason: str) -> dict[str, Any]:
+        result = self.stage_store.retry_blocked(name=name, reason=reason)
+        self._write_state()
+        return result
+
+    def _evaluated_route(self) -> dict[str, Any]:
+        return route_fingerprint(
+            self.config.document.transport,
+            self.config.document.models.evaluated,
+        )
+
+    def _route_warnings(self) -> list[str]:
+        protected = self.harness_manifest.protected_agent_fields.get(
+            "llm_config.api_type"
+        )
+        configured = nexau_api_type(
+            self.config.document.transport,
+            self.config.document.models.evaluated,
+        )
+        if protected is None or protected == configured:
+            return []
+        return [
+            f"harness manifest protects llm_config.api_type {protected!r}, but the "
+            f"evaluated model is configured for {configured!r}; the runtime "
+            "applies the configured wire API"
+        ]
+
+    def _metric_guidance_warnings(self) -> list[str]:
+        terms = self.config.document.meta.deprecated_metric_terms
+        if not terms:
+            return []
+        warnings: list[str] = []
+        for role, path in sorted(self.config.role_supplements):
+            text = path.read_text(encoding="utf-8").casefold()
+            for term in terms:
+                if term.casefold() in text:
+                    warnings.append(
+                        f"meta role supplement {role!r} contains deprecated "
+                        f"metric term {term!r}: {path}"
+                    )
+        return warnings
+
+    def _freeze_baseline(self, context: StageContext) -> StageResult:
+        del context
+        validation = validate_harness(
+            self.config.harness_dir,
+            self.harness_manifest,
+            project_root=self.config.project_root,
+        )
+        checkpoint_dir = self._checkpoint_dir(0)
+        manifest = initialize_baseline_checkpoint(
+            source_harness=self.config.harness_dir,
+            checkpoint_dir=checkpoint_dir,
+            validation_report=validation,
+        )
+        return StageResult(
+            outputs=(checkpoint_dir,),
+            data={"checkpoint_manifest": manifest},
+        )
+
+    def _ensure_training_evaluation(self, index: int) -> EvaluationResult:
+        return self._ensure_evaluation(index, SplitName.TRAIN)
+
+    def _ensure_evaluation(
+        self,
+        index: int,
+        split_name: SplitName,
+        *,
+        repeat: int = 1,
+    ) -> EvaluationResult:
+        request = self._evaluation_request(index, split_name, repeat=repeat)
+        checkpoint_manifest = verify_checkpoint(self._checkpoint_dir(index))
+        suffix = "" if repeat == 1 else f".repeat-{repeat}"
+        stage = self.stage_store.run(
+            name=f"evaluation.{request.checkpoint}.{split_name.value}{suffix}",
+            semantic_inputs=self._evaluation_semantic_inputs(
+                request,
+                harness_sha256=checkpoint_manifest["harness_sha256"],
+            ),
+            action=lambda context: self._evaluation_action(request),
+        )
+        self._write_state()
+        return EvaluationResult.model_validate(stage.data["evaluation"])
+
+    def _evaluation_action(self, request: EvaluationRequest) -> StageResult:
+        """Run, verify, and record one evaluation through the adapter."""
+
+        output_dir = request.output_dir
+        if isinstance(self.adapter, BenchmarkAdapterV2):
+            runtime = EvaluatedAgentRuntime(
+                harness_dir=request.harness_dir,
+                manifest=self.harness_manifest,
+                benchmark_interface=self.benchmark_interface,
+                model=request.model,
+                transport=request.transport,
+                api_key=request.api_key,
+                artifact_root=output_dir / "runtime",
+                project_root=self.config.project_root,
+            )
+            try:
+                result = self.adapter.evaluate(request, runtime)
+            finally:
+                runtime.close()
+        elif isinstance(self.adapter, BenchmarkAdapter):
+            result = self.adapter.evaluate(request)
+        else:
+            raise TypeError(
+                f"unsupported adapter generation: {type(self.adapter).__name__}"
+            )
+        verify_evaluation_output(request, result)
+        verified = self.adapter.verify_evaluation(
+            VerificationRequest(evaluation=request)
+        )
+        verify_evaluation_output(request, verified)
+        if verified != result:
+            raise IntegrityError("adapter verification disagrees with evaluation")
+        atomic_write_json(
+            output_dir / "adapter_result.json",
+            result.model_dump(mode="json"),
+        )
+        return StageResult(
+            outputs=(output_dir,),
+            data={
+                "evaluation": result.model_dump(mode="json"),
+                "route": route_fingerprint(request.transport, request.model),
+            },
+        )
+
+    def _evaluation_semantic_inputs(
+        self,
+        request: EvaluationRequest,
+        *,
+        harness_sha256: str,
+    ) -> dict[str, Any]:
+        return {
+            "checkpoint": request.checkpoint,
+            "harness_sha256": harness_sha256,
+            "split_identity": request.split.identity,
+            "split_task_ids_sha256": sha256_json(request.split.task_ids),
+            "trials": request.trials,
+            "root_seed": request.root_seed,
+            "evaluated_model": model_identity(request.model),
+            "transport": transport_identity(request.transport),
+            "adapter": self.adapter.identity().model_dump(mode="json"),
+            "adapter_api_generation": adapter_api_generation(self.adapter),
+            "benchmark_interface": self.benchmark_interface.model_dump(mode="json"),
+            **(
+                {"provider_rejection_policy": request.provider_rejection_policy}
+                if request.provider_rejection_policy != "grade"
+                else {}
+            ),
+        }
+
+    def _evaluation_request(
+        self,
+        index: int,
+        split_name: SplitName,
+        *,
+        repeat: int = 1,
+    ) -> EvaluationRequest:
+        if repeat < 1 or (repeat > 1 and split_name is not SplitName.TRAIN):
+            raise ValueError("only training evaluations can be repeated")
+        trials = {
+            SplitName.TRAIN: self.config.document.evaluation.train_trials,
+            SplitName.VALIDATION: self.config.document.evaluation.validation_trials,
+            SplitName.TEST: self.config.document.evaluation.test_trials,
+        }[split_name]
+        return EvaluationRequest(
+            checkpoint=f"C{index}",
+            harness_dir=self._checkpoint_dir(index) / "harness",
+            split=self.splits[split_name],
+            trials=trials,
+            # A repeat is an independent evaluation with other trial seeds.
+            root_seed=self.config.document.campaign.root_seed + repeat - 1,
+            output_dir=self._evaluation_dir(index, split_name, repeat=repeat),
+            model=self.config.document.models.evaluated,
+            transport=self.config.document.transport,
+            api_key=self.config.api_key,
+            max_concurrency=self.config.document.evaluation.max_concurrency,
+            provider_rejection_policy=(
+                self.config.document.evaluation.provider_rejection_policy
+            ),
+        )
+
+    def _ensure_evidence(self, index: int) -> Path:
+        checkpoint = f"C{index}"
+        evaluation_dir = self._evaluation_dir(index, SplitName.TRAIN)
+        result = EvaluationResult.model_validate(
+            read_json(evaluation_dir / "adapter_result.json")
+        )
+        output_dir = self.config.campaign_dir / "evidence" / f"{checkpoint}-train"
+
+        def action(context: StageContext) -> StageResult:
+            del context
+            bundle = self.adapter.materialize_training_evidence(
+                EvidenceRequest(
+                    checkpoint=checkpoint,
+                    evaluation_dir=evaluation_dir,
+                    output_dir=output_dir,
+                )
+            )
+            manifest = verify_evidence_bundle(
+                bundle,
+                evidence_dir=output_dir,
+                expected_checkpoint=checkpoint,
+                evaluation_dir=evaluation_dir,
+                source_evaluation=result,
+                source_request=self._evaluation_request(index, SplitName.TRAIN),
+            )
+            return StageResult(
+                outputs=(output_dir,),
+                data={
+                    "bundle": bundle.model_dump(mode="json"),
+                    "metrics": manifest.metrics.model_dump(mode="json"),
+                },
+            )
+
+        self.stage_store.run(
+            name=f"evidence.{checkpoint}.train",
+            semantic_inputs={
+                "evaluation_id": result.evaluation_id,
+                "checkpoint": checkpoint,
+                "adapter": self.adapter.identity().model_dump(mode="json"),
+            },
+            retryable=False,
+            action=action,
+        )
+        self._write_state()
+        return output_dir
+
+    def _ensure_candidate_validation_for(
+        self,
+        *,
+        label: str,
+        parent: str,
+        workspace: Path,
+        stage_name: str,
+        raise_invalid: bool,
+        report_path: Path | None = None,
+    ) -> dict[str, Any]:
+        """Generic and adapter validation of a committed candidate workspace."""
+
+        parent_dir = self._checkpoint_dir(int(parent[1:])) / "harness"
+        parent_validation = validate_harness(
+            parent_dir,
+            self.harness_manifest,
+            project_root=self.config.project_root,
+            run_nexau_smoke=False,
+        )
+        output_path = report_path or (
+            self.config.campaign_dir / "candidates" / label / "validation.json"
+        )
+        workspace_head = _git_head(workspace)
+        train_ids = tuple(self.splits[SplitName.TRAIN].task_ids)
+
+        def action(context: StageContext) -> StageResult:
+            del context
+            generic = validate_harness(
+                workspace,
+                self.harness_manifest,
+                project_root=self.config.project_root,
+                training_task_ids=train_ids,
+                parent_runtime_owned_hashes=parent_validation["runtime_owned_hashes"],
+            )
+            adapter_result = self.adapter.validate_candidate(
+                CandidateValidationRequest(
+                    checkpoint=label,
+                    parent_checkpoint=parent,
+                    harness_dir=workspace,
+                    parent_harness_dir=parent_dir,
+                    training_task_ids=train_ids,
+                )
+            )
+            report = {
+                "schema_version": 1,
+                "valid": generic["valid"] and adapter_result.valid,
+                "generic": generic,
+                "adapter": adapter_result.model_dump(mode="json"),
+            }
+            atomic_write_json(output_path, report)
+            if raise_invalid and not report["valid"]:
+                raise CandidateValidationError(
+                    {
+                        "errors": generic["errors"] + adapter_result.errors,
+                        **report,
+                    }
+                )
+            return StageResult(outputs=(output_path,), data=report)
+
+        result = self.stage_store.run(
+            name=stage_name,
+            semantic_inputs={
+                "workspace_head": workspace_head,
+                "parent_checkpoint": parent,
+                "harness_manifest_sha256": sha256_file(
+                    self.config.harness_manifest_path
+                ),
+                "training_task_ids_sha256": sha256_json(train_ids),
+            },
+            retryable=False,
+            action=action,
+        )
+        return result.data
+
+    def _ensure_checkpoint_for(
+        self,
+        *,
+        label: str,
+        parent: str,
+        workspace: Path,
+        validation: dict[str, Any],
+        stage_name: str,
+    ) -> dict[str, Any]:
+        destination = self._checkpoint_dir(int(label[1:]))
+        workspace_head = _git_head(workspace)
+
+        def action(context: StageContext) -> StageResult:
+            del context
+            manifest = freeze_checkpoint(
+                checkpoint=label,
+                parent_checkpoint=parent,
+                workspace=workspace,
+                destination=destination,
+                validation_report=validation,
+            )
+            return StageResult(
+                outputs=(destination,),
+                data={"checkpoint_manifest": manifest},
+            )
+
+        result = self.stage_store.run(
+            name=stage_name,
+            semantic_inputs={
+                "workspace_head": workspace_head,
+                "validation_sha256": sha256_json(validation),
+            },
+            retryable=False,
+            action=action,
+        )
+        return result.data
+
+    def _attribution_task_aliases(
+        self,
+        index: int,
+        before: EvaluationResult,
+        after: EvaluationResult,
+    ) -> dict[str, str]:
+        return ahe_algorithm.attribution_task_aliases(self, index, before, after)
+
+    def _close_evolution_action(
+        self,
+        context: StageContext,
+        rounds: int,
+        outcome: EvolutionOutcome,
+    ) -> StageResult:
+        del context
+        path = self.config.campaign_dir / "selection" / "evolution_closed.json"
+        payload = {
+            "closed_at": datetime.now(UTC).isoformat(),
+            "final_training_checkpoint": f"C{rounds}",
+            "no_further_evolution": True,
+            "algorithm": self.algorithm.identity().model_dump(mode="json"),
+            "outcome": outcome.model_dump(mode="json"),
+        }
+        atomic_write_json(path, payload)
+        return StageResult(outputs=(path,), data=payload)
+
+    def _algorithm_selection_action(
+        self,
+        context: StageContext,
+        outcome: EvolutionOutcome,
+    ) -> StageResult:
+        del context
+        payload = {
+            "schema_version": 1,
+            "selected_checkpoint": outcome.pick,
+            "selection_policy": "algorithm",
+            "selection_rule": (
+                f"the {self.algorithm.identity().name} algorithm's pick; no "
+                "validation evaluation"
+            ),
+            "algorithm_outcome": outcome.model_dump(mode="json"),
+            "validation_summaries": {},
+            "uncertainty": None,
+            "route": self._evaluated_route(),
+        }
+        path = self.config.campaign_dir / "selection" / "selection.json"
+        atomic_write_json(path, payload)
+        return StageResult(outputs=(path,), data=payload)
+
+    def _selection_action(
+        self,
+        context: StageContext,
+        summaries: dict[str, EvaluationResult],
+        outcome: EvolutionOutcome | None = None,
+    ) -> StageResult:
+        del context
+        selected = max(
+            summaries,
+            key=lambda label: (
+                self.adapter.selection_key(summaries[label].summary),
+                -int(label.removeprefix("C")),
+            ),
+        )
+        payload = {
+            "schema_version": 1,
+            "selected_checkpoint": selected,
+            "selection_policy": "validation",
+            "selection_rule": "adapter.selection_key, then earliest checkpoint",
+            **(
+                {"algorithm_outcome": outcome.model_dump(mode="json")}
+                if outcome is not None and not self._is_ahe()
+                else {}
+            ),
+            "validation_summaries": {
+                label: result.summary.model_dump(mode="json")
+                for label, result in summaries.items()
+            },
+            "uncertainty": selection_uncertainty(
+                {label: result.summary for label, result in summaries.items()},
+                selected=selected,
+            ),
+            "route": self._evaluated_route(),
+        }
+        path = self.config.campaign_dir / "selection" / "selection.json"
+        atomic_write_json(path, payload)
+        return StageResult(outputs=(path,), data=payload)
+
+    def _final_action(
+        self,
+        context: StageContext,
+        *,
+        selected: str,
+        results: dict[str, EvaluationResult],
+    ) -> StageResult:
+        del context
+        final_dir = self.config.campaign_dir / "final"
+        selected_harness = final_dir / "selected-harness"
+        source_harness = self.config.campaign_dir / "checkpoints" / selected / "harness"
+        expected_hashes = tree_hashes(source_harness)
+        if selected_harness.exists():
+            if tree_hashes(selected_harness) != expected_hashes:
+                raise IntegrityError(
+                    "existing selected-harness export does not match the "
+                    "selected immutable checkpoint"
+                )
+        else:
+            temporary = final_dir / "selected-harness.tmp"
+            if temporary.exists():
+                _make_tree_writable(temporary)
+                shutil.rmtree(temporary)
+            shutil.copytree(
+                source_harness,
+                temporary,
+            )
+            if tree_hashes(temporary) != expected_hashes:
+                _make_tree_writable(temporary)
+                shutil.rmtree(temporary)
+                raise IntegrityError(
+                    "temporary selected-harness export failed content verification"
+                )
+            os.replace(temporary, selected_harness)
+        payload = {
+            "schema_version": 1,
+            "baseline_checkpoint": "C0",
+            "selected_checkpoint": selected,
+            "test_summaries": {
+                label: result.summary.model_dump(mode="json")
+                for label, result in results.items()
+            },
+            "selected_harness_sha256": sha256_json(expected_hashes),
+            "no_post_test_evolution": True,
+            "uncertainty": (
+                paired_task_comparison(
+                    results["C0"].summary,
+                    results[selected].summary,
+                )
+                if selected != "C0"
+                else None
+            ),
+            "route": self._evaluated_route(),
+        }
+        path = final_dir / "final_test.json"
+        atomic_write_json(path, payload)
+        return StageResult(outputs=(path, selected_harness), data=payload)
+
+    def extend_rounds(
+        self,
+        *,
+        reason: str,
+        apply: bool = False,
+        reopen_closed_evolution: bool = False,
+    ) -> dict[str, Any]:
+        """Accept a larger ``campaign.rounds`` for an existing campaign.
+
+        The operator first raises ``campaign.rounds`` in the configuration file.
+        The new identity is appended to ``campaign_amendments.json``; the
+        original campaign manifest and every stage record stay unchanged. Any
+        other protected-input change is refused.
+
+        With ``reopen_closed_evolution`` a closed campaign can be extended too:
+        the closing stages and their outputs move, unchanged, to
+        ``superseded/closure-NN/`` and are described in the amendment.
+        """
+
+        normalized_reason = reason.strip()
+        if not normalized_reason:
+            raise ConfigurationError("extend-rounds needs a non-empty --reason")
+        if not self.algorithm.supports_round_extension:
+            raise ConfigurationError(
+                f"algorithm {self.algorithm.identity().name!r} does not support "
+                "extending rounds in place; its schedule depends on the round count"
+            )
+        manifest_path = self._campaign_manifest_path()
+        if not manifest_path.is_file():
+            raise ConfigurationError("campaign does not exist; use run first")
+        manifest = read_json(manifest_path)
+        accepted = self._accepted_campaign_identity(manifest)
+        identity = self._campaign_identity()
+        old_rounds = accepted["identity"]["config"]["document"]["campaign"]["rounds"]
+        new_rounds = self.config.document.campaign.rounds
+        if identity == accepted["identity"]:
+            raise ConfigurationError(
+                "nothing to amend: the configuration already matches the "
+                f"accepted campaign identity ({old_rounds} rounds)"
+            )
+        if new_rounds <= old_rounds:
+            raise ConfigurationError(
+                "extend-rounds only increases campaign.rounds; the accepted value "
+                f"is {old_rounds} and the configuration says {new_rounds}"
+            )
+        changes = _identity_differences(accepted["identity"], identity)
+        refused = [
+            change for change in changes if change not in _EXTENDABLE_IDENTITY_FIELDS
+        ]
+        if refused:
+            raise IntegrityError(
+                "extend-rounds only changes campaign.rounds, but other protected "
+                f"inputs changed: {refused}"
+            )
+        stages = self.stage_store.status()
+        closing_stages = sorted(
+            row["name"] for row in stages if row["name"] in CLOSING_STAGES
+        )
+        reopen_plan: dict[str, Any] | None = None
+        if closing_stages:
+            if not reopen_closed_evolution:
+                raise IntegrityError(
+                    "rounds cannot be extended after evolution has closed; "
+                    f"existing stages: {closing_stages}; pass "
+                    "--reopen-closed-evolution to supersede the closure"
+                )
+            reopen_plan = self._closure_reopen_plan(stages, from_rounds=old_rounds)
+        elif reopen_closed_evolution:
+            raise ConfigurationError(
+                "--reopen-closed-evolution was given, but evolution has not closed"
+            )
+        identity_sha = sha256_json(identity)
+        amendment: dict[str, Any] = {
+            "kind": "extend_rounds",
+            "created_at": datetime.now(UTC).isoformat(),
+            "reason": normalized_reason,
+            "from_rounds": old_rounds,
+            "to_rounds": new_rounds,
+            "changes": changes,
+            "previous_identity_sha256": accepted["identity_sha256"],
+            "identity_sha256": identity_sha,
+            "identity": identity,
+        }
+        report: dict[str, Any] = {
+            "status": "applied" if apply else "dry_run",
+            "campaign_dir": str(self.config.campaign_dir),
+            "from_rounds": old_rounds,
+            "to_rounds": new_rounds,
+            "changes": changes,
+            "previous_identity_sha256": accepted["identity_sha256"],
+            "identity_sha256": identity_sha,
+            "ledger": str(self._campaign_amendments_path()),
+        }
+        if reopen_plan is not None:
+            amendment["reopened_closed_evolution"] = reopen_plan
+            report["reopened_closed_evolution"] = reopen_plan
+        if not apply:
+            return report
+        if reopen_plan is not None:
+            self._archive_closure(reopen_plan, reason=normalized_reason)
+        self._append_campaign_amendment(manifest, amendment)
+        self._write_state()
+        return report
+
+    def _closure_reopen_plan(
+        self,
+        stages: list[dict[str, Any]],
+        *,
+        from_rounds: int,
+    ) -> dict[str, Any]:
+        """Check that a closed campaign can be reopened; list what moves."""
+
+        unfinished = sorted(
+            f"{row['name']} ({row.get('status')})"
+            for row in stages
+            if row.get("status") != "completed"
+        )
+        if unfinished:
+            raise IntegrityError(
+                "evolution can be reopened only when every stage is completed; "
+                f"not completed: {unfinished}"
+            )
+        campaign_dir = self.config.campaign_dir
+        by_name = {row["name"]: row for row in stages}
+        moves: list[dict[str, Any]] = []
+        for name in CLOSING_STAGES:
+            row = by_name.get(name)
+            if row is None:
+                continue
+            moves.append(
+                {
+                    "kind": "stage_record",
+                    "stage": name,
+                    "path": self.stage_store.stage_dir(name)
+                    .relative_to(campaign_dir)
+                    .as_posix(),
+                    "stage_id": row.get("stage_id"),
+                    "semantic_inputs_sha256": row.get("semantic_inputs_sha256"),
+                }
+            )
+            for fingerprint in row.get("outputs") or []:
+                relative = Path(str(fingerprint["path"]))
+                if (
+                    relative.is_absolute()
+                    or ".." in relative.parts
+                    or not relative.parts
+                    or relative.parts[0] not in _CLOSING_OUTPUT_ROOTS
+                ):
+                    raise IntegrityError(
+                        f"closing stage {name} has an output outside "
+                        f"{sorted(_CLOSING_OUTPUT_ROOTS)}: {relative}"
+                    )
+                verify_path_fingerprint(fingerprint, relative_to=campaign_dir)
+                moves.append(
+                    {
+                        "kind": "stage_output",
+                        "stage": name,
+                        "path": relative.as_posix(),
+                        "type": fingerprint.get("type"),
+                        "sha256": fingerprint.get("sha256"),
+                    }
+                )
+        archive_root = campaign_dir / "superseded"
+        number = 1 + sum(1 for path in archive_root.glob("closure-*") if path.is_dir())
+        archive_dir = archive_root / f"closure-{number:02d}"
+        selection = dict(by_name.get("selection", {}).get("data") or {})
+        final = dict(by_name.get("final.complete", {}).get("data") or {})
+        return {
+            "closed_rounds": from_rounds,
+            "archive_dir": archive_dir.relative_to(campaign_dir).as_posix(),
+            "moves": moves,
+            "previous_selected_checkpoint": selection.get("selected_checkpoint"),
+            "previous_selection_rule": selection.get("selection_rule"),
+            "previous_validation_primary": {
+                label: summary.get("primary")
+                for label, summary in dict(
+                    selection.get("validation_summaries") or {}
+                ).items()
+            },
+            "previous_test_primary": {
+                label: summary.get("primary")
+                for label, summary in dict(final.get("test_summaries") or {}).items()
+            },
+        }
+
+    def _archive_closure(self, plan: dict[str, Any], *, reason: str) -> None:
+        """Move the closing stages and outputs into the plan's archive folder."""
+
+        campaign_dir = self.config.campaign_dir
+        archive_dir = campaign_dir / str(plan["archive_dir"])
+        archive_dir.mkdir(parents=True, exist_ok=False)
+        for move in plan["moves"]:
+            source = campaign_dir / str(move["path"])
+            target = archive_dir / str(move["path"])
+            if not source.exists():
+                raise IntegrityError(
+                    f"closure path disappeared before moving: {source}"
+                )
+            target.parent.mkdir(parents=True, exist_ok=True)
+            mode = source.stat().st_mode
+            if source.is_dir() and not mode & stat.S_IWUSR:
+                # Renaming a folder to a new parent rewrites its ".." entry.
+                source.chmod(mode | stat.S_IWUSR)
+                os.rename(source, target)
+                target.chmod(mode)
+            else:
+                os.rename(source, target)
+        atomic_write_json(
+            archive_dir / "reopen.json",
+            {
+                "schema_version": 1,
+                "kind": "reopened_closed_evolution",
+                "created_at": datetime.now(UTC).isoformat(),
+                "reason": reason,
+                **plan,
+            },
+        )
+
+    def _append_campaign_amendment(
+        self,
+        manifest: dict[str, Any],
+        amendment: dict[str, Any],
+    ) -> int:
+        """Append to ``campaign_amendments.json``; return the 1-based index."""
+
+        ledger_path = self._campaign_amendments_path()
+        ledger = (
+            read_json(ledger_path)
+            if ledger_path.is_file()
+            else {
+                "schema_version": 1,
+                "base_identity_sha256": manifest["identity_sha256"],
+                "amendments": [],
+            }
+        )
+        ledger["amendments"] = [*ledger["amendments"], amendment]
+        atomic_write_json(ledger_path, ledger)
+        return len(ledger["amendments"])
+
+    def _accepted_campaign_identity(self, manifest: dict[str, Any]) -> dict[str, Any]:
+        """Return the identity a resume must match: manifest or last amendment."""
+
+        base = {
+            key: value
+            for key, value in manifest.items()
+            if key not in _MANIFEST_RECORD_FIELDS
+        }
+        if sha256_json(base) != manifest.get("identity_sha256"):
+            raise IntegrityError("campaign manifest does not match its identity hash")
+        accepted = {"identity": base, "identity_sha256": manifest["identity_sha256"]}
+        ledger_path = self._campaign_amendments_path()
+        if not ledger_path.is_file():
+            return accepted
+        ledger = read_json(ledger_path)
+        if ledger.get("base_identity_sha256") != manifest["identity_sha256"]:
+            raise IntegrityError(
+                "campaign amendments do not belong to this campaign manifest"
+            )
+        amendments = ledger.get("amendments")
+        if not isinstance(amendments, list) or not amendments:
+            raise IntegrityError("campaign amendments file has no amendments")
+        for index, amendment in enumerate(amendments, start=1):
+            if amendment.get("previous_identity_sha256") != accepted["identity_sha256"]:
+                raise IntegrityError(
+                    f"campaign amendment {index} does not follow the previous identity"
+                )
+            identity = amendment.get("identity")
+            if not isinstance(identity, dict) or sha256_json(identity) != amendment.get(
+                "identity_sha256"
+            ):
+                raise IntegrityError(
+                    f"campaign amendment {index} does not match its identity hash"
+                )
+            accepted = {
+                "identity": identity,
+                "identity_sha256": amendment["identity_sha256"],
+            }
+        return accepted
+
+    def _amendment_summary(self) -> list[dict[str, Any]]:
+        ledger_path = self._campaign_amendments_path()
+        if not ledger_path.is_file():
+            return []
+        return [
+            {
+                key: amendment[key]
+                for key in (
+                    "kind",
+                    "created_at",
+                    "reason",
+                    "from_rounds",
+                    "to_rounds",
+                    "changes",
+                )
+                if key in amendment
+            }
+            | {
+                "reopened_closure": (
+                    amendment.get("reopened_closed_evolution") or {}
+                ).get("archive_dir")
+            }
+            for amendment in read_json(ledger_path).get("amendments") or []
+        ]
+
+    def _campaign_amendments_path(self) -> Path:
+        return self.config.campaign_dir / "campaign_amendments.json"
+
+    def _ensure_campaign_manifest(self) -> dict[str, Any]:
+        identity = self._campaign_identity()
+        identity_sha = sha256_json(identity)
+        execution = execution_settings(self.config.document)
+        path = self._campaign_manifest_path()
+        if not path.is_file():
+            payload = {
+                **identity,
+                "identity_sha256": identity_sha,
+                "created_at": datetime.now(UTC).isoformat(),
+                "execution_settings": execution,
+            }
+            atomic_write_json(path, payload)
+            return payload
+        existing = read_json(path)
+        accepted = self._accepted_campaign_identity(existing)
+        if identity != accepted["identity"]:
+            changed = sorted(
+                key
+                for key in set(accepted["identity"]) | set(identity)
+                if accepted["identity"].get(key) != identity.get(key)
+            )
+            amended = self._campaign_amendments_path().is_file()
+            raise IntegrityError(
+                "campaign identity changed in protected inputs "
+                f"{changed}"
+                + (
+                    " since the last campaign amendment; use a new artifacts directory"
+                    if amended
+                    else "; use a new artifacts directory (or `evoharness "
+                    "extend-rounds` if only campaign.rounds was raised)"
+                )
+            )
+        self._record_execution_changes(existing, accepted, execution)
+        return existing
+
+    def _record_execution_changes(
+        self,
+        manifest: dict[str, Any],
+        accepted: dict[str, Any],
+        execution: dict[str, Any],
+    ) -> None:
+        """Append any change of execution-only settings to the ledger."""
+
+        previous = dict(manifest.get("execution_settings") or {})
+        ledger_path = self._campaign_amendments_path()
+        if ledger_path.is_file():
+            for amendment in read_json(ledger_path).get("amendments") or []:
+                if "execution_settings" in amendment:
+                    previous = dict(amendment["execution_settings"])
+        if previous == execution:
+            return
+        changes = sorted(
+            key
+            for key in set(previous) | set(execution)
+            if previous.get(key) != execution.get(key)
+        )
+        self._append_campaign_amendment(
+            manifest,
+            {
+                "kind": "execution_settings",
+                "created_at": datetime.now(UTC).isoformat(),
+                "reason": "execution-only settings changed on resume",
+                "changes": changes,
+                "before": {key: previous.get(key) for key in changes},
+                "after": {key: execution.get(key) for key in changes},
+                "execution_settings": execution,
+                "previous_identity_sha256": accepted["identity_sha256"],
+                "identity_sha256": accepted["identity_sha256"],
+                "identity": accepted["identity"],
+            },
+        )
+
+    def _campaign_identity(self) -> dict[str, Any]:
+        adapter_source = inspect.getsourcefile(type(self.adapter))
+        adapter_dependencies = [
+            Path(adapter_source).resolve() if adapter_source else None,
+            *self.config.adapter_dependency_paths,
+        ]
+        unique_adapter_dependencies = tuple(
+            dict.fromkeys(path for path in adapter_dependencies if path is not None)
+        )
+        package_root = Path(__file__).resolve().parent
+        identity = {
+            "schema_version": 3,
+            "runner_version": __version__,
+            "python": platform.python_version(),
+            "nexau_version": importlib.metadata.version("nexau"),
+            "config": self.config.immutable_snapshot(),
+            "harness_manifest_sha256": sha256_file(self.config.harness_manifest_path),
+            "base_harness_sha256": sha256_json(tree_hashes(self.config.harness_dir)),
+            "adapter": self.adapter.identity().model_dump(mode="json"),
+            "adapter_api_generation": adapter_api_generation(self.adapter),
+            "benchmark_interface": self.benchmark_interface.model_dump(mode="json"),
+            "adapter_dependencies": [
+                _protected_path_identity(path) for path in unique_adapter_dependencies
+            ],
+            "resolved_meta_inputs": {
+                "prompt_context": self.prompt_context.model_dump(mode="json"),
+                "safe_source_roots": [
+                    _protected_path_identity(path)
+                    for path in self.config.meta_agent_source_roots
+                ],
+                "role_supplements": {
+                    role: _protected_path_identity(path)
+                    for role, path in self.config.role_supplements
+                },
+                "research_seed_urls": list(
+                    self.config.document.meta.explore.research_seed_urls
+                ),
+            },
+            "protected_runner_resources": {
+                "package": _protected_path_identity(package_root),
+                "core_prompts": _protected_path_identity(
+                    package_root / "meta" / "prompts"
+                ),
+                "tool_descriptions": _protected_path_identity(
+                    package_root / "meta" / "tool_descriptions"
+                ),
+                "tool_implementation": _protected_path_identity(
+                    package_root / "meta" / "tools.py"
+                ),
+                "method_reference": _protected_path_identity(self.method_reference),
+            },
+            "splits": {
+                name.value: {
+                    "identity": split.identity,
+                    "task_count": len(split.task_ids),
+                    "task_ids_sha256": sha256_json(split.task_ids),
+                }
+                for name, split in self.splits.items()
+            },
+        }
+        section = self.config.document.algorithm
+        if (
+            section.name != "ahe"
+            or section.settings
+            or self.config.algorithm_role_supplements
+        ):
+            source = algorithm_source(self.algorithm)
+            identity["algorithm"] = {
+                **self.algorithm.identity().model_dump(mode="json"),
+                "settings": self.algorithm.settings.model_dump(mode="json"),
+                "source": _protected_path_identity(source) if source else None,
+                "resources": [
+                    _protected_path_identity(path)
+                    for path in self.algorithm.resources()
+                ],
+                "role_supplements": {
+                    role: _protected_path_identity(path)
+                    for role, path in self.config.algorithm_role_supplements
+                },
+            }
+        return identity
+
+    def _validate_split_separation(self) -> None:
+        sets = {name: set(split.task_ids) for name, split in self.splits.items()}
+        for left, right in (
+            (SplitName.TRAIN, SplitName.VALIDATION),
+            (SplitName.TRAIN, SplitName.TEST),
+            (SplitName.VALIDATION, SplitName.TEST),
+        ):
+            overlap = sets[left] & sets[right]
+            if overlap:
+                raise ConfigurationError(
+                    f"{left.value} and {right.value} splits overlap: "
+                    f"{sorted(overlap)[:5]}"
+                )
+
+    def _checkpoint_dir(self, index: int) -> Path:
+        return self.config.campaign_dir / "checkpoints" / f"C{index}"
+
+    def _evaluation_dir(
+        self,
+        index: int,
+        split: SplitName,
+        *,
+        repeat: int = 1,
+    ) -> Path:
+        suffix = {
+            SplitName.TRAIN: "train",
+            SplitName.VALIDATION: "validation",
+            SplitName.TEST: "final-test",
+        }[split]
+        if repeat > 1:
+            suffix += f"-repeat-{repeat}"
+        return self.config.campaign_dir / "evaluations" / f"C{index}-{suffix}"
+
+    def _campaign_manifest_path(self) -> Path:
+        return self.config.campaign_dir / "campaign_manifest.json"
+
+    def _write_state(self) -> None:
+        self.status()
+
+
+def _refuse_reentered_main() -> None:
+    """Fail clearly when a spawned trial process re-runs an operator script.
+
+    Spawned children import the parent's ``__main__`` as ``__mp_main__``. An
+    operator script that builds a controller without an
+    ``if __name__ == "__main__":`` guard would otherwise start the campaign
+    again inside every trial process (AHE-043).
+    """
+
+    if multiprocessing.parent_process() is None:
+        return
+    frame = inspect.currentframe()
+    while frame is not None:
+        if frame.f_globals.get("__name__") == "__mp_main__":
+            raise ConfigurationError(
+                "a spawned trial process re-ran the operator script that "
+                "creates the campaign controller; put that code under "
+                "`if __name__ == '__main__':`"
+            )
+        frame = frame.f_back
+
+
+def _pre_stage_timeout() -> float:
+    raw = env_value(PRE_STAGE_TIMEOUT_ENV)
+    if not raw:
+        return 1200.0
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise ConfigurationError(f"{PRE_STAGE_TIMEOUT_ENV} must be a number") from exc
+    if value <= 0:
+        raise ConfigurationError(f"{PRE_STAGE_TIMEOUT_ENV} must be positive")
+    return value
+
+
+def _identity_differences(before: Any, after: Any, prefix: str = "") -> list[str]:
+    """Return the dotted paths of every leaf that differs between two identities."""
+
+    if isinstance(before, dict) and isinstance(after, dict):
+        changes: list[str] = []
+        for key in sorted(set(before) | set(after)):
+            path = f"{prefix}.{key}" if prefix else str(key)
+            if key not in before or key not in after:
+                changes.append(path)
+            else:
+                changes.extend(_identity_differences(before[key], after[key], path))
+        return changes
+    return [] if before == after else [prefix]
+
+
+def _protected_path_identity(path: Path) -> dict[str, Any]:
+    resolved = path.resolve()
+    if resolved.is_file():
+        return {
+            "path": str(resolved),
+            "type": "file",
+            "sha256": sha256_file(resolved),
+        }
+
+    if resolved.is_dir():
+        files = tree_hashes(resolved)
+        return {
+            "path": str(resolved),
+            "type": "directory",
+            "sha256": sha256_json(files),
+            "files": files,
+        }
+    raise IntegrityError(f"protected campaign input is missing: {resolved}")
+
+
+def _git_head(workspace: Path) -> str:
+    return git_output(workspace, "rev-parse", "HEAD").strip()
+
+
+def _make_tree_writable(root: Path) -> None:
+    for path in [root, *root.rglob("*")]:
+        path.chmod(path.stat().st_mode | stat.S_IWUSR)

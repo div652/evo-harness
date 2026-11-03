@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ahe-runner"
-version = "0.9.0"
-description = "Checkpointed Agentic Harness Engineering for NexAU harnesses"
+name = "evoharness"
+version = "0.10.1"
+description = "Evolve NexAU agent harnesses with pluggable evolution algorithms (AHE, RRSI)"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -33,17 +33,20 @@ dev = [
 ]
 
 [project.scripts]
-ahe = "ahe_runner.cli:main"
+evoharness = "evoharness.cli:main"
+# The command before the rename from ahe-runner (0.10.0).
+ahe = "evoharness.cli:legacy_main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ahe_runner"]
+packages = ["src/evoharness", "src/ahe_runner"]
 
 [tool.hatch.build]
 include = [
+  "src/evoharness/**/*.py",
   "src/ahe_runner/**/*.py",
-  "src/ahe_runner/**/*.md",
-  "src/ahe_runner/**/*.yaml",
-  "src/ahe_runner/meta/skills/**/*",
+  "src/evoharness/**/*.md",
+  "src/evoharness/**/*.yaml",
+  "src/evoharness/meta/skills/**/*",
 ]
 
 [tool.hatch.metadata]
@@ -53,7 +56,7 @@ allow-direct-references = true
 line-length = 88
 target-version = "py311"
 # Copied unchanged from the original AHE (MIT); keep it byte-identical.
-extend-exclude = ["src/ahe_runner/meta/skills/nexau-evolution-guide"]
+extend-exclude = ["src/evoharness/meta/skills/nexau-evolution-guide"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]

@@ -15,23 +15,23 @@ import httpx
 import pytest
 from openai import APIConnectionError
 
-import ahe_runner.runtime as runtime_module
-from ahe_runner.adapter import BenchmarkInterface
-from ahe_runner.child_process import (
+import evoharness.runtime as runtime_module
+from evoharness.adapter import BenchmarkInterface
+from evoharness.child_process import (
     run_evaluated_trial_in_child,
     run_in_child,
 )
-from ahe_runner.config import load_config
-from ahe_runner.errors import (
+from evoharness.config import load_config
+from evoharness.errors import (
     CandidateValidationError,
     ConfigurationError,
     InfrastructureError,
     IntegrityError,
 )
-from ahe_runner.harness import load_harness_manifest
-from ahe_runner.io import read_json
-from ahe_runner.model_requests import model_request_slot
-from ahe_runner.runtime import AgentSessionRequest, EvaluatedAgentRuntime
+from evoharness.harness import load_harness_manifest
+from evoharness.io import read_json
+from evoharness.model_requests import model_request_slot
+from evoharness.runtime import AgentSessionRequest, EvaluatedAgentRuntime
 
 from .conftest import make_example_project
 

@@ -6,7 +6,7 @@ This is the file contract for an evolvable NexAU harness.
 
 ```yaml
 schema_version: 2
-abi_version: ahe.harness/v2
+abi_version: evoharness.harness/v2
 
 framework:
   name: nexau
@@ -298,7 +298,7 @@ Their execution, call IDs, and semantics remain adapter-owned and immutable.
 ## Check command
 
 ```bash
-ahe conformance --config /path/to/project/ahe.yaml
+evoharness conformance --config /path/to/project/evoharness.yaml
 ```
 
 The command reports active file registrations, tool contracts, recursive

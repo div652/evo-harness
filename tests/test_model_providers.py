@@ -11,10 +11,10 @@ import httpx
 import pytest
 from openai import APIStatusError, RateLimitError
 
-from ahe_runner.config import ModelSettings, TransportSettings
-from ahe_runner.errors import IntegrityError, ProviderBlockedError
-from ahe_runner.meta import endpoint
-from ahe_runner.meta.endpoint import (
+from evoharness.config import ModelSettings, TransportSettings
+from evoharness.errors import IntegrityError, ProviderBlockedError
+from evoharness.meta import endpoint
+from evoharness.meta.endpoint import (
     TokenWindow,
     build_openai_client,
     is_provider_blocked_failure,
@@ -24,8 +24,8 @@ from ahe_runner.meta.endpoint import (
     token_provider,
     transient_retry_delay,
 )
-from ahe_runner.meta.model_client import RecordedExactModelClient, wire_input_items
-from ahe_runner.meta.preflight import run_model_preflight
+from evoharness.meta.model_client import RecordedExactModelClient, wire_input_items
+from evoharness.meta.preflight import run_model_preflight
 
 
 @pytest.fixture(autouse=True)
@@ -175,6 +175,35 @@ def test_responses_calls_enforce_settings_and_resend_tool_items(
         failed.responses.create(model="exact-model", input="x")
 
 
+def test_responses_calls_request_summaries_at_provider_default_effort(
+    tmp_path: Path,
+) -> None:
+    def client_for(**updates: Any) -> tuple[RecordedExactModelClient, Any]:
+        client = RecordedExactModelClient(
+            transport=_transport(39203, api_mode="responses"),
+            api_key="placeholder",
+            settings=_settings(temperature=None, reasoning_effort=None, **updates),
+            log_dir=tmp_path / str(len(updates)),
+        )
+        base = _FakeResponsesBase(lambda _kwargs: _response())
+        client._base = base  # type: ignore[attr-defined]
+        return client, base
+
+    client, base = client_for()
+    client.responses.create(model="exact-model", input="hi", max_output_tokens=128)
+    assert base.calls[0]["reasoning"] == {"summary": "auto"}
+    client, base = client_for(reasoning_summary=None)
+    client.responses.create(model="exact-model", input="hi", max_output_tokens=128)
+    assert "reasoning" not in base.calls[0]
+    with pytest.raises(IntegrityError, match="neither a reasoning effort"):
+        client.responses.create(
+            model="exact-model",
+            input="hi",
+            max_output_tokens=128,
+            reasoning={"summary": "auto"},
+        )
+
+
 def test_wire_input_items_leave_other_items_untouched() -> None:
     message = {"type": "message", "content": None}
     assert wire_input_items([message]) == [message]
@@ -193,6 +222,16 @@ def test_per_model_wire_api_and_route_fingerprint() -> None:
         "summary": "auto",
     }
     assert nexau_reasoning(transport, _settings(reasoning_effort=None)) is None
+    # Provider-default effort on the Responses API still asks for a summary,
+    # or reasoning items come back empty and traces carry no reasoning.
+    default_effort = _settings(api_mode="responses", reasoning_effort=None)
+    assert nexau_reasoning(transport, default_effort) == {"summary": "auto"}
+    no_summary = _settings(
+        api_mode="responses", reasoning_effort=None, reasoning_summary=None
+    )
+    assert nexau_reasoning(transport, no_summary) is None
+    assert route_fingerprint(transport, default_effort)["reasoning_summary"] == "auto"
+    assert route_fingerprint(transport, chat)["reasoning_summary"] is None
     fingerprint = route_fingerprint(transport, responses)
     assert fingerprint["wire_api"] == "responses"
     assert fingerprint["system_prompt_placement"] == "responses_instructions"
@@ -391,7 +430,7 @@ def test_client_id_header_is_stable_per_session(tmp_path: Path) -> None:
         settings=_settings(),
         log_dir=tmp_path / "other",
     )
-    assert header.startswith("ahe-runner-")
+    assert header.startswith("evoharness-")
     assert again._base.default_headers["X-Workload-ID"] == header  # type: ignore[attr-defined]
     assert other._base.default_headers["X-Workload-ID"] != header  # type: ignore[attr-defined]
 
@@ -436,7 +475,7 @@ def test_preflight_negative_control_recognises_gateway_rejections(
         raise error
 
     monkeypatch.setattr(
-        "ahe_runner.meta.preflight.OpenAI",
+        "evoharness.meta.preflight.OpenAI",
         lambda **_kwargs: _FakeResponsesBase(callback),
     )
     transport = _transport(
@@ -478,18 +517,24 @@ def _responses_payload(model: str, output: list[dict[str, Any]]) -> dict[str, An
     }
 
 
+@pytest.mark.parametrize(
+    ("effort", "expected_reasoning"),
+    [("high", {"effort": "high", "summary": "auto"}), (None, {"summary": "auto"})],
+)
 def test_evaluated_agent_runs_through_the_responses_api(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    effort: str | None,
+    expected_reasoning: dict[str, str],
 ) -> None:
     from openai import OpenAI
 
-    import ahe_runner.meta.model_client as model_client_module
-    import ahe_runner.runtime as runtime_module
-    from ahe_runner.adapter import BenchmarkInterface
-    from ahe_runner.config import load_config
-    from ahe_runner.harness import load_harness_manifest
-    from ahe_runner.runtime import (
+    import evoharness.meta.model_client as model_client_module
+    import evoharness.runtime as runtime_module
+    from evoharness.adapter import BenchmarkInterface
+    from evoharness.config import load_config
+    from evoharness.harness import load_harness_manifest
+    from evoharness.runtime import (
         AgentInput,
         AgentInputMessage,
         AgentSessionRequest,
@@ -502,7 +547,7 @@ def test_evaluated_agent_runs_through_the_responses_api(
     model = config.document.models.evaluated.model_copy(
         update={
             "api_mode": "responses",
-            "reasoning_effort": "high",
+            "reasoning_effort": effort,
             "temperature": None,
         }
     )
@@ -588,7 +633,7 @@ def test_evaluated_agent_runs_through_the_responses_api(
     first, second = requests
     assert first["model"] == model.model
     assert first["max_output_tokens"] == model.max_tokens
-    assert first["reasoning"] == {"effort": "high", "summary": "auto"}
+    assert first["reasoning"] == expected_reasoning
     assert "temperature" not in first
     assert first["instructions"].strip()
     resent = {item.get("type"): item for item in second["input"] if "type" in item}

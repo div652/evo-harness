@@ -4,20 +4,20 @@ import inspect
 import json
 from pathlib import Path
 
-from ahe_runner.adapter import (
+from evoharness.adapter import (
     EvaluationRequest,
     EvidenceRequest,
     SplitName,
     VerificationRequest,
 )
-from ahe_runner.config import load_config
-from ahe_runner.controller import CampaignController
-from ahe_runner.evaluation import verify_evaluation_output
-from ahe_runner.evidence import verify_evidence_bundle
-from ahe_runner.example.runtime_adapter import RuntimeExampleAdapter
-from ahe_runner.io import atomic_write_json
-from ahe_runner.loading import load_adapter
-from ahe_runner.runtime import (
+from evoharness.config import load_config
+from evoharness.controller import CampaignController
+from evoharness.evaluation import verify_evaluation_output
+from evoharness.evidence import verify_evidence_bundle
+from evoharness.example.runtime_adapter import RuntimeExampleAdapter
+from evoharness.io import atomic_write_json
+from evoharness.loading import load_adapter
+from evoharness.runtime import (
     AgentInput,
     AgentOutput,
     AgentSessionRequest,
@@ -31,7 +31,7 @@ def test_generated_runtime_example_config_loads_public_adapter(
     tmp_path: Path,
 ) -> None:
     offline_config = make_example_project(tmp_path)
-    runtime_config = load_config(offline_config.parent / "ahe.runtime.yaml")
+    runtime_config = load_config(offline_config.parent / "evoharness.runtime.yaml")
     assert isinstance(load_adapter(runtime_config), RuntimeExampleAdapter)
     assert runtime_config.document.meta.backend == "nexau"
     assert runtime_config.document.meta.explore.web_search_backend == "ddgs"

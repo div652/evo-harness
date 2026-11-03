@@ -1,4 +1,4 @@
-# AHE Runner Architecture
+# evoharness Architecture
 
 ## Purpose
 
@@ -104,8 +104,8 @@ In particular:
 The operator creates a separate project repository with this layout:
 
 ```text
-my-ahe-project/
-├── ahe.yaml
+my-project/
+├── evoharness.yaml
 ├── harness_manifest.yaml
 ├── benchmark_adapter.py
 ├── harness/
@@ -135,7 +135,7 @@ execution, secrets, and model routing must live outside `harness/`.
 
 ```yaml
 schema_version: 2
-abi_version: ahe.harness/v2
+abi_version: evoharness.harness/v2
 
 framework:
   name: nexau
@@ -205,7 +205,7 @@ actual short-term agent memory is NexAU session history.
 
 ## Campaign configuration
 
-`ahe.yaml` is the immutable experiment declaration:
+`evoharness.yaml` is the immutable experiment declaration:
 
 ```yaml
 schema_version: 1
@@ -588,7 +588,7 @@ reason and prior error, then changes the stage to interrupted so normal
 `resume` creates the next immutable attempt. It never erases attempts or
 changes semantic inputs.
 
-An optional operator command (`AHE_PRE_STAGE_COMMAND`) runs before each new
+An optional operator command (`EVOHARNESS_PRE_STAGE_COMMAND`) runs before each new
 stage attempt. If it fails, the runner stops with an infrastructure error
 before the attempt is recorded.
 
@@ -617,8 +617,10 @@ earlier stage is reused.
 
 The transport uses non-streaming OpenAI-compatible chat completions by
 default, or the Responses API (`api_mode: responses`), per transport or per
-model. On the Responses API the system prompt is sent as `instructions` and
-reasoning items are resent across turns; resent tool-call items are
+model. On the Responses API the system prompt is sent as `instructions`, a
+reasoning summary is requested on every call (`models.<role>.reasoning_summary`,
+default `auto`, also at provider-default effort), and reasoning items are
+resent across turns; resent tool-call items are
 re-serialized with their API field names before sending. Authentication is a
 static key or an operator `token_command` whose bearer token is refreshed
 in-process before expiry. For every model-calling role, the runner records:
@@ -809,23 +811,23 @@ existing partial or mismatched export is rejected rather than blessed.
 The initial CLI is:
 
 ```text
-ahe init-project PATH
-ahe conformance --config PATH
-ahe validate --config PATH
-ahe run --config PATH
-ahe resume --config PATH
-ahe status --config PATH
-ahe run-round --config PATH --round N                       # AHE only
-ahe retry-stage --config PATH --stage NAME --reason TEXT
-ahe extend-rounds --config PATH --reason TEXT [--apply] [--reopen-closed-evolution]
+evoharness init-project PATH
+evoharness conformance --config PATH
+evoharness validate --config PATH
+evoharness run --config PATH
+evoharness resume --config PATH
+evoharness status --config PATH
+evoharness run-round --config PATH --round N                       # AHE only
+evoharness retry-stage --config PATH --stage NAME --reason TEXT
+evoharness extend-rounds --config PATH --reason TEXT [--apply] [--reopen-closed-evolution]
                                                             # AHE only
-ahe supervise --config PATH [--max-consecutive-failures N]
-ahe evaluate --config PATH --output DIR (--checkpoint CN | --harness DIR)
+evoharness supervise --config PATH [--max-consecutive-failures N]
+evoharness evaluate --config PATH --output DIR (--checkpoint CN | --harness DIR)
              (--split NAME | --tasks FILE) [--trials N] [--seed N] [--label TEXT]
-ahe compare --baseline DIR --candidate DIR
-ahe close-evolution --config PATH
-ahe run-validation --config PATH
-ahe run-final-test --config PATH
+evoharness compare --baseline DIR --candidate DIR
+evoharness close-evolution --config PATH
+evoharness run-validation --config PATH
+evoharness run-final-test --config PATH
 ```
 
 `supervise` relaunches `run` in a fresh process after infrastructure stops,

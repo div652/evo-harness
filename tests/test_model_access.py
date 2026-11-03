@@ -11,15 +11,15 @@ import httpx
 import pytest
 from openai import OpenAI
 
-from ahe_runner.config import MetaSettings, ModelSettings, TransportSettings
-from ahe_runner.errors import ConfigurationError, InfrastructureError, IntegrityError
-from ahe_runner.meta.model_client import (
+from evoharness.config import MetaSettings, ModelSettings, TransportSettings
+from evoharness.errors import ConfigurationError, InfrastructureError, IntegrityError
+from evoharness.meta.model_client import (
     RecordedExactModelClient,
     is_infrastructure_exception,
     summarize_model_call_retries,
 )
-from ahe_runner.meta.preflight import run_model_preflight
-from ahe_runner.model_requests import (
+from evoharness.meta.preflight import run_model_preflight
+from evoharness.model_requests import (
     context_overflow_message,
     is_context_overflow_exception,
     model_request_slot,
@@ -665,7 +665,7 @@ def test_preflight_positive_and_negative_controls(
         raise RuntimeError(f"unknown model {kwargs['model']}")
 
     monkeypatch.setattr(
-        "ahe_runner.meta.preflight.OpenAI",
+        "evoharness.meta.preflight.OpenAI",
         lambda **_kwargs: _FakeOpenAI(callback, ["exact-model"]),
     )
     output = tmp_path / "preflight.json"
@@ -697,7 +697,7 @@ def test_preflight_retries_only_hung_model_calls(
         return SimpleNamespace(model="exact-model")
 
     monkeypatch.setattr(
-        "ahe_runner.meta.preflight.OpenAI",
+        "evoharness.meta.preflight.OpenAI",
         lambda **_kwargs: _FakeOpenAI(callback, ["exact-model"]),
     )
     report = run_model_preflight(
