@@ -16,6 +16,7 @@ supplements, the splits, the campaign configurations, and the launchers.
 | `splits-rrsi-80-0-40.json` | General LAB: the RRSI paper's generator at LAB `1da4750` with 80 evolve tasks; test = the paper's 40 held-out tasks. |
 | `ahe-rrsi-pilot.yaml`, `ahe-rrsi-fk-80-40.yaml` | Pilot and firm-knowledge campaign configurations (gpt-5.6-luna agent, one gpt-5.6-sol judge, gpt-5.6-sol meta agents, CAO gateway). |
 | `scripts/run_rrsi_pilot.sh`, `scripts/run_rrsi_fk.sh` | Launchers (run, then resume after interruptions). They expect the project at `~/rrsi-pilot/harvey-ahe-project`. |
+| `scripts/rrsi_rounds_report.py` | Writes a round-by-round markdown report (scores, all-pass, cost, edits, critic verdicts, decisions) from a campaign's records: `python3 scripts/rrsi_rounds_report.py CAMPAIGN_DIR OUT.md`. |
 
 The other files are the `harveybench-cao` project as of `158d762`.
 
