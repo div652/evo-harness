@@ -130,10 +130,12 @@ def run_model_preflight(
             "max_output_tokens": min(settings.max_tokens, 64),
             "stream": False,
         }
-        if settings.reasoning_effort is not None:
-            positive_payload["reasoning"] = responses_reasoning(
-                settings.reasoning_effort
-            )
+        reasoning = responses_reasoning(
+            settings.reasoning_effort,
+            settings.reasoning_summary,
+        )
+        if reasoning is not None:
+            positive_payload["reasoning"] = reasoning
         create = client.responses.create
     else:
         positive_payload = {

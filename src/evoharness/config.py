@@ -50,6 +50,11 @@ class ModelSettings(StrictModel):
     # Wire API for this model when it differs from transport.api_mode, for a
     # gateway that serves model families on different APIs.
     api_mode: Literal["chat_completions", "responses"] | None = None
+    # Reasoning summary requested on the Responses API, with or without an
+    # effort. Without one, reasoning models return reasoning items with empty
+    # summaries, so traces carry none of the model's reasoning. None requests
+    # no summary, for models that reject the reasoning parameter.
+    reasoning_summary: Literal["auto", "concise", "detailed"] | None = "auto"
     # Prices for cost accounting. They never reach the provider.
     pricing: ModelPricing | None = None
 
@@ -392,6 +397,8 @@ LATER_RESULT_DEFAULTS: dict[str, Any] = {
     "evaluation.provider_rejection_policy": "grade",
     "models.evaluated.pricing": None,
     "models.meta.pricing": None,
+    "models.evaluated.reasoning_summary": "auto",
+    "models.meta.reasoning_summary": "auto",
     "algorithm": {"name": "ahe", "settings": {}, "role_supplements": {}},
     "selection": {"policy": None},
 }
@@ -426,6 +433,8 @@ def model_identity(model: ModelSettings) -> dict[str, Any]:
     value = model.model_dump(mode="json")
     if value.get("api_mode") is None:
         value.pop("api_mode", None)
+    if value.get("reasoning_summary") == "auto":
+        value.pop("reasoning_summary", None)
     value.pop("pricing", None)
     return value
 

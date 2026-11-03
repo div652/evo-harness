@@ -424,6 +424,15 @@ on different APIs. Set `temperature: null` for models that reject the
 parameter; the runner then sends none and rejects any harness attempt to send
 one.
 
+On the Responses API every request asks for a reasoning summary
+(`reasoning: {summary: auto}`, plus `effort` when `reasoning_effort` is set).
+Without the summary, reasoning models return reasoning items with empty
+summaries even at their default effort, and the traces that meta agents read
+carry none of the model's reasoning. `models.<role>.reasoning_summary` takes
+`auto` (default), `concise`, `detailed`, or `null` for a model that rejects
+the `reasoning` parameter. Before 0.10.1, no summary was requested when
+`reasoning_effort` was `provider-default`.
+
 The runtime always applies the configured wire API. If the harness manifest
 protects `llm_config.api_type`, keep it consistent (`openai_responses` for the
 Responses API, `openai_chat_completion` otherwise); `evoharness validate` warns when

@@ -246,8 +246,11 @@ class RecordedExactModelClient:
         if kwargs.pop("reasoning_effort", None) is not None:
             raise IntegrityError("the Responses API takes reasoning.effort only")
         reasoning = kwargs.pop("reasoning", None)
-        if self._settings.reasoning_effort is not None:
-            expected = responses_reasoning(self._settings.reasoning_effort)
+        expected = responses_reasoning(
+            self._settings.reasoning_effort,
+            self._settings.reasoning_summary,
+        )
+        if expected is not None:
             if reasoning is not None and reasoning != expected:
                 raise IntegrityError(
                     f"reasoning was {reasoning!r}; expected {expected!r}"
@@ -255,8 +258,8 @@ class RecordedExactModelClient:
             kwargs["reasoning"] = expected
         elif reasoning is not None:
             raise IntegrityError(
-                "reasoning override is prohibited when campaign reasoning "
-                "is provider-default"
+                "reasoning override is prohibited when the campaign requests "
+                "neither a reasoning effort nor a summary"
             )
         self._set_extra_body(kwargs, extra_body)
         if "input" in kwargs:

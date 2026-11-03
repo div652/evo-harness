@@ -1,5 +1,16 @@
 # Validation Results
 
+## 0.10.1: reasoning summaries at provider-default effort
+
+Through 0.10.0, a model on the Responses API whose `reasoning_effort` was
+`provider-default` was sent no `reasoning` parameter, so reasoning models
+returned reasoning items with empty summaries and evaluated-agent traces
+carried none of the agent's reasoning. Requests now always include a
+summary (`models.<role>.reasoning_summary`, default `auto`; `null` disables
+it). Tests check the request a real NexAU session sends at both an explicit
+and the provider-default effort, the recorded client, the route fingerprint
+(which now includes the summary setting), and the opt-out.
+
 ## 0.10.0: renamed from ahe-runner to evoharness
 
 Validated on 2026-11-02:

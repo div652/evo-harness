@@ -76,10 +76,23 @@ def nexau_api_type(transport: TransportSettings, model: ModelSettings) -> str:
     return "openai_chat_completion"
 
 
-def responses_reasoning(effort: str) -> dict[str, str]:
-    """Reasoning request for the Responses API, with a reasoning summary."""
+def responses_reasoning(
+    effort: str | None,
+    summary: str | None = "auto",
+) -> dict[str, str] | None:
+    """Reasoning request for the Responses API.
 
-    return {"effort": effort, "summary": "auto"}
+    The summary is requested even when the effort is left to the provider:
+    without it, reasoning items come back with empty summaries and traces
+    carry none of the model's reasoning. None when neither is set.
+    """
+
+    request = {}
+    if effort is not None:
+        request["effort"] = effort
+    if summary is not None:
+        request["summary"] = summary
+    return request or None
 
 
 def nexau_reasoning(
@@ -88,10 +101,10 @@ def nexau_reasoning(
 ) -> dict[str, str] | None:
     """NexAU ``llm_config.reasoning`` for the model's wire API."""
 
+    if wire_api(transport, model) == "responses":
+        return responses_reasoning(model.reasoning_effort, model.reasoning_summary)
     if model.reasoning_effort is None:
         return None
-    if wire_api(transport, model) == "responses":
-        return responses_reasoning(model.reasoning_effort)
     return {"effort": model.reasoning_effort}
 
 
@@ -113,6 +126,7 @@ def route_fingerprint(
         "authentication": "token_command" if transport.token_command else "api_key",
         "model": model.model,
         "reasoning_effort": model.reasoning_effort,
+        "reasoning_summary": model.reasoning_summary if api == "responses" else None,
         "temperature": model.temperature,
         "max_output_tokens": model.max_tokens,
         "system_prompt_placement": (

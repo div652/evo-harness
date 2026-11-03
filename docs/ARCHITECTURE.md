@@ -617,8 +617,10 @@ earlier stage is reused.
 
 The transport uses non-streaming OpenAI-compatible chat completions by
 default, or the Responses API (`api_mode: responses`), per transport or per
-model. On the Responses API the system prompt is sent as `instructions` and
-reasoning items are resent across turns; resent tool-call items are
+model. On the Responses API the system prompt is sent as `instructions`, a
+reasoning summary is requested on every call (`models.<role>.reasoning_summary`,
+default `auto`, also at provider-default effort), and reasoning items are
+resent across turns; resent tool-call items are
 re-serialized with their API field names before sending. Authentication is a
 static key or an operator `token_command` whose bearer token is refreshed
 in-process before expiry. For every model-calling role, the runner records:
