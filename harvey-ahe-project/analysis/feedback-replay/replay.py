@@ -8,6 +8,7 @@ response that follows the review is generated.
 
 Variants (add new ones to VARIANTS):
   control  the review unchanged (measures the model's own variability)
+  control_nosum  the review unchanged and no added reasoning-summary request: the exact recorded request
   wrapped  the whole review wrapped in [VERIFIER FEEDBACK] ... [\\VERIFIER FEEDBACK]
 
 Targets:
@@ -45,8 +46,11 @@ def wrap(text: str) -> str:
 
 VARIANTS = {
     "control": lambda text: text,
+    "control_nosum": lambda text: text,  # control without the added reasoning-summary request
     "wrapped": wrap,
 }
+NO_SUMMARY_VARIANTS = {"control_nosum"}
+IDENTITY_VARIANTS = {"control", "control_nosum"}
 
 
 def load_request(item: dict, target: str) -> tuple[dict, str]:
@@ -62,7 +66,7 @@ def apply_variant(kwargs: dict, review: str, variant: str) -> dict:
     last = kwargs["input"][-1]
     if last.get("type") != "function_call_output":
         raise ValueError("last input item is not the stage_end output")
-    if variant == "control":
+    if variant in IDENTITY_VARIANTS:
         return kwargs  # byte-identical tool output
     payload = json.loads(last["output"])
     if payload.get("result") != review:
@@ -124,6 +128,7 @@ def main() -> None:
         items = [i for i in items if i.get("has_strict") and i.get("request_copy")]
     else:
         items = [i for i in items if (i.get("first_error_flag") or {}).get("request_copy")]
+    summaries = not args.no_summaries and args.variant not in NO_SUMMARY_VARIANTS
     out_dir = HERE / "replays" / args.target / args.variant
     out_dir.mkdir(parents=True, exist_ok=True)
     jobs = [(i, k) for i in sorted(items, key=lambda x: x["id"]) for k in range(1, args.samples + 1)
@@ -134,12 +139,12 @@ def main() -> None:
         item, k = job
         try:
             kwargs, review = load_request(item, args.target)
-            resp = send(apply_variant(kwargs, review, args.variant), not args.no_summaries)
+            resp = send(apply_variant(kwargs, review, args.variant), summaries)
         except Exception as exc:  # noqa: BLE001
             print(f"FAILED {item['id']} s{k}: {type(exc).__name__}: {str(exc)[:200]}", flush=True)
             return
         row = {"id": item["id"], "target": args.target, "variant": args.variant, "sample": k,
-               "summaries": not args.no_summaries, **summarize_output(resp)}
+               "summaries": summaries, **summarize_output(resp)}
         (out_dir / f"{item['id']}.s{k}.json").write_text(json.dumps(row, ensure_ascii=False, indent=1))
         names = [n.get("name") or "message" for n in row["next"]]
         print(f"ok {item['id']} s{k} {names}", flush=True)

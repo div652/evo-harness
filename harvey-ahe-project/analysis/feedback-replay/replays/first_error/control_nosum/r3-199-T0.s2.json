@@ -1,0 +1,28 @@
+{
+ "id": "r3-199-T0",
+ "target": "first_error",
+ "variant": "control_nosum",
+ "sample": 2,
+ "summaries": false,
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 173400,
+  "input_tokens_details": {
+   "cache_write_tokens": 163542,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 487,
+  "output_tokens_details": {
+   "reasoning_tokens": 165
+  },
+  "total_tokens": 173887
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "bash",
+   "arguments": "{\"command\":\"python - <<'PY'\\nimport re,collections\\nhits=set();\\nfor l in open('/tmp/healthcare_hits.txt'):\\n if re.match(r'^\\\\d{4}-\\\\d{5}\\\\t',l): hits.add(l.split('\\\\t')[0])\\nfor m in sorted(hits):\\n fs=[l.strip() for l in open('/tmp/all_hit_matter_files.txt') if f'/matters/{m}/' in l]\\n if any(re.search(r'(health|hospital|clinic|provider|physician|medical|ambulatory|surgical|behavioral|rehab|patient|medicare|medicaid)',f,re.I) for f in fs) and any(re.search(r'(transaction documents|purchase agreement|merger agreement|stock purchase|asset purchase|acquisition|diligence)',f,re.I) for f in fs):\\n  print(m)\\n  for f in fs:\\n   if re.search(r'(diligence|due.?diligence|purchase agreement|merger agreement|stock purchase|asset purchase|acquisition|health|hospital|provider|physician|clinic)',f,re.I): print(' ',f.split(f'/matters/{m}/',1)[1])\\nPY > /tmp/health_mna_candidates.txt\\nwc -l /tmp/health_mna_candidates.txt; cat /tmp/health_mna_candidates.txt | head -240\"}"
+  }
+ ],
+ "reasoning_summary": []
+}
