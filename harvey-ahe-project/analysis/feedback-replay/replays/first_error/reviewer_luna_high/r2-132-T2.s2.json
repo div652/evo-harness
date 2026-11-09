@@ -1,0 +1,40 @@
+{
+ "id": "r2-132-T2",
+ "target": "first_error",
+ "variant": "reviewer_luna_high",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The final confirmation command hard-coded 17 matter IDs, while the preceding /tmp/target.txt result surfaced matter 1015-00005 and its Transaction Documents; that surfaced matter was omitted from confirmation.",
+   "The strong-filter output included the unrelated 1001-00001 Antitrust Analysis document discussing healthcare fraud and abuse, demonstrating that broad fraud matches remained mixed with transaction-cap candidates."
+  ],
+  "concerns": "The range-based extraction recovered substantial candidates after the initial timeout, including 1001-00003's disclosure schedules with an indemnification-cap passage. However, the logged follow-up does not establish that every surfaced matter was carried through confirmation, and the candidate output contains substantial non-M&A noise. The visible excerpts also do not consistently show the complete fraud carve-out language needed for reliable precedent selection.",
+  "recommendation": "Build a complete manifest from every completed range, retaining each matching matter, document, and bounded passage rather than using the 17-ID list. Carry 1015-00005 and all other surfaced matters through review, including both DOCX and EML. Then classify hits as transaction or unrelated and confirm explicit cap-exception language in the operative agreement, schedules, or amendments.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The final confirmation command hard-coded 17 matter IDs, while the preceding /tmp/target.txt result surfaced matter 1015-00005 and its Transaction Documents; that surfaced matter was omitted from confirmation.; The strong-filter output included the unrelated 1001-00001 Antitrust Analysis document discussing healthcare fraud and abuse, demonstrating that broad fraud matches remained mixed with transaction-cap candidates.\nReviewer concerns: The range-based extraction recovered substantial candidates after the initial timeout, including 1001-00003's disclosure schedules with an indemnification-cap passage. However, the logged follow-up does not establish that every surfaced matter was carried through confirmation, and the candidate output contains substantial non-M&A noise. The visible excerpts also do not consistently show the complete fraud carve-out language needed for reliable precedent selection.\nReviewer recommendation: Build a complete manifest from every completed range, retaining each matching matter, document, and bounded passage rather than using the 17-ID list. Carry 1015-00005 and all other surfaced matters through review, including both DOCX and EML. Then classify hits as transaction or unrelated and confirm explicit cap-exception language in the operative agreement, schedules, or amendments.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1023-00002, 1044-00003, 1001-00006, 1002-00002, 1002-00004, 1004-00001, 1005-00003, 1006-00003, 1006-00008, 1008-00010, 1009-00004, 1009-00005, 1009-00007, 1014-00006, 1015-00001, 1015-00005, 1016-00009, 1018-00004, 1018-00006, 1018-00008, 1019-00005, 1021-00007, 1022-00008, 1023-00001, 1025-00006, 1029-00001, 1031-00004, 1036-00001, 1036-00004, 1036-00005, 1043-00001, 1043-00002, 1043-00003, 1044-00005, 1001-00004, 1001-00005 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 191592,
+  "input_tokens_details": {
+   "cache_write_tokens": 182073,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 133,
+  "output_tokens_details": {
+   "reasoning_tokens": 72
+  },
+  "total_tokens": 191725
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Complete the manifest by scanning all matters for explicit cap-exception formulations, classify out unrelated fraud hits, and retain every transaction-document precedent with reliable operative language.\",\"new_stage_name\":\"Focused precedent confirmation\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

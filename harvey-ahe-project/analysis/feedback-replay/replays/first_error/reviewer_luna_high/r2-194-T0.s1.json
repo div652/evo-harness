@@ -1,0 +1,40 @@
+{
+ "id": "r2-194-T0",
+ "target": "first_error",
+ "variant": "reviewer_luna_high",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Coverage is unverified: both extraction commands returned “Error: command timed out after 60s” (the initial scan and `scan_mfn_dir`), and the later 508-line output has no completion marker or processed-file manifest.",
+   "The exact-term filter dropped equivalent-language candidates: `1001-00003` appears in `/tmp/mfn_matters_all` but not `/tmp/mfn_exact_matters`; the filter retained only favored/MFN terms and excluded no-less-favorable, equal-treatment, parity, and price-protection hits."
+  ],
+  "concerns": "The scan produced useful candidate snippets—508 file hits and more than 50 provisional matters—but it does not establish complete store coverage after the timeouts. Its broad regex also creates substantial screening noise, and the exact-term result cannot safely define the candidate population. Surfaced matters such as 1001-00007 remain unexamined according to the supplied unresolved-matters list.",
+  "recommendation": "Rerun deterministically by matter-folder batches, recording an all-files manifest and per-batch completion status; retry every failed batch. Preserve the union of all broad-equivalent matches rather than the exact-term subset, and emit bounded records containing matter, path, matched category, and snippet. Carry every surfaced matter—including broad-only matters—into document-level screening.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Coverage is unverified: both extraction commands returned “Error: command timed out after 60s” (the initial scan and `scan_mfn_dir`), and the later 508-line output has no completion marker or processed-file manifest.; The exact-term filter dropped equivalent-language candidates: `1001-00003` appears in `/tmp/mfn_matters_all` but not `/tmp/mfn_exact_matters`; the filter retained only favored/MFN terms and excluded no-less-favorable, equal-treatment, parity, and price-protection hits.\nReviewer concerns: The scan produced useful candidate snippets—508 file hits and more than 50 provisional matters—but it does not establish complete store coverage after the timeouts. Its broad regex also creates substantial screening noise, and the exact-term result cannot safely define the candidate population. Surfaced matters such as 1001-00007 remain unexamined according to the supplied unresolved-matters list.\nReviewer recommendation: Rerun deterministically by matter-folder batches, recording an all-files manifest and per-batch completion status; retry every failed batch. Preserve the union of all broad-equivalent matches rather than the exact-term subset, and emit bounded records containing matter, path, matched category, and snippet. Carry every surfaced matter—including broad-only matters—into document-level screening.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00007, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00004, 1005-00002, 1005-00003, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00001, 1008-00006, 1008-00008, 1008-00010, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00001, 1012-00003, 1013-00004, 1014-00004, 1015-00001, 1015-00005, 1017-00004, 1017-00005 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 60917,
+  "input_tokens_details": {
+   "cache_write_tokens": 51398,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 155,
+  "output_tokens_details": {
+   "reasoning_tokens": 81
+  },
+  "total_tokens": 61072
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Rerun the MFN scan deterministically by matter batches with completion markers and preserve both exact MFN terms and equivalent pricing/parity language, then establish a complete candidate matter union for document-level screening.\",\"new_stage_name\":\"Deterministic MFN scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

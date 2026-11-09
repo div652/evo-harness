@@ -10,12 +10,15 @@ Scores: yes = 1, partly = 0.5, no = 0, averaged over an item's samples.
 | control_nosum | 474 | 62% / 38% / 1% | 0.805 | 21% / 42% / 37% | 0.419 |
 | reviewer_sonnet | 474 | 57% / 42% / 1% | 0.777 | 22% / 44% / 34% | 0.439 |
 | reviewer_luna | 474 | 38% / 57% / 5% | 0.664 | 12% / 42% / 46% | 0.334 |
+| reviewer_luna_high | 474 | 41% / 54% / 5% | 0.681 | 16% / 42% / 42% | 0.372 |
 
 ## Paired differences (95% bootstrap CI over items)
 
 | Comparison | review score | step score |
 |---|---|---|
 | reviewer_luna − reviewer_sonnet | -0.114 [-0.145, -0.084] | -0.104 [-0.143, -0.066] |
+| reviewer_luna_high − reviewer_sonnet | -0.096 [-0.124, -0.068] | -0.066 [-0.110, -0.024] |
+| reviewer_luna_high − reviewer_luna | +0.018 [-0.002, +0.039] | +0.038 [+0.006, +0.069] |
 | reviewer_sonnet − control_nosum | -0.027 [-0.049, -0.006] | +0.020 [-0.017, +0.057] |
 | reviewer_luna − control_nosum | -0.141 [-0.174, -0.110] | -0.084 [-0.130, -0.040] |
 
@@ -27,3 +30,4 @@ Scores: yes = 1, partly = 0.5, no = 0, averaged over an item's samples.
 | control_nosum | | 292 | 0.50 | | 3 | 0.00 |
 | reviewer_sonnet | | 269 | 0.55 | | 6 | 0.00 |
 | reviewer_luna | | 179 | 0.48 | | 24 | 0.04 |
+| reviewer_luna_high | | 196 | 0.55 | | 24 | 0.02 |

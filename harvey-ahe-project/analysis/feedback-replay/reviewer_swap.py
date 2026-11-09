@@ -9,7 +9,9 @@ model request (no other change, no reasoning-summary request), and generate the
 agent's next step (gpt-5.6-luna via CAO).
 
 Reviewers:
-  luna    gpt-5.6-luna, reasoning effort medium (Responses API; 16K output tokens so reasoning is not cut)
+  luna       gpt-5.6-luna, reasoning effort medium (Responses API; 32K output tokens so reasoning is not cut;
+             the medium run on 2026-11-09 used 16K)
+  luna_high  gpt-5.6-luna, reasoning effort high
   sonnet  claude-sonnet-5-5 through the harness's own call (the original reviewer, fresh sample)
 
 Each item first checks the rebuild: rendering the review with the recorded
@@ -54,9 +56,15 @@ def load_harness(rnd: str):
     return stage, common
 
 
-def luna_chat(model: str, system: str, user: str, max_tokens: int = 900) -> str:  # noqa: ARG001 (signature of the harness chat)
+def make_luna_chat(effort: str):
+    def luna_chat(model: str, system: str, user: str, max_tokens: int = 900) -> str:  # noqa: ARG001 (signature of the harness chat)
+        return _luna_call(system, user, effort)
+    return luna_chat
+
+
+def _luna_call(system: str, user: str, effort: str) -> str:
     body = json.dumps({"model": "gpt-5.6-luna", "instructions": system, "input": user, "stream": False,
-                       "reasoning": {"effort": "medium", "summary": "auto"}, "max_output_tokens": 16000}).encode()
+                       "reasoning": {"effort": effort, "summary": "auto"}, "max_output_tokens": 32000}).encode()
     for attempt in range(6):
         req = urllib.request.Request(RESPONSES_URL, data=body, headers={
             "Authorization": f"Bearer {os.environ['CAO_API_KEY']}", "Content-Type": "application/json"})
@@ -197,15 +205,16 @@ def fresh_critique(rnd: str, stage_mod, common, rb: dict, effective: str | None)
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--round", choices=["r2", "r3"], required=True)
-    ap.add_argument("--reviewer", choices=["luna", "sonnet"], required=True)
+    ap.add_argument("--reviewer", choices=["luna", "luna_high", "sonnet"], required=True)
     ap.add_argument("--samples", type=int, default=2)
     ap.add_argument("--workers", type=int, default=24)
     ap.add_argument("--limit", type=int)
     ap.add_argument("--check-only", action="store_true", help="only verify the rebuild, no model calls")
     args = ap.parse_args()
     stage_mod, common = load_harness(args.round)
-    if args.reviewer == "luna":
-        stage_mod.chat = luna_chat  # the harness critic calls chat(CRITIC_MODEL, system, user)
+    if args.reviewer in ("luna", "luna_high"):
+        # the harness critic calls chat(CRITIC_MODEL, system, user)
+        stage_mod.chat = make_luna_chat("high" if args.reviewer == "luna_high" else "medium")
     items = [i for i in map(json.loads, open(HERE / "dataset" / "items.jsonl"))
              if i["round"] == args.round and (i.get("first_error_flag") or {}).get("request_copy")]
     out_dir = HERE / "replays" / "first_error" / f"reviewer_{args.reviewer}"

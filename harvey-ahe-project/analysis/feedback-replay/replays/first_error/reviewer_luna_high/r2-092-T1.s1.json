@@ -1,0 +1,41 @@
+{
+ "id": "r2-092-T1",
+ "target": "first_error",
+ "variant": "reviewer_luna_high",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Partial-scan acceptance: the first two scan commands timed out, and the later `pgrep` calls still showed all five workers running while the agent claimed completion.",
+   "Unreliable range partitioning: `/tmp/scan_1001.out`, supposedly for matters 1001–1009, contains 1033-00005 and 1017-00004, so the range filter was not trustworthy.",
+   "Filename-only candidate narrowing: the final grep examined only `/tmp/scan_1001.out`, filtered filenames by six terms, and stopped at 200 lines; the other four range outputs and differently named files were not reviewed."
+  ],
+  "concerns": "Some candidate hits were surfaced, including draft and agreement-centered matters, but the scan was neither shown to finish nor consolidated across all ranges. Each output showed 280 FILE lines while its worker remained active. The only displayed follow-up examined one output and applied a filename filter, so the reported candidate set cannot establish store-wide completeness or preserve differently named documents.",
+  "recommendation": "Fix and validate the matter-range filter, rerun every range with bounded, structured output covering both DOCX and EML, and wait for explicit completion. Merge all range outputs without filename-only filtering, deduplicate by matter and document, and retain every duration, execution, and Labor & Employment hit for direct document review.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Partial-scan acceptance: the first two scan commands timed out, and the later `pgrep` calls still showed all five workers running while the agent claimed completion.; Unreliable range partitioning: `/tmp/scan_1001.out`, supposedly for matters 1001–1009, contains 1033-00005 and 1017-00004, so the range filter was not trustworthy.; Filename-only candidate narrowing: the final grep examined only `/tmp/scan_1001.out`, filtered filenames by six terms, and stopped at 200 lines; the other four range outputs and differently named files were not reviewed.\nReviewer concerns: Some candidate hits were surfaced, including draft and agreement-centered matters, but the scan was neither shown to finish nor consolidated across all ranges. Each output showed 280 FILE lines while its worker remained active. The only displayed follow-up examined one output and applied a filename filter, so the reported candidate set cannot establish store-wide completeness or preserve differently named documents.\nReviewer recommendation: Fix and validate the matter-range filter, rerun every range with bounded, structured output covering both DOCX and EML, and wait for explicit completion. Merge all range outputs without filename-only filtering, deduplicate by matter and document, and retain every duration, execution, and Labor & Employment hit for direct document review.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00006, 1001-00007, 1003-00003, 1005-00006, 1006-00006, 1006-00008, 1007-00003, 1007-00006, 1009-00005, 1010-00003, 1010-00004, 1011-00005, 1013-00006, 1015-00004, 1017-00006, 1018-00003, 1018-00008, 1021-00001, 1022-00004, 1025-00007, 1026-00004, 1037-00004, 1037-00006, 1038-00006, 1038-00008, 1041-00001, 1041-00003, 1045-00002, 1003-00005, 1005-00001, 1007-00008, 1009-00001, 1012-00001, 1013-00004 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 53865,
+  "input_tokens_details": {
+   "cache_write_tokens": 44346,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 144,
+  "output_tokens_details": {
+   "reasoning_tokens": 80
+  },
+  "total_tokens": 54009
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Rerun the extraction with a validated matter-range filter and bounded per-file output, wait for completion, and merge/deduplicate all hits across the store.\",\"new_stage_name\":\"Validated storewide covenant scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

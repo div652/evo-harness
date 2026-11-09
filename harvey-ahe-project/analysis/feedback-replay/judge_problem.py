@@ -152,7 +152,8 @@ def summarize(arms: list[str]) -> None:
         rng = random.Random(0)
         bs = sorted(sum(rng.choice(diffs) for _ in diffs) / len(diffs) for _ in range(5000))
         return f"{sum(diffs) / len(diffs):+.3f} [{bs[125]:+.3f}, {bs[4875]:+.3f}]"
-    pairs = [("reviewer_luna", "reviewer_sonnet"), ("reviewer_sonnet", "control_nosum"), ("reviewer_luna", "control_nosum")]
+    pairs = [("reviewer_luna", "reviewer_sonnet"), ("reviewer_luna_high", "reviewer_sonnet"), ("reviewer_luna_high", "reviewer_luna"),
+             ("reviewer_sonnet", "control_nosum"), ("reviewer_luna", "control_nosum")]
     for a, b in pairs:
         if a in per and b in per:
             out.append(f"| {a} − {b} | {ci([per[a][i][0] - per[b][i][0] for i in common])} | {ci([per[a][i][1] - per[b][i][1] for i in common])} |")

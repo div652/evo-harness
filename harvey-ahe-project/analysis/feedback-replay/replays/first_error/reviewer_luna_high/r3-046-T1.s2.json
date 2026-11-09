@@ -1,0 +1,45 @@
+{
+ "id": "r3-046-T1",
+ "target": "first_error",
+ "variant": "reviewer_luna_high",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The ranges `1000 1019` and `1020 1039` timed out, yet their partial `/tmp/h1.tsv` and `/tmp/h2.tsv` outputs were merged into `hitpaths.txt` without a rerun or completeness check.",
+   "`/tmp/scan_fast.py` restricts extraction to `.docx`, `.pptx`, `.xlsx`, `.eml`, and `.txt`, excluding other document formats such as PDFs and legacy files.",
+   "The follow-up Python call constructs `useful` only from filename keywords such as `offering`, `prospectus`, `proceeds`, `underwriting`, and `closing`, narrowing the full hit set before candidate screening."
+  ],
+  "concerns": "The scan produced 1,798 path hits, but two range jobs timed out and the extractor used a restrictive file-type list. The later filename-based `useful` subset is not a complete matter-level candidate inventory. Accordingly, this is a noisy partial pool, not evidence that all Capital Markets growth offerings or their closing and use-of-proceeds proof were found. Surfaced-but-unlisted matter IDs must remain in scope.",
+  "recommendation": "Rerun every timed-out range to completion, covering all supported document formats and recording a complete matter/file manifest. Build candidates from the full manifest and extracted text—not visible output, filename keywords, or capped subsets. Preserve every surfaced matter for the next listing and document-screening stage.",
+  "new_stage": {
+   "name": "Scan document text (attempt 2)",
+   "goal": "Complete an uncapped, format-inclusive scan across every matter, verify range completeness, and produce a full matter-level candidate manifest with text snippets for growth earmark, offering, and closing evidence."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = no.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The ranges `1000 1019` and `1020 1039` timed out, yet their partial `/tmp/h1.tsv` and `/tmp/h2.tsv` outputs were merged into `hitpaths.txt` without a rerun or completeness check.; `/tmp/scan_fast.py` restricts extraction to `.docx`, `.pptx`, `.xlsx`, `.eml`, and `.txt`, excluding other document formats such as PDFs and legacy files.; The follow-up Python call constructs `useful` only from filename keywords such as `offering`, `prospectus`, `proceeds`, `underwriting`, and `closing`, narrowing the full hit set before candidate screening.\nReviewer concerns: The scan produced 1,798 path hits, but two range jobs timed out and the extractor used a restrictive file-type list. The later filename-based `useful` subset is not a complete matter-level candidate inventory. Accordingly, this is a noisy partial pool, not evidence that all Capital Markets growth offerings or their closing and use-of-proceeds proof were found. Surfaced-but-unlisted matter IDs must remain in scope.\nReviewer recommendation: Rerun every timed-out range to completion, covering all supported document formats and recording a complete matter/file manifest. Build candidates from the full manifest and extracted text—not visible output, filename keywords, or capped subsets. Preserve every surfaced matter for the next listing and document-screening stage.\nReviewer suggests a new step: 'Scan document text (attempt 2)' (Complete an uncapped, format-inclusive scan across every matter, verify range completeness, and produce a full matter-level candidate manifest with text snippets for growth earmark, offering, and closing evidence.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Scan document text (attempt 2)\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1003-00002, 1003-00003, 1003-00004, 1003-00005, 1004-00001, 1004-00002, 1004-00003, 1005-00001, 1005-00002, 1005-00003, 1005-00004, 1005-00005, 1005-00006, 1006-00001, 1006-00002, 1006-00003, 1039-00005, 1040-00001, 1041-00001, 1041-00002, 1041-00003, 1041-00004 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nYou said the goal was not reached. Reopen this stage: call stage_start with stage=\"Scan document text with an extraction script\" and a sharper goal that follows the recommendation above, or start a different stage if that is what is needed.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 44452,
+  "input_tokens_details": {
+   "cache_write_tokens": 34594,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 99,
+  "output_tokens_details": {
+   "reasoning_tokens": 38
+  },
+  "total_tokens": 44551
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Enumerate complete file lists for likely Capital Markets offering matters surfaced by the scan, preserving all candidate matters before reading proof documents.\",\"new_stage_name\":\"List files in candidate matters\",\"stage\":\"List files in candidate matters\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,45 @@
+{
+ "id": "r3-141-T2",
+ "target": "first_error",
+ "variant": "reviewer_luna_high",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Incomplete cap-term coverage: the `/tmp/scan_broad.py` pattern matches `liability cap/limitation` but not standalone `cap` or `caps`, so the claimed caps inventory is not complete.",
+   "Hand-picked follow-up review: `/tmp/broad_summary.txt` reports 244 hit matters, but only 18 documents were opened; the explicit no-open list includes 1045-00004, 1001-00002, 1002-00001, 1003-00001, and 1004-00001.",
+   "Series/client tally not demonstrated: the displayed inventory contains matter IDs and hit counts only, with no client mapping before the 18 matters were selected for review."
+  ],
+  "concerns": "The broad scan appears to cover the matter directory without a filename/path filter and saved a 244-matter inventory, which fixes the prior coverage problem. However, the search pattern is not complete for caps, and the subsequent review does not carry the full hit inventory forward. The log therefore does not establish that all transaction, JV, minority-investment, or negotiation candidates will be screened from their own documents.",
+  "recommendation": "Rerun the scan with standalone `cap`/`caps` (and equivalent limitation wording), then create a complete manifest of every hit matter and number series with its client. List files for all manifest matters—without filename, document-type, execution-status, or output-line filters—and identify each matter’s executed, closing, or formation proof document before screening.",
+  "new_stage": {
+   "name": "List files for every scanned hit matter",
+   "goal": "Using the complete 244-matter manifest and client/series mapping, produce uncapped folder and file listings for every hit matter, preserving all IDs and identifying the likely executed or closing proof documents."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Incomplete cap-term coverage: the `/tmp/scan_broad.py` pattern matches `liability cap/limitation` but not standalone `cap` or `caps`, so the claimed caps inventory is not complete.; Hand-picked follow-up review: `/tmp/broad_summary.txt` reports 244 hit matters, but only 18 documents were opened; the explicit no-open list includes 1045-00004, 1001-00002, 1002-00001, 1003-00001, and 1004-00001.; Series/client tally not demonstrated: the displayed inventory contains matter IDs and hit counts only, with no client mapping before the 18 matters were selected for review.\nReviewer concerns: The broad scan appears to cover the matter directory without a filename/path filter and saved a 244-matter inventory, which fixes the prior coverage problem. However, the search pattern is not complete for caps, and the subsequent review does not carry the full hit inventory forward. The log therefore does not establish that all transaction, JV, minority-investment, or negotiation candidates will be screened from their own documents.\nReviewer recommendation: Rerun the scan with standalone `cap`/`caps` (and equivalent limitation wording), then create a complete manifest of every hit matter and number series with its client. List files for all manifest matters—without filename, document-type, execution-status, or output-line filters—and identify each matter’s executed, closing, or formation proof document before screening.\nLabel: these calls looked like 'Screen candidate matters by reading documents' work, so they were also reviewed against that stage's failures. Declare 'Screen candidate matters by reading documents' for this kind of work.\nReviewer suggests a new step: 'List files for every scanned hit matter' (Using the complete 244-matter manifest and client/series mapping, produce uncapped folder and file listings for every hit matter, preserving all IDs and identifying the likely executed or closing proof documents.). You can start it with stage_start(stage=\"new\", new_stage_name=\"List files for every scanned hit matter\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00002, 1001-00005, 1001-00006, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1003-00002, 1003-00005, 1004-00001.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nCommon failures at 'Screen candidate matters by reading documents':\n- Matters that surfaced in the agent's own searches, scans or candidate lists were left out of the reading shortlist, never opened, and so dropped from or misclassified in the answer from snippets alone.\n- A matter's needed proof document (executed agreement, closing or covenant memo, complaint or motion, spreadsheet) appeared in a listing, but the agent opened or cited other documents of that matter or a sibling matter instead.\n- A matter's proof document never appeared in any search or listing because the agent never listed that matter's folder, so it read peripheral papers and cited no proof record.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 316257,
+  "input_tokens_details": {
+   "cache_write_tokens": 306399,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 120,
+  "output_tokens_details": {
+   "reasoning_tokens": 54
+  },
+  "total_tokens": 316377
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Complete the terminology coverage by rerunning the broad scan with standalone cap/caps and limitation terms, saving a complete hit manifest for all matters before final screening.\",\"new_stage_name\":\"Scan fraud carve-out terms with standalone caps\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}
