@@ -1,0 +1,28 @@
+{
+ "id": "r3-102-T0",
+ "target": "first_error",
+ "variant": "control",
+ "sample": 2,
+ "summaries": true,
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 219057,
+  "input_tokens_details": {
+   "cache_write_tokens": 0,
+   "cached_tokens": 219054
+  },
+  "output_tokens": 373,
+  "output_tokens_details": {
+   "reasoning_tokens": 136
+  },
+  "total_tokens": 219430
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "bash",
+   "arguments": "{\"command\":\"python - <<'PY'\\nimport re,zipfile,html\\nfor fn in ['documents/matters/1022-00004/Draft Agreement/employment-agreement-draft-2.docx','documents/matters/1033-00005/Transaction Documents/executive-employment-agreement-draft-3-enhanced.docx']:\\n with zipfile.ZipFile(fn) as z:s=z.read('word/document.xml').decode('utf8','ignore')\\n t=re.sub(r'\\\\s+',' ',re.sub('<[^>]+>',' ',html.unescape(s)))\\n print('\\\\n',fn)\\n for pat in [r'(?i)full acceleration',r'(?i)all RSUs.{0,400}',r'(?i)accelerat.{0,250}equity',r'(?i)RSU Acceleration']:\\n  for m in list(re.finditer(pat,t))[:5]: print(t[max(0,m.start()-160):m.end()+500])\\nPY\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,28 @@
+{
+ "id": "r2-184-T0",
+ "target": "first_error",
+ "variant": "wrapped",
+ "sample": 1,
+ "summaries": true,
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 118101,
+  "input_tokens_details": {
+   "cache_write_tokens": 108582,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 751,
+  "output_tokens_details": {
+   "reasoning_tokens": 223
+  },
+  "total_tokens": 118852
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "bash",
+   "arguments": "{\"command\":\"cat > /tmp/scanrange.py <<'PY'\\nimport os,re,zipfile,html,sys\\nlo,hi=map(int,sys.argv[1:]); root='documents/matters'\\npat=re.compile(r'(2026)',re.I)\\nfor m in sorted(os.listdir(root)):\\n try: num=int(m.split('-')[0])\\n except: continue\\n if not(lo<=num<=hi): continue\\n p=os.path.join(root,m); hits=[]\\n for dp,ds,fs in os.walk(p):\\n  for f in fs:\\n   path=os.path.join(dp,f)\\n   if not f.lower().endswith(('.docx','.eml','.xlsx')): continue\\n   try:\\n    if f.lower().endswith('.eml'): txt=open(path,errors='ignore').read()\\n    else:\\n     with zipfile.ZipFile(path) as z: txt=' '.join(z.read(n).decode('utf8','ignore') for n in z.namelist() if n.endswith('.xml'))\\n    txt=re.sub('<[^>]+>',' ',html.unescape(txt)); txt=re.sub(r'\\\\s+',' ',txt)\\n    if pat.search(txt) and re.search(r'(execution version|executed|signed|signing|dated as of|effective date|execution date)',txt,re.I):\\n     # only if file likely transaction/commercial based path or text\\n     if re.search(r'(agreement|purchase|merger|acquisition|transaction|loan|credit|underwriting|subscription|term.sheet|execution|deal|closing)',path+' '+txt[:5000],re.I):\\n      dates=re.findall(r'.{0,80}(?:2026).{0,100}',txt,re.I)[:2]\\n      hits.append((os.path.relpath(path,p),dates))\\n   except: pass\\n if hits:\\n  print(m)\\n  for fn,ds in hits[:12]: print(' ',fn,' :: ',' || '.join(ds)[:400])\\nPY\\npython /tmp/scanrange.py 1001 1020 > /tmp/r1.txt\\npython /tmp/scanrange.py 1021 1040 > /tmp/r2.txt\\nwc -l /tmp/r1.txt /tmp/r2.txt\\ncat /tmp/r1.txt\\ncat /tmp/r2.txt\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

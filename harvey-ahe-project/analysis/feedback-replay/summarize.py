@@ -53,7 +53,7 @@ def main() -> None:
         out.append(f"| {a} | {n} | {c['yes'] / n:.0%} | {c['partly'] / n:.0%} | {c['no'] / n:.0%} | "
                    f"{sum(mean[a].values()) / len(common):.3f} | {mv['reopen_same_stage'] / n:.0%} / {mv['new_stage'] / n:.0%} / {mv['other_stage'] / n:.0%} |")
     out.append("")
-    base = args.arms[1] if len(args.arms) > 1 and args.arms[0] == "original" else args.arms[0]
+    base = "control" if "control" in args.arms else args.arms[0]
     out += ["## Paired differences (mean score per item, 95% bootstrap CI over items)", "", "| Comparison | difference | CI |", "|---|---|---|"]
     for a in args.arms:
         if a == base:

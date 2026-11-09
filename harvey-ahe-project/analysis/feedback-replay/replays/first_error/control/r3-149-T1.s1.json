@@ -1,0 +1,28 @@
+{
+ "id": "r3-149-T1",
+ "target": "first_error",
+ "variant": "control",
+ "sample": 1,
+ "summaries": true,
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 185138,
+  "input_tokens_details": {
+   "cache_write_tokens": 175280,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 414,
+  "output_tokens_details": {
+   "reasoning_tokens": 209
+  },
+  "total_tokens": 185552
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "bash",
+   "arguments": "{\"command\":\"python - <<'PY'\\nfrom pathlib import Path\\nfrom collections import defaultdict\\nD=defaultdict(list)\\nfor line in Path('scan_hits.txt').read_text().splitlines():\\n if line.startswith('  ') or '\\\\t' not in line: continue\\n p=line.split('\\\\t')[0]\\n if 'Transaction Documents' in p or 'Negotiation & Transaction Documents' in p or 'Post-Closing' in p:\\n  D[p.split('/')[2]].append(p)\\nprint('matters',len(D))\\nfor m,ps in sorted(D.items()):\\n print(m, len(ps))\\n for p in ps:\\n  if any(k in p.lower() for k in ['purchase','merger','stock','asset','mipa','spa','apa','working','true-up','post-closing']):print(' ',p)\\nPY\"}"
+  }
+ ],
+ "reasoning_summary": []
+}
