@@ -185,13 +185,19 @@ class EvaluationSettings(StrictModel):
     # them enables the paired passing/failing comparison, but no metric,
     # attribution, or selection counts them. 0: off. Needs adapter support.
     train_extra_trials: int = Field(default=0, ge=0, le=10)
+    # Whether the final test also runs the baseline C0 next to the selected
+    # checkpoint. False: only the selected checkpoint (the baseline's test
+    # results come from elsewhere).
+    final_test_baseline: bool = True
 
     @model_serializer(mode="wrap")
     def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
-        # Omitted at its default so earlier campaigns keep their identity.
+        # Omitted at their defaults so earlier campaigns keep their identity.
         data = handler(self)
         if data.get("train_extra_trials") == 0:
             del data["train_extra_trials"]
+        if data.get("final_test_baseline") is True:
+            del data["final_test_baseline"]
         return data
 
 

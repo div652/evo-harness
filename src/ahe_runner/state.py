@@ -14,11 +14,13 @@ from pathlib import Path
 from typing import Any
 
 from .errors import (
+    DISK_FULL_MARKER,
     ConfigurationError,
     InfrastructureError,
     IntegrityError,
     StageBlockedError,
     StageInterruptedError,
+    is_disk_full,
 )
 from .io import (
     atomic_write_json,
@@ -161,6 +163,9 @@ class StageStore:
                 for path in result.outputs
             ]
         except Exception as exc:
+            # A full disk is transient host trouble, retried like any other
+            # infrastructure failure.
+            infrastructure = isinstance(exc, InfrastructureError) or is_disk_full(exc)
             error = {
                 "type": type(exc).__name__,
                 "message": str(exc),
@@ -170,19 +175,13 @@ class StageStore:
             attempts = list(stage["attempts"])
             attempts[-1] = {
                 **attempts[-1],
-                "status": "infrastructure_failed"
-                if isinstance(exc, InfrastructureError)
-                else "failed",
+                "status": "infrastructure_failed" if infrastructure else "failed",
                 "completed_at": datetime.now(UTC).isoformat(),
                 "error": error,
             }
             stage["attempts"] = attempts
             stage["last_error"] = error
-            can_retry = (
-                retryable
-                and isinstance(exc, InfrastructureError)
-                and attempt < allowed_attempts
-            )
+            can_retry = retryable and infrastructure and attempt < allowed_attempts
             stage["status"] = "interrupted" if can_retry else "blocked"
             stage["updated_at"] = datetime.now(UTC).isoformat()
             atomic_write_json(stage_path, stage)
@@ -383,6 +382,13 @@ def _failed_on_infrastructure(attempt: Mapping[str, Any]) -> bool:
     if attempt.get("status") == "infrastructure_failed":
         return True
     error = attempt.get("error")
+    # Attempts recorded before a full disk counted as infrastructure.
+    if (
+        attempt.get("status") == "failed"
+        and isinstance(error, dict)
+        and DISK_FULL_MARKER in str(error.get("message", "")).casefold()
+    ):
+        return True
     return (
         attempt.get("status") == "interrupted"
         and isinstance(error, dict)

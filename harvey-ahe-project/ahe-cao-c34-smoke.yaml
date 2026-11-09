@@ -1,0 +1,142 @@
+# Smoke test for campaign 34 (C0 on one task, one trial, rounds 0). Campaign 34: campaign 23 rerun with reasoning summaries (prepared 2026-11-03).
+# Campaigns 23-27 sent no `reasoning` on the Responses API at provider-default
+# effort, so the agent's reasoning items came back without summaries and the
+# Debugger and Evolve never saw the agent's reasoning. The runner now always
+# requests {"summary": "auto"} (effort still provider-default, medium).
+# Changes from campaign 23 (operator request):
+#   * reasoning summaries on (runner fix, no config field);
+#   * no evidence-only extra training trials (campaign 23: 2);
+#   * 3 validation trials (campaign 23: 2);
+#   * test on 70 tasks (campaign 23's 20 test tasks + campaign 24's 50
+#     held-out tasks), 3 trials, selected checkpoint only: C0's test results
+#     come from campaigns 23 and 24.
+# Everything else as campaign 23: gpt-5.6-luna agent at provider-default
+# effort, one gpt-5.6-sol high judge, all-pass objective, 10 rounds, 3 train
+# trials, gpt-5.6-sol high meta agents, CAO gateway.
+# CAO_API_KEY must hold the gateway key (/home/agarwaldi/cao/profile/.gateway-key).
+# Launch with scripts/run_c34.sh, in this worktree.
+schema_version: 1
+
+campaign:
+  name: harvey-lab-campaign-34-smoke
+  artifacts_dir: ./campaign-artifacts/harvey-lab-campaign-34-smoke
+  rounds: 0
+  root_seed: 42
+
+project:
+  harness_dir: ./harness_lab
+  harness_manifest: ./harness_manifest_lab.yaml
+  adapter: benchmark_adapter:HarveyAdapter
+  adapter_settings:
+    lab_root: ../../harvey-labs
+    # Campaign 12's train and validation; test = campaign 15's 70 tasks.
+    split_file: ./splits-firm-knowledge-cao-smoke1.json
+    apply_task_filter: false
+    objective: all_pass
+    judge_api: openai_responses
+    judges:
+      - model: gpt-5.6-sol
+        # LAB's judge output cap, as campaign 12.
+        max_tokens: 64000
+        reasoning_effort: high
+        temperature: null
+    # LAB's deliverable filename helper, as campaign 12.
+    helper:
+      model: claude-sonnet-5
+      max_tokens: 1024
+      temperature: 0.0
+    # CAO serves Claude only on chat completions and messages.
+    helper_api: chat
+    judge_max_prompt_chars: 240000
+    sandbox_image: lab-sandbox:latest
+    shell_timeout: 60
+    scratch_root: null
+    grading_parallel: 10
+    judge_max_concurrent_calls: 18
+    grading_attempts: 2
+    attribution_min_task_delta: 0.0
+    trial_processes: true
+    # As campaigns 20-22: an API rejection mid-run reruns the trial.
+    api_rejection_policy: rerun
+  adapter_dependency_paths:
+    - ./benchmark_adapter.py
+    - ./harvey_ahe
+    - ./splits-firm-knowledge-cao-smoke1.json
+    - ./pyproject.toml
+    - ./requirements.txt
+  meta_agent_source_roots:
+    - ./benchmark_public_all_pass
+
+models:
+  evaluated:
+    model: gpt-5.6-luna
+    max_tokens: 128000
+    reasoning_effort: provider-default
+    temperature: null
+  meta:
+    model: gpt-5.6-sol
+    max_tokens: 32000
+    reasoning_effort: high
+    temperature: null
+
+transport:
+  provider: gh_copilot_server
+  base_url: http://127.0.0.1:4141/v1
+  api_key_env: CAO_API_KEY
+  api_mode: responses
+  stream: false
+  request_timeout_seconds: 600
+  observable_model_policy: exact
+  model_catalog: required
+  negative_control: required
+  max_concurrent_requests: 24
+  hung_call_retries: 2
+  transient_retries: 6
+  transient_max_wait_seconds: 120
+
+evaluation:
+  train_trials: 1
+  validation_trials: 1
+  test_trials: 1
+  # Test only the selected checkpoint; C0's test results exist already.
+  final_test_baseline: false
+  max_concurrency: 20
+
+debugger:
+  max_concurrency: 20
+  max_iterations: 25
+
+recovery:
+  maximum_stage_attempts: 10
+  archive_incomplete_attempts: true
+
+meta:
+  backend: nexau
+  explore:
+    source_enabled: true
+    web_enabled: true
+    web_search_backend: ddgs
+    research_seed_urls:
+      - https://github.com/nex-agi/NexAU
+      - https://python-docx.readthedocs.io/en/latest/
+      - https://openpyxl.readthedocs.io/en/stable/
+      - https://python-pptx.readthedocs.io/en/latest/
+  role_supplements:
+    source: ./meta_supplements_all_pass/source.md
+    web: ./meta_supplements_all_pass/web.md
+    debugger: ./meta_supplements_all_pass/debugger.md
+    evolve: ./meta_supplements_all_pass/evolve.md
+  # (This runner predates meta.deprecated_metric_terms; the supplements were
+  # checked by hand for campaign 12's metric and two-judge wording.)
+  max_concurrent_model_calls: 20
+  max_context_tokens: 200000
+  max_running_subagents: 5
+  evolve_max_iterations: 500
+  explore_max_iterations: 200
+  # Campaign 12's per-role settings without temperatures (see above).
+  roles:
+    debugger:
+      max_tokens: 20000
+  shell:
+    backend: docker
+    image: ahe-meta-shell:py313-v2

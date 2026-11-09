@@ -188,6 +188,38 @@ def test_only_infrastructure_blocked_retryable_stages_reopen(tmp_path: Path) -> 
         store.blocked_retry_plan("final")
 
 
+def test_disk_full_is_a_retryable_infrastructure_failure(tmp_path: Path) -> None:
+    import errno
+
+    campaign = tmp_path / "campaign"
+    store = StageStore(campaign_dir=campaign, maximum_attempts=2)
+
+    def disk_full(_context):  # type: ignore[no-untyped-def]
+        raise OSError(errno.ENOSPC, "No space left on device", "/tmp/x")
+
+    with pytest.raises(StageInterruptedError):
+        store.run(name="eval", semantic_inputs={}, action=disk_full)
+    stage = read_json(campaign / "stages" / "eval" / "stage.json")
+    assert stage["attempts"][0]["status"] == "infrastructure_failed"
+
+    # A stage blocked by a full disk before this rule existed can be retried.
+    path = campaign / "stages" / "old" / "stage.json"
+    with pytest.raises(StageBlockedError):
+        store.run(
+            name="old",
+            semantic_inputs={},
+            action=lambda _c: (_ for _ in ()).throw(ValueError("other")),
+        )
+    old = read_json(path)
+    old["attempts"][0]["status"] = "failed"
+    old["attempts"][0]["error"] = {
+        "type": "OSError",
+        "message": "[Errno 28] No space left on device: '/x'",
+    }
+    atomic_write_json(path, old)
+    assert store.blocked_retry_plan("old")["attempts"] == 1
+
+
 def test_pre_stage_command_runs_before_each_attempt(tmp_path: Path) -> None:
     campaign = tmp_path / "campaign"
     log = tmp_path / "hook.log"

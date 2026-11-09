@@ -261,9 +261,12 @@ class CampaignController:
         selection = self.run_validation()
         selected = str(selection["selected_checkpoint"])
         selected_index = int(selected.removeprefix("C"))
+        tested = {selected_index}
+        if self.config.document.evaluation.final_test_baseline:
+            tested.add(0)
         results = {
             f"C{index}": self._ensure_evaluation(index, SplitName.TEST)
-            for index in sorted({0, selected_index})
+            for index in sorted(tested)
         }
         result = self.stage_store.run(
             name="final.complete",
@@ -938,7 +941,7 @@ class CampaignController:
             os.replace(temporary, selected_harness)
         payload = {
             "schema_version": 1,
-            "baseline_checkpoint": "C0",
+            "baseline_checkpoint": "C0" if "C0" in results else None,
             "selected_checkpoint": selected,
             "test_summaries": {
                 label: result.summary.model_dump(mode="json")

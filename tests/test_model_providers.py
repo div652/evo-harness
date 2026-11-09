@@ -136,7 +136,9 @@ def test_nexau_wire_settings() -> None:
     assert nexau_reasoning(copilot, "high") == {"effort": "high"}
     assert nexau_api_type(_azure()) == "openai_responses"
     assert nexau_reasoning(_azure(), "high") == {"effort": "high", "summary": "auto"}
-    assert nexau_reasoning(_azure(), None) is None
+    # Summaries are requested even at provider-default effort (no effort sent).
+    assert nexau_reasoning(_azure(), None) == {"summary": "auto"}
+    assert nexau_reasoning(copilot, None) is None
 
 
 # --------------------------------------------------------------------------
@@ -219,18 +221,28 @@ class _Raw:
         return self._response
 
 
-def _response(model: str = "exact-model", status: str = "completed") -> Any:
+def _response(
+    model: str = "exact-model",
+    status: str = "completed",
+    output: list[dict[str, Any]] | None = None,
+) -> Any:
+    dumped: dict[str, Any] = {"model": model, "status": status}
+    if output is not None:
+        dumped["output"] = output
     return SimpleNamespace(
         model=model,
         status=status,
         error=None,
         output_text="OK",
-        model_dump=lambda mode="json": {"model": model, "status": status},
+        model_dump=lambda mode="json": dumped,
     )
 
 
 def _responses_client(
-    tmp_path: Path, outcomes: list[Any], transport: TransportSettings | None = None
+    tmp_path: Path,
+    outcomes: list[Any],
+    transport: TransportSettings | None = None,
+    settings: ModelSettings | None = None,
 ) -> tuple[RecordedExactModelClient, list[dict[str, Any]]]:
     sent: list[dict[str, Any]] = []
 
@@ -251,7 +263,7 @@ def _responses_client(
     client = RecordedExactModelClient(
         transport=transport or _azure(),
         api_key="unused",
-        settings=_settings(),
+        settings=settings or _settings(),
         log_dir=tmp_path / "calls",
     )
     client._base = SimpleNamespace(  # type: ignore[attr-defined]
@@ -305,6 +317,21 @@ def test_responses_overrides_are_rejected_before_any_request(
     with pytest.raises(IntegrityError, match=message):
         client.responses.create(input="hello", **kwargs)
     assert sent == []
+
+
+def test_provider_default_effort_still_requests_summaries(tmp_path: Path) -> None:
+    settings = _settings(reasoning_effort=None)
+    client, sent = _responses_client(tmp_path, [_response()], settings=settings)
+    client.responses.create(model="exact-model", input="hi", max_output_tokens=256)
+    assert sent[0]["reasoning"] == {"summary": "auto"}
+    client, _ = _responses_client(tmp_path / "b", [_response()], settings=settings)
+    with pytest.raises(IntegrityError, match="reasoning"):
+        client.responses.create(
+            model="exact-model",
+            input="hi",
+            max_output_tokens=256,
+            reasoning={"effort": "low", "summary": "auto"},
+        )
 
 
 def test_responses_proxy_exposes_only_create(tmp_path: Path) -> None:

@@ -110,10 +110,7 @@ def run_model_preflight(
         }
         if settings.temperature is not None:
             positive_payload["temperature"] = settings.temperature
-        if settings.reasoning_effort is not None:
-            positive_payload["reasoning"] = responses_reasoning(
-                settings.reasoning_effort
-            )
+        positive_payload["reasoning"] = responses_reasoning(settings.reasoning_effort)
         create: Callable[..., Any] = client.responses.create
     else:
         positive_payload = {

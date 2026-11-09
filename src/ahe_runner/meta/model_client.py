@@ -35,6 +35,7 @@ from ahe_runner.errors import (
     InfrastructureError,
     IntegrityError,
     ProviderBlockedError,
+    is_disk_full,
 )
 from ahe_runner.io import atomic_write_json, sha256_json
 
@@ -622,18 +623,10 @@ class RecordedExactModelClient:
         if kwargs.pop("reasoning_effort", None) is not None:
             raise IntegrityError("the Responses API takes reasoning.effort only")
         reasoning = kwargs.pop("reasoning", None)
-        if self._settings.reasoning_effort is not None:
-            expected = responses_reasoning(self._settings.reasoning_effort)
-            if reasoning is not None and reasoning != expected:
-                raise IntegrityError(
-                    f"reasoning was {reasoning!r}; expected {expected!r}"
-                )
-            kwargs["reasoning"] = expected
-        elif reasoning is not None:
-            raise IntegrityError(
-                "reasoning override is prohibited when campaign reasoning "
-                "is provider-default"
-            )
+        expected = responses_reasoning(self._settings.reasoning_effort)
+        if reasoning is not None and reasoning != expected:
+            raise IntegrityError(f"reasoning was {reasoning!r}; expected {expected!r}")
+        kwargs["reasoning"] = expected
         self._set_extra_body(kwargs, extra_body)
         if "input" in kwargs:
             kwargs["input"] = wire_input_items(kwargs["input"])
@@ -959,8 +952,16 @@ def wire_input_items(value: Any) -> Any:
     return items
 
 
-def responses_reasoning(effort: str) -> dict[str, str]:
-    """Reasoning request for the Responses API, as LAB's OpenAI adapter sends it."""
+def responses_reasoning(effort: str | None) -> dict[str, str]:
+    """Reasoning request for the Responses API, as LAB's OpenAI adapter sends it.
+
+    Summaries are always requested: without ``summary`` the endpoint returns
+    reasoning items with empty summaries, and the traces the Debugger and
+    Evolve read carry no reasoning. With no effort the model keeps its
+    provider-default effort.
+    """
+    if effort is None:
+        return {"summary": "auto"}
     return {"effort": effort, "summary": "auto"}
 
 
@@ -975,10 +976,10 @@ def nexau_reasoning(
     transport: TransportSettings, effort: str | None
 ) -> dict[str, str] | None:
     """NexAU ``llm_config.reasoning`` for the transport's wire API."""
-    if effort is None:
-        return None
     if transport.api_mode == "responses":
         return responses_reasoning(effort)
+    if effort is None:
+        return None
     return {"effort": effort}
 
 
@@ -1103,6 +1104,8 @@ def parse_json_object(text: str) -> dict[str, Any]:
 
 
 def is_infrastructure_exception(exc: BaseException) -> bool:
+    if is_disk_full(exc):
+        return True
     current: BaseException | None = exc
     seen: set[int] = set()
     while current is not None and id(current) not in seen:

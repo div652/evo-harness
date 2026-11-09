@@ -56,6 +56,17 @@ def test_full_deterministic_campaign_and_idempotent_resume(tmp_path: Path) -> No
     assert resumed["final_test"] == status["final_test"]
 
 
+def test_final_test_can_skip_the_baseline(tmp_path: Path) -> None:
+    config_path = make_example_project(tmp_path, rounds=1)
+    document = yaml.safe_load(config_path.read_text("utf-8"))
+    document.setdefault("evaluation", {})["final_test_baseline"] = False
+    config_path.write_text(yaml.safe_dump(document), "utf-8")
+    status = CampaignController(load_config(config_path)).run()
+    selected = status["selection"]["selected_checkpoint"]
+    assert set(status["final_test"]["test_summaries"]) == {selected}
+    assert status["final_test"]["baseline_checkpoint"] is None
+
+
 def test_attribution_aliases_map_debugger_keys_to_task_keys(tmp_path: Path) -> None:
     config_path = make_example_project(tmp_path, rounds=1)
     controller = CampaignController(load_config(config_path))

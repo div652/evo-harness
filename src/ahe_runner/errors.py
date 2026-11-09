@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 from typing import Any
 
 
@@ -23,6 +24,23 @@ class InfrastructureError(AHERunnerError):
 
 # Kept in the message so the block survives wrapping and process boundaries.
 PROVIDER_BLOCKED_MARKER = "model provider blocked this principal"
+
+# strerror(ENOSPC); also matched in recorded error messages.
+DISK_FULL_MARKER = "no space left on device"
+
+
+def is_disk_full(exc: BaseException) -> bool:
+    """The host disk filled up: a transient condition, not a result."""
+    current: BaseException | None = exc
+    seen: set[int] = set()
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        if isinstance(current, OSError) and current.errno == errno.ENOSPC:
+            return True
+        if DISK_FULL_MARKER in str(current).casefold():
+            return True
+        current = current.__cause__ or current.__context__
+    return False
 
 
 class ProviderBlockedError(InfrastructureError):
