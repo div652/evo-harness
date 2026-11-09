@@ -1,0 +1,40 @@
+{
+ "id": "r2-181-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Hand-picked top-25 by hit count: the script ranked matters from /tmp/patent_hits.txt via most_common(25), so lower-hit matters with patent litigation can be dropped. The unopened list includes many matters (e.g., 1014-00002, 1014-00005, 1014-00006, 1013-00001, 1013-00004) that never got screened.",
+   "Strict regex filter (claim construction, Markman, P.R. 3-x, IPR) may drop matters worded differently; the agent then declared only four 'strong' matters and dismissed the rest as transactions or diligence from snippets."
+  ],
+  "concerns": "Only one call was made, and the output is dominated by a long snippet dump for 1014-00004. Screening is limited to the top 25 by hit count, so the four-matter conclusion is unsupported for the rest of the store. Many hit matters in sibling series (1014-0000x, 1013-0000x) were never listed or opened. No associate names were extracted yet, so the stated goal of naming associates or roles is not met. The dismissal of other matters as non-litigation rests on snippets.",
+  "recommendation": "Rerun the screen over all matters appearing in the hits file, not just the top 25, printing only a few capped snippets per matter. Include sibling matters in the 1014 and 1013 series. Then list the folders of each qualifying matter and read the team or engagement documents for associate names.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Hand-picked top-25 by hit count: the script ranked matters from /tmp/patent_hits.txt via most_common(25), so lower-hit matters with patent litigation can be dropped. The unopened list includes many matters (e.g., 1014-00002, 1014-00005, 1014-00006, 1013-00001, 1013-00004) that never got screened.; Strict regex filter (claim construction, Markman, P.R. 3-x, IPR) may drop matters worded differently; the agent then declared only four 'strong' matters and dismissed the rest as transactions or diligence from snippets.\nReviewer concerns: Only one call was made, and the output is dominated by a long snippet dump for 1014-00004. Screening is limited to the top 25 by hit count, so the four-matter conclusion is unsupported for the rest of the store. Many hit matters in sibling series (1014-0000x, 1013-0000x) were never listed or opened. No associate names were extracted yet, so the stated goal of naming associates or roles is not met. The dismissal of other matters as non-litigation rests on snippets.\nReviewer recommendation: Rerun the screen over all matters appearing in the hits file, not just the top 25, printing only a few capped snippets per matter. Include sibling matters in the 1014 and 1013 series. Then list the folders of each qualifying matter and read the team or engagement documents for associate names.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1006-00007, 1014-00004, 1015-00005, 1033-00005, 1001-00003, 1001-00004, 1001-00007, 1002-00002, 1002-00004, 1003-00003, 1003-00004, 1003-00005, 1004-00001, 1004-00003, 1005-00001, 1005-00002, 1005-00006, 1006-00004, 1006-00006, 1006-00008, 1007-00001, 1007-00002, 1007-00003, 1007-00006, 1007-00008, 1008-00001, 1008-00002, 1008-00003, 1008-00006, 1008-00008, 1008-00010, 1009-00001, 1009-00003, 1009-00007, 1010-00001 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 50207,
+  "input_tokens_details": {
+   "cache_write_tokens": 40688,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 137,
+  "output_tokens_details": {
+   "reasoning_tokens": 69
+  },
+  "total_tokens": 50344
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Fix the incomplete candidate screen by reviewing every matter in the hit set for litigation-specific file names and text, then enumerate all genuine patent-litigation matters before reading team documents.\",\"new_stage_name\":\"\" ,\"stage\":\"Scan document text with an extraction script\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

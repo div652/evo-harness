@@ -1,0 +1,42 @@
+{
+ "id": "r2-092-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "First scan (/tmp/scan.py) timed out at 60s; the agent split into three ranges (0-90, 90-180, 180-266), which was fine. However, the scan's keyword regex included 'competition' and 'non-solicit', so output was noisy (e.g. 1001-00001 HSR 'Competition' snippets); the output was ~105k chars, heavy but not fatal.",
+   "The scan was never filtered to Labor & Employment. Its candidate list is dominated by M&A, fund and HSR matters (1001-00002, 1001-00003 APA, 1006, 1038). Executed L&E non-competes are not distinguished from deal-side covenants.",
+   "The agent's key candidate list is a hand-picked subset of the scan hits. Many matters in the output (1045-1046, 1002-1005, 1008-1009, 1012-1016, etc.) have no documents opened and are absent from the list, risking silent drops.",
+   "The second scan (concise.py) timed out as well; the final output was cut (+20806 chars) and the agent never checked that all three range files were complete."
+  ],
+  "concerns": "The scan produced noisy, mostly non-L&E candidates, and the self-assessment (goal_reached=True) overstates it. Range files were never confirmed complete. The candidate list was picked by hand rather than by practice area or by an execution/duration co-occurrence criterion. Many surfaced matters were not opened.",
+  "recommendation": "Identify Labor & Employment matters first, by folder names or practice-area metadata. Rerun the scan on those matters only, with 'non-compete' terms together with duration regex hits, and capture per-matter hit counts to confirm every range finished. Then open the executed agreements for every matter with a duration hit, not a hand-picked subset.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: First scan (/tmp/scan.py) timed out at 60s; the agent split into three ranges (0-90, 90-180, 180-266), which was fine. However, the scan's keyword regex included 'competition' and 'non-solicit', so output was noisy (e.g. 1001-00001 HSR 'Competition' snippets); the output was ~105k chars, heavy but not fatal.; The scan was never filtered to Labor & Employment. Its candidate list is dominated by M&A, fund and HSR matters (1001-00002, 1001-00003 APA, 1006, 1038). Executed L&E non-competes are not distinguished from deal-side covenants.; The agent's key candidate list is a hand-picked subset of the scan hits. Many matters in the output (1045-1046, 1002-1005, 1008-1009, 1012-1016, etc.) have no documents opened and are absent from the list, risking silent drops.; The second scan (concise.py) timed out as well; the final output was cut (+20806 chars) and the agent never checked that all three range files were complete.\nReviewer concerns: The scan produced noisy, mostly non-L&E candidates, and the self-assessment (goal_reached=True) overstates it. Range files were never confirmed complete. The candidate list was picked by hand rather than by practice area or by an execution/duration co-occurrence criterion. Many surfaced matters were not opened.\nReviewer recommendation: Identify Labor & Employment matters first, by folder names or practice-area metadata. Rerun the scan on those matters only, with 'non-compete' terms together with duration regex hits, and capture per-matter hit counts to confirm every range finished. Then open the executed agreements for every matter with a duration hit, not a hand-picked subset.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00004, 1003-00001, 1003-00003, 1003-00005, 1005-00001, 1005-00005, 1005-00006, 1006-00002, 1006-00004, 1006-00006, 1006-00008, 1007-00002, 1007-00005, 1007-00006, 1007-00008, 1008-00002, 1008-00003, 1008-00006, 1008-00008, 1009-00001, 1009-00005, 1010-00002, 1010-00003, 1010-00004, 1011-00001, 1011-00003, 1011-00005, 1011-00008, 1012-00001 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 57511,
+  "input_tokens_details": {
+   "cache_write_tokens": 47992,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 127,
+  "output_tokens_details": {
+   "reasoning_tokens": 45
+  },
+  "total_tokens": 57638
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Run a bounded, exact-term scan across all matters in three completed ranges, reporting only documents containing non-compete/noncompetition/restrictive-covenant terms plus an explicit duration of at least 12 months, to establish a complete candidate set before reading.\",\"new_stage_name\":\"targeted covenant scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

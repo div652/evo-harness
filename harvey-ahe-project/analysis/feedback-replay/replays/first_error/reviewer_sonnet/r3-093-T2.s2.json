@@ -1,0 +1,40 @@
+{
+ "id": "r3-093-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Pattern 2 risk: the scan's regex only covers non-compete, covenant not to compete, restrictive covenant and post-employment. Variants such as 'shall not compete' or 'noncompetition period' may be missed, and only 1,209 hit lines were produced, with no per-matter tally or check of coverage."
+  ],
+  "concerns": "The scan did run across all batches, which is good. But the output is just a flat hit file, and the agent saw only a truncated view of it. There is no per-matter summary. 38 matters that appeared in hits have no document opened or folder listed. The self-assessment names only a few extra matters, so the pool could be narrowed by hand. The first hit looks like a restructuring memo about a future separation agreement, not a signed non-compete. Hits are not classified as executed or not.",
+  "recommendation": "Build a per-matter hit count from text_hits_all.txt covering every matter, and print it compactly (matter number, file count, one short term snippet). Keep every matter that has a hit as a candidate. Then list the folders of all of them to find the executed agreements, without trimming by filename or by hit rank.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Pattern 2 risk: the scan's regex only covers non-compete, covenant not to compete, restrictive covenant and post-employment. Variants such as 'shall not compete' or 'noncompetition period' may be missed, and only 1,209 hit lines were produced, with no per-matter tally or check of coverage.\nReviewer concerns: The scan did run across all batches, which is good. But the output is just a flat hit file, and the agent saw only a truncated view of it. There is no per-matter summary. 38 matters that appeared in hits have no document opened or folder listed. The self-assessment names only a few extra matters, so the pool could be narrowed by hand. The first hit looks like a restructuring memo about a future separation agreement, not a signed non-compete. Hits are not classified as executed or not.\nReviewer recommendation: Build a per-matter hit count from text_hits_all.txt covering every matter, and print it compactly (matter number, file count, one short term snippet). Keep every matter that has a hit as a candidate. Then list the folders of all of them to find the executed agreements, without trimming by filename or by hit rank.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00006, 1006-00008, 1007-00006, 1010-00004, 1011-00005, 1013-00006, 1017-00006, 1018-00003, 1018-00008, 1022-00004, 1037-00006, 1038-00008, 1041-00003, 1016-00006, 1017-00004, 1038-00006, 1038-00009, 1041-00004, 1001-00002, 1001-00004, 1001-00005, 1001-00006, 1002-00001, 1002-00002, 1002-00004, 1003-00001, 1003-00004, 1003-00005, 1004-00001.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 245301,
+  "input_tokens_details": {
+   "cache_write_tokens": 235443,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 106,
+  "output_tokens_details": {
+   "reasoning_tokens": 45
+  },
+  "total_tokens": 245407
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Create a compact per-matter candidate summary from the complete text-hit file, preserving every hit matter and identifying likely agreement documents and stated durations for subsequent reading.\",\"new_stage_name\":\"Scan candidate summary\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

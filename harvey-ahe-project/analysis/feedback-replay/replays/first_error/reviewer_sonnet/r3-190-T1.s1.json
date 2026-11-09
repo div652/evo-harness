@@ -1,0 +1,45 @@
+{
+ "id": "r3-190-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Coverage was verified (266/266), but the candidate list was built by a file-name regex (merger|acquisition|closing|signing...). Matters whose file names lack these terms are missed. The regex also pulls in generic 'closing' files such as matter-closing-memo and final-invoice-matter-closing-letter, which are not M&A closings.",
+   "Only a hand-picked subset of listed matters was opened. The search results list 1045-00004 to 1045-00007, 1046-00001, 1015-00005 and 1016-1018 series matters, none of which were opened or listed.",
+   "Proof documents were not read for several matters. 1011-00006 and 1013-00006 were read only as deal-summary memos, with no executed agreement or closing document. 1006-00008 and 1038-00008 were read only through the APA, with no closing evidence."
+  ],
+  "concerns": "The scan covered the whole store, but the candidate pool is a filename-regex result that was never tallied by matter series or client. The agent moved on after sampling about 20 matters. Many surfaced matters (1016-1018 series, 1045 series) were never opened. Also, 1017-00006's memo is filed as matter 1043-00002, so that matter number needs checking. Some reads hit file-not-found errors from guessed paths.",
+  "recommendation": "Do not rescan. Tally all matters from the existing output by series and client, and separate M&A-practice series from others. Then list the folder of every matter in the M&A series, including the 29 unopened ones. Open each matter's executed agreement and closing document to extract signing and closing dates. Use real listed paths, not guessed ones.",
+  "new_stage": {
+   "name": "Tally matter series and clients",
+   "goal": "From the existing complete scan output, build a full table of matters by series and client, flag the M&A-practice series, and list every M&A matter without dropping any on filename or cap filters."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Coverage was verified (266/266), but the candidate list was built by a file-name regex (merger|acquisition|closing|signing...). Matters whose file names lack these terms are missed. The regex also pulls in generic 'closing' files such as matter-closing-memo and final-invoice-matter-closing-letter, which are not M&A closings.; Only a hand-picked subset of listed matters was opened. The search results list 1045-00004 to 1045-00007, 1046-00001, 1015-00005 and 1016-1018 series matters, none of which were opened or listed.; Proof documents were not read for several matters. 1011-00006 and 1013-00006 were read only as deal-summary memos, with no executed agreement or closing document. 1006-00008 and 1038-00008 were read only through the APA, with no closing evidence.\nReviewer concerns: The scan covered the whole store, but the candidate pool is a filename-regex result that was never tallied by matter series or client. The agent moved on after sampling about 20 matters. Many surfaced matters (1016-1018 series, 1045 series) were never opened. Also, 1017-00006's memo is filed as matter 1043-00002, so that matter number needs checking. Some reads hit file-not-found errors from guessed paths.\nReviewer recommendation: Do not rescan. Tally all matters from the existing output by series and client, and separate M&A-practice series from others. Then list the folder of every matter in the M&A series, including the 29 unopened ones. Open each matter's executed agreement and closing document to extract signing and closing dates. Use real listed paths, not guessed ones.\nLabel: these calls looked like 'Screen candidate matters by reading documents' work, so they were also reviewed against that stage's failures. Declare 'Screen candidate matters by reading documents' for this kind of work.\nReviewer suggests a new step: 'Tally matter series and clients' (From the existing complete scan output, build a full table of matters by series and client, flag the M&A-practice series, and list every M&A matter without dropping any on filename or cap filters.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Tally matter series and clients\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1015-00005, 1016-00001, 1016-00002, 1016-00003, 1016-00004, 1016-00005, 1016-00006, 1016-00007, 1016-00008, 1016-00009, 1017-00001, 1017-00002, 1017-00003, 1017-00004, 1017-00005, 1017-00007, 1017-00008, 1017-00009, 1018-00001, 1018-00002, 1018-00003, 1018-00004, 1018-00005, 1018-00006.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nCommon failures at 'Screen candidate matters by reading documents':\n- Matters that surfaced in the agent's own searches, scans or candidate lists were left out of the reading shortlist, never opened, and so dropped from or misclassified in the answer from snippets alone.\n- A matter's needed proof document (executed agreement, closing or covenant memo, complaint or motion, spreadsheet) appeared in a listing, but the agent opened or cited other documents of that matter or a sibling matter instead.\n- A matter's proof document never appeared in any search or listing because the agent never listed that matter's folder, so it read peripheral papers and cited no proof record.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 214948,
+  "input_tokens_details": {
+   "cache_write_tokens": 205090,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 307,
+  "output_tokens_details": {
+   "reasoning_tokens": 220
+  },
+  "total_tokens": 215255
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"From the existing complete store map, identify and validate every M&A matter with an executed merger/stock/asset/membership purchase or business-combination agreement plus actual closing evidence; read those proof documents for exact signing and closing dates and record exclusions for drafts/terminations.\",\"new_stage_name\":\"Validate all M&A candidate matters\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

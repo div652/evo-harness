@@ -1,0 +1,45 @@
+{
+ "id": "r3-181-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The aggregation reports 150 candidate matters, including many M&A matters such as 1001-00003 (asset purchase, tax, closing docs). The agent then narrowed to five matters using file-name and body-text review, so the shortlist comes from a filename regex output, not a full read of the pool.",
+   "The second call filtered by file path (patent|infring|markman|trade secret in names), which is the known follow-up file-name filter. Matters whose patent content sits in generically named files would drop out. The summary's candidate list rests on this filtered output.",
+   "The agent says it will review candidates, yet the log shows no document opened. It also dropped most of the 150 hit matters (e.g. 1001-0000x, 1002-0000x, 1003-0000x, 1045-0000x) without stating a reason. These are unopened but surfaced."
+  ],
+  "concerns": "The first call's output was truncated in view, and the 150-matter pool was never ranked or examined in a way that separates real patent litigation from boilerplate mentions. The agent then used file-name matches to pick five matters. Setting goal_reached=True is premature: no per-matter body-text check was done and no document was opened.",
+  "recommendation": "Rank the 150 matters by patent-term density, counting only terms like claim construction, Markman, IPR and infringement contentions. Print a capped per-matter table with 2 snippets each. Open the top matters, plus any with patent hits in non-boilerplate files. Record an inclusion or exclusion reason for every matter, then move on to listing the folders of those candidates.",
+  "new_stage": {
+   "name": "Rank patent hits by density",
+   "goal": "Produce a capped per-matter table of patent-specific term counts with a short snippet each, and record a disposition for every one of the 150 matters before any are dropped."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The aggregation reports 150 candidate matters, including many M&A matters such as 1001-00003 (asset purchase, tax, closing docs). The agent then narrowed to five matters using file-name and body-text review, so the shortlist comes from a filename regex output, not a full read of the pool.; The second call filtered by file path (patent|infring|markman|trade secret in names), which is the known follow-up file-name filter. Matters whose patent content sits in generically named files would drop out. The summary's candidate list rests on this filtered output.; The agent says it will review candidates, yet the log shows no document opened. It also dropped most of the 150 hit matters (e.g. 1001-0000x, 1002-0000x, 1003-0000x, 1045-0000x) without stating a reason. These are unopened but surfaced.\nReviewer concerns: The first call's output was truncated in view, and the 150-matter pool was never ranked or examined in a way that separates real patent litigation from boilerplate mentions. The agent then used file-name matches to pick five matters. Setting goal_reached=True is premature: no per-matter body-text check was done and no document was opened.\nReviewer recommendation: Rank the 150 matters by patent-term density, counting only terms like claim construction, Markman, IPR and infringement contentions. Print a capped per-matter table with 2 snippets each. Open the top matters, plus any with patent hits in non-boilerplate files. Record an inclusion or exclusion reason for every matter, then move on to listing the folders of those candidates.\nReviewer suggests a new step: 'Rank patent hits by density' (Produce a capped per-matter table of patent-specific term counts with a short snippet each, and record a disposition for every one of the 150 matters before any are dropped.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Rank patent hits by density\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1003-00002, 1003-00003, 1011-00001, 1011-00002, 1020-00005, 1020-00006, 1033-00005, 1033-00006, 1006-00004, 1007-00003, 1009-00007, 1011-00003, 1013-00005, 1014-00003, 1014-00004, 1014-00005, 1017-00003, 1018-00005, 1018-00006, 1021-00004, 1022-00008, 1025-00008 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 54748,
+  "input_tokens_details": {
+   "cache_write_tokens": 44890,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 185,
+  "output_tokens_details": {
+   "reasoning_tokens": 116
+  },
+  "total_tokens": 54933
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Rank all patent-specific body-text hits across the 266 matters by substantive litigation terms, with a compact matter/file table and snippets sufficient to distinguish real patent litigation from boilerplate transactional references.\",\"new_stage_name\":\"Rank patent hits by density\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

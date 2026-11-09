@@ -1,0 +1,41 @@
+{
+ "id": "r2-092-T1",
+ "target": "first_error",
+ "variant": "reviewer_luna",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The initial uncapped scan timed out (first bash call), and the attempted range scan also timed out (second bash call), so those runs did not establish complete coverage.",
+   "The supposed range workers were not actually range-limited: /tmp/scan_1001.out contains documents/matters/1033-00005, and every shard reported the same 280 FILE matches, indicating the range filter was ineffective.",
+   "The scan surfaced 1017-00004/restrictive-covenant-enforceability-memo.docx and its settlement agreement, but the self-assessment's candidate list instead names 1017-00006 and omits 1017-00004, showing a surfaced matter was dropped during candidate summarization."
+  ],
+  "concerns": "Extraction produced substantial hits, but the log does not demonstrate a completed, correctly partitioned scan of all 266 matters. The range-filter bug means the identical shard counts cannot prove coverage or prevent omissions/duplication. The displayed grep is only a partial filtered view, and the candidate summary does not reconcile all surfaced matters, including 1017-00004. No direct document review was performed, so execution, duration, and Labor & Employment scope remain unverified.",
+  "recommendation": "Fix the matter-range filter and rerun bounded scans, recording per-range completion and distinct matter/file counts. Consolidate all shard outputs without hand-picking candidates, deduplicate by matter and document, and include every surfaced matter (including 1017-00004). Then report each candidate's keyword, duration, execution, and employment-context hits for follow-up review.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The initial uncapped scan timed out (first bash call), and the attempted range scan also timed out (second bash call), so those runs did not establish complete coverage.; The supposed range workers were not actually range-limited: /tmp/scan_1001.out contains documents/matters/1033-00005, and every shard reported the same 280 FILE matches, indicating the range filter was ineffective.; The scan surfaced 1017-00004/restrictive-covenant-enforceability-memo.docx and its settlement agreement, but the self-assessment's candidate list instead names 1017-00006 and omits 1017-00004, showing a surfaced matter was dropped during candidate summarization.\nReviewer concerns: Extraction produced substantial hits, but the log does not demonstrate a completed, correctly partitioned scan of all 266 matters. The range-filter bug means the identical shard counts cannot prove coverage or prevent omissions/duplication. The displayed grep is only a partial filtered view, and the candidate summary does not reconcile all surfaced matters, including 1017-00004. No direct document review was performed, so execution, duration, and Labor & Employment scope remain unverified.\nReviewer recommendation: Fix the matter-range filter and rerun bounded scans, recording per-range completion and distinct matter/file counts. Consolidate all shard outputs without hand-picking candidates, deduplicate by matter and document, and include every surfaced matter (including 1017-00004). Then report each candidate's keyword, duration, execution, and employment-context hits for follow-up review.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00006, 1001-00007, 1003-00003, 1005-00006, 1006-00006, 1006-00008, 1007-00003, 1007-00006, 1009-00005, 1010-00003, 1010-00004, 1011-00005, 1013-00006, 1015-00004, 1017-00006, 1018-00003, 1018-00008, 1021-00001, 1022-00004, 1025-00007, 1026-00004, 1037-00004, 1037-00006, 1038-00006, 1038-00008, 1041-00001, 1041-00003, 1045-00002, 1003-00005, 1005-00001, 1007-00008, 1009-00001, 1012-00001, 1013-00004 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 53917,
+  "input_tokens_details": {
+   "cache_write_tokens": 44398,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 175,
+  "output_tokens_details": {
+   "reasoning_tokens": 105
+  },
+  "total_tokens": 54092
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Fix the extraction coverage by scanning each matter directory exactly once with a correct matter-ID filter and emit a deduplicated report of all files containing non-compete/restrictive-covenant terms.\",\"new_stage_name\":\"Fix bounded content scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

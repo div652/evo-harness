@@ -1,0 +1,40 @@
+{
+ "id": "r2-011-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "no",
+  "applicable_failures": [
+   "The single listing loop covered only 23 hand-picked matters (1001-00004, 1001-00007, 1003-00003, ...). The prompt's list of surfaced-but-unlisted matters still holds about 60 matters, e.g. 1045-00004 to 1045-00007, 1046-00001, 1002-00001/2/5, 1003-00001/4, 1024-00001 to 1024-00004 and 1025-00001/4/8. None of these were listed.",
+   "The loop's grep filter on names (credit.agreement|term.sheet|negotiat|issues|covenant|complia...) can drop matters whose files are named differently. It also pulled in unrelated files such as no-shop-compliance-memorandum and rwi-policy-summary-negotiation-memo."
+  ],
+  "concerns": "The agent claims it listed key documents for every screened candidate. Yet about 60 matters that surfaced in earlier searches were never listed or opened. The 23 chosen matters look picked by hand, not taken from the surfaced candidate set. A name-based grep also adds noise and may miss differently named files. The coverage claim is therefore overstated.",
+  "recommendation": "Take the full surfaced-candidate list, including the ~60 unlisted matters, and list every file in each folder without a name filter, or with a broad filter such as docx/pdf. Page the output if it is long. Then choose proof documents per matter from the actual listings.",
+  "available": true
+ },
+ "review_text": "[Stage review: List files in candidate matters, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = no.\nReviewer flags: The single listing loop covered only 23 hand-picked matters (1001-00004, 1001-00007, 1003-00003, ...). The prompt's list of surfaced-but-unlisted matters still holds about 60 matters, e.g. 1045-00004 to 1045-00007, 1046-00001, 1002-00001/2/5, 1003-00001/4, 1024-00001 to 1024-00004 and 1025-00001/4/8. None of these were listed.; The loop's grep filter on names (credit.agreement|term.sheet|negotiat|issues|covenant|complia...) can drop matters whose files are named differently. It also pulled in unrelated files such as no-shop-compliance-memorandum and rwi-policy-summary-negotiation-memo.\nReviewer concerns: The agent claims it listed key documents for every screened candidate. Yet about 60 matters that surfaced in earlier searches were never listed or opened. The 23 chosen matters look picked by hand, not taken from the surfaced candidate set. A name-based grep also adds noise and may miss differently named files. The coverage claim is therefore overstated.\nReviewer recommendation: Take the full surfaced-candidate list, including the ~60 unlisted matters, and list every file in each folder without a name filter, or with a broad filter such as docx/pdf. Page the output if it is long. Then choose proof documents per matter from the actual listings.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00004, 1005-00002, 1005-00003, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00001, 1008-00006, 1008-00008, 1008-00010, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00003, 1013-00004, 1014-00004, 1015-00001, 1015-00005, 1017-00004, 1017-00005, 1018-00006, 1018-00007 ….\nCommon failures at this stage in past runs:\n- Matters that earlier searches, greps, counts or scans had already surfaced as qualifying were left out of the folders chosen for listing, often because selection followed matter number, recency or hit count rather than the surfaced list, so those matters were never opened and were wrongly excluded from the answer.\nWhat successful runs did: Passing runs listed every matter that the earlier name search or grep pointed to, often in one loop over all hit matters, and re-listed or located folders when a path failed, rather than choosing a subset by number or recency.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"List files in candidate matters\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 87398,
+  "input_tokens_details": {
+   "cache_write_tokens": 77879,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 103,
+  "output_tokens_details": {
+   "reasoning_tokens": 44
+  },
+  "total_tokens": 87501
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"List every file in all 65 union candidate matters to a scratch inventory, then derive proof-document paths without excluding matters by filename pattern.\",\"new_stage_name\":\"Inventory all union candidate matters\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,41 @@
+{
+ "id": "r2-130-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The first scan (60s timeout) and the second run, which wrote 0 lines everywhere, produced nothing. The later outputs of 3,081 lines came from parallel range scans. Matter ranges were split only up to 1030 plus a third range, and the visible log doesn't confirm that every range through 1046 was covered. Matters such as 1045-00004 and 1046-00001 are only partly accounted for.",
+   "The agent filtered the scan output via /tmp/candidates.txt, a list of litigation matters whose origin isn't shown in this stage. It then built short.txt from that list only. Matters outside it, or ones whose fee language was filed under non-litigation paths, were silently dropped. The 'strong signal' filter also kept only certain pattern names.",
+   "The agent accepted 'goal_reached' and a hand-picked list of about 20 matters, while dozens of surfaced matters (e.g. 1001-00002, 1017-00002, 1016-00002) have no documents opened or folder listed."
+  ],
+  "concerns": "The scan completed only after parallel reruns, and the final candidate set depends on an unexplained candidates.txt filter plus a pattern-name filter. The 1001-00001 hit is an arbitration engagement letter, so some 'strong' hits are boilerplate. The agent itself notes that several matters are mere fee requests or indemnity language. The self-assessment overstates completeness, and coverage of the full store is unverified.",
+  "recommendation": "Verify that the scan ranges cover every matter up to the last folder, and count the distinct matters per range. Then take the matters with fee-shifting hits from the full scan output, without the candidates.txt restriction, and screen them for general-litigation relevance. Open the operative documents for each remaining matter.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The first scan (60s timeout) and the second run, which wrote 0 lines everywhere, produced nothing. The later outputs of 3,081 lines came from parallel range scans. Matter ranges were split only up to 1030 plus a third range, and the visible log doesn't confirm that every range through 1046 was covered. Matters such as 1045-00004 and 1046-00001 are only partly accounted for.; The agent filtered the scan output via /tmp/candidates.txt, a list of litigation matters whose origin isn't shown in this stage. It then built short.txt from that list only. Matters outside it, or ones whose fee language was filed under non-litigation paths, were silently dropped. The 'strong signal' filter also kept only certain pattern names.; The agent accepted 'goal_reached' and a hand-picked list of about 20 matters, while dozens of surfaced matters (e.g. 1001-00002, 1017-00002, 1016-00002) have no documents opened or folder listed.\nReviewer concerns: The scan completed only after parallel reruns, and the final candidate set depends on an unexplained candidates.txt filter plus a pattern-name filter. The 1001-00001 hit is an arbitration engagement letter, so some 'strong' hits are boilerplate. The agent itself notes that several matters are mere fee requests or indemnity language. The self-assessment overstates completeness, and coverage of the full store is unverified.\nReviewer recommendation: Verify that the scan ranges cover every matter up to the last folder, and count the distinct matters per range. Then take the matters with fee-shifting hits from the full scan output, without the candidates.txt restriction, and screen them for general-litigation relevance. Open the operative documents for each remaining matter.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00007, 1003-00001, 1003-00002, 1003-00003, 1003-00004, 1005-00001, 1005-00003, 1005-00004, 1005-00005, 1006-00002, 1006-00004, 1006-00005, 1007-00002, 1007-00003, 1007-00004, 1007-00005, 1007-00008, 1008-00004, 1008-00005, 1008-00007, 1009-00001, 1009-00005, 1009-00006, 1010-00003, 1010-00005, 1011-00002, 1011-00003, 1011-00004, 1011-00005, 1012-00003, 1012-00004, 1012-00005 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 108296,
+  "input_tokens_details": {
+   "cache_write_tokens": 98777,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 97,
+  "output_tokens_details": {
+   "reasoning_tokens": 26
+  },
+  "total_tokens": 108393
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Verify complete scan coverage through matter 1046-00001 and summarize all fee-specific text hits by distinct matter without the earlier litigation-candidate filter, so classification does not silently drop matters.\",\"new_stage_name\":\"Verify fee-shifting scan coverage\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

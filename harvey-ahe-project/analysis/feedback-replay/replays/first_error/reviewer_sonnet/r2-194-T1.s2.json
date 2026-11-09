@@ -1,0 +1,42 @@
+{
+ "id": "r2-194-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "About 60 matters surfaced in search results (e.g., 1001-00001 to 1001-00006, 1002-00001/2, 1003-00001/4, 1004-00003, 1005-00002, 1008-00001/2/10, 1009-00004 to 1009-00007, 1013-00001/6, 1018-00003/8, 1022-00001/2/6, 1045-x, 1046-00001) were never opened or listed, so qualifying matters may be missing.",
+   "The agent called many matters confirmed (1012-00002, 1019-00002, 1041-00003, 1022-00008) after reading only the first 100-180 lines. Those reads may not reach the MFN clause.",
+   "1016-00009 was listed, but the agent opened no document from it. 1021-00001's memo cites engagement 1016-00009, so the matter link is unresolved.",
+   "Exhibit forms and templates (1009-00001 form of note, 1013-00002/3 forms of note, 1002-00003 template) were treated as operative or confirmed, though they are not executed agreements."
+  ],
+  "concerns": "The self-assessment claims every substantive candidate was screened, but dozens of surfaced matters were never opened. Several confirmations rest on beginning-of-document reads that may not include the MFN clause. Forms of note and templates were counted as confirmed. Some matters (1008-00008, 1003-00003, 1006-00008, 1009-00003) were opened and excluded, which seems reasonable, but the claim of coverage is overstated.",
+  "recommendation": "Open and keyword-check the unopened matters, starting with those whose file names show an agreement or side letter. Grep each confirmed document for 'most favored' to verify the clause itself. Check whether the form notes were actually executed in their matters. Open at least one document from 1016-00009 and resolve its link to 1021-00001.",
+  "available": true
+ },
+ "review_text": "[Stage review: Screen candidate matters by reading documents, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: About 60 matters surfaced in search results (e.g., 1001-00001 to 1001-00006, 1002-00001/2, 1003-00001/4, 1004-00003, 1005-00002, 1008-00001/2/10, 1009-00004 to 1009-00007, 1013-00001/6, 1018-00003/8, 1022-00001/2/6, 1045-x, 1046-00001) were never opened or listed, so qualifying matters may be missing.; The agent called many matters confirmed (1012-00002, 1019-00002, 1041-00003, 1022-00008) after reading only the first 100-180 lines. Those reads may not reach the MFN clause.; 1016-00009 was listed, but the agent opened no document from it. 1021-00001's memo cites engagement 1016-00009, so the matter link is unresolved.; Exhibit forms and templates (1009-00001 form of note, 1013-00002/3 forms of note, 1002-00003 template) were treated as operative or confirmed, though they are not executed agreements.\nReviewer concerns: The self-assessment claims every substantive candidate was screened, but dozens of surfaced matters were never opened. Several confirmations rest on beginning-of-document reads that may not include the MFN clause. Forms of note and templates were counted as confirmed. Some matters (1008-00008, 1003-00003, 1006-00008, 1009-00003) were opened and excluded, which seems reasonable, but the claim of coverage is overstated.\nReviewer recommendation: Open and keyword-check the unopened matters, starting with those whose file names show an agreement or side letter. Grep each confirmed document for 'most favored' to verify the clause itself. Check whether the form notes were actually executed in their matters. Open at least one document from 1016-00009 and resolve its link to 1021-00001.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1002-00001, 1002-00002, 1044-00006, 1044-00007, 1045-00001, 1045-00002, 1045-00003, 1003-00001, 1003-00004, 1004-00003, 1005-00002, 1006-00001, 1006-00002, 1006-00006, 1006-00007, 1007-00006, 1008-00001, 1008-00002, 1008-00010, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00002, 1010-00003, 1010-00004, 1011-00001, 1011-00005, 1011-00006 ….\nCommon failures at this stage in past runs:\n- A search or scan listed a qualifying matter, but the reading batches left it out, so the matter was never opened and was missing or misidentified in the answer.\n- A matter's file listing showed the specific document needed (status memo, closing papers, amended filing, proof motion), but the agent read other documents from that matter and never opened or cited the needed one.\n- When tallying matters or number series from complete listings, the agent left out some series or matters and never verified them, so the ranking undercounted them.\nWhat successful runs did: Passing runs picked reads across every matter the searches had surfaced, or those with the most specific hits, and opened the role-defining document (closing memo, status report, executed agreement, key court filing) for each, rather than sticking to matters with matching file names or one matter of a client.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Screen candidate matters by reading documents\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 198030,
+  "input_tokens_details": {
+   "cache_write_tokens": 188511,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 221,
+  "output_tokens_details": {
+   "reasoning_tokens": 149
+  },
+  "total_tokens": 198251
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "bash",
+   "arguments": "{\"command\":\"find documents/matters/1001-00002 -type f | grep -Ei 'side|letter|lpa|agreement' | sort | head -80; find documents/matters/1016-00009 -type f | head -2\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

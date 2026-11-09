@@ -1,0 +1,45 @@
+{
+ "id": "r3-190-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Coverage was verified (266/266), but the candidate list came from a filename regex on closing/signing/acquisition terms, not document text. It was then read via a hand-picked subset (~20 matters), e.g. 1001-00003, 1003-00003, 1006-00006. This matches the filtered-then-subset failure.",
+   "Many matters that surfaced in the scan were never opened or listed: 1016-00001..00009, 1018-00001..00006, 1045-00004..00007 and others. Reading was done by hand-picked paths, not the full candidate pool.",
+   "Several reads failed with file-not-found (1001-00003 post-closing letter, 1009-00003 signing notice) because paths were guessed, not listed. Some matters were read only via peripheral papers, e.g. 1011-00006 and 1013-00006 deal-summary memos."
+  ],
+  "concerns": "The scan stage never produced a full text-based candidate pool. Filename matching can miss M&A matters whose files use other names, and it also matches non-M&A matters (e.g. 'closing' engagement-closing letters). The agent's claim that the pool 'includes all transaction-heavy matters' is unsupported. About 29 surfaced matters are unopened, and the reads sampled only some matters.",
+  "recommendation": "Stop re-scanning. Build a per-matter table for all 266 matters: practice group or client, plus a count of folders such as Closing and Transaction Documents, written to a file. Then list each matter's folder in batches, with no cap on the matters included. Classify each matter from its executed agreement and closing document.",
+  "new_stage": {
+   "name": "Per-matter folder inventory",
+   "goal": "Write an inventory file covering every one of the 266 matters (practice area, folder names, key executed and closing documents) and use it, not filename regex hits, as the basis for the reading shortlist."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Coverage was verified (266/266), but the candidate list came from a filename regex on closing/signing/acquisition terms, not document text. It was then read via a hand-picked subset (~20 matters), e.g. 1001-00003, 1003-00003, 1006-00006. This matches the filtered-then-subset failure.; Many matters that surfaced in the scan were never opened or listed: 1016-00001..00009, 1018-00001..00006, 1045-00004..00007 and others. Reading was done by hand-picked paths, not the full candidate pool.; Several reads failed with file-not-found (1001-00003 post-closing letter, 1009-00003 signing notice) because paths were guessed, not listed. Some matters were read only via peripheral papers, e.g. 1011-00006 and 1013-00006 deal-summary memos.\nReviewer concerns: The scan stage never produced a full text-based candidate pool. Filename matching can miss M&A matters whose files use other names, and it also matches non-M&A matters (e.g. 'closing' engagement-closing letters). The agent's claim that the pool 'includes all transaction-heavy matters' is unsupported. About 29 surfaced matters are unopened, and the reads sampled only some matters.\nReviewer recommendation: Stop re-scanning. Build a per-matter table for all 266 matters: practice group or client, plus a count of folders such as Closing and Transaction Documents, written to a file. Then list each matter's folder in batches, with no cap on the matters included. Classify each matter from its executed agreement and closing document.\nLabel: these calls looked like 'Screen candidate matters by reading documents' work, so they were also reviewed against that stage's failures. Declare 'Screen candidate matters by reading documents' for this kind of work.\nReviewer suggests a new step: 'Per-matter folder inventory' (Write an inventory file covering every one of the 266 matters (practice area, folder names, key executed and closing documents) and use it, not filename regex hits, as the basis for the reading shortlist.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Per-matter folder inventory\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1015-00005, 1016-00001, 1016-00002, 1016-00003, 1016-00004, 1016-00005, 1016-00006, 1016-00007, 1016-00008, 1016-00009, 1017-00001, 1017-00002, 1017-00003, 1017-00004, 1017-00005, 1017-00007, 1017-00008, 1017-00009, 1018-00001, 1018-00002, 1018-00003, 1018-00004, 1018-00005, 1018-00006.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nCommon failures at 'Screen candidate matters by reading documents':\n- Matters that surfaced in the agent's own searches, scans or candidate lists were left out of the reading shortlist, never opened, and so dropped from or misclassified in the answer from snippets alone.\n- A matter's needed proof document (executed agreement, closing or covenant memo, complaint or motion, spreadsheet) appeared in a listing, but the agent opened or cited other documents of that matter or a sibling matter instead.\n- A matter's proof document never appeared in any search or listing because the agent never listed that matter's folder, so it read peripheral papers and cited no proof record.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 214922,
+  "input_tokens_details": {
+   "cache_write_tokens": 205064,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 121,
+  "output_tokens_details": {
+   "reasoning_tokens": 50
+  },
+  "total_tokens": 215043
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Create a complete per-matter inventory for all 266 matters showing transaction/closing folders and key executed/closing filenames, then use that inventory to classify every potential M&A matter before extracting dates.\",\"new_stage_name\":\"Per-matter folder inventory\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

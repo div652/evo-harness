@@ -1,0 +1,43 @@
+{
+ "id": "r2-017-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Candidate set appears hand-picked from a partial view: the stage shows no store-wide keyword search or full Banking & Finance listing. The 16-deal total and '9 sponsor / 7 corporate' split look anchored to the matters opened (1001, 1003, 1005, 1006, 1008, 1010, 1012-00001/2, 1013, 1019, 1020, 1021, 1038, 1041, 1042, 1043) rather than a verified population.",
+   "Draft opened as evidence: 1001-00004 'credit-agreement-draft.docx' has a [●] date and is not an executed deal, yet it is counted toward the sponsor bucket.",
+   "Same borrower counted twice: 1012-00001 and 1012-00002 are both Stonefield Logistics, and the second is an amended and restated agreement.",
+   "DIP facility (1020-00002) and a mezzanine loan and bridge loans are included, which may be out-of-scope deal types.",
+   "Control classification is weak: the 'conservative rule' defaults borrowers to corporate when sponsor evidence was not found, with no ownership documents read."
+  ],
+  "concerns": "The 16-deal count and the 9/7 split are not supported by this stage's reads. No store-wide search shows the candidate set is complete. A draft, an amended and restated sibling, and a DIP facility were read and apparently counted. Add-back counts of 8 and 6 rest on a short grep, and some of its output was cut off. Control type was not verified from ownership documents, so unverified borrowers were defaulted to corporate.",
+  "recommendation": "Run a store-wide search of Banking & Finance matters by file name and by content (EBITDA, add-back, sponsor, portfolio company) to fix the full set of signed facilities. Exclude drafts and treat amendments as the same deal. Then read the ownership or closing documents for each borrower to settle sponsor or corporate control, and extract the add-back clauses per executed agreement.",
+  "available": true
+ },
+ "review_text": "[Stage review: Read documents picked from the file listing, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Candidate set appears hand-picked from a partial view: the stage shows no store-wide keyword search or full Banking & Finance listing. The 16-deal total and '9 sponsor / 7 corporate' split look anchored to the matters opened (1001, 1003, 1005, 1006, 1008, 1010, 1012-00001/2, 1013, 1019, 1020, 1021, 1038, 1041, 1042, 1043) rather than a verified population.; Draft opened as evidence: 1001-00004 'credit-agreement-draft.docx' has a [●] date and is not an executed deal, yet it is counted toward the sponsor bucket.; Same borrower counted twice: 1012-00001 and 1012-00002 are both Stonefield Logistics, and the second is an amended and restated agreement.; DIP facility (1020-00002) and a mezzanine loan and bridge loans are included, which may be out-of-scope deal types.; Control classification is weak: the 'conservative rule' defaults borrowers to corporate when sponsor evidence was not found, with no ownership documents read.\nReviewer concerns: The 16-deal count and the 9/7 split are not supported by this stage's reads. No store-wide search shows the candidate set is complete. A draft, an amended and restated sibling, and a DIP facility were read and apparently counted. Add-back counts of 8 and 6 rest on a short grep, and some of its output was cut off. Control type was not verified from ownership documents, so unverified borrowers were defaulted to corporate.\nReviewer recommendation: Run a store-wide search of Banking & Finance matters by file name and by content (EBITDA, add-back, sponsor, portfolio company) to fix the full set of signed facilities. Exclude drafts and treat amendments as the same deal. Then read the ownership or closing documents for each borrower to settle sponsor or corporate control, and extract the add-back clauses per executed agreement.\nCommon failures at this stage in past runs:\n- Treating a capped, partial listing as the whole store: choosing documents only from the few matters shown, running no keyword search across the store, so the relevant matters never surfaced and the agent undercounted or concluded that none qualified.\nWhat successful runs did: The notes do not show passing runs avoiding the failure; they read documents from the top-listed matter or matters, and one run extended its reads to engagement letters of several other listed matters.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Read documents picked from the file listing\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 173907,
+  "input_tokens_details": {
+   "cache_write_tokens": 164388,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 375,
+  "output_tokens_details": {
+   "reasoning_tokens": 312
+  },
+  "total_tokens": 174282
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Reconcile the signed-deal population by deduplicating amended/restated agreements, excluding drafts, and documenting the inclusion rule and exclusions before calculating rates.\",\"new_stage_name\":\"Reconcile signed-deal population\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

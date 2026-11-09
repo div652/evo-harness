@@ -1,0 +1,41 @@
+{
+ "id": "r2-240-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The first scan wrote 4632 lines to /tmp/scan.out and printed a huge snippet dump (+88580 chars truncated), a risk of the uncapped-scan context-flooding pattern. The agent then fell back to a second summary scan with an exact-phrase filter.",
+   "The second scan filtered on the exact phrase 'tax indemnity agreement' plus execution markers. Matters worded differently could be silently dropped, and the output showed mostly dates, not execution evidence.",
+   "The agent's self-assessment names 1015-00005 as the clearest match, but the only 1015-00005 file in the visible output is tax-opinion-ridgeline.docx. The 'tax-indemnity-agreement.docx' claim is not shown in this stage's visible output, and about 60 matters were never opened."
+  ],
+  "concerns": "The scan covered the store, but the output is noisy and unranked. The agent picked 1015-00005 by clue strength, not by recency across all Tax matters. The 'most recent' criterion was not applied systematically. The self-assessment mentions later Tax matters, such as 1001-00004 with dates in 2025, that were not screened. The tax-opinion clues describe executed documents but are not the agreement itself.",
+  "recommendation": "Build a compact per-matter table from /tmp/scan.out, with at most a few hits per matter. Include matter, Tax folder status, indemnity clause hit, signature evidence and latest date. Then open the executed agreement in each of the most recent candidate matters to check for a real indemnity clause and signatures, and compare dates across them before choosing.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The first scan wrote 4632 lines to /tmp/scan.out and printed a huge snippet dump (+88580 chars truncated), a risk of the uncapped-scan context-flooding pattern. The agent then fell back to a second summary scan with an exact-phrase filter.; The second scan filtered on the exact phrase 'tax indemnity agreement' plus execution markers. Matters worded differently could be silently dropped, and the output showed mostly dates, not execution evidence.; The agent's self-assessment names 1015-00005 as the clearest match, but the only 1015-00005 file in the visible output is tax-opinion-ridgeline.docx. The 'tax-indemnity-agreement.docx' claim is not shown in this stage's visible output, and about 60 matters were never opened.\nReviewer concerns: The scan covered the store, but the output is noisy and unranked. The agent picked 1015-00005 by clue strength, not by recency across all Tax matters. The 'most recent' criterion was not applied systematically. The self-assessment mentions later Tax matters, such as 1001-00004 with dates in 2025, that were not screened. The tax-opinion clues describe executed documents but are not the agreement itself.\nReviewer recommendation: Build a compact per-matter table from /tmp/scan.out, with at most a few hits per matter. Include matter, Tax folder status, indemnity clause hit, signature evidence and latest date. Then open the executed agreement in each of the most recent candidate matters to check for a real indemnity clause and signatures, and compare dates across them before choosing.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1024-00004, 1025-00007, 1026-00003, 1026-00005, 1027-00002, 1027-00005, 1030-00001, 1031-00004, 1032-00003, 1033-00002, 1033-00006, 1034-00002, 1034-00004, 1036-00002, 1036-00004, 1036-00005, 1036-00006, 1037-00001, 1037-00004, 1037-00006, 1037-00007, 1038-00008, 1038-00009, 1039-00004, 1041-00003, 1041-00004, 1041-00005, 1042-00002, 1043-00001, 1043-00002, 1044-00003, 1044-00005, 1045-00001, 1001-00006, 1002-00002 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 59871,
+  "input_tokens_details": {
+   "cache_write_tokens": 50352,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 113,
+  "output_tokens_details": {
+   "reasoning_tokens": 56
+  },
+  "total_tokens": 59984
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"List the files in the highest-priority Tax and transaction candidates so the executed-agreement documents can be selected for direct reading.\",\"new_stage_name\":\"\" ,\"stage\":\"List files in candidate matters\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

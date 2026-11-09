@@ -1,0 +1,42 @@
+{
+ "id": "r3-155-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Second scan script restricted to rglob('*.docx') only, so any matter whose text sits in PDFs or other formats (or non-docx files) was never scanned; the goal was 'every document'.",
+   "The first scan timed out after 60s with no output; the rerun was split into ranges and its pattern was altered (dropped 'shall not.*alternative'), so coverage is not the same as the intended tight phrase set.",
+   "Output of the summary was a huge dump (~90k chars) showing snippets of non-covenant text (e.g. 1001-00003 hit on 'No Material...' text, which looks like a false match on 'no solicitation'/'no shop' pattern), risking context overflow and visible-only reading; the 76 hit matters were not all opened."
+  ],
+  "concerns": "The scan only covered .docx files, so qualifying matters with PDF or other file types could be missed. The pattern set was narrowed from the first attempt. The summary printed large snippets, with unclear matching, and no check was shown that all 76 matters were distinct qualifying ones. Many listed matters remain unopened. The self-assessment of 'every document' is unsupported.",
+  "recommendation": "Rerun the scan over all file types (extract text from pdf/doc/txt too) in chunked ranges with per-matter output capped to a one-line summary written to file, then print only the matter count and ID list. Confirm coverage by counting files scanned versus files in the store, and keep the full hit list for later reading.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Second scan script restricted to rglob('*.docx') only, so any matter whose text sits in PDFs or other formats (or non-docx files) was never scanned; the goal was 'every document'.; The first scan timed out after 60s with no output; the rerun was split into ranges and its pattern was altered (dropped 'shall not.*alternative'), so coverage is not the same as the intended tight phrase set.; Output of the summary was a huge dump (~90k chars) showing snippets of non-covenant text (e.g. 1001-00003 hit on 'No Material...' text, which looks like a false match on 'no solicitation'/'no shop' pattern), risking context overflow and visible-only reading; the 76 hit matters were not all opened.\nReviewer concerns: The scan only covered .docx files, so qualifying matters with PDF or other file types could be missed. The pattern set was narrowed from the first attempt. The summary printed large snippets, with unclear matching, and no check was shown that all 76 matters were distinct qualifying ones. Many listed matters remain unopened. The self-assessment of 'every document' is unsupported.\nReviewer recommendation: Rerun the scan over all file types (extract text from pdf/doc/txt too) in chunked ranges with per-matter output capped to a one-line summary written to file, then print only the matter count and ID list. Confirm coverage by counting files scanned versus files in the store, and keep the full hit list for later reading.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1006-00007, 1015-00005, 1017-00004, 1019-00001, 1028-00001, 1033-00005, 1001-00002, 1001-00003, 1001-00004, 1001-00007, 1002-00002, 1002-00004, 1003-00002, 1003-00003, 1003-00004, 1004-00001, 1005-00001, 1006-00002, 1006-00006, 1006-00008, 1007-00008, 1008-00002, 1008-00005, 1008-00010, 1009-00001, 1009-00003, 1009-00007, 1010-00002, 1010-00003, 1010-00004, 1011-00005, 1012-00002, 1012-00005, 1013-00006, 1014-00004 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 82228,
+  "input_tokens_details": {
+   "cache_write_tokens": 72370,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 121,
+  "output_tokens_details": {
+   "reasoning_tokens": 51
+  },
+  "total_tokens": 82349
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Verify non-DOCX coverage by scanning PDFs, spreadsheets, emails, and text files for tight no-shop/exclusivity covenant phrases, and confirm whether they add any candidate matters.\",\"new_stage_name\":\"Scan non-DOCX document text\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

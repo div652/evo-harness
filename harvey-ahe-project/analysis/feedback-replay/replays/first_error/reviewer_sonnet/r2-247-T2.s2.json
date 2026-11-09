@@ -1,0 +1,41 @@
+{
+ "id": "r2-247-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Only one filename-regex pass was run (single bash call); no content search or alternative naming (e.g., 'plea', 'monitor', 'internal investigation', 'remediation', 'FCPA', 'grand jury') was tried, so matters whose files lack these exact words never surfaced.",
+   "Output was long (~12.7k chars truncated) and the agent then fixed a short candidate list (1016-00009, 1031-00001, etc.) from it, apparently excluding matters on filename-only judgment (e.g., 'transactional DPAs', antitrust second requests) without opening them.",
+   "The agent's regex included noisy tokens (\\bsec\\b, dpa, enforcement) that pulled in SEC filings and data-processing agreements, contrary to the 'no unrelated noise' goal."
+  ],
+  "concerns": "The stage ran a single regex pass and the output was truncated in the log. The agent's summary names a candidate shortlist whose basis cannot be verified from the visible output. It did not widen the vocabulary or page through the full list. Noise (SEC filings, DPA as data-processing agreement) was not removed. The 'complete matter-level list' claim is unsupported.",
+  "recommendation": "Re-run the path search writing results to a file and page through all of it. Add alternative terms (plea, monitor, remediation, internal investigation, grand jury, FCPA, indictment). Drop the noisy tokens by requiring government-context folder names. Keep every matter with a hit on the candidate list, to be screened later by reading content, not by filename.",
+  "available": true
+ },
+ "review_text": "[Stage review: Search file names for request keywords, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Only one filename-regex pass was run (single bash call); no content search or alternative naming (e.g., 'plea', 'monitor', 'internal investigation', 'remediation', 'FCPA', 'grand jury') was tried, so matters whose files lack these exact words never surfaced.; Output was long (~12.7k chars truncated) and the agent then fixed a short candidate list (1016-00009, 1031-00001, etc.) from it, apparently excluding matters on filename-only judgment (e.g., 'transactional DPAs', antitrust second requests) without opening them.; The agent's regex included noisy tokens (\\bsec\\b, dpa, enforcement) that pulled in SEC filings and data-processing agreements, contrary to the 'no unrelated noise' goal.\nReviewer concerns: The stage ran a single regex pass and the output was truncated in the log. The agent's summary names a candidate shortlist whose basis cannot be verified from the visible output. It did not widen the vocabulary or page through the full list. Noise (SEC filings, DPA as data-processing agreement) was not removed. The 'complete matter-level list' claim is unsupported.\nReviewer recommendation: Re-run the path search writing results to a file and page through all of it. Add alternative terms (plea, monitor, remediation, internal investigation, grand jury, FCPA, indictment). Drop the noisy tokens by requiring government-context folder names. Keep every matter with a hit on the candidate list, to be screened later by reading content, not by filename.\nCommon failures at this stage in past runs:\n- The agent ran a file-name search that was cut by its own line cap, matched only one naming convention, or returned nothing, then fixed the candidate set from that partial list without paging further, widening the patterns, trying alternative agreement or document names, or running a content search across the store. Matters whose files lacked the exact words never surfaced.\n- The agent had a broad path search that reached all the needed matters, but then filtered or re-ran it on fewer keywords or only on matters already named. That dropped needed matters whose files were in the broader list, and they were never opened.\nWhat successful runs did: Passing runs searched paths store-wide with several keyword patterns, often across both file and folder names, and counted or listed hits per matter so that every matter was visible. They did not rely on a single capped or narrow search, and they checked candidate matters by listing their files.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Search file names for request keywords\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 42420,
+  "input_tokens_details": {
+   "cache_write_tokens": 32901,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 133,
+  "output_tokens_details": {
+   "reasoning_tokens": 34
+  },
+  "total_tokens": 42553
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Search the contents of all DOCX/EML files for white-collar and government-cooperation indicators (FCPA, bribery, sanctions, DOJ, SEC enforcement, proffer, voluntary disclosure, self-report, declination, cooperation, subpoena, grand jury, Wells) to catch candidates missed by filenames and identify dated evidence.\",\"new_stage_name\":\"Content scan for government cooperation candidates\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

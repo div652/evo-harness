@@ -1,0 +1,34 @@
+{
+ "id": "r2-072-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "available": true,
+  "raw": "{\"goal_reached\": \"partly\", \"applicable_failures\": [\"Only 1018-00005, 1018-00006 and 1018-00008 were opened, while dozens of surfaced matters (e.g., 1018-00002, 1018-00003, 1018-00007, 1017-00004, 1019-00001) remain unopened, so the candidate set is a hand-picked subset.\", \"The script's .docx-only filter skips other file types, and each matter returned only one or two snippets. The 1018-00005 hit is a single memo snippet and 1018-00006 is a pharmacovigilance agreement; neither was shown to be the key document. 1018-00008 shows no output in the visible log.\"],\" concerns\": \"\", \"concerns_note\": \"\", \"recommendation\": \"\"}\n\nCorrection to comply with the required schema:\n\n```json\n{\"goal_reached\":\"partly\",\"applicable_failures\":[\"Hand-picked list: only 1018-00005, 1018-00006 and 1018-00008 were opened, while dozens of surfaced matters (e.g. 1018-00002, 1018-00003, 1018-00007, 1017-00004, 1019-00001) were never opened.\",\"The .docx-only filter in the script skips other file types, and each matter returned only one snippet (1018-00005 pediatric memo; 1018-00006 pharmacovigilance agreement), not the key document. No 1018-00008 output is visible in the log.\"],\"concerns\":\"The self-assessment claims 1018-00008 involves IRB re-approvals and informed-consent forms, but the log shows no 1018-00008 output. The 1018-00005 hit is a planned future IRB application in a deferral memo, which is weak evidence of IRB involvement. The 1018-00006 hit is an obligation clause in a pharmacovigilance agreement …(+420 chars)"
+ },
+ "review_text": "[Stage review: Search within a candidate matter's files, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: {\"goal_reached\": \"partly\", \"applicable_failures\": [\"Only 1018-00005, 1018-00006 and 1018-00008 were opened, while dozens of surfaced matters (e.g., 1018-00002, 1018-00003, 1018-00007, 1017-00004, 1019-00001) remain unopened, so the candidate set is a hand-picked subset.\", \"The script's .docx-only filter skips other file types, and each matter returned only one or two snippets. The 1018-00005 hit is a single memo snippet and 1018-00006 is a pharmacovigilance agreement; neither was shown to be the key document. 1018-00008 shows no output in the visible log.\"],\" concerns\": \"\", \"concerns_note\": \"\", \"recommendation\": \"\"}\n\nCorrection to comply with the required schema:\n\n```json\n{\"goal_reached\":\"partly\",\"applicable_failures\":[\"Hand-picked list: only 1018-00005, 1018-00006 and 1018-00008 were opened, while dozens of surfaced matters (e.g. 1018-00002, 1018-00003, 1018-00007, 1017-00004, 1019-00001) were never opened.\",\"The .docx-only filter in the script skips other file types, and each matter returned only one snippet (1018-00005 pediatric memo; 1018-00006 pharmacovigilance agreement), not the key document. No 1018-00008 output is visible in the log.\"],\"concerns\":\"The self-assessment claims 1018-00008 involves IRB re-approvals and informed-consent forms, but the log shows no 1018-00008 output. The 1018-00005 hit is a planned future IRB application in a deferral memo, which is weak evidence of IRB involvement. The 1018-00006 hit is an obligation clause in a pharmacovigilance agreement …(+420 chars)\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00006, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00002, 1003-00004, 1005-00002, 1005-00003, 1006-00003, 1006-00005, 1006-00007, 1007-00004, 1007-00005, 1007-00006, 1007-00007, 1007-00008, 1008-00001, 1008-00006, 1008-00007, 1008-00008, 1008-00010, 1009-00001, 1009-00003, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1010-00004, 1010-00006, 1011-00001, 1011-00004, 1011-00005, 1011-00006 ….\nCommon failures at this stage in past runs:\n- A matter that qualified in an earlier file-path or practice-area scan was left out of the hand-picked list for in-matter grepping, so it was never opened even when later scans listed it again.\n- A qualifying matter's key document (such as the executed agreement) appeared in a file listing, but the snippet script was pointed at a different file or later filters dropped it, so the key document was never opened or cited.\nWhat successful runs did: Passing runs ran snippet scripts over every named candidate, or over all documents of a matter, and used sanity checks such as per-matter hit counts and path checks to confirm that empty output meant no matches rather than a missed folder.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Search within a candidate matter's files\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 120160,
+  "input_tokens_details": {
+   "cache_write_tokens": 110641,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 369,
+  "output_tokens_details": {
+   "reasoning_tokens": 273
+  },
+  "total_tokens": 120529
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Search nearby HLS matters 1018-00002, 1018-00003, and 1018-00007 for exact IRB/informed-consent passages and classify them as qualifying or excluded, reducing the risk of undercounting the Penterra matter series.\",\"new_stage_name\":\"Check remaining HLS matter siblings\",\"stage\":\"Search within a candidate matter's files\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

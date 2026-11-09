@@ -1,0 +1,43 @@
+{
+ "id": "r3-121-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The first scan (reconcile.py) failed with a SyntaxError and a filename-regex prefilter found only 13 files across 12 matters. The follow-up scan was also keyed to settlement-agreement/mutual-release filenames, so matters with differently named executed settlements could be missed. The 21-matter claim rests on this filename-based scan.",
+   "The summary lists 11 matters but only 8 recovery figures plus 3 paid. 1033-00006 and 1025-00006 were read and appear to have been dropped from the final set with no stated reason in the summary. 1007-00005, 1008-00007, 1005-00005 and 1006-00005 have no visible reading in the shown calls.",
+   "Direction (recovered vs paid) is asserted in the summary with no per-matter amounts tied to the client's side. The 87.5M and 47.3M figures are unusually large for general commercial litigation and are unverified in the shown output.",
+   "1017-00004, a class action at 14.75M, appears in the scan output, yet 14.75M is also listed as a recovery in the summary. This suggests a possible misattribution or a class-action matter slipping into the set."
+  ],
+  "concerns": "Coverage rests on a filename-regex scan after a failed first script, so the store-wide reconciliation is not demonstrated. Several included matters show no opened agreement in the shown calls. The summary's amount list does not map cleanly to the 11 matters and includes 14.75M, which matches the class settlement in 1017-00004 that the summary says was excluded. Exclusions of 1033-00006 and 1025-00006 are unexplained.",
+  "recommendation": "Build a per-matter table for the 11 matters: agreement file path, client side, amount, and recovered vs paid, quoting the payment clause. Resolve the 14.75M ambiguity against 1017-00004 and 1021-00003. State why 1033-00006 and 1025-00006 were excluded. Run one content-based check for settlement payment language across matters not found by filename.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: new: Widen settlement coverage and verify direction, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The first scan (reconcile.py) failed with a SyntaxError and a filename-regex prefilter found only 13 files across 12 matters. The follow-up scan was also keyed to settlement-agreement/mutual-release filenames, so matters with differently named executed settlements could be missed. The 21-matter claim rests on this filename-based scan.; The summary lists 11 matters but only 8 recovery figures plus 3 paid. 1033-00006 and 1025-00006 were read and appear to have been dropped from the final set with no stated reason in the summary. 1007-00005, 1008-00007, 1005-00005 and 1006-00005 have no visible reading in the shown calls.; Direction (recovered vs paid) is asserted in the summary with no per-matter amounts tied to the client's side. The 87.5M and 47.3M figures are unusually large for general commercial litigation and are unverified in the shown output.; 1017-00004, a class action at 14.75M, appears in the scan output, yet 14.75M is also listed as a recovery in the summary. This suggests a possible misattribution or a class-action matter slipping into the set.\nReviewer concerns: Coverage rests on a filename-regex scan after a failed first script, so the store-wide reconciliation is not demonstrated. Several included matters show no opened agreement in the shown calls. The summary's amount list does not map cleanly to the 11 matters and includes 14.75M, which matches the class settlement in 1017-00004 that the summary says was excluded. Exclusions of 1033-00006 and 1025-00006 are unexplained.\nReviewer recommendation: Build a per-matter table for the 11 matters: agreement file path, client side, amount, and recovered vs paid, quoting the payment clause. Resolve the 14.75M ambiguity against 1017-00004 and 1021-00003. State why 1033-00006 and 1025-00006 were excluded. Run one content-based check for settlement payment language across matters not found by filename.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"new\" and new_stage_name=\"Widen settlement coverage and verify direction\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 213731,
+  "input_tokens_details": {
+   "cache_write_tokens": 203873,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 235,
+  "output_tokens_details": {
+   "reasoning_tokens": 138
+  },
+  "total_tokens": 213966
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Create a per-matter verified dataset for the 11 included matters with agreement path, client side, exact consideration, direction, and date; resolve the 14.75M duplicate amount and document exclusions for 1017-00004, 1033-00006, and 1025-00006.\",\"new_stage_name\":\"Widen settlement coverage and verify direction\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,41 @@
+{
+ "id": "r2-047-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The candidate set came from a path-name search (pathterm over comfort/auditor/accountant/etc.), so 34 matters were scanned and any matter whose files lack those words was never included.",
+   "The second scan (scan2) narrowed to a tight precise regex and path filter, then concluded comfort-letter artifacts are concentrated in 1010-00002. Matters such as 1002-00001 appear with underwriting-agreement and closing-checklist files that were only listed, not read. A follow-up filter on exact phrases risks silently dropping differently worded matters.",
+   "Many matters surfaced in the scan output (e.g. 1002-00001, 1003-00002, 1010-00001) have no document opened, and the self-assessment dismisses them as requests, drafts, or generic mentions based only on snippets."
+  ],
+  "concerns": "The scan was limited to 34 filename-derived candidates rather than every capital-markets matter. The second pass's narrow phrase regex plus path filter could drop delivered letters worded differently, such as 'accountants' letter' or 'agreed-upon procedures'. Declaring 1010-00002 the concentration of comfort letters is not yet supported. The 'goal reached' self-assessment is overstated because no document was read to confirm delivery.",
+  "recommendation": "Run a content scan across all matters, capped per file and per matter (counts plus a few snippets), using varied wording: accountants' letter, 'comfort', 'bring-down', 'Trask'-style auditor names, and closing-set indexes. Then read the closing checklists and closing-set indexes in each matter with hits, including 1002-00001, to confirm which letters were actually delivered.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The candidate set came from a path-name search (pathterm over comfort/auditor/accountant/etc.), so 34 matters were scanned and any matter whose files lack those words was never included.; The second scan (scan2) narrowed to a tight precise regex and path filter, then concluded comfort-letter artifacts are concentrated in 1010-00002. Matters such as 1002-00001 appear with underwriting-agreement and closing-checklist files that were only listed, not read. A follow-up filter on exact phrases risks silently dropping differently worded matters.; Many matters surfaced in the scan output (e.g. 1002-00001, 1003-00002, 1010-00001) have no document opened, and the self-assessment dismisses them as requests, drafts, or generic mentions based only on snippets.\nReviewer concerns: The scan was limited to 34 filename-derived candidates rather than every capital-markets matter. The second pass's narrow phrase regex plus path filter could drop delivered letters worded differently, such as 'accountants' letter' or 'agreed-upon procedures'. Declaring 1010-00002 the concentration of comfort letters is not yet supported. The 'goal reached' self-assessment is overstated because no document was read to confirm delivery.\nReviewer recommendation: Run a content scan across all matters, capped per file and per matter (counts plus a few snippets), using varied wording: accountants' letter, 'comfort', 'bring-down', 'Trask'-style auditor names, and closing-set indexes. Then read the closing checklists and closing-set indexes in each matter with hits, including 1002-00001, to confirm which letters were actually delivered.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00007, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00002, 1003-00004, 1005-00002, 1005-00003, 1006-00005, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00001, 1008-00006, 1008-00007, 1008-00008, 1008-00010, 1009-00001, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1010-00006, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00001, 1012-00003, 1013-00004 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 63437,
+  "input_tokens_details": {
+   "cache_write_tokens": 53918,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 123,
+  "output_tokens_details": {
+   "reasoning_tokens": 54
+  },
+  "total_tokens": 63560
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Fix completeness risk by scanning every matter, not just filename-derived candidates, for varied auditor-comfort wording and closing-set evidence, with bounded output of hit counts and representative files.\",\"new_stage_name\":\"Scan all matters for comfort-letter evidence\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,39 @@
+{
+ "id": "r2-194-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The 76 scan-hit matters versus 24 'core verified' matters: the single command only counted matters and printed the core list. It did not open or reconcile the 52 others, so qualifying matters may have been dropped by the hand-picked list without being opened."
+  ],
+  "concerns": "The grep for 2023-07742 is solid. It shows the string is an escrow account reference in matter 1022-00008 correspondence, not a matter folder. The reconciliation, however, is only a count (76 vs 24), with no matter-by-matter comparison. The 52 'noisy' exclusions are asserted, not shown, and no in-matter snippets confirm the operative MFN clause for any of them. The self-assessment of goal reached is overstated.",
+  "recommendation": "List the 52 scan-hit matters not in the core 24. For each, run a capped snippet grep on its executed agreement, term sheet or diligence file for the MFN clause. Record the keep or exclude reason with the file cited. Only then draft, keeping the reasons for excluded matters in the notes.",
+  "available": true
+ },
+ "review_text": "[Stage review: Search within a candidate matter's files, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The 76 scan-hit matters versus 24 'core verified' matters: the single command only counted matters and printed the core list. It did not open or reconcile the 52 others, so qualifying matters may have been dropped by the hand-picked list without being opened.\nReviewer concerns: The grep for 2023-07742 is solid. It shows the string is an escrow account reference in matter 1022-00008 correspondence, not a matter folder. The reconciliation, however, is only a count (76 vs 24), with no matter-by-matter comparison. The 52 'noisy' exclusions are asserted, not shown, and no in-matter snippets confirm the operative MFN clause for any of them. The self-assessment of goal reached is overstated.\nReviewer recommendation: List the 52 scan-hit matters not in the core 24. For each, run a capped snippet grep on its executed agreement, term sheet or diligence file for the MFN clause. Record the keep or exclude reason with the file cited. Only then draft, keeping the reasons for excluded matters in the notes.\nCommon failures at this stage in past runs:\n- A matter that qualified in an earlier file-path or practice-area scan was left out of the hand-picked list for in-matter grepping, so it was never opened even when later scans listed it again.\n- A qualifying matter's key document (such as the executed agreement) appeared in a file listing, but the snippet script was pointed at a different file or later filters dropped it, so the key document was never opened or cited.\nWhat successful runs did: Passing runs ran snippet scripts over every named candidate, or over all documents of a matter, and used sanity checks such as per-matter hit counts and path checks to confirm that empty output meant no matches rather than a missed folder.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Search within a candidate matter's files\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 222270,
+  "input_tokens_details": {
+   "cache_write_tokens": 212751,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 206,
+  "output_tokens_details": {
+   "reasoning_tokens": 135
+  },
+  "total_tokens": 222476
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Complete matter-by-matter reconciliation by listing every scan-hit matter outside the 24-item substantive set and extracting a concise first-hit reason from its source files, so no candidate is silently dropped.\",\"new_stage_name\":\"Reconcile remaining MFN candidates\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,45 @@
+{
+ "id": "r3-181-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The aggregate reports 150 candidate matters (e.g. 1001-00003, a deal matter with 'patent' hits in APA/tax docs), but the agent's summary narrows to about 5 matters from filename matches plus a quick body review; the pool was filtered by file names (second call's path regex) rather than by the full body-text candidate list.",
+   "Hand-picked subset: many matters in the unopened list (1001-x, 1002-x, 1003-x, 1004-x, 1005-x, 1045-x) had body hits but were dismissed without being opened.",
+   "Self-assessment claims candidates were identified, but no staffing or substantive documents have been opened yet; 1007-00003, 1013-00005, 1014-00003/4, 1037-00004 remain unread."
+  ],
+  "concerns": "The scan output was likely long (about 20k chars) and was only partly visible. The candidate set was then built from a filename regex rather than ranking by body-text hits. Transactional matters with incidental patent hits are noise, but the agent has not shown how it separated them from litigation matters. Cutting 150 down to about 10 rests on filenames alone.",
+  "recommendation": "Rank the 150 matters by the strength of patent-litigation signals in body text (e.g. complaint, claim construction, IPR, Markman, invalidity), using a compact per-matter count table with no snippets. Then list the folders of every matter with strong signals, including those whose filenames lack patent words, and move on to reading them.",
+  "new_stage": {
+   "name": "Triage body-hit matters by litigation signal",
+   "goal": "From the existing scan output, print a compact per-matter table of litigation-specific term counts for all 150 matters, and classify each as litigation, prosecution, or incidental, so the folder listing covers every litigation candidate."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The aggregate reports 150 candidate matters (e.g. 1001-00003, a deal matter with 'patent' hits in APA/tax docs), but the agent's summary narrows to about 5 matters from filename matches plus a quick body review; the pool was filtered by file names (second call's path regex) rather than by the full body-text candidate list.; Hand-picked subset: many matters in the unopened list (1001-x, 1002-x, 1003-x, 1004-x, 1005-x, 1045-x) had body hits but were dismissed without being opened.; Self-assessment claims candidates were identified, but no staffing or substantive documents have been opened yet; 1007-00003, 1013-00005, 1014-00003/4, 1037-00004 remain unread.\nReviewer concerns: The scan output was likely long (about 20k chars) and was only partly visible. The candidate set was then built from a filename regex rather than ranking by body-text hits. Transactional matters with incidental patent hits are noise, but the agent has not shown how it separated them from litigation matters. Cutting 150 down to about 10 rests on filenames alone.\nReviewer recommendation: Rank the 150 matters by the strength of patent-litigation signals in body text (e.g. complaint, claim construction, IPR, Markman, invalidity), using a compact per-matter count table with no snippets. Then list the folders of every matter with strong signals, including those whose filenames lack patent words, and move on to reading them.\nReviewer suggests a new step: 'Triage body-hit matters by litigation signal' (From the existing scan output, print a compact per-matter table of litigation-specific term counts for all 150 matters, and classify each as litigation, prosecution, or incidental, so the folder listing covers every litigation candidate.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Triage body-hit matters by litigation signal\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1003-00002, 1003-00003, 1011-00001, 1011-00002, 1020-00005, 1020-00006, 1033-00005, 1033-00006, 1006-00004, 1007-00003, 1009-00007, 1011-00003, 1013-00005, 1014-00003, 1014-00004, 1014-00005, 1017-00003, 1018-00005, 1018-00006, 1021-00004, 1022-00008, 1025-00008 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 54746,
+  "input_tokens_details": {
+   "cache_write_tokens": 44888,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 161,
+  "output_tokens_details": {
+   "reasoning_tokens": 77
+  },
+  "total_tokens": 54907
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Rank all body-hit matters by strong patent-litigation signals (complaint, claim construction, Markman, IPR, invalidity, non-infringement, patent litigation) and classify likely litigation versus prosecution or incidental matters before reading documents.\",\"new_stage_name\":\"Triage body-hit matters by litigation signal\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

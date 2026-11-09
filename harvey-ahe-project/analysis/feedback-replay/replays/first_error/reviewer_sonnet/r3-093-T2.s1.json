@@ -1,0 +1,42 @@
+{
+ "id": "r3-093-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Possible partial-scan reliance: the tool output shows only batch file line counts (468, 402, 100, 243) and a couple of sample lines; the 1,209 hits sit in a file whose content was not reviewed, and the agent claims full coverage without verifying per-matter counts.",
+   "38 matters that surfaced in the scan (e.g. 1001-00002, 1001-00004, 1003-00004, 1004-00001, 1045-00004) have no document opened or folder listed; the scan produced hits but no candidate pool was built from the full set.",
+   "The pattern only matches non-compete, restrictive covenant and post-employment language; it can miss wording like 'shall not engage in a competing business' or 'competitive activity', and no broader rerun was done."
+  ],
+  "concerns": "The scan ran over all batches, but the output was a raw 1,209-line hit file, and only a truncated sample was seen. The pool of candidate matters was never deduplicated or tallied by matter. Many hits likely come from the fund and regulatory matters (e.g. management-fee-sharing, Form ADV memo) rather than negotiated employment agreements. The claim of completeness is unverified.",
+  "recommendation": "Aggregate text_hits_all.txt into a per-matter list with hit counts and file names, covering every matter without a cap on lines or a filter on names. Then run a second scan with broader phrasing (compete, competing business, restricted period, months following termination) to catch non-matching language. Keep the output compact (counts per matter, not snippets).",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Possible partial-scan reliance: the tool output shows only batch file line counts (468, 402, 100, 243) and a couple of sample lines; the 1,209 hits sit in a file whose content was not reviewed, and the agent claims full coverage without verifying per-matter counts.; 38 matters that surfaced in the scan (e.g. 1001-00002, 1001-00004, 1003-00004, 1004-00001, 1045-00004) have no document opened or folder listed; the scan produced hits but no candidate pool was built from the full set.; The pattern only matches non-compete, restrictive covenant and post-employment language; it can miss wording like 'shall not engage in a competing business' or 'competitive activity', and no broader rerun was done.\nReviewer concerns: The scan ran over all batches, but the output was a raw 1,209-line hit file, and only a truncated sample was seen. The pool of candidate matters was never deduplicated or tallied by matter. Many hits likely come from the fund and regulatory matters (e.g. management-fee-sharing, Form ADV memo) rather than negotiated employment agreements. The claim of completeness is unverified.\nReviewer recommendation: Aggregate text_hits_all.txt into a per-matter list with hit counts and file names, covering every matter without a cap on lines or a filter on names. Then run a second scan with broader phrasing (compete, competing business, restricted period, months following termination) to catch non-matching language. Keep the output compact (counts per matter, not snippets).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00007, 1003-00003, 1005-00006, 1006-00006, 1006-00008, 1007-00006, 1010-00004, 1011-00005, 1013-00006, 1017-00006, 1018-00003, 1018-00008, 1022-00004, 1037-00006, 1038-00008, 1041-00003, 1016-00006, 1017-00004, 1038-00006, 1038-00009, 1041-00004, 1001-00002, 1001-00004, 1001-00005, 1001-00006, 1002-00001, 1002-00002, 1002-00004, 1003-00001, 1003-00004, 1003-00005, 1004-00001.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 245392,
+  "input_tokens_details": {
+   "cache_write_tokens": 235534,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 81,
+  "output_tokens_details": {
+   "reasoning_tokens": 14
+  },
+  "total_tokens": 245473
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Aggregate all scan hits by matter and file, run a broader second-pass scan for competing-business/restricted-period language, and produce a compact complete candidate pool for screening.\",\"new_stage_name\":\"Aggregate and broaden non-compete scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,41 @@
+{
+ "id": "r2-181-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The script ranked matters by hit count from /tmp/patent_hits.txt and took only the top 25 (Counter.most_common(25)), then filtered them with a hand-written 'strong' regex. This could drop patent matters whose documents are worded differently, and the output shows only the first matter, 1014-00004, before the log is cut off.",
+   "Of the 'strong' matters the agent named, 1014-00004, 1013-00005 and 1014-00003 are still on the unopened list. Their status rests on scan snippets alone, with no document opened and no folder listed.",
+   "The agent's summary says other high-hit matters were transactions, trademark or diligence references. It names none of them, and none of the many other matters in the unopened list was examined, so that dismissal is not backed by anything visible in this stage."
+  ],
+  "concerns": "The goal was to identify named associates and team roles for each top matter. The visible output is only hit snippets, such as a draft motion in 1014-00004, and shows no associate names or roles. The summary claims four strong matters, but the log shows only the first one. The top-25 hit-count cutoff and the regex filter risk excluding patent matters that rank lower or use different wording. The 'goal reached' claim is overstated.",
+  "recommendation": "Open the team, engagement and pleading signature blocks in 1014-00004, 1014-00003, 1037-00004 and 1013-00005 to get associate names. Then check the lower-ranked matters that have patent-litigation hits (beyond the top 25) using a short, capped per-matter scan of counsel signature blocks. Confirm each matter involves actual litigation before including it.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The script ranked matters by hit count from /tmp/patent_hits.txt and took only the top 25 (Counter.most_common(25)), then filtered them with a hand-written 'strong' regex. This could drop patent matters whose documents are worded differently, and the output shows only the first matter, 1014-00004, before the log is cut off.; Of the 'strong' matters the agent named, 1014-00004, 1013-00005 and 1014-00003 are still on the unopened list. Their status rests on scan snippets alone, with no document opened and no folder listed.; The agent's summary says other high-hit matters were transactions, trademark or diligence references. It names none of them, and none of the many other matters in the unopened list was examined, so that dismissal is not backed by anything visible in this stage.\nReviewer concerns: The goal was to identify named associates and team roles for each top matter. The visible output is only hit snippets, such as a draft motion in 1014-00004, and shows no associate names or roles. The summary claims four strong matters, but the log shows only the first one. The top-25 hit-count cutoff and the regex filter risk excluding patent matters that rank lower or use different wording. The 'goal reached' claim is overstated.\nReviewer recommendation: Open the team, engagement and pleading signature blocks in 1014-00004, 1014-00003, 1037-00004 and 1013-00005 to get associate names. Then check the lower-ranked matters that have patent-litigation hits (beyond the top 25) using a short, capped per-matter scan of counsel signature blocks. Confirm each matter involves actual litigation before including it.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1006-00007, 1014-00004, 1015-00005, 1033-00005, 1001-00003, 1001-00004, 1001-00007, 1002-00002, 1002-00004, 1003-00003, 1003-00004, 1003-00005, 1004-00001, 1004-00003, 1005-00001, 1005-00002, 1005-00006, 1006-00004, 1006-00006, 1006-00008, 1007-00001, 1007-00002, 1007-00003, 1007-00006, 1007-00008, 1008-00001, 1008-00002, 1008-00003, 1008-00006, 1008-00008, 1008-00010, 1009-00001, 1009-00003, 1009-00007, 1010-00001 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 50256,
+  "input_tokens_details": {
+   "cache_write_tokens": 40737,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 140,
+  "output_tokens_details": {
+   "reasoning_tokens": 68
+  },
+  "total_tokens": 50396
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Enumerate all matters with substantive patent-litigation file or folder names, including claim-construction, infringement-contention, patent pleadings, or Markman materials, so no genuine litigation matter is omitted.\",\"new_stage_name\":\"Patent-litigation matter enumeration\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

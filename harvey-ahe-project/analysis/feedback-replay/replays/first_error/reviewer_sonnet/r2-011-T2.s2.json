@@ -1,0 +1,41 @@
+{
+ "id": "r2-011-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "no",
+  "applicable_failures": [
+   "The single listing loop covered only 23 hand-picked matters (1001-00004, 1001-00007, 1003-00003, ... 1044-00004). The prompt's list of surfaced matters with no folder listed still has about 60 entries, including 1045-00004 to 1045-00007, 1046-00001, 1002-00001/2/5, 1024-00001 to 1024-00004 and 1025-00001/4/8. None of these were listed.",
+   "The loop's grep filter keeps only file names matching credit-agreement, term-sheet, negotiat, issues, covenant and compliance patterns. Matters whose documents are named differently (e.g. an EBITDA schedule or definitions file) would be dropped silently, which makes the listing look like it covers more than it does.",
+   "The self-assessment says every screened candidate was covered. That is contradicted by the many surfaced matters that were never listed."
+  ],
+  "concerns": "The candidate selection appears to follow some unexplained subset rather than the full set of matters surfaced by earlier searches. Dozens of surfaced matters were never listed, so they cannot be judged from their actual documents. Some listed matters returned only loosely related files, such as a no-shop compliance memo, which suggests the filter is imprecise.",
+  "recommendation": "List files for all the surfaced-but-unlisted matters, in batches by matter range, with a modest line cap per matter. Show every filename in each folder, or use a wide filter that also includes names like EBITDA, definitions, financing and schedule. Then choose which documents to open for each matter.",
+  "available": true
+ },
+ "review_text": "[Stage review: List files in candidate matters, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = no.\nReviewer flags: The single listing loop covered only 23 hand-picked matters (1001-00004, 1001-00007, 1003-00003, ... 1044-00004). The prompt's list of surfaced matters with no folder listed still has about 60 entries, including 1045-00004 to 1045-00007, 1046-00001, 1002-00001/2/5, 1024-00001 to 1024-00004 and 1025-00001/4/8. None of these were listed.; The loop's grep filter keeps only file names matching credit-agreement, term-sheet, negotiat, issues, covenant and compliance patterns. Matters whose documents are named differently (e.g. an EBITDA schedule or definitions file) would be dropped silently, which makes the listing look like it covers more than it does.; The self-assessment says every screened candidate was covered. That is contradicted by the many surfaced matters that were never listed.\nReviewer concerns: The candidate selection appears to follow some unexplained subset rather than the full set of matters surfaced by earlier searches. Dozens of surfaced matters were never listed, so they cannot be judged from their actual documents. Some listed matters returned only loosely related files, such as a no-shop compliance memo, which suggests the filter is imprecise.\nReviewer recommendation: List files for all the surfaced-but-unlisted matters, in batches by matter range, with a modest line cap per matter. Show every filename in each folder, or use a wide filter that also includes names like EBITDA, definitions, financing and schedule. Then choose which documents to open for each matter.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00004, 1005-00002, 1005-00003, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00001, 1008-00006, 1008-00008, 1008-00010, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00003, 1013-00004, 1014-00004, 1015-00001, 1015-00005, 1017-00004, 1017-00005, 1018-00006, 1018-00007 ….\nCommon failures at this stage in past runs:\n- Matters that earlier searches, greps, counts or scans had already surfaced as qualifying were left out of the folders chosen for listing, often because selection followed matter number, recency or hit count rather than the surfaced list, so those matters were never opened and were wrongly excluded from the answer.\nWhat successful runs did: Passing runs listed every matter that the earlier name search or grep pointed to, often in one loop over all hit matters, and re-listed or located folders when a path failed, rather than choosing a subset by number or recency.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"List files in candidate matters\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 87419,
+  "input_tokens_details": {
+   "cache_write_tokens": 77900,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 118,
+  "output_tokens_details": {
+   "reasoning_tokens": 51
+  },
+  "total_tokens": 87537
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"List the full filenames for every matter in the 65-matter loose-scan union, not just a hand-picked subset, so no surfaced candidate is silently dropped before screening.\",\"new_stage_name\":\"\" ,\"stage\":\"List files in candidate matters\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

@@ -1,0 +1,45 @@
+{
+ "id": "r3-190-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "no",
+  "applicable_failures": [
+   "Only one file-name grep (execution/executed, certificate-of-merger, closing-memo patterns) was run, and the 24 candidates came from that output alone; the stage policy says not to narrow to name-pattern matches, and there was no cross-check against a full matter listing.",
+   "No folder was listed for any candidate: the 60+ matters named as surfaced but unlisted (e.g. 1001-00003, 1001-00004, 1003-00003, 1045-00004, 2024-05178) still have no folder enumeration, so goal 'complete file lists for every matter' was not met.",
+   "Matters with differently named documents (e.g. 1001-00006, which matched only on a lessons-learned memo) were not examined with a full listing, so their actual contents are unknown."
+  ],
+  "concerns": "The stage purpose was to list full folder contents of candidate matters. The agent ran a single filename search, which returned only matching files, and then claimed to have 'enumerated complete file lists'. This is a narrowed net, not a full listing. The self-assessment overstates the result. Many matters remain unlisted, and the 24-matter count comes from the pattern match, not from a matter-wide cross-check.",
+  "recommendation": "Run `find` or `ls` on each candidate matter folder (all of the surfaced matters, not a hand-picked subset), printing all files with a per-matter grouping and no line cap. Also list the top-level matter directories and their practice or type metadata to catch M&A matters with differently named files. Retry on timeout.",
+  "new_stage": {
+   "name": "List full folder contents of all surfaced matters",
+   "goal": "Produce a complete file listing for every matter that surfaced in prior searches, plus a full matter-directory listing for cross-checking, with no pattern filter or output cap."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: List files in candidate matters, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = no.\nReviewer flags: Only one file-name grep (execution/executed, certificate-of-merger, closing-memo patterns) was run, and the 24 candidates came from that output alone; the stage policy says not to narrow to name-pattern matches, and there was no cross-check against a full matter listing.; No folder was listed for any candidate: the 60+ matters named as surfaced but unlisted (e.g. 1001-00003, 1001-00004, 1003-00003, 1045-00004, 2024-05178) still have no folder enumeration, so goal 'complete file lists for every matter' was not met.; Matters with differently named documents (e.g. 1001-00006, which matched only on a lessons-learned memo) were not examined with a full listing, so their actual contents are unknown.\nReviewer concerns: The stage purpose was to list full folder contents of candidate matters. The agent ran a single filename search, which returned only matching files, and then claimed to have 'enumerated complete file lists'. This is a narrowed net, not a full listing. The self-assessment overstates the result. Many matters remain unlisted, and the 24-matter count comes from the pattern match, not from a matter-wide cross-check.\nReviewer recommendation: Run `find` or `ls` on each candidate matter folder (all of the surfaced matters, not a hand-picked subset), printing all files with a per-matter grouping and no line cap. Also list the top-level matter directories and their practice or type metadata to catch M&A matters with differently named files. Retry on timeout.\nLabel: these calls looked like 'Search file names for a document type' work, so they were also reviewed against that stage's failures. Declare 'Search file names for a document type' for this kind of work.\nReviewer suggests a new step: 'List full folder contents of all surfaced matters' (Produce a complete file listing for every matter that surfaced in prior searches, plus a full matter-directory listing for cross-checking, with no pattern filter or output cap.). You can start it with stage_start(stage=\"new\", new_stage_name=\"List full folder contents of all surfaced matters\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00004, 2024-05178, 1001-00003, 1001-00006, 1001-00007, 1002-00002, 1003-00003, 1005-00001, 1006-00001, 1008-00001, 1010-00001, 1010-00002, 1012-00001, 1013-00006, 1015-00002, 1015-00005, 1016-00003, 1017-00006, 1017-00009, 1018-00006, 1019-00002, 1021-00001, 1021-00002, 1024-00004, 1026-00004, 1027-00004, 1030-00001, 1031-00001, 1031-00004, 1032-00004, 1036-00004, 1037-00006, 1038-00002, 1039-00002 ….\nCommon failures at this stage in past runs:\n- Matters that surfaced in the agent's own scans, counts, snippets or file-name searches were left out of the set chosen for listing, because the set was hand-picked, capped by line or number cutoffs, or rebuilt from partial output, so qualifying matters were never listed or opened.\nCommon failures at 'Search file names for a document type':\n- No recurring failures (seen in two or more runs) were recorded at this stage in the latest training round.\nWhat successful runs did: Passing runs listed every matter the search or grep had pointed to, often in a single loop, and added a parallel check across all matters' file names rather than screening candidates by name alone.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"List files in candidate matters\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 51994,
+  "input_tokens_details": {
+   "cache_write_tokens": 42136,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 144,
+  "output_tokens_details": {
+   "reasoning_tokens": 72
+  },
+  "total_tokens": 52138
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"List every file path, grouped by matter, for all surfaced execution/closing candidates plus matters identified by strong post-closing signals, to create a complete matter-level inventory before document reading.\",\"new_stage_name\":\"List full folder contents of all surfaced matters\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

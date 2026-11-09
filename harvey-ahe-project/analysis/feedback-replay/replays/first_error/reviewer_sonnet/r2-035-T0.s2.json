@@ -1,0 +1,42 @@
+{
+ "id": "r2-035-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "no",
+  "applicable_failures": [
+   "The log shows reads of only 8 matters (1008-00002, 1010-00002, 1015-00001, 1018-00001, 1032-00003, 1037-00001, 1009-00003, plus a failed 1008 memo read). About 60 matters that surfaced in search results were never opened, including 1008-00010, 1010-00004, 1032-00004, 1037-00002, 1018-00006, 1009-00005 and the whole 1001–1006, 1012–1046 range. The agent's claim of reading 'all extracted candidates' is unsupported.",
+   "1015-00001 and 1032-00003 are confirmed on near-final or draft documents only (near-final unexecuted underwriting agreement, form of lock-up, draft closing memo). The deals are 'proposed', so executed status is unverified and they may not be completed offerings.",
+   "1010-00002 was read only through its underwriting agreement. No lock-up document was opened, so the 180-day lock-up is not shown by a lock-up document.",
+   "1008-00002 was read through an unexecuted 'execution version'. The matter-opening memo read failed with file not found, and the agent did not list the folder to find the right file."
+  ],
+  "concerns": "The stage was meant to cover every matter with a 180-day hit, but most surfaced matters, including sibling matters of already-read clients (1008-00010, 1010-00004, 1037-00002, 1032-00004), were never opened. Several confirmations rest on unexecuted drafts. The self-assessment overstates coverage. Excluding 1018-00001 and 1009-00003 looks reasonable, but the candidate set is likely incomplete.",
+  "recommendation": "List the folders of the unopened matters that had 180-day hits. Open each one's underwriting agreement or lock-up document and check the lock-up term and the Capital Markets practice area. Check sibling matters of already-read clients. Find the executed or final versions for 1015-00001, 1032-00003, 1008-00002 and 1010-00002, and the lock-up clause for 1010-00002.",
+  "available": true
+ },
+ "review_text": "[Stage review: Screen candidate matters by reading documents, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = no.\nReviewer flags: The log shows reads of only 8 matters (1008-00002, 1010-00002, 1015-00001, 1018-00001, 1032-00003, 1037-00001, 1009-00003, plus a failed 1008 memo read). About 60 matters that surfaced in search results were never opened, including 1008-00010, 1010-00004, 1032-00004, 1037-00002, 1018-00006, 1009-00005 and the whole 1001–1006, 1012–1046 range. The agent's claim of reading 'all extracted candidates' is unsupported.; 1015-00001 and 1032-00003 are confirmed on near-final or draft documents only (near-final unexecuted underwriting agreement, form of lock-up, draft closing memo). The deals are 'proposed', so executed status is unverified and they may not be completed offerings.; 1010-00002 was read only through its underwriting agreement. No lock-up document was opened, so the 180-day lock-up is not shown by a lock-up document.; 1008-00002 was read through an unexecuted 'execution version'. The matter-opening memo read failed with file not found, and the agent did not list the folder to find the right file.\nReviewer concerns: The stage was meant to cover every matter with a 180-day hit, but most surfaced matters, including sibling matters of already-read clients (1008-00010, 1010-00004, 1037-00002, 1032-00004), were never opened. Several confirmations rest on unexecuted drafts. The self-assessment overstates coverage. Excluding 1018-00001 and 1009-00003 looks reasonable, but the candidate set is likely incomplete.\nReviewer recommendation: List the folders of the unopened matters that had 180-day hits. Open each one's underwriting agreement or lock-up document and check the lock-up term and the Capital Markets practice area. Check sibling matters of already-read clients. Find the executed or final versions for 1015-00001, 1032-00003, 1008-00002 and 1010-00002, and the lock-up clause for 1010-00002.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00004, 1001-00006, 1001-00007, 1002-00001, 1003-00002, 1003-00003, 1003-00004, 1004-00002, 1005-00002, 1006-00006, 1006-00008, 1008-00010, 1009-00005, 1010-00004, 1011-00005, 1012-00001, 1012-00002, 1014-00001, 1014-00004, 1016-00003, 1017-00001, 1017-00003, 1017-00004, 1018-00006, 1019-00002, 1020-00003, 1021-00001, 1021-00002, 1021-00003, 1021-00007, 1022-00008, 1023-00001, 1024-00004, 1025-00001, 1025-00007 ….\nCommon failures at this stage in past runs:\n- A search or scan listed a qualifying matter, but the reading batches left it out, so the matter was never opened and was missing or misidentified in the answer.\n- A matter's file listing showed the specific document needed (status memo, closing papers, amended filing, proof motion), but the agent read other documents from that matter and never opened or cited the needed one.\n- When tallying matters or number series from complete listings, the agent left out some series or matters and never verified them, so the ranking undercounted them.\nWhat successful runs did: Passing runs picked reads across every matter the searches had surfaced, or those with the most specific hits, and opened the role-defining document (closing memo, status report, executed agreement, key court filing) for each, rather than sticking to matters with matching file names or one matter of a client.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Screen candidate matters by reading documents\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 78565,
+  "input_tokens_details": {
+   "cache_write_tokens": 69046,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 163,
+  "output_tokens_details": {
+   "reasoning_tokens": 90
+  },
+  "total_tokens": 78728
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Re-run a bounded store-wide extraction without filename filtering, using only lock-up plus 180-day language, and produce a complete matter-level hit list with at most two source files per matter.\",\"new_stage_name\":\"Bounded 180-day lock-up scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

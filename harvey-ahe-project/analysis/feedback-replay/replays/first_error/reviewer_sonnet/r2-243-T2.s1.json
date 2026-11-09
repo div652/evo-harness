@@ -1,0 +1,41 @@
+{
+ "id": "r2-243-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The scan found 19 attributed matters, but the second script only examined the 12 with hold-language hits. Attributed matters without a hit (1009-00001, 1015-00001, 1034-00004, 1035-00001, 1035-00005, 1045-00002) were never opened to check for hold wording that the regex missed.",
+   "The hold regex covers only four phrases (litigation hold, legal hold, document preservation, preservation notice). Variants such as 'preserve documents' or 'hold notice' would silently drop matters, so the 12-matter hit list may be incomplete.",
+   "The attribution regex found only 19 matters. The tool call is truncated, so it is unclear whether it caught attribution wording that differs from 'White Collar' or 'Investigations'. Many surfaced matters (for example 1045-00004 and the 1024-0000x series) have no document opened, so they were not checked for attribution."
+  ],
+  "concerns": "The chunked scan completed, which fixes the timeout. However, the candidate set depends on two narrow regexes, and the 19 attributed matters were then filtered by hold-language hits only. The agent's own summary claims the qualifying set is 10, but the output shown does not verify that each was an issued hold rather than a recommendation. Only 1007-00008 and 1025-00010 were distinguished.",
+  "recommendation": "Open the 7 attributed matters with no hold hit and search them with broader preservation wording (preserve, hold notice, custodians). Then read the hold passages in each of the 10 claimed matters to confirm the hold was actually issued. Cross-check the attribution field against the matter files for matters not yet in the attributed list.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The scan found 19 attributed matters, but the second script only examined the 12 with hold-language hits. Attributed matters without a hit (1009-00001, 1015-00001, 1034-00004, 1035-00001, 1035-00005, 1045-00002) were never opened to check for hold wording that the regex missed.; The hold regex covers only four phrases (litigation hold, legal hold, document preservation, preservation notice). Variants such as 'preserve documents' or 'hold notice' would silently drop matters, so the 12-matter hit list may be incomplete.; The attribution regex found only 19 matters. The tool call is truncated, so it is unclear whether it caught attribution wording that differs from 'White Collar' or 'Investigations'. Many surfaced matters (for example 1045-00004 and the 1024-0000x series) have no document opened, so they were not checked for attribution.\nReviewer concerns: The chunked scan completed, which fixes the timeout. However, the candidate set depends on two narrow regexes, and the 19 attributed matters were then filtered by hold-language hits only. The agent's own summary claims the qualifying set is 10, but the output shown does not verify that each was an issued hold rather than a recommendation. Only 1007-00008 and 1025-00010 were distinguished.\nReviewer recommendation: Open the 7 attributed matters with no hold hit and search them with broader preservation wording (preserve, hold notice, custodians). Then read the hold passages in each of the 10 claimed matters to confirm the hold was actually issued. Cross-check the attribution field against the matter files for matters not yet in the attributed list.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1046-00001, 1001-00007, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00004, 1005-00002, 1005-00003, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1008-00001, 1008-00006, 1008-00008, 1008-00010, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00001, 1012-00003, 1013-00004, 1014-00004, 1015-00001, 1015-00005, 1017-00004, 1018-00002, 1018-00006, 1018-00007 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 139785,
+  "input_tokens_details": {
+   "cache_write_tokens": 130266,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 131,
+  "output_tokens_details": {
+   "reasoning_tokens": 56
+  },
+  "total_tokens": 139916
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Verify all 19 explicitly attributed matters, including the seven initially lacking narrow hold hits, using broader preservation/hold wording and representative source files; confirm the 10 qualifying matters have actual issuance/implementation evidence.\",\"new_stage_name\":\"\" ,\"stage\":\"Search within a candidate matter's files\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

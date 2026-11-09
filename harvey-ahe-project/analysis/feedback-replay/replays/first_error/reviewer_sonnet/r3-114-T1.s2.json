@@ -1,0 +1,43 @@
+{
+ "id": "r3-114-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Scan was prefiltered by a regex of specific phrases such as \"expert witness\" and \"expert report\" (the script text shown), so matters using other wording may be missed",
+   "First run timed out at 60s; the rerun in four ranges produced 169 hit-bearing matters, but the log does not show that all four ranges completed or covered all 266 matters",
+   "The hit list was saved to /tmp/scan_hits.txt and only a truncated view was seen; the agent's summary names about 15 'strong' matters, a hand-picked subset of 169",
+   "1045-00004 to 1045-00007 and 1046-00001 surfaced in the search results but have not been opened or listed"
+  ],
+  "concerns": "The scan is noisy: the hits include M&A matters (1001-xxxx) matching on diligence or antitrust memos, so 169 hits does not mean 169 candidates. The agent's shortlist of about 15 is not shown to be derived by any systematic criterion. Completeness is unverified because the range runs are not confirmed, and the 1045/1046 matters were skipped. The terms regex is also narrow.",
+  "recommendation": "Confirm each of the four range runs finished and the matter count in the output equals 266. Then classify every one of the 169 hit matters by practice group (general litigation vs. other) from the file paths and hit counts. Carry all litigation-group hit matters, including 1045-00004 to 1045-00007 and 1046-00001, forward to listing and reading, rather than the hand-picked 15.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Scan was prefiltered by a regex of specific phrases such as \"expert witness\" and \"expert report\" (the script text shown), so matters using other wording may be missed; First run timed out at 60s; the rerun in four ranges produced 169 hit-bearing matters, but the log does not show that all four ranges completed or covered all 266 matters; The hit list was saved to /tmp/scan_hits.txt and only a truncated view was seen; the agent's summary names about 15 'strong' matters, a hand-picked subset of 169; 1045-00004 to 1045-00007 and 1046-00001 surfaced in the search results but have not been opened or listed\nReviewer concerns: The scan is noisy: the hits include M&A matters (1001-xxxx) matching on diligence or antitrust memos, so 169 hits does not mean 169 candidates. The agent's shortlist of about 15 is not shown to be derived by any systematic criterion. Completeness is unverified because the range runs are not confirmed, and the 1045/1046 matters were skipped. The terms regex is also narrow.\nReviewer recommendation: Confirm each of the four range runs finished and the matter count in the output equals 266. Then classify every one of the 169 hit matters by practice group (general litigation vs. other) from the file paths and hit counts. Carry all litigation-group hit matters, including 1045-00004 to 1045-00007 and 1046-00001, forward to listing and reading, rather than the hand-picked 15.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 193002,
+  "input_tokens_details": {
+   "cache_write_tokens": 183144,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 143,
+  "output_tokens_details": {
+   "reasoning_tokens": 65
+  },
+  "total_tokens": 193145
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Read key retention letters, expert-scope/work-plan documents, damages analyses, and matter-closing/status documents from all plausible general-litigation candidates to determine which experts were actually retained for damages work and what the engagement evidence says.\",\"new_stage_name\":\"\" ,\"stage\":\"Screen candidate matters by reading documents\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

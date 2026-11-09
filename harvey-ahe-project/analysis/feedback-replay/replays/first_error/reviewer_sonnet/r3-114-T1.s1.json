@@ -1,0 +1,42 @@
+{
+ "id": "r3-114-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The scan timed out on the first run (60s), then ran in four ranges; only a line count (169) was shown, so completeness across all 266 matters is unverified.",
+   "The summary names about 15 'strong' candidates from a 169-matter hit list. Matters such as 1045-00004 through 1046-00001 appeared in results but were never opened, which suggests the shortlist was hand-picked.",
+   "Hit terms such as 'expert witness' and 'expert report' are broad. 1001-00003 (employment agreements) and 1001-00007 (D&O tail insurance) appear as hits, so the pool is noisy and not limited to damages-expert matters."
+  ],
+  "concerns": "The scan reached the whole store only if all four ranges completed. The output shows just the final line count, so this was not confirmed. The 169 hits include many transactional matters. The summary ranks a subset as strong, which risks dropping other hit-bearing matters. The saved file is large, and printing it unfiltered would overflow the context.",
+  "recommendation": "Confirm the four range runs covered all 266 matters, for example by checking per-range counts. Then group /tmp/scan_hits.txt by practice area or folder and keep every general-litigation matter, not just the ones the agent ranked. Pass the full litigation list to the next stage, printing it in bounded chunks.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The scan timed out on the first run (60s), then ran in four ranges; only a line count (169) was shown, so completeness across all 266 matters is unverified.; The summary names about 15 'strong' candidates from a 169-matter hit list. Matters such as 1045-00004 through 1046-00001 appeared in results but were never opened, which suggests the shortlist was hand-picked.; Hit terms such as 'expert witness' and 'expert report' are broad. 1001-00003 (employment agreements) and 1001-00007 (D&O tail insurance) appear as hits, so the pool is noisy and not limited to damages-expert matters.\nReviewer concerns: The scan reached the whole store only if all four ranges completed. The output shows just the final line count, so this was not confirmed. The 169 hits include many transactional matters. The summary ranks a subset as strong, which risks dropping other hit-bearing matters. The saved file is large, and printing it unfiltered would overflow the context.\nReviewer recommendation: Confirm the four range runs covered all 266 matters, for example by checking per-range counts. Then group /tmp/scan_hits.txt by practice area or folder and keep every general-litigation matter, not just the ones the agent ranked. Pass the full litigation list to the next stage, printing it in bounded chunks.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001.\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 192955,
+  "input_tokens_details": {
+   "cache_write_tokens": 183097,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 122,
+  "output_tokens_details": {
+   "reasoning_tokens": 48
+  },
+  "total_tokens": 193077
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Confirm the parallel scan covered all 266 matters without gaps and identify every hit-bearing matter with litigation-oriented folder structure, including previously unopened 1045-00004 through 1046-00001, before reading sources.\",\"new_stage_name\":\"Scan completeness check\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

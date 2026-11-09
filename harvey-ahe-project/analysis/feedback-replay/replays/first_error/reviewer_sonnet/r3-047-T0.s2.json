@@ -1,0 +1,42 @@
+{
+ "id": "r3-047-T0",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The only call is a single regex over file paths, and it mixes broad terms (audit, indenture, purchase agreement, bring-down) with comfort-letter terms. The 60+ matters with no folder listed or document opened (e.g. 1001-00002, 1005-00002, 1008-00002) show noisy hits, not a bounded candidate set.",
+   "The self-assessment names only 11 'strongest' matters (e.g. 1010-00002, 1015-00001, 1045-00006) and says the 'complete named candidate set' was found. That is a hand-picked subset of a much larger hit list, with no stated rule for how it was chosen.",
+   "The search covers file names only and no document text. Matters whose comfort letter sits in a file with an unhelpful name (e.g. 'closing-deliverables') would be missed, and there is no reconciliation against a text scan."
+  ],
+  "concerns": "The path search was a single pass whose patterns were too broad, so it returned many unrelated hits (bring-down certificates, indentures). The agent then narrowed to 11 matters by judgment. It did not separate files with 'comfort' in the name from the rest, and it did not search text. The output was long, possibly truncated (+12955 chars), and the agent may have seen only part of it. The claim that the candidate set is complete is unsupported.",
+  "recommendation": "Rerun the path search uncapped with a narrow pattern ('comfort', 'auditor', 'accountant', '10b-5', 'SAS 72', 'AS 6101'), writing results to a file and counting matters. Separately run a text search over all matters for 'comfort letter' and print matter IDs only. Merge both into one master list, then read it in full.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Search file names for request keywords, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The only call is a single regex over file paths, and it mixes broad terms (audit, indenture, purchase agreement, bring-down) with comfort-letter terms. The 60+ matters with no folder listed or document opened (e.g. 1001-00002, 1005-00002, 1008-00002) show noisy hits, not a bounded candidate set.; The self-assessment names only 11 'strongest' matters (e.g. 1010-00002, 1015-00001, 1045-00006) and says the 'complete named candidate set' was found. That is a hand-picked subset of a much larger hit list, with no stated rule for how it was chosen.; The search covers file names only and no document text. Matters whose comfort letter sits in a file with an unhelpful name (e.g. 'closing-deliverables') would be missed, and there is no reconciliation against a text scan.\nReviewer concerns: The path search was a single pass whose patterns were too broad, so it returned many unrelated hits (bring-down certificates, indentures). The agent then narrowed to 11 matters by judgment. It did not separate files with 'comfort' in the name from the rest, and it did not search text. The output was long, possibly truncated (+12955 chars), and the agent may have seen only part of it. The claim that the candidate set is complete is unsupported.\nReviewer recommendation: Rerun the path search uncapped with a narrow pattern ('comfort', 'auditor', 'accountant', '10b-5', 'SAS 72', 'AS 6101'), writing results to a file and counting matters. Separately run a text search over all matters for 'comfort letter' and print matter IDs only. Merge both into one master list, then read it in full.\nLabel: these calls looked like 'Scan document text with an extraction script' work, so they were also reviewed against that stage's failures. Declare 'Scan document text with an extraction script' for this kind of work.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00002, 1002-00001, 1002-00002, 1003-00003, 1003-00005, 1005-00001, 1005-00002, 1007-00006, 1008-00002, 1008-00010, 1009-00001, 1009-00003, 1009-00005, 1009-00007, 1010-00002, 1011-00005, 1012-00002, 1012-00005, 1014-00001, 1014-00002, 1015-00001, 1016-00003, 1017-00001, 1017-00006, 1017-00008, 1018-00001, 1019-00005, 1020-00003, 1021-00002, 1021-00003, 1021-00005, 1021-00006, 1021-00008, 1022-00001, 1023-00003 ….\nCommon failures at this stage in past runs:\n- No recurring failures (seen in two or more runs) were recorded at this stage in the latest training round.\nCommon failures at 'Scan document text with an extraction script':\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Search file names for request keywords\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 159717,
+  "input_tokens_details": {
+   "cache_write_tokens": 149859,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 89,
+  "output_tokens_details": {
+   "reasoning_tokens": 27
+  },
+  "total_tokens": 159806
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Search extracted text across the full document store for comfort-letter and auditor-delivery language, recording matter IDs and file paths without relying on filename-only hits.\",\"new_stage_name\":\"Full comfort-letter text scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

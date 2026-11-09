@@ -1,0 +1,40 @@
+{
+ "id": "r2-126-T2",
+ "target": "first_error",
+ "variant": "reviewer_luna",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The extraction output surfaced 1001-00004, 1002-00002, 1003-00001, 1006-00006, 1007-00003, 1007-00008, and 1016-00006, but the self-assessment's strongest candidate set omits them, evidencing narrowing after the broad scan.",
+   "The 1001-00004 snippet is a second-request preparation memo estimating attorney fees and e-discovery costs, and the 1002-00002 output is a closing legal opinion discussing fee-shifting enforceability; these show boilerplate or exposure material being retained as apparent request hits."
+  ],
+  "concerns": "The corrected script produced 356 lines across many matters, but the visible results include non-request material and do not demonstrate document-level validation. The self-assessment also says 44 matters were identified while presenting only a narrower strongest set, despite additional matters appearing in direct.txt. Many surfaced matters remain unopened or unlisted, so completeness and qualification cannot yet be established.",
+  "recommendation": "Treat every matter header in /tmp/direct.txt as a review candidate, including those omitted from the strongest set. List each candidate folder and open the specific hit documents. Retain only affirmative fee requests or fee claims, excluding estimates, enforceability discussion, denials, and boilerplate; record the exact document path and passage for each retained matter.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The extraction output surfaced 1001-00004, 1002-00002, 1003-00001, 1006-00006, 1007-00003, 1007-00008, and 1016-00006, but the self-assessment's strongest candidate set omits them, evidencing narrowing after the broad scan.; The 1001-00004 snippet is a second-request preparation memo estimating attorney fees and e-discovery costs, and the 1002-00002 output is a closing legal opinion discussing fee-shifting enforceability; these show boilerplate or exposure material being retained as apparent request hits.\nReviewer concerns: The corrected script produced 356 lines across many matters, but the visible results include non-request material and do not demonstrate document-level validation. The self-assessment also says 44 matters were identified while presenting only a narrower strongest set, despite additional matters appearing in direct.txt. Many surfaced matters remain unopened or unlisted, so completeness and qualification cannot yet be established.\nReviewer recommendation: Treat every matter header in /tmp/direct.txt as a review candidate, including those omitted from the strongest set. List each candidate folder and open the specific hit documents. Retain only affirmative fee requests or fee claims, excluding estimates, enforceability discussion, denials, and boilerplate; record the exact document path and passage for each retained matter.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1017-00004, 1019-00001, 1028-00001, 1003-00002, 1003-00003, 1003-00004, 1005-00001, 1005-00004, 1005-00005, 1006-00002, 1006-00004, 1006-00005, 1006-00006, 1007-00002, 1007-00003, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00005, 1008-00007, 1008-00009 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 56678,
+  "input_tokens_details": {
+   "cache_write_tokens": 47159,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 91,
+  "output_tokens_details": {
+   "reasoning_tokens": 20
+  },
+  "total_tokens": 56769
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Read the hit documents for every direct-language candidate matter and classify whether the firm/client affirmatively sought fee-shifting, rather than merely discussing exposure, denying fees, or using boilerplate.\",\"new_stage_name\":\"Screen candidates\",\"stage\":\"Screen candidate matters by reading documents\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

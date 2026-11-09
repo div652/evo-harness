@@ -1,0 +1,44 @@
+{
+ "id": "r3-243-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The single awk call only re-filters the saved scan file (/tmp/work/wc_scan.txt) by `$2 ~ /^WC=[1-9]/`. That is a follow-up filter on the earlier output, and the stage never shows that the scan covered every matter. Matters 1001-1008 and 1045-1046 appear in search results with no WC hit and no opened file, so scan completeness is unverified.",
+   "The candidate set rests on the exact phrase count WC, which can miss matters whose attribution is worded differently or sits in metadata. No broader check was run."
+  ],
+  "concerns": "The re-derivation reads only the saved scan and cannot show that the scan itself reached all 266 matters. Whether the WC pattern was exact, or whether any matter timed out or errored, is not visible here. The 11 matters are scan hits only, and no document has been opened. HOLDS and ISSUEDLIKE counts of 0-3 are keyword counts, not proof that a hold was issued. 1035-00001 has HOLDS=0.",
+  "recommendation": "Do not rescan the whole store. First check the scan file's line count and error or timeout rows against the 266 matters. Then open the proof documents (hold notices, attribution records) for all 11 matters, including 1035-00001 and the low-count ones, and confirm practice attribution and issuance from each matter's own documents.",
+  "new_stage": {
+   "name": "Verify scan coverage",
+   "goal": "Confirm wc_scan.txt has one row per matter for all 266 matters with no errors or timeouts, and list any gaps for a targeted rerun."
+  },
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 3]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The single awk call only re-filters the saved scan file (/tmp/work/wc_scan.txt) by `$2 ~ /^WC=[1-9]/`. That is a follow-up filter on the earlier output, and the stage never shows that the scan covered every matter. Matters 1001-1008 and 1045-1046 appear in search results with no WC hit and no opened file, so scan completeness is unverified.; The candidate set rests on the exact phrase count WC, which can miss matters whose attribution is worded differently or sits in metadata. No broader check was run.\nReviewer concerns: The re-derivation reads only the saved scan and cannot show that the scan itself reached all 266 matters. Whether the WC pattern was exact, or whether any matter timed out or errored, is not visible here. The 11 matters are scan hits only, and no document has been opened. HOLDS and ISSUEDLIKE counts of 0-3 are keyword counts, not proof that a hold was issued. 1035-00001 has HOLDS=0.\nReviewer recommendation: Do not rescan the whole store. First check the scan file's line count and error or timeout rows against the 266 matters. Then open the proof documents (hold notices, attribution records) for all 11 matters, including 1035-00001 and the low-count ones, and confirm practice attribution and issuance from each matter's own documents.\nLabel: these calls looked like 'Calculate figures for the answer' work, so they were also reviewed against that stage's failures. Declare 'Calculate figures for the answer' for this kind of work.\nReviewer suggests a new step: 'Verify scan coverage' (Confirm wc_scan.txt has one row per matter for all 266 matters with no errors or timeouts, and list any gaps for a targeted rerun.). You can start it with stage_start(stage=\"new\", new_stage_name=\"Verify scan coverage\", goal=...).\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00001, 1001-00002, 1001-00003, 1001-00004, 1001-00005, 1001-00006, 1001-00007, 1002-00001, 1002-00002, 1002-00003, 1002-00004, 1002-00005, 1003-00001, 1003-00002, 1003-00003, 1003-00004, 1003-00005, 1004-00001, 1004-00002, 1004-00003, 1005-00001, 1005-00002, 1005-00003, 1005-00004, 1005-00005, 1005-00006, 1006-00001, 1006-00002, 1006-00003, 1006-00004, 1006-00005, 1006-00006, 1006-00007, 1006-00008, 1007-00001 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nCommon failures at 'Calculate figures for the answer':\n- No recurring failures (seen in two or more runs) were recorded at this stage in the latest training round.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 667147,
+  "input_tokens_details": {
+   "cache_write_tokens": 657289,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 200,
+  "output_tokens_details": {
+   "reasoning_tokens": 138
+  },
+  "total_tokens": 667347
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Verify that the full scan covered all 266 matter folders and identify any gaps or errors in the saved scan before relying on its 11-matter candidate set.\",\"new_stage_name\":\"Verify scan coverage\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

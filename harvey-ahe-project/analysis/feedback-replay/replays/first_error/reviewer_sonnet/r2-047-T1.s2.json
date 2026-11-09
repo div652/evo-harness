@@ -1,0 +1,41 @@
+{
+ "id": "r2-047-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "Candidate set was fixed from a filename path-search of 34 matters (scan.py pathterm on comfort/auditor/accountant etc.); matters whose files are named differently were never scanned. The long list of matters surfaced but unopened (e.g. 1002-00001, 1003-00002, 1010-00001) shows candidates beyond the 34.",
+   "scan2.py narrowed to a tight precise regex and path filter after the broad scan; its output was only 1918 chars, so matters with differently worded comfort-letter references (e.g. 'accountants' letter', 'auditor's letter') may have been silently dropped.",
+   "The first scan's 8517-char output was apparently capped and showed only some matters, yet the agent concluded comfort-letter artifacts are concentrated in 1010-00002 without confirming coverage of the full store."
+  ],
+  "concerns": "The self-assessment claims full coverage, but the scan covered only 34 filename-derived candidates, not the whole store. The conclusion that only 1010-00002 has real delivered letters rests on a narrowed regex and hit-limited output. Many surfaced matters are unopened, and no document was verified as executed or delivered. The result is a lead, not a candidate set.",
+  "recommendation": "Rerun the text extraction across all capital markets matters (by matter range, in batches, with per-file hit caps and counts only). Use varied wording: comfort letter, accountants' letter, agreed-upon procedures, bring-down, 'cut-off date'. Then list the matters with hits and open the closing sets and executed letters in each before concluding.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: Candidate set was fixed from a filename path-search of 34 matters (scan.py pathterm on comfort/auditor/accountant etc.); matters whose files are named differently were never scanned. The long list of matters surfaced but unopened (e.g. 1002-00001, 1003-00002, 1010-00001) shows candidates beyond the 34.; scan2.py narrowed to a tight precise regex and path filter after the broad scan; its output was only 1918 chars, so matters with differently worded comfort-letter references (e.g. 'accountants' letter', 'auditor's letter') may have been silently dropped.; The first scan's 8517-char output was apparently capped and showed only some matters, yet the agent concluded comfort-letter artifacts are concentrated in 1010-00002 without confirming coverage of the full store.\nReviewer concerns: The self-assessment claims full coverage, but the scan covered only 34 filename-derived candidates, not the whole store. The conclusion that only 1010-00002 has real delivered letters rests on a narrowed regex and hit-limited output. Many surfaced matters are unopened, and no document was verified as executed or delivered. The result is a lead, not a candidate set.\nReviewer recommendation: Rerun the text extraction across all capital markets matters (by matter range, in batches, with per-file hit caps and counts only). Use varied wording: comfort letter, accountants' letter, agreed-upon procedures, bring-down, 'cut-off date'. Then list the matters with hits and open the closing sets and executed letters in each before concluding.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00007, 1002-00001, 1002-00002, 1002-00005, 1003-00001, 1003-00002, 1003-00004, 1005-00002, 1005-00003, 1006-00005, 1006-00007, 1006-00008, 1007-00004, 1007-00005, 1007-00006, 1007-00008, 1008-00001, 1008-00006, 1008-00007, 1008-00008, 1008-00010, 1009-00001, 1009-00004, 1009-00005, 1009-00006, 1009-00007, 1010-00001, 1010-00006, 1011-00001, 1011-00004, 1011-00005, 1011-00006, 1012-00001, 1012-00003, 1013-00004 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 63419,
+  "input_tokens_details": {
+   "cache_write_tokens": 53900,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 139,
+  "output_tokens_details": {
+   "reasoning_tokens": 69
+  },
+  "total_tokens": 63558
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Scan every matter in the store, not just filename-derived candidates, using varied auditor-comfort terminology and bounded per-matter/file counts so no capital-markets precedent is dropped before direct verification.\",\"new_stage_name\":\"Full-store comfort-letter scan\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

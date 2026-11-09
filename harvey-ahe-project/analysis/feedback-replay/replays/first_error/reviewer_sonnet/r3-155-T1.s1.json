@@ -1,0 +1,43 @@
+{
+ "id": "r3-155-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The scan's file-type prefilter: the second script uses rglob('*.docx') only, so non-docx files (PDFs, etc.) were never scanned; the stage was meant to cover every document, and the pool is probably incomplete.",
+   "The first full-store scan timed out at 60s, and the rerun was split by ranges. The 76 hits are not shown to cover all ranges, and no check confirmed each range finished.",
+   "The pattern list was narrowed (the 'shall not.*alternative' alternation was dropped), so some covenant phrasings could be missed, e.g. 'shall not solicit' variants and 'exclusive dealing'.",
+   "The summary output was very large (+89973 chars truncated), and the matters list shows 60 matters surfaced but never opened. The candidate pool risks being built from partial visible output."
+  ],
+  "concerns": "The final output has 76 matters, but it is unclear that it covers all documents. Only .docx files were scanned, and the first scan timed out. The 'unfiltered' claim is overstated. The hit snippets include generic covenant text (e.g. 'Performance of Covenants'), which suggests noisy matching, and the huge output was truncated, so the visible portion may not show all matters.",
+  "recommendation": "Verify the scan's coverage: count the matters and file types in the store, and confirm that every range completed. Rescan the non-docx files (pdf, txt, doc) with the same phrases, and write compact per-matter lines (matter, file count, one short snippet) to a file. Then compare the matter list in the file against the 76 and merge all of them.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 2]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The scan's file-type prefilter: the second script uses rglob('*.docx') only, so non-docx files (PDFs, etc.) were never scanned; the stage was meant to cover every document, and the pool is probably incomplete.; The first full-store scan timed out at 60s, and the rerun was split by ranges. The 76 hits are not shown to cover all ranges, and no check confirmed each range finished.; The pattern list was narrowed (the 'shall not.*alternative' alternation was dropped), so some covenant phrasings could be missed, e.g. 'shall not solicit' variants and 'exclusive dealing'.; The summary output was very large (+89973 chars truncated), and the matters list shows 60 matters surfaced but never opened. The candidate pool risks being built from partial visible output.\nReviewer concerns: The final output has 76 matters, but it is unclear that it covers all documents. Only .docx files were scanned, and the first scan timed out. The 'unfiltered' claim is overstated. The hit snippets include generic covenant text (e.g. 'Performance of Covenants'), which suggests noisy matching, and the huge output was truncated, so the visible portion may not show all matters.\nReviewer recommendation: Verify the scan's coverage: count the matters and file types in the store, and confirm that every range completed. Rescan the non-docx files (pdf, txt, doc) with the same phrases, and write compact per-matter lines (matter, file count, one short snippet) to a file. Then compare the matter list in the file against the 76 and merge all of them.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1006-00007, 1015-00005, 1017-00004, 1019-00001, 1028-00001, 1033-00005, 1001-00002, 1001-00003, 1001-00004, 1001-00007, 1002-00002, 1002-00004, 1003-00002, 1003-00003, 1003-00004, 1004-00001, 1005-00001, 1006-00002, 1006-00006, 1006-00008, 1007-00008, 1008-00002, 1008-00005, 1008-00010, 1009-00001, 1009-00003, 1009-00007, 1010-00002, 1010-00003, 1010-00004, 1011-00005, 1012-00002, 1012-00005, 1013-00006, 1014-00004 ….\nCommon failures at this stage in past runs:\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nWhat successful runs did: Passing runs kept the scan broad (all matters, documents plus emails), split it into parallel range scripts, or printed per-matter hit counts. They also kept the output to a manageable size, so candidates could be named from what the scan returned.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 82253,
+  "input_tokens_details": {
+   "cache_write_tokens": 72395,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 93,
+  "output_tokens_details": {
+   "reasoning_tokens": 32
+  },
+  "total_tokens": 82346
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Verify scan coverage by counting all file types and scanning non-DOCX text-bearing files for the same tight covenant phrases, then merge any additional matter hits.\",\"new_stage_name\":\"Verify scan coverage\",\"stage\":\"new\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

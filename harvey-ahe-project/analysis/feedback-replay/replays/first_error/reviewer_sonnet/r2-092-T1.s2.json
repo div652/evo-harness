@@ -1,0 +1,40 @@
+{
+ "id": "r2-092-T1",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 2,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The final filter on scan_1001.out used `grep -Ei 'non.?comp|employment|agreement|restrictive|covenant|separation'` over file names. This risks silently dropping matters whose documents are named differently. The agent's candidate list appears to be built from that filter and from hand-picking, not from the full scan output.",
+   "The first two scans timed out at 60s. The agent then ran range workers, but only counted FILE lines (about 280 per range). It never confirmed that the workers finished or that their output was complete. It also printed only the first 100 lines of one output file, so the other ranges were never inspected."
+  ],
+  "concerns": "The scan produced hits across all five ranges, but the agent only partly reviewed the output. It examined one range directly and then filtered by file name. Many matters that appeared in results (for example 1017-00004, whose memo scored KW 93 and DUR 30) are absent from the self-assessed candidate list. Hit counts and snippets do not show whether a covenant is executed. The 'complete candidate hit report' goal is therefore not demonstrated.",
+  "recommendation": "Confirm the workers have finished. Then rank all five output files by keyword and duration scores, without file-name filtering. Pull candidates from every range, including the matters listed as unopened, such as 1017-00004. Open those documents to check whether the covenant was executed, whether it runs 12 months or longer, and whether the matter is Labor & Employment.",
+  "available": true
+ },
+ "review_text": "[Stage review: Scan document text with an extraction script, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The final filter on scan_1001.out used `grep -Ei 'non.?comp|employment|agreement|restrictive|covenant|separation'` over file names. This risks silently dropping matters whose documents are named differently. The agent's candidate list appears to be built from that filter and from hand-picking, not from the full scan output.; The first two scans timed out at 60s. The agent then ran range workers, but only counted FILE lines (about 280 per range). It never confirmed that the workers finished or that their output was complete. It also printed only the first 100 lines of one output file, so the other ranges were never inspected.\nReviewer concerns: The scan produced hits across all five ranges, but the agent only partly reviewed the output. It examined one range directly and then filtered by file name. Many matters that appeared in results (for example 1017-00004, whose memo scored KW 93 and DUR 30) are absent from the self-assessed candidate list. Hit counts and snippets do not show whether a covenant is executed. The 'complete candidate hit report' goal is therefore not demonstrated.\nReviewer recommendation: Confirm the workers have finished. Then rank all five output files by keyword and duration scores, without file-name filtering. Pull candidates from every range, including the matters listed as unopened, such as 1017-00004. Open those documents to check whether the covenant was executed, whether it runs 12 months or longer, and whether the matter is Labor & Employment.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00006, 1001-00007, 1003-00003, 1005-00006, 1006-00006, 1006-00008, 1007-00003, 1007-00006, 1009-00005, 1010-00003, 1010-00004, 1011-00005, 1013-00006, 1015-00004, 1017-00006, 1018-00003, 1018-00008, 1021-00001, 1022-00004, 1025-00007, 1026-00004, 1037-00004, 1037-00006, 1038-00006, 1038-00008, 1041-00001, 1041-00003, 1045-00002, 1003-00005, 1005-00001, 1007-00008, 1009-00001, 1012-00001, 1013-00004 ….\nCommon failures at this stage in past runs:\n- An uncapped store-wide scan with broad or common terms printed snippets for every match, producing millions of characters that filled the context before any response was written.\n- A store-wide scan timed out or printed nothing after reaching only part of the store, and the agent accepted the partial output instead of narrowing by matter range or folder, rerunning, or searching file names, so qualifying matters never entered the candidate set.\n- A scan had already surfaced every needed matter, but a follow-up filter on file names, folder names, exact phrases, or a hand-picked list silently dropped matters whose documents were named or worded differently.\n- Matters were listed in file-name searches or scan output, but later scripts restricted to certain names or folders so the needed matter was never opened or examined.\nWhat successful runs did: Passing runs also hit timeouts, but their output stayed bounded enough to read, and they often split the scan into parallel matter-range scripts or narrowed to a key acronym or per-matter hit counts, then picked candidates from what was reached.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Scan document text with an extraction script\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 53911,
+  "input_tokens_details": {
+   "cache_write_tokens": 44392,
+   "cached_tokens": 9516
+  },
+  "output_tokens": 80,
+  "output_tokens_details": {
+   "reasoning_tokens": 14
+  },
+  "total_tokens": 53991
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Confirm the extraction workers completed, inspect all range outputs, and compile candidates from keyword/duration hits without relying on filename filtering before document-level screening.\",\"new_stage_name\":\"Complete extraction scan review\",\"stage\":\"Scan document text with an extraction script\"}"
+  }
+ ],
+ "reasoning_summary": []
+}

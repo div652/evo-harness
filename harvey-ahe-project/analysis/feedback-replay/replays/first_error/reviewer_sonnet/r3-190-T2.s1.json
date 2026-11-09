@@ -1,0 +1,41 @@
+{
+ "id": "r3-190-T2",
+ "target": "first_error",
+ "variant": "reviewer_sonnet",
+ "sample": 1,
+ "summaries": false,
+ "rebuild_exact": true,
+ "critique": {
+  "goal_reached": "partly",
+  "applicable_failures": [
+   "The scan walked file names only (os.walk with a regex on file names), so matters whose file names lack M&A terms were never reached. The policy requires also searching document text, and none was done.",
+   "The output was long (+16703 chars) and the summary's candidate list appears to be hand-picked from it. The candidates named (e.g. 1001-00003 to 00007, 1046-00001) are not reconciled against the full path-search list. Matters such as 1045-00004 to 00007 and 1002-00002 are on the unopened list but are absent from the summary."
+  ],
+  "concerns": "The only call was a file-name regex, with no text search and no matter-level listing. The summary calls candidates 'executed' and separates term sheets from deals without opening any document. Its list is a subset of the matters that surfaced, and no master list was kept. Closed status, signing dates and closing dates are not yet verified. The practice-area filter (M&A vs other groups) was not applied.",
+  "recommendation": "Save the full path-search hits as a master candidate list, uncapped. Add a document-text scan across all matters for closing/signing terms, written to a file and then summarized. Reconcile both lists, then list the folders of every surfaced matter before reading the executed agreements and closing documents.",
+  "new_stage": null,
+  "available": true
+ },
+ "review_text": "[Stage review: Search file names for request keywords, attempt 1]\nYou reported: goal reached = yes.\nIndependent reviewer: goal reached = partly.\nReviewer flags: The scan walked file names only (os.walk with a regex on file names), so matters whose file names lack M&A terms were never reached. The policy requires also searching document text, and none was done.; The output was long (+16703 chars) and the summary's candidate list appears to be hand-picked from it. The candidates named (e.g. 1001-00003 to 00007, 1046-00001) are not reconciled against the full path-search list. Matters such as 1045-00004 to 00007 and 1002-00002 are on the unopened list but are absent from the summary.\nReviewer concerns: The only call was a file-name regex, with no text search and no matter-level listing. The summary calls candidates 'executed' and separates term sheets from deals without opening any document. Its list is a subset of the matters that surfaced, and no master list was kept. Closed status, signing dates and closing dates are not yet verified. The practice-area filter (M&A vs other groups) was not applied.\nReviewer recommendation: Save the full path-search hits as a master candidate list, uncapped. Add a document-text scan across all matters for closing/signing terms, written to a file and then summarized. Reconcile both lists, then list the folders of every surfaced matter before reading the executed agreements and closing documents.\nLabel: these calls looked like 'Scan document text with an extraction script' work, so they were also reviewed against that stage's failures. Declare 'Scan document text with an extraction script' for this kind of work.\nMatters that appeared in your search results but none of whose documents you have opened or listed: 1045-00004, 1045-00005, 1045-00006, 1045-00007, 1046-00001, 1001-00003, 1001-00004, 1001-00005, 1001-00007, 1002-00002, 1002-00004, 1003-00002, 1003-00003, 1003-00004, 1003-00005, 1004-00001, 1004-00003, 1005-00001, 1005-00002, 1005-00005, 1005-00006, 1006-00003, 1006-00006, 1006-00008, 1007-00006, 1007-00008, 1008-00003, 1008-00005, 1008-00007, 1008-00008, 1009-00001, 1009-00002, 1009-00003, 1009-00005, 1009-00006, 1011-00001, 1011-00005, 1011-00006, 1012-00001, 1012-00002 ….\nCommon failures at this stage in past runs:\n- No recurring failures (seen in two or more runs) were recorded at this stage in the latest training round.\nCommon failures at 'Scan document text with an extraction script':\n- After a scan that reached every qualifying matter, a follow-up filter on file names, document types, exact phrases or execution flags, or a cap on printed lines, dropped matters, and the candidate set was built only from the filtered or visible output.\n- The scan itself missed matters because it was prefiltered by file name or file type, timed out, had a range filter that failed, or was read only partially, and the partial output was treated as the whole store without a rerun or a broader search.\n- Scan hits listed matters that qualified, but the agent read only a hand-picked or number-ranked subset and never opened the rest.\n- The script printed snippets for common terms across every matter with no output cap, so the output filled the context and no answer could be written.\nReconsider before moving on. If the goal was not fully reached, or any failure above applies, reopen this stage now: call stage_start with stage=\"Search file names for request keywords\" and a goal that says what you will fix. Otherwise call stage_start for the next stage you need.",
+ "model": "gpt-5.6-luna",
+ "usage": {
+  "input_tokens": 30680,
+  "input_tokens_details": {
+   "cache_write_tokens": 20822,
+   "cached_tokens": 9855
+  },
+  "output_tokens": 141,
+  "output_tokens_details": {
+   "reasoning_tokens": 73
+  },
+  "total_tokens": 30821
+ },
+ "next": [
+  {
+   "type": "function_call",
+   "name": "stage_start",
+   "arguments": "{\"goal\":\"Enumerate complete file contents for every matter surfaced by the broad M&A path search, including previously surfaced non-M&A near-candidates, so no matter is silently dropped before verification.\",\"new_stage_name\":\"\" ,\"stage\":\"List files in candidate matters\"}"
+  }
+ ],
+ "reasoning_summary": []
+}
